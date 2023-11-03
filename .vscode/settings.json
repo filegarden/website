@@ -1,18 +1,19 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "files.eol": "\n",
-  "editor.insertSpaces": true,
-  "editor.tabSize": 2,
-  "eslint.format.enable": true,
-  "editor.defaultFormatter": null,
-  "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.quoteStyle": "single",
   "files.exclude": {
     ".env": true,
     ".env.local": true,
     ".env.production": true
   },
+  "files.eol": "\n",
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "eslint.format.enable": true,
+  "editor.defaultFormatter": null,
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.quoteStyle": "double",
+  "html.completion.attributeDefaultValue": "doublequotes",
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnPaste": false

@@ -8,6 +8,27 @@ module.exports = {
     "plugin:prettier/recommended",
   ],
   rules: {
+    "vue/block-lang": [
+      "error",
+      {
+        script: {
+          lang: "ts",
+        },
+        template: {
+          lang: "html",
+        },
+        style: {
+          lang: "scss",
+        },
+      },
+    ],
+    "vue/component-tags-order": [
+      "error",
+      {
+        order: ["script", "template", "style"],
+      },
+    ],
+    "vue/padding-line-between-blocks": "error",
     "vue/multi-word-component-names": "off",
   },
 };
