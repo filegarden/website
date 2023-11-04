@@ -30,5 +30,12 @@ module.exports = {
     ],
     "vue/padding-line-between-blocks": "error",
     "vue/multi-word-component-names": "off",
+    "vue/no-restricted-html-elements": [
+      "error",
+      ...["a", "NuxtLink"].map((element) => ({
+        element,
+        message: "Use our `A` component instead.",
+      })),
+    ],
   },
 };
