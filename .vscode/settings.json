@@ -12,6 +12,8 @@
   "editor.defaultFormatter": null,
   "javascript.preferences.quoteStyle": "double",
   "typescript.preferences.quoteStyle": "double",
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "html.completion.attributeDefaultValue": "doublequotes",
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
@@ -24,7 +26,5 @@
   "[vue]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnPaste": false
-  },
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifier": "non-relative"
+  }
 }
