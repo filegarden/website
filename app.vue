@@ -2,13 +2,13 @@
 const appConfig = useAppConfig();
 const requestUrl = useRequestURL();
 
-useHead({
+useServerHead({
   htmlAttrs: {
     lang: "en",
   },
 });
 
-useSeoMeta({
+useServerSeoMeta({
   title: appConfig.APP_NAME,
 
   ogType: "website",
