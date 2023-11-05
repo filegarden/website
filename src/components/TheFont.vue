@@ -9,9 +9,3 @@
     />
   </Head>
 </template>
-
-<style lang="scss">
-:root {
-  font-family: "Roboto", sans-serif;
-}
-</style>

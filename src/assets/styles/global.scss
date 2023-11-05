@@ -1,0 +1,11 @@
+@use "~/assets/styles/themes.scss";
+
+:root {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+
+  background-color: var(--primary-color);
+}
