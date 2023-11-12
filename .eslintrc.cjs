@@ -18,7 +18,7 @@ module.exports = {
     // #region All disabled or overwritten rules.
 
     // ⚠️ IMPORTANT! PLEASE READ:
-    // For the same reason our `.prettierrc` mustn't be modified, be extremely
+    // For the same reason our Prettier config mustn't be modified, be extremely
     // hesitant to disable or overwrite rules. Every rule in this region should
     // be explained by a comment above.
 
@@ -159,9 +159,4 @@ module.exports = {
     project: "./tsconfig.json",
     extraFileExtensions: [".vue"],
   },
-  ignorePatterns: [
-    // ESLint ignores dotfiles by default, but we want those linted too, so this
-    // excludes them from the ignore patterns.
-    "!/.*",
-  ],
 };
