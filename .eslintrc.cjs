@@ -22,6 +22,26 @@ module.exports = {
     // hesitant to disable or overwrite rules. Every rule in this region should
     // be explained by a comment above.
 
+    // If you have an `Array<ComplexTypeExpression>`, you can see it's an array
+    // from the start, reading the rest with that in mind. On the other hand,
+    // with `ComplexTypeExpression[]`, especially if it's multi-line, you only
+    // realize it's an array once you've read to the end. You may then have to
+    // take a moment to reconsider the type you thought you understood.
+    //
+    // That reconsideration can be especially difficult when the array is within
+    // another complex type expression (e.g. a `Record`'s value parameter),
+    // since once you've already read to the end, you can't as quickly find the
+    // start of the array expression you want to reconsider.
+    //
+    // You might argue it could be made more readable by extracting complex
+    // types to type aliases, but that's not easily enforceable. This is.
+    "@typescript-eslint/array-type": [
+      "error",
+      {
+        default: "array-simple",
+      },
+    ],
+
     // `type`s can do everything `interface`s can, but the reverse is not true.
     // Despite that, this rule prefers `interface`s over `type`s by default,
     // resulting in these problems:
