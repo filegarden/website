@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import type { NuxtLinkProps } from "nuxt/app";
 
+// eslint-disable-next-line vue/no-unused-properties -- It's used by `$props`.
 export type AProps = NuxtLinkProps;
 
 defineProps<AProps>();
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue/no-restricted-html-elements -->
+  <!-- eslint-disable-next-line vue/no-restricted-html-elements -- This *is* the `A` component, so `NuxtLink` can be used here. -->
   <NuxtLink :prefetch="false" v-bind="$props">
     <slot></slot>
   </NuxtLink>

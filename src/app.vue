@@ -28,6 +28,5 @@ useServerSeoMeta({
   </div>
 </template>
 
-<style lang="scss">
-@use "~/assets/styles/global.scss";
-</style>
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This is the global style sheet. -->
+<style lang="scss" src="~/assets/styles/global.scss"></style>
