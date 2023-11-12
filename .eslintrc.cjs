@@ -121,7 +121,8 @@ module.exports = {
     // #endregion
   },
   ignorePatterns: [
-    // Dotfiles are ignored by default, but there are dotfiles we want linted!
+    // ESLint ignores dotfiles by default, but we want those linted too, so this
+    // excludes them from the ignore patterns.
     "!/.*",
   ],
 };
