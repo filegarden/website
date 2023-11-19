@@ -61,8 +61,8 @@ module.exports = {
     // bikeshed about, no inconsistency, and nothing to ever have to change.
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
 
-    // We use a compiler, so this rule has little benefit, making templates much
-    // more noisy and difficult to read as quickly.
+    // We use a compiler, so this rule has little benefit, making templates more
+    // noisy and hard to read as quickly due to less concise component names.
     "vue/multi-word-component-names": "off",
 
     // #endregion
