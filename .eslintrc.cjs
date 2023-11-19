@@ -89,13 +89,7 @@ module.exports = {
     "vue/block-order": [
       "error",
       {
-        order: [
-          "script:not([setup])",
-          "script[setup]",
-          "template",
-          "style[scoped]",
-          "style:not([scoped])",
-        ],
+        order: ["script:not([setup])", "script[setup]", "template", "style"],
       },
     ],
     "vue/block-tag-newline": "error",

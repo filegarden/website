@@ -13,3 +13,10 @@ const appConfig = useAppConfig();
     </div>
   </header>
 </template>
+
+<style scoped lang="scss">
+header {
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-color);
+}
+</style>

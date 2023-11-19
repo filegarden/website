@@ -22,7 +22,7 @@ useServerSeoMeta({
 </script>
 
 <template>
-  <div id="page">
+  <div class="page">
     <Header>
       <slot name="header">
         {{ title }}
@@ -34,3 +34,16 @@ useServerSeoMeta({
     </main>
   </div>
 </template>
+
+<style scoped lang="scss">
+.page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  overflow: auto;
+  flex-grow: 1;
+}
+</style>
