@@ -3,9 +3,9 @@
   "compilerOptions": {
     "noUncheckedIndexedAccess": true
   },
-  "include": [
-    "./.nuxt/nuxt.d.ts",
-    "./**/*",
-    "./.*"
+  "files": [
+    // This is needed because ESLint's config is a dotfile, and `**/*` (which is
+    // `include`d in the TS config this one extends) doesn't match dotfiles.
+    "./.eslintrc.cjs"
   ]
 }
