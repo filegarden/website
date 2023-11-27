@@ -1,3 +1,3 @@
-# Forcibly convert text file line endings to LF. Without this, our linter would
+# Disable text file line ending conversion. Without this, our linter would
 # complain to anyone whose Git config is set to convert to CRLF.
-* text=auto eol=lf
+* -text
