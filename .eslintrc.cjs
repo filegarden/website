@@ -14,6 +14,7 @@ module.exports = {
     "plugin:security/recommended",
     "plugin:vue-scoped-css/all",
   ],
+  plugins: ["@stylistic"],
   rules: {
     // #region All disabled or overwritten rules.
 
@@ -24,7 +25,7 @@ module.exports = {
 
     // If you have an `Array<ComplexTypeExpression>`, you can see it's an array
     // from the start, reading the rest with that in mind. On the other hand,
-    // with `ComplexTypeExpression[]`, especially if it's multi-line, you only
+    // with `ComplexTypeExpression[]`, especially if it's multiline, you only
     // realize it's an array once you've read to the end. You may then have to
     // take a moment to reconsider the type you thought you understood.
     //
@@ -69,6 +70,16 @@ module.exports = {
 
     // #region Enabled from `@eslint-community/eslint-plugin-eslint-comments`.
     "@eslint-community/eslint-comments/require-description": "error",
+    // #endregion
+
+    // #region Enabled from `@stylistic/eslint-plugin`.
+    "@stylistic/max-len": [
+      "error",
+      {
+        // This is needed as `eslint-disable-line` comments can't be multiline.
+        ignorePattern: /^\s*(?:\/\/|<!--) eslint-disable-next-line /.source,
+      },
+    ],
     // #endregion
 
     // #region Enabled from `eslint-plugin-vue`.
