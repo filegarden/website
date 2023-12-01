@@ -1,8 +1,8 @@
 <script setup lang="ts">
-export type PageProps = {
+export interface PageProps {
   /** The name of this page (if any). */
   title?: string;
-};
+}
 
 const props = defineProps<PageProps>();
 

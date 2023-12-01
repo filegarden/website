@@ -43,25 +43,6 @@ module.exports = {
       },
     ],
 
-    // `type`s can do everything `interface`s can, but the reverse is not true.
-    // Despite that, this rule prefers `interface`s over `type`s by default,
-    // resulting in these problems:
-    //
-    // - There are situations where both `interface` and `type` are allowed, so
-    //   you still have to make a decision on which to use, defeating the point
-    //   of stylistic rules.
-    //
-    // - That decision may be inconsistent in different situations and/or by
-    //   different people.
-    //
-    // - If an `interface` starts needing a feature only `type`s can support, it
-    //   has to be changed to a `type`. If a `type` stops needing any features
-    //   `interface`s can't support, it has to be changed to an `interface`.
-    //
-    // In contrast, using `type` unconditionally results in nothing to think or
-    // bikeshed about, no inconsistency, and nothing to ever have to change.
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
-
     // We use a compiler, so this rule has little benefit, making templates more
     // noisy and hard to read as quickly due to less concise component names.
     "vue/multi-word-component-names": "off",
