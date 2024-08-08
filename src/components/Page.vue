@@ -23,12 +23,6 @@ useServerSeoMeta({
 
 <template>
   <div class="page">
-    <Header>
-      <slot name="header">
-        {{ title }}
-      </slot>
-    </Header>
-
     <main>
       <slot></slot>
     </main>
