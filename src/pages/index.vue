@@ -53,8 +53,8 @@ nav {
 
 .hero {
   // Make the hero section cover the header so the header is only revealed after
-  // scrolling below the hero section. We don't want the logo to be visible in
-  // both the header and the hero section.
+  // scrolling below the hero section. We don't want the logo visible in both
+  // the header and the hero section at the same time.
   position: relative;
 
   box-sizing: border-box;
