@@ -23,21 +23,10 @@ useServerSeoMeta({
 
 <template>
   <div class="page">
+    <slot name="header"></slot>
+
     <main>
       <slot></slot>
     </main>
   </div>
 </template>
-
-<style scoped lang="scss">
-.page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  overflow: auto;
-  flex-grow: 1;
-}
-</style>

@@ -4,15 +4,17 @@ const appConfig = useAppConfig();
 
 <template>
   <Page>
-    <header>
-      <nav>
-        <img
-          class="nav-logo"
-          src="/assets/brand/logo.svg"
-          :title="appConfig.APP_NAME"
-        />
-      </nav>
-    </header>
+    <template #header>
+      <header>
+        <nav>
+          <img
+            class="nav-logo"
+            src="/assets/brand/logo.svg"
+            :title="appConfig.APP_NAME"
+          />
+        </nav>
+      </header>
+    </template>
 
     <div class="hero">
       <img
@@ -25,8 +27,13 @@ const appConfig = useAppConfig();
 </template>
 
 <style scoped lang="scss">
+:global(body) {
+  background-image: radial-gradient(160vh 80vh at top, #1e3426, transparent);
+  background-repeat: no-repeat;
+}
+
 header {
-  position: absolute;
+  position: sticky;
   top: 0;
   width: 100%;
   z-index: 100;
@@ -55,16 +62,11 @@ nav {
 }
 
 .hero {
-  box-sizing: border-box;
-  min-height: 90vh;
-  padding: 8rem 1.5rem 1.5rem;
-
-  background-image: radial-gradient(160vh 80vh at top, #1e3426, #0f1a17);
   text-align: center;
 }
 
 .hero-logo {
-  margin-top: 5vh;
+  margin: 5vh auto;
   width: 60%;
   width: max(60%, 400px);
   max-width: 100%;
