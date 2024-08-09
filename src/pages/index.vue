@@ -18,6 +18,8 @@ const appConfig = useAppConfig();
         src="/assets/brand/logo.svg"
         :title="appConfig.APP_NAME"
       />
+
+      <p class="slogan">a nice place to plant your file trees</p>
     </div>
   </Page>
 </template>
@@ -66,5 +68,11 @@ nav img {
   width: 60%;
   width: max(60%, 400px);
   max-width: 100%;
+}
+
+.slogan {
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--brand-color);
 }
 </style>
