@@ -7,18 +7,14 @@ const appConfig = useAppConfig();
     <template #header>
       <header>
         <nav>
-          <img
-            class="nav-logo"
-            src="/assets/brand/logo.svg"
-            :title="appConfig.APP_NAME"
-          />
+          <img src="/assets/brand/logo.svg" :title="appConfig.APP_NAME" />
         </nav>
       </header>
     </template>
 
     <div class="hero">
       <img
-        class="hero-logo"
+        class="logo"
         src="/assets/brand/logo.svg"
         :title="appConfig.APP_NAME"
       />
@@ -56,7 +52,7 @@ nav {
   backdrop-filter: blur(8px);
 }
 
-.nav-logo {
+nav img {
   height: 100%;
   vertical-align: bottom;
 }
@@ -65,7 +61,7 @@ nav {
   text-align: center;
 }
 
-.hero-logo {
+.hero .logo {
   margin-top: 5vh;
   width: 60%;
   width: max(60%, 400px);
