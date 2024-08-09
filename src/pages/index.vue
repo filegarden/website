@@ -66,7 +66,7 @@ nav {
 }
 
 .hero-logo {
-  margin: 5vh auto;
+  margin-top: 5vh;
   width: 60%;
   width: max(60%, 400px);
   max-width: 100%;
