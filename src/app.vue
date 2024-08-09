@@ -3,9 +3,8 @@ const appConfig = useAppConfig();
 const requestUrl = useRequestURL();
 
 useServerHead({
-  htmlAttrs: {
-    lang: "en",
-  },
+  htmlAttrs: { lang: "en" },
+  link: [{ rel: "icon", href: "/assets/brand/icon.svg" }],
 });
 
 useServerSeoMeta({
