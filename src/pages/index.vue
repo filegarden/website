@@ -53,8 +53,8 @@ nav {
   overflow: hidden;
 
   border-radius: 1rem;
-  background-color: #80808029;
-  box-shadow: 2px 1px 5px 0px #00000029;
+  background-color: var(--surface-color);
+  box-shadow: 2px 1px 5px var(--shadow-color);
   backdrop-filter: blur(8px);
 }
 
