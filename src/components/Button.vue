@@ -25,15 +25,20 @@ button {
     0.05s ease-out border-color,
     0.05s ease-out box-shadow;
 
-  &:hover {
+  &:enabled:hover {
     border-color: var(--hover-border-color);
     box-shadow: inset 0 0 0.25rem -1px var(--border-color);
   }
 
-  &:active,
-  &:focus-visible {
+  &:enabled:active,
+  &:enabled:focus-visible {
     border-color: var(--active-border-color);
     box-shadow: inset 0 0 0.5rem -1px var(--border-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 </style>
