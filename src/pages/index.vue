@@ -12,6 +12,10 @@ const appConfig = useAppConfig();
             src="/assets/brand/logo.svg"
             :title="appConfig.APP_NAME"
           />
+
+          <div>
+            <Button>Sign In</Button>
+          </div>
         </nav>
       </header>
     </template>
@@ -50,6 +54,9 @@ nav {
   margin: 2rem;
   padding: 1rem;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   overflow: hidden;
 
   border-radius: 1rem;
