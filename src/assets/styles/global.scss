@@ -3,6 +3,14 @@
 :root {
   height: 100%;
   font-family: var(--font-family);
+  line-height: 1.2;
+
+	-webkit-tap-highlight-color: transparent;
+	-webkit-focus-ring-color: transparent;
+}
+
+* {
+  outline: none;
 }
 
 body {
