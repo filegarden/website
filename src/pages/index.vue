@@ -71,7 +71,7 @@ nav .logo {
   margin-top: 5vh;
   width: 60%;
   width: max(60%, 400px);
-  max-width: 100%;
+  max-width: 80%;
 }
 
 .slogan {
