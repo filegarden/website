@@ -71,14 +71,15 @@ nav .logo {
 }
 
 .hero {
+  padding: 5vh 1rem;
+
   text-align: center;
 }
 
 .hero .logo {
-  margin-top: 5vh;
   width: 60%;
   width: max(60%, 400px);
-  max-width: 80%;
+  max-width: 90%;
 }
 
 .slogan {
