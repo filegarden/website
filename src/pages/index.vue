@@ -14,7 +14,7 @@ const appConfig = useAppConfig();
           />
 
           <div>
-            <Button>Sign In</Button>
+            <Button>Your Garden</Button>
           </div>
         </nav>
       </header>
