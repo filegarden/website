@@ -14,7 +14,8 @@ button {
   padding: 0.5rem 1.5rem;
   background-color: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
+  // This size is about a fourth of a typical button's height.
+  border-radius: 0.581rem;
 
   cursor: pointer;
   white-space: nowrap;
