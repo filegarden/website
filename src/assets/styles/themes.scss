@@ -4,9 +4,15 @@
   --background-color: #0f1a17;
   --text-color: #f0f0f0;
 
+  // An input's text should never be translucent, because that would make the
+  // input appear disabled.
+  --input-text-color: #e8e8e8;
+  --input-text-color-hover: #f8f8f8;
+  --input-text-color-active: #ffffff;
+
   --border-color: #f0f0f060;
-  --hover-border-color: #f0f0f080;
-  --active-border-color: #f0f0f0c0;
+  --border-color-hover: #f0f0f080;
+  --border-color-active: #f0f0f0c0;
 
   --surface-color: #f0f0f018;
   --shadow-color: #00000029;

@@ -25,7 +25,7 @@ defineProps<ButtonProps>();
   line-height: 1.2;
   font-size: 1rem;
   font-family: var(--font-family);
-  color: var(--text-color);
+  color: var(--input-text-color);
 
   padding: 0.5rem 1.5rem;
   background-color: var(--surface-color);
@@ -37,23 +37,23 @@ defineProps<ButtonProps>();
   overflow: hidden;
   user-select: none;
 
-  transition:
-    0.1s ease-out border-color,
-    0.1s ease-out box-shadow;
+  transition: 0.1s ease-out;
 
   &:hover:not(:disabled) {
-    border-color: var(--hover-border-color);
+    color: var(--input-text-color-hover);
+    border-color: var(--border-color-hover);
     box-shadow:
       inset 0 0 0.25rem -1px var(--border-color),
-      2px 1px 6px var(--shadow-color);
+      2px 1px 0.375rem var(--shadow-color);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
+    color: var(--input-text-color-active);
     border-color: var(--active-border-color);
     box-shadow:
       inset 0 0 0.5rem -1px var(--border-color),
-      2px 1px 12px var(--shadow-color);
+      2px 1px 0.75rem var(--shadow-color);
   }
 
   &:disabled {
