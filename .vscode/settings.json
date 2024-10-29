@@ -1,20 +1,14 @@
 {
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "files.exclude": {
-    ".env.local": true,
-    ".env.production": true
-  },
   "files.eol": "\n",
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
   "eslint.format.enable": true,
-  "editor.defaultFormatter": null,
   "javascript.preferences.quoteStyle": "double",
   "typescript.preferences.quoteStyle": "double",
   "javascript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "html.completion.attributeDefaultValue": "doublequotes",
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
