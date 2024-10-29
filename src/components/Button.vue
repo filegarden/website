@@ -1,11 +1,27 @@
+<script setup lang="ts">
+import type { AProps } from "~/components/A.vue";
+
+export type ButtonProps = AProps;
+
+defineProps<ButtonProps>();
+</script>
+
 <template>
-  <button type="button">
+  <A v-if="$props.href" class="button" v-bind="$props">
+    <slot />
+  </A>
+  <button v-else type="button" class="button">
     <slot />
   </button>
 </template>
 
 <style scoped lang="scss">
-button {
+.button {
+  // Make `a` styles consistent with `button` styles.
+  display: inline-block;
+  text-decoration: none;
+  vertical-align: bottom;
+
   line-height: 1.2;
   font-size: 1rem;
   font-family: var(--font-family);
@@ -25,15 +41,15 @@ button {
     0.1s ease-out border-color,
     0.1s ease-out box-shadow;
 
-  &:enabled:hover {
+  &:hover:not(:disabled) {
     border-color: var(--hover-border-color);
     box-shadow:
       inset 0 0 0.25rem -1px var(--border-color),
       2px 1px 6px var(--shadow-color);
   }
 
-  &:enabled:active,
-  &:enabled:focus-visible {
+  &:active:not(:disabled),
+  &:focus-visible:not(:disabled) {
     border-color: var(--active-border-color);
     box-shadow:
       inset 0 0 0.5rem -1px var(--border-color),
