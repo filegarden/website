@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NuxtLinkProps } from "nuxt/app";
 
-export type AProps = NuxtLinkProps;
+export type AProps = Omit<NuxtLinkProps, "noPrefetch">;
 
 defineProps<AProps>();
 </script>
