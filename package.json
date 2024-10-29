@@ -4,8 +4,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build-preview": "npm run build && npm run preview",
-    "typecheck": "vue-tsc",
-    "lint": "eslint --ext .js,.cjs,.ts,.vue .",
+    "check": "vue-tsc && eslint && prettier --check .",
     "build": "nuxt build",
     "preview": "nuxt preview"
   },
