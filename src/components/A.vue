@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { NuxtLinkProps } from "nuxt/app";
 
-// eslint-disable-next-line vue/no-unused-properties -- It's used by `$props`.
 export type AProps = NuxtLinkProps;
 
 defineProps<AProps>();
