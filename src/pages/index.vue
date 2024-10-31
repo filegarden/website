@@ -27,7 +27,7 @@ const appConfig = useAppConfig();
         :title="appConfig.APP_NAME"
       />
 
-      <p class="slogan">a nice place to plant your file trees</p>
+      <p class="slogan">an open-source place to plant your file trees</p>
     </div>
   </Page>
 </template>
