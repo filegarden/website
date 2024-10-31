@@ -103,7 +103,6 @@ nav .logo {
 }
 
 .slogan {
-  font-style: italic;
   font-size: 1.25rem;
   color: var(--brand-color);
 }
