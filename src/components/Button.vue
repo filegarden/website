@@ -7,7 +7,7 @@ defineProps<ButtonProps>();
 </script>
 
 <template>
-  <A v-if="$props.href" class="button" v-bind="$props">
+  <A v-if="href" class="button" v-bind="$props">
     <slot />
   </A>
   <button v-else type="button" class="button">
