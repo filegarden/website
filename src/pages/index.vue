@@ -8,7 +8,7 @@ const appConfig = useAppConfig();
       <header>
         <nav>
           <img
-            class="logo"
+            class="logo collapsed"
             src="/assets/brand/logo.svg"
             :title="appConfig.APP_NAME"
           />
@@ -68,6 +68,26 @@ nav {
 nav .logo {
   height: 100%;
   vertical-align: bottom;
+
+  object-fit: cover;
+  object-position: left;
+
+  // Easing out the filter sooner than the opacity looks better since the
+  // filter's brightness only looks good with opacity to reduce it.
+  transition:
+    0.15s ease-out filter,
+    0.15s ease-in opacity,
+    0.15s ease-out width;
+
+  &.collapsed {
+    filter: contrast(0) brightness(2);
+    opacity: 0.5;
+    aspect-ratio: 1;
+
+    // Reverse the transitions to uphold the prior reasoning in reverse too, and
+    // so the animation is symmetrical.
+    transition-timing-function: ease-in, ease-out, ease-in;
+  }
 }
 
 .hero {
