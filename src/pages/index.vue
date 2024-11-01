@@ -68,7 +68,7 @@ nav {
   border-radius: 1rem;
   background-color: var(--surface-color);
   box-shadow: 2px 1px 5px var(--shadow-color);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(1rem);
 
   // Undo the `pointer-events` set on the header.
   pointer-events: auto;
