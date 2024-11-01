@@ -10,7 +10,7 @@ const appConfig = useAppConfig();
           <img
             class="logo collapsed"
             src="/assets/brand/logo.svg"
-            :title="appConfig.APP_NAME"
+            :alt="appConfig.APP_NAME"
           />
 
           <div>
@@ -24,7 +24,7 @@ const appConfig = useAppConfig();
       <img
         class="logo"
         src="/assets/brand/logo.svg"
-        :title="appConfig.APP_NAME"
+        :alt="appConfig.APP_NAME"
       />
 
       <p class="slogan">an open-source place to plant your file trees</p>
