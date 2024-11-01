@@ -100,19 +100,18 @@ nav .logo {
 }
 
 .hero {
-  padding: 5vh 1rem;
+  padding: 8vh 1rem;
 
   text-align: center;
 }
 
 .hero .logo {
-  width: 60%;
-  width: max(60%, 400px);
-  max-width: 90%;
+  width: clamp(60%, 400px, 90%);
 }
 
 .slogan {
-  font-size: 1.25rem;
+  margin: 1rem;
+  font-size: 1.5rem;
   color: var(--brand-color);
 }
 
