@@ -33,6 +33,33 @@ const appConfig = useAppConfig();
         <Button>Upload Files</Button>
       </p>
     </div>
+
+    <div class="advantages">
+      <section class="advantage">
+        <h1>Free and open.</h1>
+        <p>
+          We're <u>open-source</u>, funded by users who choose to
+          <u>support us</u>.
+        </p>
+      </section>
+
+      <section class="advantage">
+        <h1>No sharing restrictions.</h1>
+        <p>
+          Get direct permalinks to your files, and use them anywhere on the web.
+        </p>
+      </section>
+
+      <section class="advantage">
+        <h1>Full quality.</h1>
+        <p>No lossy compression or watermarks. Files are served unmodified.</p>
+      </section>
+
+      <section class="advantage">
+        <h1>All file types supported.</h1>
+        <p>Images, videos, entire web pages or browser games, you name it.</p>
+      </section>
+    </div>
   </Page>
 </template>
 
@@ -118,5 +145,33 @@ nav .logo {
 .call-to-action {
   margin-top: 3rem;
   font-size: 1.333rem;
+}
+
+.advantages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
+  grid-auto-rows: 1fr;
+
+  box-sizing: border-box;
+  padding: 1.5rem 0;
+  width: clamp(60%, 400px, 90%);
+  margin: 0 auto;
+}
+
+.advantage {
+  flex-basis: 0;
+  flex-grow: 1;
+
+  margin: 1.5rem;
+  padding: 1rem 2rem;
+
+  border-radius: 1rem;
+  background-color: var(--surface-color);
+  box-shadow: 2px 1px 5px var(--shadow-color);
+
+  p {
+    font-size: 1.25em;
+    line-height: 1.5;
+  }
 }
 </style>
