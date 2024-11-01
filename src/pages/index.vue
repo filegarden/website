@@ -42,10 +42,12 @@ header {
   position: sticky;
   top: 0;
   width: 100%;
-  z-index: 100;
 
   display: flex;
   justify-content: center;
+
+  // The nav's margin shouldn't block the cursor.
+  pointer-events: none;
 }
 
 nav {
@@ -63,6 +65,9 @@ nav {
   background-color: var(--surface-color);
   box-shadow: 2px 1px 5px var(--shadow-color);
   backdrop-filter: blur(8px);
+
+  // Undo the `pointer-events` set on the header.
+  pointer-events: auto;
 }
 
 nav .logo {
