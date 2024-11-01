@@ -117,7 +117,7 @@ nav .logo {
 }
 
 .call-to-action {
-  padding-top: 2rem;
+  margin-top: 3rem;
   font-size: 1.333rem;
 }
 </style>
