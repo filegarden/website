@@ -144,7 +144,7 @@ nav .logo {
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
 
   padding: 1.5rem 0;
-  width: clamp(60%, 400px, 90%);
+  width: clamp(60%, 500px, 90%);
   margin: 0 auto;
 }
 
