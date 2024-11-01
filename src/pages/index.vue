@@ -29,8 +29,8 @@ const appConfig = useAppConfig();
 
       <p class="slogan">an open-source place to plant your file trees</p>
 
-      <p>
-        <Button class="call-to-action">Upload Files</Button>
+      <p class="call-to-action">
+        <Button>Upload Files</Button>
       </p>
     </div>
   </Page>
@@ -117,7 +117,7 @@ nav .logo {
 }
 
 .call-to-action {
-  margin-top: 2rem;
+  padding-top: 2rem;
   font-size: 1.333rem;
 }
 </style>
