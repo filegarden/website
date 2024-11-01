@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const appConfig = useAppConfig();
-</script>
-
 <template>
   <Page>
     <template #header>
@@ -10,7 +6,7 @@ const appConfig = useAppConfig();
           <img
             class="logo collapsed"
             src="/assets/brand/logo.svg"
-            :alt="appConfig.APP_NAME"
+            alt="File Garden"
           />
 
           <div>
@@ -21,11 +17,7 @@ const appConfig = useAppConfig();
     </template>
 
     <div class="hero">
-      <img
-        class="logo"
-        src="/assets/brand/logo.svg"
-        :alt="appConfig.APP_NAME"
-      />
+      <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
 
       <p class="slogan">an open-source place to plant your file trees</p>
 

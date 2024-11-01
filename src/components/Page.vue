@@ -6,13 +6,9 @@ export interface PageProps {
 
 const props = defineProps<PageProps>();
 
-const appConfig = useAppConfig();
-
 useSeoMeta({
   title: () =>
-    props.title === undefined
-      ? appConfig.APP_NAME
-      : `${props.title} - ${appConfig.APP_NAME}`,
+    props.title === undefined ? "File Garden" : `${props.title} - File Garden`,
 });
 
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss -- SSR has no reactivity.

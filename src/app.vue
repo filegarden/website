@@ -8,11 +8,11 @@ useServerHead({
 });
 
 useServerSeoMeta({
-  title: appConfig.APP_NAME,
+  title: "File Garden",
 
   ogType: "website",
-  ogSiteName: appConfig.APP_NAME,
-  ogTitle: appConfig.APP_NAME,
+  ogSiteName: "File Garden",
+  ogTitle: "File Garden",
   ogUrl: appConfig.SITE_URL_BASE + requestUrl.pathname + requestUrl.search,
   // TODO: Set an `ogImage`.
   ogImage: "",
