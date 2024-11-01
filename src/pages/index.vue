@@ -28,6 +28,10 @@ const appConfig = useAppConfig();
       />
 
       <p class="slogan">an open-source place to plant your file trees</p>
+
+      <p>
+        <Button class="call-to-action">Upload Files</Button>
+      </p>
     </div>
   </Page>
 </template>
@@ -110,5 +114,10 @@ nav .logo {
 .slogan {
   font-size: 1.25rem;
   color: var(--brand-color);
+}
+
+.call-to-action {
+  margin-top: 2rem;
+  font-size: 1.333rem;
 }
 </style>
