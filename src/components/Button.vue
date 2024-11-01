@@ -29,7 +29,7 @@ defineProps<ButtonProps>();
 
   padding: 0.5em 1.5em;
   background-color: var(--surface-color);
-  border: 1px solid var(--border-color);
+  border: 0.083em solid var(--border-color);
   border-radius: 0.667em;
 
   cursor: pointer;
