@@ -150,7 +150,6 @@ nav .logo {
 .advantages {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
-  grid-auto-rows: 1fr;
 
   box-sizing: border-box;
   padding: 1.5rem 0;
