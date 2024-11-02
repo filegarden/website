@@ -141,7 +141,7 @@ h1 {
 }
 
 .hero .logo {
-  width: clamp(60%, 400px, 90%);
+  width: clamp(60%, 500px, 90%);
   vertical-align: bottom;
 }
 
