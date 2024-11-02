@@ -180,9 +180,6 @@ h2 {
 }
 
 .advantage {
-  flex-basis: 0;
-  flex-grow: 1;
-
   margin: 1.5rem;
   padding: 1rem 2rem;
 
