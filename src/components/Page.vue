@@ -19,10 +19,6 @@ useServerSeoMeta({
 
 <template>
   <div class="page">
-    <slot name="header"></slot>
-
-    <main>
-      <slot></slot>
-    </main>
+    <slot></slot>
   </div>
 </template>

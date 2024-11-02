@@ -1,68 +1,68 @@
 <template>
   <Page>
-    <template #header>
-      <header>
-        <nav>
-          <img
-            class="logo collapsed"
-            src="/assets/brand/logo.svg"
-            alt="File Garden"
-          />
+    <header>
+      <nav>
+        <img
+          class="logo collapsed"
+          src="/assets/brand/logo.svg"
+          alt="File Garden"
+        />
 
-          <div>
-            <Button>Your Garden</Button>
-          </div>
-        </nav>
-      </header>
-    </template>
+        <div>
+          <Button>Your Garden</Button>
+        </div>
+      </nav>
+    </header>
 
-    <section class="hero">
-      <h1>
-        <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
-      </h1>
+    <main>
+      <section class="hero">
+        <h1>
+          <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+        </h1>
 
-      <p class="slogan">an open-source place to plant your file trees</p>
+        <p class="slogan">an open-source place to plant your file trees</p>
 
-      <p class="call-to-action">
-        <Button>Upload Files</Button>
-      </p>
-    </section>
+        <p class="call-to-action">
+          <Button>Upload Files</Button>
+        </p>
+      </section>
 
-    <section class="advantages">
-      <h2>We're better than other file hosts.</h2>
+      <section class="advantages">
+        <h2>We're better than other file hosts.</h2>
 
-      <div class="advantages-content">
-        <section class="advantage">
-          <h3>Free and open.</h3>
-          <p class="advantage-content">
-            We're <u>open-source</u>, funded by users who choose to
-            <u>support us</u>.
-          </p>
-        </section>
+        <div class="advantages-content">
+          <section class="advantage">
+            <h3>Free and open.</h3>
+            <p class="advantage-content">
+              We're <u>open-source</u>, funded by users who choose to
+              <u>support us</u>.
+            </p>
+          </section>
 
-        <section class="advantage">
-          <h3>No sharing restrictions.</h3>
-          <p class="advantage-content">
-            Get direct permalinks to your files, and use them anywhere on the
-            web.
-          </p>
-        </section>
+          <section class="advantage">
+            <h3>No sharing restrictions.</h3>
+            <p class="advantage-content">
+              Get direct permalinks to your files, and use them anywhere on the
+              web.
+            </p>
+          </section>
 
-        <section class="advantage">
-          <h3>Full quality.</h3>
-          <p class="advantage-content">
-            No lossy compression or watermarks. Files are served unmodified.
-          </p>
-        </section>
+          <section class="advantage">
+            <h3>Full quality.</h3>
+            <p class="advantage-content">
+              No lossy compression or watermarks. Files are served unmodified.
+            </p>
+          </section>
 
-        <section class="advantage">
-          <h3>All file types supported.</h3>
-          <p class="advantage-content">
-            Images, videos, entire web pages, browser games, you name it.
-          </p>
-        </section>
-      </div>
-    </section>
+          <section class="advantage">
+            <h3>All file types supported.</h3>
+            <p class="advantage-content">
+              Images, videos, entire web pages, browser games, you name it.
+            </p>
+          </section>
+        </div>
+      </section>
+    </main>
   </Page>
 </template>
 
@@ -128,6 +128,10 @@ nav .logo {
     // so the animation is symmetrical.
     transition-timing-function: ease-in, ease-out, ease-in;
   }
+}
+
+main {
+  padding-bottom: 4rem;
 }
 
 .hero {
