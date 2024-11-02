@@ -159,7 +159,6 @@ h1 {
 .advantages {
   margin: 0 auto;
   padding: 1.5rem 0;
-  width: clamp(60%, 500px, 90%);
 
   font-size: 1.25em;
 }
@@ -167,11 +166,17 @@ h1 {
 h2 {
   text-align: center;
   font-size: 2rem;
+
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .advantages-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
+
+  width: clamp(60%, 500px, 90%);
+  margin: 0 auto;
 }
 
 .advantage {
