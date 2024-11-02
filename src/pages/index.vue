@@ -16,42 +16,53 @@
       </header>
     </template>
 
-    <div class="hero">
-      <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+    <section class="hero">
+      <h1>
+        <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+      </h1>
 
       <p class="slogan">an open-source place to plant your file trees</p>
 
       <p class="call-to-action">
         <Button>Upload Files</Button>
       </p>
-    </div>
+    </section>
 
-    <div class="advantages">
-      <section class="advantage">
-        <h1>Free and open.</h1>
-        <p>
-          We're <u>open-source</u>, funded by users who choose to
-          <u>support us</u>.
-        </p>
-      </section>
+    <section class="advantages">
+      <h2>We're better than other file hosts.</h2>
 
-      <section class="advantage">
-        <h1>No sharing restrictions.</h1>
-        <p>
-          Get direct permalinks to your files, and use them anywhere on the web.
-        </p>
-      </section>
+      <div class="advantages-content">
+        <section class="advantage">
+          <h3>Free and open.</h3>
+          <p class="advantage-content">
+            We're <u>open-source</u>, funded by users who choose to
+            <u>support us</u>.
+          </p>
+        </section>
 
-      <section class="advantage">
-        <h1>Full quality.</h1>
-        <p>No lossy compression or watermarks. Files are served unmodified.</p>
-      </section>
+        <section class="advantage">
+          <h3>No sharing restrictions.</h3>
+          <p class="advantage-content">
+            Get direct permalinks to your files, and use them anywhere on the
+            web.
+          </p>
+        </section>
 
-      <section class="advantage">
-        <h1>All file types supported.</h1>
-        <p>Images, videos, entire web pages or browser games, you name it.</p>
-      </section>
-    </div>
+        <section class="advantage">
+          <h3>Full quality.</h3>
+          <p class="advantage-content">
+            No lossy compression or watermarks. Files are served unmodified.
+          </p>
+        </section>
+
+        <section class="advantage">
+          <h3>All file types supported.</h3>
+          <p class="advantage-content">
+            Images, videos, entire web pages, browser games, you name it.
+          </p>
+        </section>
+      </div>
+    </section>
   </Page>
 </template>
 
@@ -125,8 +136,13 @@ nav .logo {
   text-align: center;
 }
 
+h1 {
+  margin-top: 0;
+}
+
 .hero .logo {
   width: clamp(60%, 400px, 90%);
+  vertical-align: bottom;
 }
 
 .slogan {
@@ -136,17 +152,26 @@ nav .logo {
 }
 
 .call-to-action {
-  margin-top: 3rem;
+  margin: 4rem 0;
   font-size: 1.333rem;
 }
 
 .advantages {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
-
+  margin: 0 auto;
   padding: 1.5rem 0;
   width: clamp(60%, 500px, 90%);
-  margin: 0 auto;
+
+  font-size: 1.25em;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.advantages-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
 }
 
 .advantage {
@@ -159,10 +184,14 @@ nav .logo {
   border-radius: 1rem;
   background-color: var(--surface-color);
   box-shadow: 2px 1px 5px var(--shadow-color);
+}
 
-  p {
-    font-size: 1.25em;
-    line-height: 1.5;
-  }
+h3 {
+  font-size: 1.2em;
+  margin: 0.83em 0;
+}
+
+.advantage-content {
+  line-height: 1.5;
 }
 </style>
