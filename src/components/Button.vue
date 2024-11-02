@@ -27,9 +27,11 @@ defineProps<ButtonProps>();
   font-family: var(--font-family);
   color: var(--input-text-color);
 
+  $border-width: 0.083em;
+
   padding: 0.5em 1.5em;
   background-color: var(--surface-color);
-  border: 0.083em solid var(--border-color);
+  border: $border-width solid var(--border-color);
   border-radius: 0.667em;
 
   cursor: pointer;
@@ -43,7 +45,7 @@ defineProps<ButtonProps>();
     color: var(--input-text-color-hover);
     border-color: var(--border-color-hover);
     box-shadow:
-      inset 0 0 0.25em -1px var(--border-color),
+      inset 0 0 0.25em -$border-width var(--border-color),
       2px 1px 0.375rem var(--shadow-color);
   }
 
@@ -52,7 +54,7 @@ defineProps<ButtonProps>();
     color: var(--input-text-color-active);
     border-color: var(--active-border-color);
     box-shadow:
-      inset 0 0 0.5em -1px var(--border-color),
+      inset 0 0 0.5em -$border-width var(--border-color),
       2px 1px 0.75rem var(--shadow-color);
   }
 
