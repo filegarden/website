@@ -146,9 +146,11 @@ h1 {
 }
 
 .slogan {
-  margin: 1rem;
   font-size: 1.5rem;
   color: var(--brand-color);
+
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 .call-to-action {
