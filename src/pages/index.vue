@@ -131,7 +131,7 @@ nav .logo {
 }
 
 main {
-  padding-bottom: 4rem;
+  padding-bottom: 8vh;
 }
 
 .hero {
