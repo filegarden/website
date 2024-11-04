@@ -52,7 +52,7 @@ defineProps<ButtonProps>();
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
     color: var(--input-text-color-active);
-    border-color: var(--active-border-color);
+    border-color: var(--border-color-active);
     box-shadow:
       inset 0 0 0.5em (-$border-width) var(--border-color),
       2px 1px 0.75rem var(--shadow-color);
