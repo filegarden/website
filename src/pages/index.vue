@@ -66,9 +66,8 @@
   </Page>
 </template>
 
-<style scoped lang="scss">
-:global(body) {
-  background-image: radial-gradient(160vh 80vh at top, #1e3426, transparent);
+<style lang="scss">
+body {
   background-repeat: no-repeat;
 }
 

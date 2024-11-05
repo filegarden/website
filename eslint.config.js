@@ -8,8 +8,7 @@ import prettier from "eslint-config-prettier";
 import esX from "eslint-plugin-es-x";
 import security from "eslint-plugin-security";
 import ts from "typescript-eslint";
-// @ts-expect-error: This module has no type declarations.
-import vueScopedCss from "eslint-plugin-vue-scoped-css";
+import vueParser from "vue-eslint-parser";
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt([
@@ -20,10 +19,12 @@ export default withNuxt([
   security.configs.recommended,
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- This is `any` because it has no type declarations.
-  ...vueScopedCss.configs["flat/all"],
   prettier,
   {
+    languageOptions: {
+      // Nuxt already sets this, but TS overrides it, so this re-overrides TS.
+      parser: vueParser,
+    },
     plugins: {
       "@stylistic": stylistic,
     },
