@@ -20,8 +20,8 @@ defineProps<ButtonProps>();
   // Make `a` styles consistent with `button` styles.
   display: inline-block;
   text-decoration: none;
-  vertical-align: middle;
 
+  vertical-align: middle;
   line-height: 1.2;
   font-size: 1em;
   font-family: var(--font-family);
