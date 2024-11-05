@@ -1,21 +1,31 @@
 :root {
-  --font-family: "Roboto", sans-serif;
-
+  color-scheme: dark;
   --background-color: #0f1a17;
   --text-color: #f0f0f0;
-
   // An input's text should never be translucent, because that would make the
   // input appear disabled.
   --input-text-color: #e8e8e8;
   --input-text-color-hover: #f8f8f8;
   --input-text-color-active: #ffffff;
-
   --border-color: #f0f0f060;
   --border-color-hover: #f0f0f080;
   --border-color-active: #f0f0f0c0;
-
   --surface-color: #f0f0f018;
   --shadow-color: #00000029;
+}
 
-  --brand-color: #309f76;
+.theme-light {
+  color-scheme: light;
+  // TODO: Make light theme look good.
+  --background-color: #e1d5bf;
+  // Use pure black for the best contrast.
+  --text-color: #000000;
+  --input-text-color: #000000;
+  --input-text-color-hover: #101010;
+  --input-text-color-active: #181818;
+  --border-color: #f0f0f060;
+  --border-color-hover: #f0f0f080;
+  --border-color-active: #f0f0f0c0;
+  --surface-color: #ffffff40;
+  --shadow-color: #00000029;
 }

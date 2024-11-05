@@ -68,7 +68,19 @@
 
 <style lang="scss">
 body {
+  --background-gradient-color: #1e3426;
+
+  background-image: radial-gradient(
+    160vh 80vh at top,
+    var(--background-gradient-color),
+    transparent
+  );
   background-repeat: no-repeat;
+
+  .theme-light & {
+    // TODO: Find a better gradient color for light theme.
+    --background-gradient-color: transparent;
+  }
 }
 
 header {
@@ -126,6 +138,10 @@ nav .logo {
     // Reverse the transitions to uphold the prior reasoning in reverse too, and
     // so the animation is symmetrical.
     transition-timing-function: ease-in, ease-out, ease-in;
+
+    .theme-light & {
+      filter: brightness(0);
+    }
   }
 }
 

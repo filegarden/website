@@ -5,9 +5,11 @@
   font-family: var(--font-family);
   line-height: 1.2;
 
-  color-scheme: dark;
   -webkit-tap-highlight-color: transparent;
   -webkit-focus-ring-color: transparent;
+
+  --font-family: "Roboto", sans-serif;
+  --brand-color: #309f76;
 }
 
 * {
