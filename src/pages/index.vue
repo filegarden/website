@@ -109,7 +109,7 @@ nav {
 
   border-radius: 1rem;
   background-color: var(--surface-color);
-  box-shadow: 2px 1px 5px var(--shadow-color);
+  box-shadow: 2px 1px 5px var(--shadow-large-color);
   backdrop-filter: blur(1rem);
 
   // Undo the `pointer-events` set on the header.
@@ -206,7 +206,7 @@ h2 {
 
   border-radius: 1rem;
   background-color: var(--surface-color);
-  box-shadow: 2px 1px 5px var(--shadow-color);
+  box-shadow: 2px 1px 5px var(--shadow-large-color);
 }
 
 h3 {

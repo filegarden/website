@@ -32,13 +32,13 @@ input {
 
   border-radius: 0.667em;
   padding: 0.5em 0.75em;
-  background-color: #0000002c;
+  background-color: var(--input-background-color);
 
   $border-width: 0.083em;
   $box-shadow:
-    inset 1px 1px 0.25rem -1px #00000060,
-    1px 2px 1px -1px #f0f0f020,
-    2px 1px 1px -1px #f0f0f020;
+    inset 1px 1px 0.25rem -1px var(--shadow-small-color),
+    1px 2px 1px -1px var(--edge-color),
+    2px 1px 1px -1px var(--edge-color);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
@@ -54,19 +54,19 @@ input {
 
   &:hover:not(:disabled) {
     color: var(--input-text-color-hover);
-    outline-color: #f0f0f030;
+    outline-color: var(--outline-color-hover);
     box-shadow:
       $box-shadow,
-      0 0 0.4em -0.2em var(--border-color);
+      0 0 0.4em -0.2em var(--glow-color);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
     color: var(--input-text-color-active);
-    outline-color: #f0f0f0a0;
+    outline-color: var(--outline-color-active);
     box-shadow:
       $box-shadow,
-      0 0 0.4em var(--border-color);
+      0 0 0.4em var(--glow-color);
   }
 
   &:disabled {

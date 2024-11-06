@@ -34,8 +34,8 @@ defineProps<ButtonProps>();
 
   $border-width: 0.083em;
   $box-shadow:
-    inset 0 2px 1px -1px #f0f0f020,
-    inset 2px 0 1px -1px #f0f0f020;
+    inset 0 2px 1px -1px var(--edge-color),
+    inset 2px 0 1px -1px var(--edge-color);
 
   border: none;
   outline: $border-width solid transparent;
@@ -43,7 +43,7 @@ defineProps<ButtonProps>();
   margin: $border-width;
   box-shadow:
     $box-shadow,
-    1px 1px 0.25rem -1px #00000060;
+    1px 1px 0.25rem -1px var(--shadow-small-color);
 
   white-space: nowrap;
   overflow: hidden;
@@ -53,21 +53,21 @@ defineProps<ButtonProps>();
 
   &:hover:not(:disabled) {
     color: var(--input-text-color-hover);
-    outline-color: #f0f0f030;
+    outline-color: var(--outline-color-hover);
     box-shadow:
       $box-shadow,
-      2px 1px 0.375rem #00000050,
-      inset 0 0 0.5em -0.2em var(--border-color);
+      2px 1px 0.375rem var(--shadow-medium-color),
+      inset 0 0 0.5em -0.2em var(--glow-color);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
     color: var(--input-text-color-active);
-    outline-color: #f0f0f0b0;
+    outline-color: var(--outline-color-active);
     box-shadow:
       $box-shadow,
-      2px 1px 0.75rem #00000050,
-      inset 0 0 0.5em var(--border-color);
+      2px 1px 0.75rem var(--shadow-medium-color),
+      inset 0 0 0.5em var(--glow-color);
   }
 
   &:disabled {
