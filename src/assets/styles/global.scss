@@ -34,16 +34,14 @@ input {
   padding: 0.5em 0.75em;
   background-color: var(--input-background-color);
 
-  $border-width: 0.083em;
   $box-shadow:
-    inset 1px 1px 0.25rem -1px var(--shadow-small-color),
-    1px 2px 1px -1px var(--edge-color),
-    2px 1px 1px -1px var(--edge-color);
+    1px 1px var(--edge-color),
+    inset 1px 1px 0.25rem -1px var(--shadow-small-color);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
-  outline: $border-width solid transparent;
-  margin: $border-width;
+  outline: 1px solid transparent;
+  margin: 1px;
   box-shadow: $box-shadow;
 
   white-space: nowrap;
