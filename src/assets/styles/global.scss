@@ -22,3 +22,54 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
 }
+
+input {
+  vertical-align: middle;
+  line-height: 1.2;
+  font-size: 1em;
+  font-family: var(--font-family);
+  color: var(--input-text-color);
+
+  border-radius: 0.667em;
+  padding: 0.5em 0.75em;
+  background-color: #0000002c;
+
+  $border-width: 0.083em;
+  $box-shadow:
+    inset 1px 1px 0.25rem -1px #00000060,
+    1px 2px 1px -1px #f0f0f020,
+    2px 1px 1px -1px #f0f0f020;
+
+  border: none;
+  // A transparent default outline makes transitions to other outlines smoother.
+  outline: $border-width solid transparent;
+  margin: $border-width;
+  box-shadow: $box-shadow;
+
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+
+  transition: 0.1s ease-out;
+
+  &:hover:not(:disabled) {
+    color: var(--input-text-color-hover);
+    outline-color: #f0f0f030;
+    box-shadow:
+      $box-shadow,
+      0 0 0.25em (-$border-width) var(--border-color);
+  }
+
+  &:active:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    color: var(--input-text-color-active);
+    outline-color: #f0f0f0a0;
+    box-shadow:
+      $box-shadow,
+      0 0 0.5em (-$border-width) var(--border-color);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
