@@ -45,8 +45,8 @@ defineProps<ButtonProps>();
     color: var(--input-text-color-hover);
     border-color: var(--border-color-hover);
     box-shadow:
-      inset 0 0 0.25em (-$border-width) var(--border-color),
-      2px 1px 0.375rem var(--shadow-color);
+      2px 1px 0.375rem var(--shadow-color),
+      inset 0 0 0.25em (-$border-width) var(--border-color);
   }
 
   &:active:not(:disabled),
@@ -54,8 +54,8 @@ defineProps<ButtonProps>();
     color: var(--input-text-color-active);
     border-color: var(--border-color-active);
     box-shadow:
-      inset 0 0 0.5em (-$border-width) var(--border-color),
-      2px 1px 0.75rem var(--shadow-color);
+      2px 1px 0.75rem var(--shadow-color),
+      inset 0 0 0.5em (-$border-width) var(--border-color);
   }
 
   &:disabled {
