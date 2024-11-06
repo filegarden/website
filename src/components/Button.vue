@@ -27,14 +27,24 @@ defineProps<ButtonProps>();
   font-family: var(--font-family);
   color: var(--input-text-color);
 
-  $border-width: 0.083em;
-
-  padding: 0.5em 1.5em;
-  background-color: var(--surface-color);
-  border: $border-width solid var(--border-color);
   border-radius: 0.667em;
-
+  padding: 0.6em 1.5em;
+  background-color: var(--surface-color);
   cursor: pointer;
+
+  $border-width: 0.083em;
+  $box-shadow:
+    inset 0 2px 1px -1px #f0f0f020,
+    inset 2px 0 1px -1px #f0f0f020;
+
+  border: none;
+  outline: $border-width solid transparent;
+  outline-offset: -$border-width;
+  margin: $border-width;
+  box-shadow:
+    $box-shadow,
+    1px 1px 0.25rem -1px #00000060;
+
   white-space: nowrap;
   overflow: hidden;
   user-select: none;
@@ -43,19 +53,21 @@ defineProps<ButtonProps>();
 
   &:hover:not(:disabled) {
     color: var(--input-text-color-hover);
-    border-color: var(--border-color-hover);
+    outline-color: #f0f0f030;
     box-shadow:
-      2px 1px 0.375rem var(--shadow-color),
-      inset 0 0 0.25em (-$border-width) var(--border-color);
+      $box-shadow,
+      2px 1px 0.375rem #00000050,
+      inset 0 0 0.5em -0.2em var(--border-color);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
     color: var(--input-text-color-active);
-    border-color: var(--border-color-active);
+    outline-color: #f0f0f0b0;
     box-shadow:
-      2px 1px 0.75rem var(--shadow-color),
-      inset 0 0 0.5em (-$border-width) var(--border-color);
+      $box-shadow,
+      2px 1px 0.75rem #00000050,
+      inset 0 0 0.5em var(--border-color);
   }
 
   &:disabled {
