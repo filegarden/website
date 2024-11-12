@@ -40,7 +40,6 @@ defineProps<ButtonProps>();
   // A transparent default outline makes transitions to other outlines smoother.
   outline: 1px solid transparent;
   outline-offset: -1px;
-  margin: 1px;
   box-shadow:
     $box-shadow,
     1px 1px 0.25rem -1px var(--shadow-small-color);
