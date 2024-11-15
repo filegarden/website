@@ -23,7 +23,7 @@
         <p class="slogan">an open-source place to plant your file trees</p>
 
         <p class="call-to-action">
-          <Button>Upload Files</Button>
+          <Button class="call-to-action-button">Upload Files</Button>
         </p>
       </section>
 
@@ -174,7 +174,12 @@ h1 {
 
 .call-to-action {
   margin: 4rem 0;
-  font-size: 1.333rem;
+}
+
+.call-to-action-button {
+  // This must take priority over `.button` so a flash of incorrect font size
+  // can't happen depending on the order of `style` tags.
+  font-size: 1.333rem !important;
 }
 
 .advantages {
