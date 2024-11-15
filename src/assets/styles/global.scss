@@ -19,6 +19,14 @@ body {
   color: var(--text-color);
 }
 
+.panel {
+  border-radius: 1rem;
+  background-color: var(--surface-color);
+  box-shadow: 2px 1px 5px var(--shadow-large-color);
+
+  text-align: left;
+}
+
 input {
   vertical-align: middle;
   line-height: 1.2;

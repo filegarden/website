@@ -31,7 +31,7 @@
         <h2>We're better than other file hosts.</h2>
 
         <div class="advantages-content">
-          <section class="advantage">
+          <section class="panel advantage">
             <h3>Free and open.</h3>
             <p class="advantage-content">
               We're <u>open-source</u>, funded by users who choose to
@@ -39,7 +39,7 @@
             </p>
           </section>
 
-          <section class="advantage">
+          <section class="panel advantage">
             <h3>No sharing restrictions.</h3>
             <p class="advantage-content">
               Get direct permalinks to your files, and use them anywhere on the
@@ -47,14 +47,14 @@
             </p>
           </section>
 
-          <section class="advantage">
+          <section class="panel advantage">
             <h3>Full quality.</h3>
             <p class="advantage-content">
               No lossy compression or watermarks. Files are served unmodified.
             </p>
           </section>
 
-          <section class="advantage">
+          <section class="panel advantage">
             <h3>All file types supported.</h3>
             <p class="advantage-content">
               Images, videos, entire web pages, browser games, you name it.
@@ -203,10 +203,6 @@ h2 {
 .advantage {
   margin: 1.5rem;
   padding: 1rem 2rem;
-
-  border-radius: 1rem;
-  background-color: var(--surface-color);
-  box-shadow: 2px 1px 5px var(--shadow-large-color);
 }
 
 h3 {
