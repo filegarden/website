@@ -1,3 +1,11 @@
+<script setup lang="ts">
+const style = useCssModule();
+
+useHead({
+  bodyAttrs: { class: style.body },
+});
+</script>
+
 <template>
   <Page>
     <header>
@@ -66,8 +74,9 @@
   </Page>
 </template>
 
-<style lang="scss">
-body {
+<style module lang="scss">
+// This must use a style module because of nuxt/nuxt#22817.
+.body {
   --background-gradient-color: #1e3426;
 
   background-image: radial-gradient(
@@ -77,12 +86,14 @@ body {
   );
   background-repeat: no-repeat;
 
-  .theme-light & {
+  :global(.theme-light) & {
     // TODO: Find a better gradient color for light theme.
     --background-gradient-color: transparent;
   }
 }
+</style>
 
+<style lang="scss">
 header {
   position: sticky;
   top: 0;
