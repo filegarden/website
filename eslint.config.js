@@ -78,7 +78,13 @@ export default withNuxt([
           order: ["script:not([setup])", "script[setup]", "template", "style"],
         },
       ],
-      "vue/block-tag-newline": "error",
+      "vue/block-tag-newline": [
+        "error",
+        {
+          multiline: "always",
+          singleline: "always",
+        },
+      ],
       "vue/component-api-style": ["error", ["script-setup"]],
       "vue/component-name-in-template-casing": [
         "error",
