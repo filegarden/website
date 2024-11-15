@@ -27,9 +27,10 @@ useServerSeoMeta({
   </div>
 </template>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This is the global style sheet. -->
 <style lang="scss" src="~/assets/styles/global.scss"></style>
 
-<style lang="scss">
+<style scoped lang="scss">
 .app {
   height: 100%;
 }

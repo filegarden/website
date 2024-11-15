@@ -11,7 +11,7 @@ useHead({
     <header>
       <nav>
         <img
-          class="logo collapsed"
+          class="nav-logo collapsed"
           src="/assets/brand/logo.svg"
           alt="File Garden"
         />
@@ -25,7 +25,11 @@ useHead({
     <main>
       <section class="hero">
         <h1>
-          <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+          <img
+            class="hero-logo"
+            src="/assets/brand/logo.svg"
+            alt="File Garden"
+          />
         </h1>
 
         <p class="slogan">an open-source place to plant your file trees</p>
@@ -40,7 +44,7 @@ useHead({
 
         <div class="advantages-content">
           <section class="panel advantage">
-            <h3>Free and open.</h3>
+            <h3 class="advantage-heading">Free and open.</h3>
             <p class="advantage-content">
               We're <u>open-source</u>, funded by users who choose to
               <u>support us</u>.
@@ -48,7 +52,7 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3>No sharing restrictions.</h3>
+            <h3 class="advantage-heading">No sharing restrictions.</h3>
             <p class="advantage-content">
               Get direct permalinks to your files, and use them anywhere on the
               web.
@@ -56,14 +60,14 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3>Full quality.</h3>
+            <h3 class="advantage-heading">Full quality.</h3>
             <p class="advantage-content">
               No lossy compression or watermarks. Files are served unmodified.
             </p>
           </section>
 
           <section class="panel advantage">
-            <h3>All file types supported.</h3>
+            <h3 class="advantage-heading">All file types supported.</h3>
             <p class="advantage-content">
               Images, videos, entire web pages, browser games, you name it.
             </p>
@@ -74,8 +78,8 @@ useHead({
   </Page>
 </template>
 
+<!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This must use a style module because of nuxt/nuxt#22817. -->
 <style module lang="scss">
-// This must use a style module because of nuxt/nuxt#22817.
 .body {
   --background-gradient-color: #1e3426;
 
@@ -93,7 +97,7 @@ useHead({
 }
 </style>
 
-<style lang="scss">
+<style scoped lang="scss">
 header {
   position: sticky;
   top: 0;
@@ -127,7 +131,7 @@ nav {
   pointer-events: auto;
 }
 
-nav .logo {
+.nav-logo {
   height: 100%;
   vertical-align: bottom;
 
@@ -150,7 +154,8 @@ nav .logo {
     // so the animation is symmetrical.
     transition-timing-function: ease-in, ease-out, ease-in;
 
-    .theme-light & {
+    // eslint-disable-next-line vue-scoped-css/require-selector-used-inside -- See future-architect/eslint-plugin-vue-scoped-css#377.
+    :root.theme-light & {
       filter: brightness(0);
     }
   }
@@ -170,7 +175,7 @@ h1 {
   margin-top: 0;
 }
 
-.hero .logo {
+.hero-logo {
   width: clamp(60%, 500px, 90%);
   vertical-align: bottom;
 }
@@ -221,7 +226,7 @@ h2 {
   padding: 1rem 2rem;
 }
 
-h3 {
+.advantage-heading {
   font-size: 1.2em;
   margin: 0.83em 0;
 }

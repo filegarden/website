@@ -15,7 +15,7 @@ defineProps<ButtonProps>();
   </button>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .button {
   // Make `a` styles consistent with `button` styles.
   display: inline-block;

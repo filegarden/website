@@ -20,6 +20,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-es-x": "^8.1.0",
     "eslint-plugin-security": "^3.0.1",
+    "eslint-plugin-vue-scoped-css": "^2.8.1",
     "nuxt": "^3.14.159",
     "prettier": "3.3.3",
     "sass-embedded": "^1.80.7",
