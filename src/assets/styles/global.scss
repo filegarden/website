@@ -32,6 +32,12 @@ body {
   color: currentColor;
 }
 
+label {
+  display: block;
+  margin-bottom: 0.333em;
+  opacity: 0.85;
+}
+
 input {
   vertical-align: middle;
   line-height: 1.2;
