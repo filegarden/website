@@ -8,7 +8,7 @@ const props = defineProps<PageProps>();
 
 useSeoMeta({
   title: () =>
-    props.title === undefined ? "File Garden" : `${props.title} - File Garden`,
+    props.title === undefined ? "File Garden" : `${props.title} | File Garden`,
 });
 
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss -- SSR has no reactivity.
