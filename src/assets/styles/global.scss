@@ -27,6 +27,11 @@ body {
   text-align: left;
 }
 
+:link:not(:active),
+:visited:not(:active) {
+  color: currentColor;
+}
+
 input {
   vertical-align: middle;
   line-height: 1.2;
