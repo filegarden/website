@@ -22,7 +22,11 @@ const id = useId();
       <label :for="id">{{ label }}</label>
     </div>
 
-    <input :id="id" v-autofocus="autofocus" v-bind="$attrs" />
+    <div>
+      <input :id="id" v-autofocus="autofocus" v-bind="$attrs" />
+    </div>
+
+    <slot name="after"></slot>
   </div>
 </template>
 
