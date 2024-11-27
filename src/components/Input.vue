@@ -14,6 +14,8 @@ defineOptions({
 defineProps<InputProps>();
 
 const id = useId();
+
+const model = defineModel<string>();
 </script>
 
 <template>
@@ -23,7 +25,7 @@ const id = useId();
     </div>
 
     <div>
-      <input :id="id" v-autofocus="autofocus" v-bind="$attrs" />
+      <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
     </div>
 
     <slot name="after"></slot>
