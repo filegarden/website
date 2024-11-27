@@ -8,8 +8,7 @@
       <form class="panel">
         <h1>Sign Up</h1>
 
-        <label>Email</label>
-        <input v-autofocus type="email" maxlength="254" required />
+        <Input label="Email" type="email" maxlength="254" required autofocus />
 
         <Button class="submit-button" type="submit">Create Account</Button>
 
@@ -52,7 +51,7 @@ main {
 }
 
 h1 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin: 0 0 1em;
   text-align: center;
 }
