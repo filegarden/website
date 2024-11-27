@@ -35,7 +35,9 @@ useHead({
         <p class="slogan">an open-source place to plant your file trees</p>
 
         <p class="call-to-action">
-          <Button class="call-to-action-button">Upload Files</Button>
+          <Button class="call-to-action-button" href="/sign-in">
+            Upload Files
+          </Button>
         </p>
       </section>
 
