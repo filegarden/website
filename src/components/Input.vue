@@ -17,8 +17,22 @@ const id = useId();
 </script>
 
 <template>
-  <div>
-    <label :for="id">{{ label }}</label>
+  <div class="input">
+    <div class="label-wrapper">
+      <label :for="id">{{ label }}</label>
+    </div>
+
     <input :id="id" v-autofocus="autofocus" v-bind="$attrs" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.input {
+  margin: 1.25em 0;
+}
+
+.label-wrapper {
+  margin: 0.333em 1px;
+  opacity: 0.875;
+}
+</style>
