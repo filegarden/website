@@ -28,7 +28,7 @@ defineProps<ButtonProps>();
   color: var(--input-text-color);
 
   border-radius: 0.667em;
-  padding: 0.6em 1.5em;
+  padding: 0.667em 1.5em;
   background-color: var(--surface-color);
   cursor: pointer;
 
