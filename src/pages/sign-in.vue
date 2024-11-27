@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const email = ref("");
+const password = ref("");
+</script>
+
 <template>
   <Page class="page" title="Sign In">
     <main>
@@ -5,15 +10,80 @@
         <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
 
-      <form class="panel">
+      <form v-if="$route.query.for === 'existing-user'" class="panel">
+        <h1>Sign In</h1>
+
+        <Input
+          v-model="email"
+          label="Email"
+          type="email"
+          maxlength="254"
+          required
+          autofocus
+        />
+
+        <Input
+          v-model="password"
+          label="Password"
+          type="password"
+          maxlength="256"
+          required
+        >
+          <template #after>
+            <div class="forgot-password-wrapper">
+              <A href="?for=forgot-password">Forgot password?</A>
+            </div>
+          </template>
+        </Input>
+
+        <div class="submit-button-wrapper">
+          <Button type="submit">Sign In</Button>
+        </div>
+
+        <div class="panel-footer">
+          Don't have an account? <A href="?for=new-user">Sign Up</A>
+        </div>
+      </form>
+
+      <form v-else-if="$route.query.for === 'forgot-password'" class="panel">
+        <h1>Forgot Password</h1>
+
+        <Input
+          v-model="email"
+          label="Email"
+          type="email"
+          maxlength="254"
+          required
+          autofocus
+        />
+
+        <div class="submit-button-wrapper">
+          <Button type="submit">Reset Password</Button>
+        </div>
+
+        <div class="panel-footer">
+          Already know your password? <A href="?for=existing-user">Sign In</A>
+        </div>
+      </form>
+
+      <form v-else class="panel">
         <h1>Sign Up</h1>
 
-        <Input label="Email" type="email" maxlength="254" required autofocus />
+        <Input
+          v-model="email"
+          label="Email"
+          type="email"
+          maxlength="254"
+          required
+          autofocus
+        />
 
-        <Button class="submit-button" type="submit">Create Account</Button>
+        <div class="submit-button-wrapper">
+          <Button type="submit">Create Account</Button>
+        </div>
 
-        <div class="form-type-nav">
-          Already have an account? <A href="#">Sign In</A>
+        <div class="panel-footer">
+          Already have an account? <A href="?for=existing-user">Sign In</A>
         </div>
       </form>
     </main>
@@ -56,11 +126,22 @@ h1 {
   text-align: center;
 }
 
-.submit-button {
-  margin: 1.25em 0;
+.forgot-password-wrapper {
+  text-align: right;
+  margin: 0.667em 1px;
+
+  font-size: 0.75em;
+  opacity: 0.667;
+
+  // Don't let this add too much awkward empty space below the password input.
+  height: 0;
 }
 
-.form-type-nav {
+.submit-button-wrapper {
+  margin: 1.25em 0 2em;
+}
+
+.panel-footer {
   font-size: 0.875em;
   opacity: 0.875;
 }
