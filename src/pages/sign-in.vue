@@ -9,7 +9,7 @@
         <h1>Sign Up</h1>
 
         <label>Email</label>
-        <input v-autofocus type="email" required />
+        <input v-autofocus type="email" maxlength="254" required />
 
         <Button class="submit-button" type="submit">Create Account</Button>
 
