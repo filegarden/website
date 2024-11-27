@@ -58,7 +58,7 @@ const password = ref("");
         />
 
         <div class="submit-button-wrapper">
-          <Button type="submit">Reset Password</Button>
+          <Button type="submit">Request Password Reset</Button>
         </div>
 
         <div class="panel-footer">
