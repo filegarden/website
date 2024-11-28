@@ -6,9 +6,11 @@ const password = ref("");
 <template>
   <Page class="page" title="Sign In">
     <main>
-      <A class="logo-wrapper" href="/">
-        <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
-      </A>
+      <div class="top-space">
+        <A href="/">
+          <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+        </A>
+      </div>
 
       <form v-if="$route.query.for === 'existing-user'" class="panel">
         <h1>Sign In</h1>
@@ -86,11 +88,15 @@ const password = ref("");
           Already have an account? <A href="?for=existing-user">Sign In</A>
         </div>
       </form>
+
+      <div class="bottom-space"></div>
     </main>
   </Page>
 </template>
 
 <style scoped lang="scss">
+$panel-width: 480px;
+
 main {
   position: absolute;
   width: 100%;
@@ -100,24 +106,43 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  & > * {
+    // This vertically centers the panel.
+    flex-grow: 1;
+    flex-basis: 0;
+  }
 }
 
-.logo-wrapper {
+.top-space {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  text-align: center;
   font-size: 0;
+
+  @media (max-width: $panel-width) {
+    flex-grow: 0;
+  }
 }
 
 .logo {
-  $height: 3rem;
-  height: $height;
-  // Don't let the logo push the panel off-center.
-  margin-top: -$height;
+  max-width: 90vw;
+  height: 3rem;
+  margin: 2rem 0;
 }
 
 .panel {
   box-sizing: border-box;
-  width: 480px;
-  margin: 2rem;
+  width: $panel-width;
+  max-width: 100%;
   padding: 2rem;
+
+  @media (max-width: $panel-width) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 h1 {
@@ -144,5 +169,11 @@ h1 {
 .panel-footer {
   font-size: 0.875em;
   opacity: 0.875;
+}
+
+.bottom-space {
+  @media (max-width: $panel-width) {
+    display: none;
+  }
 }
 </style>
