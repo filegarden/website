@@ -5,14 +5,14 @@ const password = ref("");
 
 <template>
   <Page class="page" title="Sign In">
-    <main>
-      <div class="space-around-panel top-space">
-        <A href="/">
-          <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
-        </A>
-      </div>
+    <header class="space-around-panel">
+      <A href="/">
+        <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
+      </A>
+    </header>
 
-      <form v-if="$route.query.for === 'existing-user'" class="panel">
+    <main class="panel">
+      <form v-if="$route.query.for === 'existing-user'">
         <h1>Sign In</h1>
 
         <Input
@@ -47,7 +47,7 @@ const password = ref("");
         </div>
       </form>
 
-      <form v-else-if="$route.query.for === 'forgot-password'" class="panel">
+      <form v-else-if="$route.query.for === 'forgot-password'">
         <h1>Forgot Password</h1>
 
         <Input
@@ -68,7 +68,7 @@ const password = ref("");
         </div>
       </form>
 
-      <form v-else class="panel">
+      <form v-else>
         <h1>Sign Up</h1>
 
         <Input
@@ -88,16 +88,16 @@ const password = ref("");
           Already have an account? <A href="?for=existing-user">Sign In</A>
         </div>
       </form>
-
-      <div class="space-around-panel"></div>
     </main>
+
+    <div class="space-around-panel"></div>
   </Page>
 </template>
 
 <style scoped lang="scss">
 $panel-width: 480px;
 
-main {
+.page {
   position: absolute;
   width: 100%;
   min-height: 100%;
@@ -118,7 +118,7 @@ main {
   }
 }
 
-.top-space {
+header {
   display: flex;
   align-items: flex-end;
   justify-content: center;
