@@ -6,7 +6,7 @@ const password = ref("");
 <template>
   <Page class="page" title="Sign In">
     <main>
-      <div class="top-space">
+      <div class="space-around-panel top-space">
         <A href="/">
           <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
         </A>
@@ -89,7 +89,7 @@ const password = ref("");
         </div>
       </form>
 
-      <div class="bottom-space"></div>
+      <div class="space-around-panel"></div>
     </main>
   </Page>
 </template>
@@ -106,11 +106,15 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
 
-  & > * {
+.space-around-panel {
+  @media not (max-width: $panel-width) {
     // This vertically centers the panel.
+
     flex-grow: 1;
-    flex-basis: 0;
+    // This is the minimum space above and below the panel.
+    flex-basis: 2rem;
   }
 }
 
@@ -121,10 +125,6 @@ main {
 
   text-align: center;
   font-size: 0;
-
-  @media (max-width: $panel-width) {
-    flex-grow: 0;
-  }
 }
 
 .logo {
@@ -140,6 +140,7 @@ main {
   padding: 2rem;
 
   @media (max-width: $panel-width) {
+    flex-grow: 1;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -169,11 +170,5 @@ h1 {
 .panel-footer {
   font-size: 0.875em;
   opacity: 0.875;
-}
-
-.bottom-space {
-  @media (max-width: $panel-width) {
-    display: none;
-  }
 }
 </style>
