@@ -64,7 +64,7 @@ const password = ref("");
         </div>
 
         <div class="panel-footer">
-          Already know your password? <A href="?for=existing-user">Sign In</A>
+          <A href="?for=existing-user">Back to Sign In</A>
         </div>
       </form>
 
