@@ -14,5 +14,14 @@ export default defineNuxtConfig({
         },
       },
     },
+
+    server: {
+      hmr: {
+        // The backend's reverse proxy can't handle WebSocket traffic, which HMR
+        // uses. This tells HMR to connect directly to Nuxt's port for WebSocket
+        // traffic instead of going through the reverse proxy.
+        clientPort: 3000,
+      },
+    },
   },
 });
