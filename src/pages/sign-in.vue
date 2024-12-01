@@ -142,6 +142,7 @@ header {
   align-items: flex-end;
   justify-content: center;
 
+  padding: 2rem 0;
   text-align: center;
   font-size: 0;
 }
@@ -149,7 +150,6 @@ header {
 .logo {
   max-width: 90vw;
   height: 3rem;
-  margin: 2rem 0;
 }
 
 .panel {
