@@ -20,7 +20,7 @@ async function submitSignUp() {
 <template>
   <Page class="page" title="Sign In">
     <header class="space-around-panel">
-      <A href="/">
+      <A class="logo-wrapper" href="/">
         <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
     </header>
@@ -142,9 +142,12 @@ header {
   align-items: flex-end;
   justify-content: center;
 
-  padding: 2rem 0;
   text-align: center;
   font-size: 0;
+}
+
+.logo-wrapper {
+  margin: 2rem 0;
 }
 
 .logo {
