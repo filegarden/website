@@ -26,6 +26,8 @@ async function submitSignUp() {
     </header>
 
     <main class="panel">
+      <LoadingIndicator v-if="submitting"></LoadingIndicator>
+
       <form v-if="$route.query.for === 'existing-user'" :inert="submitting">
         <h1>Sign In</h1>
 
