@@ -32,6 +32,11 @@ body {
   color: currentColor;
 }
 
+[inert] {
+  opacity: 0.5;
+  transition: 0.2s ease-out opacity;
+}
+
 input {
   vertical-align: middle;
   line-height: 1.2;
