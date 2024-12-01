@@ -1,30 +1,41 @@
 <template>
-  <div class="loading-indicator">
-    <div class="loading-bar-wrapper loading-bar-wrapper-1">
-      <div class="loading-bar loading-bar-1"></div>
-    </div>
-    <div class="loading-bar-wrapper loading-bar-wrapper-2">
-      <div class="loading-bar loading-bar-2"></div>
+  <div class="loading-indicator-wrapper">
+    <div class="loading-indicator">
+      <div class="loading-bar-wrapper loading-bar-wrapper-1">
+        <div class="loading-bar loading-bar-1"></div>
+      </div>
+      <div class="loading-bar-wrapper loading-bar-wrapper-2">
+        <div class="loading-bar loading-bar-2"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.loading-indicator {
+// Don't indicate loading unless it takes longer than this duration to load.
+// Loading feels slower when it's shown for a short time.
+$animation-delay: 1s;
+
+.loading-indicator-wrapper {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  border-radius: inherit;
-  overflow: hidden;
 
+  border-radius: inherit;
+  // `hidden` would make the indicator stick to this element instead of the
+  // viewport.
+  overflow: clip;
+
+  z-index: 10;
   pointer-events: none;
 }
 
-// Don't indicate loading unless it takes longer than this duration to load.
-// Loading feels slower when it's shown for a short time.
-$animation-delay: 1s;
+.loading-indicator {
+  position: sticky;
+  top: 0;
+}
 
 .loading-bar-wrapper {
   position: absolute;
