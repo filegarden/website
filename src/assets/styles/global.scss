@@ -20,6 +20,9 @@ body {
 }
 
 .panel {
+  // Let descendants be positioned relative to panels.
+  position: relative;
+
   border-radius: 1rem;
   background-color: var(--surface-color);
   box-shadow: 2px 1px 5px var(--shadow-large-color);
