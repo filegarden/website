@@ -1,6 +1,20 @@
 <script setup lang="ts">
 const email = ref("");
 const password = ref("");
+
+const submitting = ref(false);
+
+async function submitSignUp() {
+  submitting.value = true;
+
+  await api
+    .post(`/email-verification`, {
+      email: email.value,
+    })
+    .finally(() => {
+      submitting.value = false;
+    });
+}
 </script>
 
 <template>
@@ -12,7 +26,7 @@ const password = ref("");
     </header>
 
     <main class="panel">
-      <form v-if="$route.query.for === 'existing-user'">
+      <form v-if="$route.query.for === 'existing-user'" :inert="submitting">
         <h1>Sign In</h1>
 
         <Input
@@ -47,7 +61,10 @@ const password = ref("");
         </div>
       </form>
 
-      <form v-else-if="$route.query.for === 'forgot-password'">
+      <form
+        v-else-if="$route.query.for === 'forgot-password'"
+        :inert="submitting"
+      >
         <h1>Forgot Password</h1>
 
         <Input
@@ -68,7 +85,7 @@ const password = ref("");
         </div>
       </form>
 
-      <form v-else>
+      <form v-else :inert="submitting" @submit.prevent="submitSignUp">
         <h1>Sign Up</h1>
 
         <Input
