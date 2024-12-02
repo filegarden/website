@@ -35,7 +35,7 @@ onBeforeRouteLeave(clearErrorBoxes);
 
   display: flex;
   box-sizing: border-box;
-  padding: 1.5em;
+  padding: 1.5rem;
 
   // The scrollable element must fill the page so its content isn't clipped.
   width: 100%;

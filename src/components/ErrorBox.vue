@@ -35,7 +35,7 @@ function close() {
 .error-box {
   box-sizing: border-box;
   width: 100%;
-  padding: 1.25em;
+  padding: 1.25rem;
 
   background-color: var(--error-color);
   box-shadow: 0 0 2rem var(--error-glow-color);
@@ -45,13 +45,13 @@ function close() {
   pointer-events: auto;
 
   &:not(:first-child) {
-    margin-top: 1.25em;
+    margin-top: 1.25rem;
   }
 }
 
 p {
   margin: 0;
-  padding: 0.25em 0;
+  padding: 0.25rem 0;
 }
 
 .error-details,
