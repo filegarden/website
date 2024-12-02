@@ -51,6 +51,7 @@ p {
 }
 
 code {
+  font-size: 0.875em;
   opacity: 0.667;
 }
 
