@@ -19,9 +19,7 @@ function close() {
   <div class="error-box panel">
     <Button class="close-button" title="Close" @click="close" />
 
-    <p class="error-message">
-      {{ value.message || "Unknown error" }}
-    </p>
+    <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
 
     <p v-if="value.details" class="error-details">
       {{ value.details }}
