@@ -1,3 +1,7 @@
+<script setup lang="ts">
+useLeaveConfirmation(true);
+</script>
+
 <template>
   <div class="loading-indicator-wrapper">
     <div class="loading-indicator">
