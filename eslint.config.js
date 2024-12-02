@@ -13,14 +13,11 @@ import vueScopedCss from "eslint-plugin-vue-scoped-css";
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt([
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- This is `any` because it has no type declarations.
   comments.recommended,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- This is `any` because it has no type declarations.
   esX.configs["flat/restrict-to-es2020"],
   security.configs.recommended,
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- This is `any` because it has no type declarations.
   ...vueScopedCss.configs["flat/all"],
   prettier,
   {
@@ -34,6 +31,18 @@ export default withNuxt([
       // For the same reason our Prettier config mustn't be modified, be
       // extremely hesitant to disable or overwrite rules. Every rule in this
       // region should be explained by a comment above.
+
+      // If I'm explicitly choosing to use `any`, I've already decided to use it
+      // and shouldn't have to re-decide that every time I interact with it.
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+
+      // These are far too strict and barely useful.
+      "@typescript-eslint/restrict-plus-operands": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
 
       // We use a compiler, so this rule has little benefit, making templates
       // more noisy and hard to read as quickly due to less concise component
