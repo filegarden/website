@@ -8,6 +8,13 @@ const LEAVE_CONFIRMATION_MESSAGE =
 export default function useLeaveConfirmation(
   enabled: MaybeRefOrGetter<boolean>,
 ) {
+  const leaveConfirmation = { enabled };
+  const leaveConfirmations = useState<(typeof leaveConfirmation)[]>(() =>
+    // This is shallow because the contents of the array don't need reactivity
+    // (and making them reactive would change their identities).
+    shallowRef([]),
+  );
+
   function handleBeforeUnload(event: BeforeUnloadEvent) {
     if (!enabled) {
       return;
@@ -17,22 +24,36 @@ export default function useLeaveConfirmation(
   }
 
   onMounted(() => {
+    leaveConfirmations.value.push(leaveConfirmation);
+
     window.addEventListener("beforeunload", handleBeforeUnload);
   });
 
   onUnmounted(() => {
+    leaveConfirmations.value.splice(
+      leaveConfirmations.value.indexOf(leaveConfirmation),
+      1,
+    );
+
     window.removeEventListener("beforeunload", handleBeforeUnload);
   });
 
-  onBeforeRouteLeave((to, from) => {
-    if (
-      toValue(enabled) &&
-      // Ensure it's a different route, and not just different parameters on the
-      // same route. State is preserved when only the parameters change, so the
-      // user wouldn't need to confirm leaving the previous state.
-      to.name !== from.name &&
-      !confirm(LEAVE_CONFIRMATION_MESSAGE)
-    ) {
+  onBeforeRouteLeave(() => {
+    if (!toValue(enabled)) {
+      return;
+    }
+
+    const firstEnabledLeaveConfirmation = leaveConfirmations.value.find((one) =>
+      toValue(one.enabled),
+    );
+
+    // If there are multiple leave confirmations, this ensures only one of them
+    // prompts the user for confirmation.
+    if (leaveConfirmation !== firstEnabledLeaveConfirmation) {
+      return;
+    }
+
+    if (!confirm(LEAVE_CONFIRMATION_MESSAGE)) {
       return false;
     }
   });
