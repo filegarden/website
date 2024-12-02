@@ -19,6 +19,9 @@ useServerSeoMeta({
 
 <template>
   <div class="page">
+    <!-- This is at the start of the page so it's tabbed to first. -->
+    <ErrorBoxes />
+
     <slot></slot>
   </div>
 </template>
