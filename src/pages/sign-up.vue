@@ -20,17 +20,19 @@ async function submitSignUp() {
   <FormPage title="Sign Up">
     <LoadingIndicator v-if="loading"></LoadingIndicator>
 
-    <form :inert="loading" @submit.prevent="submitSignUp">
-      <Input
-        v-model="email"
-        label="Email"
-        type="email"
-        maxlength="254"
-        required
-        autofocus
-      />
+    <form @submit.prevent="submitSignUp">
+      <fieldset :disabled="loading">
+        <Input
+          v-model="email"
+          label="Email"
+          type="email"
+          maxlength="254"
+          required
+          autofocus
+        />
 
-      <Button type="submit">Create Account</Button>
+        <Button type="submit">Create Account</Button>
+      </fieldset>
     </form>
 
     <template #bottom-text>

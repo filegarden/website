@@ -9,31 +9,33 @@ const loading = ref(false);
   <FormPage title="Sign In">
     <LoadingIndicator v-if="loading"></LoadingIndicator>
 
-    <form :inert="loading" @submit.prevent>
-      <Input
-        v-model="email"
-        label="Email"
-        type="email"
-        maxlength="254"
-        required
-        autofocus
-      />
+    <form @submit.prevent>
+      <fieldset :disabled="loading">
+        <Input
+          v-model="email"
+          label="Email"
+          type="email"
+          maxlength="254"
+          required
+          autofocus
+        />
 
-      <Input
-        v-model="password"
-        label="Password"
-        type="password"
-        maxlength="256"
-        required
-      >
-        <template #after>
-          <div class="forgot-password-wrapper">
-            <A href="/forgot-password" prefetch>Forgot password?</A>
-          </div>
-        </template>
-      </Input>
+        <Input
+          v-model="password"
+          label="Password"
+          type="password"
+          maxlength="256"
+          required
+        >
+          <template #after>
+            <div class="forgot-password-wrapper">
+              <A href="/forgot-password" prefetch>Forgot password?</A>
+            </div>
+          </template>
+        </Input>
 
-      <Button type="submit">Sign In</Button>
+        <Button type="submit">Sign In</Button>
+      </fieldset>
     </form>
 
     <template #bottom-text>
