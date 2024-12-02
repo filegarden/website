@@ -3,8 +3,6 @@ export interface ErrorBoxInfo {
   readonly key: symbol;
   /** A short description of the error. */
   message?: string;
-  /** A detailed description of the error. */
-  details?: string;
   /** Any code relating to the error. */
   code?: string;
 }

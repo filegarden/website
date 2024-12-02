@@ -21,10 +21,6 @@ function close() {
 
     <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
 
-    <p v-if="value.details" class="error-details">
-      {{ value.details }}
-    </p>
-
     <p v-if="value.code">
       <code>{{ value.code }}</code>
     </p>
@@ -54,7 +50,6 @@ p {
   padding: 0.25rem 0;
 }
 
-.error-details,
 code {
   opacity: 0.667;
 }
