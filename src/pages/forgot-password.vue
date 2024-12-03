@@ -5,7 +5,7 @@ const loading = ref(false);
 </script>
 
 <template>
-  <FormPage title="Forgot Password">
+  <SinglePanelPage title="Forgot Password">
     <LoadingIndicator v-if="loading"></LoadingIndicator>
 
     <form @submit.prevent>
@@ -26,5 +26,5 @@ const loading = ref(false);
     <template #bottom-text>
       <A href="/sign-in" prefetch>Back to Sign In</A>
     </template>
-  </FormPage>
+  </SinglePanelPage>
 </template>

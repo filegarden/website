@@ -6,7 +6,7 @@ const loading = ref(false);
 </script>
 
 <template>
-  <FormPage title="Sign In">
+  <SinglePanelPage title="Sign In">
     <LoadingIndicator v-if="loading"></LoadingIndicator>
 
     <form @submit.prevent>
@@ -41,7 +41,7 @@ const loading = ref(false);
     <template #bottom-text>
       Don't have an account? <A href="/sign-up" prefetch>Sign Up</A>
     </template>
-  </FormPage>
+  </SinglePanelPage>
 </template>
 
 <style scoped lang="scss">

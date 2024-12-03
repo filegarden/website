@@ -1,10 +1,10 @@
 <script setup lang="ts">
-export interface FormPageProps {
+export interface SinglePanelPageProps {
   /** The name of this page. */
   title: string;
 }
 
-defineProps<FormPageProps>();
+defineProps<SinglePanelPageProps>();
 </script>
 
 <template>
