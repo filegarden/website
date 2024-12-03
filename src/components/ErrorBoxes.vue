@@ -9,33 +9,52 @@ onBeforeRouteLeave(clearErrorBoxes);
 </script>
 
 <template>
-  <div v-if="errorBoxes.value.length" class="error-boxes-wrapper">
-    <div class="error-boxes">
-      <div v-if="errorBoxes.value.length >= 2" class="clear-button-wrapper">
-        <Button class="clear-button" @click="clearErrorBoxes">
-          Clear All {{ errorBoxes.value.length }} Errors
-        </Button>
-      </div>
+  <div v-if="errorBoxes.value.length" class="error-boxes">
+    <div
+      v-if="errorBoxes.value.length >= 2"
+      class="error-boxes-section clear-button-wrapper"
+    >
+      <Button class="clear-button" @click="clearErrorBoxes">
+        Clear All {{ errorBoxes.value.length }} Errors
+      </Button>
+    </div>
 
-      <ErrorBox
-        v-for="errorBox in errorBoxes.value"
-        :key="errorBox.key"
-        :value="errorBox"
-      />
+    <div class="error-boxes-section error-boxes-above-the-fold">
+      <!--
+        We don't want to cover the screen with errors unless the user scrolls
+        down, so show only the first one above the fold.
+      -->
+      <ErrorBox :value="errorBoxes.value[0]!" />
+    </div>
+
+    <div
+      v-if="errorBoxes.value.length >= 2"
+      class="error-boxes-section error-boxes-below-the-fold-wrapper"
+    >
+      <div class="error-boxes-below-the-fold">
+        <ErrorBox
+          v-for="errorBox in errorBoxes.value.slice(1)"
+          :key="errorBox.key"
+          :value="errorBox"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.error-boxes-wrapper {
+$error-boxes-padding: 1.5rem;
+
+.error-boxes {
   position: fixed;
   right: 0;
   bottom: 0;
   z-index: 1000;
 
   display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  padding: 1.5rem;
+  padding: $error-boxes-padding;
 
   // The scrollable element must fill the page so its content isn't clipped.
   width: 100%;
@@ -48,12 +67,16 @@ onBeforeRouteLeave(clearErrorBoxes);
   pointer-events: none;
 }
 
-.error-boxes {
+.error-boxes-section {
+  pointer-events: auto;
+
   width: 360px;
   max-width: 100%;
-  margin: auto 0 0 auto;
+  margin-left: auto;
 
-  pointer-events: auto;
+  &:first-child {
+    margin-top: auto;
+  }
 }
 
 .clear-button-wrapper {
@@ -61,10 +84,22 @@ onBeforeRouteLeave(clearErrorBoxes);
   top: 0;
   z-index: 1;
 
+  // This uses padding rather than margin because padding accepts pointer
+  // events, letting you scroll when hovered over.
+  padding-bottom: 1.25rem;
+
   text-align: center;
 }
 
 .clear-button {
   backdrop-filter: blur(1rem);
+}
+
+.error-boxes-below-the-fold-wrapper {
+  height: 0;
+}
+
+.error-boxes-below-the-fold {
+  padding: 1.25rem 0 $error-boxes-padding;
 }
 </style>
