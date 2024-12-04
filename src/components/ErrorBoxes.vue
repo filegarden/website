@@ -93,6 +93,7 @@ $error-boxes-padding: 1.5rem;
 
 .clear-button {
   backdrop-filter: blur(1rem);
+  animation: 0.1s fade-in;
 }
 
 .error-boxes-below-the-fold-wrapper {

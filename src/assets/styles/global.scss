@@ -91,3 +91,13 @@ input {
     opacity: 0.5;
   }
 }
+
+@keyframes fade-in {
+  from {
+    animation-timing-function: ease;
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

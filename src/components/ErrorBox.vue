@@ -37,6 +37,7 @@ function close() {
   box-shadow: 0 0 2rem var(--error-glow-color);
   color: var(--error-text-color);
   backdrop-filter: blur(1rem);
+  animation: 0.125s fade-in;
 
   pointer-events: auto;
 
