@@ -16,7 +16,7 @@ export default function useLeaveConfirmation(
   );
 
   function handleBeforeUnload(event: BeforeUnloadEvent) {
-    if (!enabled) {
+    if (!toValue(enabled)) {
       return;
     }
 
