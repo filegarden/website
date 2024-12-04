@@ -39,6 +39,10 @@ $animation-delay: 1s;
 .loading-indicator {
   position: sticky;
   top: 0;
+
+  // Animating color inherited from a single parent node ensures child colors
+  // stay in sync.
+  animation: 13s changing-colors infinite linear;
 }
 
 .loading-bar-wrapper {
@@ -52,14 +56,20 @@ $animation-delay: 1s;
   top: -3px;
   height: 4px;
 
-  // Overlap the color twice for more opacity without a new CSS variable.
-  background-color: var(--outline-color-active);
-  background-image: linear-gradient(
-    var(--outline-color-active),
-    var(--outline-color-active)
-  );
+  background-color: currentColor;
+  box-shadow: 0 0 20px currentColor;
+}
 
-  box-shadow: 0 0 20px var(--outline-color-active);
+@keyframes changing-colors {
+  0%,
+  10%,
+  100% {
+    color: var(--brand-color);
+  }
+  50%,
+  60% {
+    color: var(--brand-color-2);
+  }
 }
 
 /*
