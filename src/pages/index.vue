@@ -232,8 +232,4 @@ h2 {
   font-size: 1.2em;
   margin: 0.83em 0;
 }
-
-.advantage-content {
-  line-height: 1.5;
-}
 </style>

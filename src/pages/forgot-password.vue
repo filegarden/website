@@ -24,7 +24,9 @@ const loading = ref(false);
     </form>
 
     <template #bottom-text>
-      <A href="/sign-in" prefetch>Back to Sign In</A>
+      <p>
+        <A href="/sign-in" prefetch>Back to Sign In</A>
+      </p>
     </template>
   </SinglePanelPage>
 </template>

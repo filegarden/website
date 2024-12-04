@@ -21,6 +21,10 @@ body {
   color: var(--text-color);
 }
 
+p {
+  line-height: 1.5;
+}
+
 .panel {
   // Let descendants be positioned relative to panels.
   position: relative;

@@ -39,7 +39,7 @@ const loading = ref(false);
     </form>
 
     <template #bottom-text>
-      Don't have an account? <A href="/sign-up" prefetch>Sign Up</A>
+      <p>Don't have an account? <A href="/sign-up" prefetch>Sign up</A></p>
     </template>
   </SinglePanelPage>
 </template>

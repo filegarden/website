@@ -36,7 +36,7 @@ async function submitSignUp() {
     </form>
 
     <template #bottom-text>
-      Already have an account? <A href="/sign-in" prefetch>Sign In</A>
+      <p>Already have an account? <A href="/sign-in" prefetch>Sign in</A></p>
     </template>
   </SinglePanelPage>
 </template>

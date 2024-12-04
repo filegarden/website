@@ -95,5 +95,9 @@ h1 {
 
   font-size: 0.875em;
   opacity: 0.875;
+
+  :deep(p:last-child) {
+    margin-bottom: 0;
+  }
 }
 </style>
