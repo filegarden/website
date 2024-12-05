@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isAxiosError } from "axios";
 import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
 const page = ref<"email" | "verification-sent" | "code">("email");
@@ -28,17 +29,52 @@ function openCodePage() {
 }
 
 const code = ref("");
+const codeIncorrect = ref(false);
+
+watch(page, () => {
+  // This sensitive data needn't be saved outside the page it was entered on.
+  code.value = "";
+});
+
+watch(code, (code) => {
+  if (code !== "") {
+    codeIncorrect.value = false;
+  }
+});
+
+async function submitCode(event: Event) {
+  loading.value = true;
+
+  try {
+    await api
+      .get("/email-verification", {
+        params: {
+          email: email.value,
+          code: code.value.toUpperCase(),
+        },
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data?.code === "RESOURCE_NOT_FOUND"
+    ) {
+      codeIncorrect.value = true;
+
+      const form = event.target as HTMLFormElement;
+      form.getElementsByTagName("input")[0]?.select();
+      return;
+    }
+
+    throw error;
+  }
+}
 
 function tryAgain() {
   page.value = "email";
 }
-
-watchEffect(() => {
-  if (page.value !== "code") {
-    // This sensitive data needn't be saved outside the page it was entered on.
-    code.value = "";
-  }
-});
 </script>
 
 <template>
@@ -73,8 +109,8 @@ watchEffect(() => {
         <strong>{{ email }}</strong>
       </p>
 
-      <form class="code-form" @submit.prevent>
-        <fieldset class="code-input-section">
+      <form class="code-form" @submit.prevent="submitCode">
+        <fieldset class="code-input-section" :disabled="loading">
           <ShortCodeInput
             v-model="code"
             class="code-input"
@@ -82,6 +118,10 @@ watchEffect(() => {
             required
             autofocus
           />
+
+          <p v-if="codeIncorrect" class="code-incorrect">
+            That verification code is incorrect.
+          </p>
 
           <Button type="submit" :disabled="code.length !== SHORT_CODE_LENGTH">
             Verify
@@ -130,5 +170,9 @@ watchEffect(() => {
 
 :deep(.code-input) {
   font-size: min(3em, 10vw);
+}
+
+.code-incorrect {
+  color: var(--invalid-text-color);
 }
 </style>
