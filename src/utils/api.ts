@@ -1,3 +1,4 @@
+import type { AxiosError } from "axios";
 import axios from "axios";
 
 const api = axios.create({
@@ -26,6 +27,8 @@ function handleError(error: AxiosError) {
       message: error.message,
     });
   }
+
+  return Promise.reject(error);
 }
 
 export default api;
