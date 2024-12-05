@@ -21,7 +21,7 @@ function close() {
 
     <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
 
-    <p v-if="value.code">
+    <p v-if="value.code" class="error-code">
       <code>{{ value.code }}</code>
     </p>
   </div>
@@ -49,6 +49,10 @@ function close() {
 p {
   margin: 0;
   padding: 0.25rem 0;
+}
+
+.error-code {
+  line-height: 1.2;
 }
 
 code {
