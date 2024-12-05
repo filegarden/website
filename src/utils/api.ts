@@ -10,18 +10,15 @@ const api = axios.create({
 api.interceptors.request.use(undefined, handleError);
 api.interceptors.response.use(undefined, handleError);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Using `unknown` here requires many extraneous checks.
-function handleError(error: any) {
+function handleError(error: AxiosError) {
   const errorBoxes = useErrorBoxes();
-
-  console.error(error);
 
   if (error.response) {
     errorBoxes.open({
       message: error.response.status + " " + error.response.statusText,
       code:
-        typeof error.response?.data === "object"
-          ? JSON.stringify(error.response?.data)
+        typeof error.response.data === "object"
+          ? JSON.stringify(error.response.data)
           : undefined,
     });
   } else {
