@@ -85,6 +85,7 @@ useHead({
 .body {
   --background-gradient-color: #1e3426;
 
+  background-position: 0 -1rem;
   background-image: radial-gradient(
     160vh 80vh at top,
     var(--background-gradient-color),
