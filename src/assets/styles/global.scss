@@ -31,7 +31,7 @@ p {
 
   border-radius: 1rem;
   background-color: var(--surface-color);
-  box-shadow: 2px 1px 5px var(--shadow-large-color);
+  box-shadow: 0 4px 8px var(--shadow-large-color);
 
   text-align: left;
 }
@@ -60,8 +60,8 @@ input {
   background-color: var(--input-background-color);
 
   $box-shadow:
-    1px 1px var(--edge-color),
-    inset 1px 1px 0.25rem -1px var(--shadow-small-color);
+    0 1px var(--edge-color),
+    inset 0 1px 0.25rem -1px var(--shadow-small-color);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.

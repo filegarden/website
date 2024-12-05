@@ -9,7 +9,7 @@ useHead({
 <template>
   <Page>
     <header>
-      <nav>
+      <nav class="panel">
         <img
           class="nav-logo collapsed"
           src="/assets/brand/logo.svg"
@@ -124,13 +124,10 @@ nav {
   justify-content: space-between;
   overflow: hidden;
 
-  border-radius: 1rem;
-  background-color: var(--surface-color);
-  box-shadow: 2px 1px 5px var(--shadow-large-color);
-  backdrop-filter: blur(1rem);
-
   // Undo the `pointer-events` set on the header.
   pointer-events: auto;
+
+  backdrop-filter: blur(1rem);
 }
 
 .nav-logo {

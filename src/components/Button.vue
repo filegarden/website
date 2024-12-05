@@ -32,9 +32,7 @@ defineProps<ButtonProps>();
   background-color: var(--surface-color);
   cursor: pointer;
 
-  $box-shadow:
-    inset 0 2px 0 -1px var(--edge-color),
-    inset 2px 0 0 -1px var(--edge-color);
+  $box-shadow: inset 0 2px 0 -1px var(--edge-color);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
@@ -42,7 +40,7 @@ defineProps<ButtonProps>();
   outline-offset: -1px;
   box-shadow:
     $box-shadow,
-    1px 1px 0.25rem -1px var(--shadow-small-color);
+    0 1px 0.25rem -1px var(--shadow-small-color);
 
   white-space: nowrap;
   overflow: hidden;
@@ -55,7 +53,7 @@ defineProps<ButtonProps>();
     outline-color: var(--outline-color-hover);
     box-shadow:
       $box-shadow,
-      2px 1px 0.375rem var(--shadow-medium-color),
+      0 2px 0.375rem var(--shadow-medium-color),
       inset 0 0 0.5em -0.2em var(--glow-color);
   }
 
@@ -65,7 +63,7 @@ defineProps<ButtonProps>();
     outline-color: var(--outline-color-active);
     box-shadow:
       $box-shadow,
-      2px 1px 0.75rem var(--shadow-medium-color),
+      0 2px 0.75rem var(--shadow-medium-color),
       inset 0 0 0.5em var(--glow-color);
   }
 
