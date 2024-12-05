@@ -1,6 +1,6 @@
 <script lang="ts">
 /** The required length for a `ShortCodeInput`'s value. */
-export const SHORT_CODE_LENGTH = 8;
+export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
@@ -58,7 +58,7 @@ async function handleCodeInput(
 </template>
 
 <style scoped lang="scss">
-$SHORT-CODE-LENGTH: 8;
+$SHORT-CODE-LENGTH: 6;
 
 :deep(input) {
   $letter-spacing: 0.75ch;

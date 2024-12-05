@@ -129,6 +129,6 @@ watchEffect(() => {
 }
 
 :deep(.code-input) {
-  font-size: min(2.75em, 8vw);
+  font-size: min(3em, 10vw);
 }
 </style>
