@@ -118,7 +118,7 @@ watchEffect(() => {
 .code-info {
   text-align: center;
 
-  &:first-child {
+  &:first-of-type {
     margin-top: 0;
   }
 }
