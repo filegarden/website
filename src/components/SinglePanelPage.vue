@@ -2,6 +2,9 @@
 export interface SinglePanelPageProps {
   /** The name of this page. */
   title: string;
+
+  /** Whether to remove the `h1` element from the page. */
+  removeHeading?: boolean;
 }
 
 defineProps<SinglePanelPageProps>();
@@ -16,7 +19,9 @@ defineProps<SinglePanelPageProps>();
     </header>
 
     <main class="panel">
-      <h1>{{ title }}</h1>
+      <h1 v-if="!removeHeading">
+        {{ title }}
+      </h1>
 
       <slot />
 

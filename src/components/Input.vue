@@ -1,7 +1,7 @@
 <script setup lang="ts">
 export interface InputProps {
-  /** The label's content. */
-  label: string;
+  /** The label's content. If undefined, an `aria-label` should be set. */
+  label?: string;
 
   /** Whether the input should be focused on mount. */
   autofocus?: boolean;
@@ -20,7 +20,7 @@ const model = defineModel<string>();
 
 <template>
   <div class="input">
-    <div class="label-wrapper">
+    <div v-if="label" class="label-wrapper">
       <label :for="id">{{ label }}</label>
     </div>
 
