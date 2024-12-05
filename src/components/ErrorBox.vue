@@ -8,10 +8,10 @@ export interface ErrorBoxProps {
 
 const props = defineProps<ErrorBoxProps>();
 
-const errorBoxes = useErrorBoxes();
+const emit = defineEmits<(e: "close", errorBox: ErrorBoxInfo) => void>();
 
 function close() {
-  errorBoxes.close(props.value);
+  emit("close", props.value);
 }
 </script>
 

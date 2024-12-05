@@ -1,11 +1,46 @@
 <script setup lang="ts">
+import { isAxiosError } from "axios";
+
 const errorBoxes = useErrorBoxes();
+
+function handleRejection(event: PromiseRejectionEvent) {
+  const error = event.reason as unknown;
+  if (!isAxiosError<unknown>(error)) {
+    return;
+  }
+
+  if (error.response) {
+    errorBoxes.open({
+      message: error.response.status + " " + error.response.statusText,
+      code:
+        typeof error.response.data === "object"
+          ? JSON.stringify(error.response.data)
+          : undefined,
+    });
+  } else {
+    errorBoxes.open({
+      message: error.message,
+    });
+  }
+}
+
+onMounted(() => {
+  window.addEventListener("unhandledrejection", handleRejection);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("unhandledrejection", handleRejection);
+});
 
 function clearErrorBoxes() {
   errorBoxes.value.length = 0;
 }
 
 onBeforeRouteLeave(clearErrorBoxes);
+
+function closeErrorBox(errorBox: ErrorBoxInfo) {
+  errorBoxes.close(errorBox);
+}
 </script>
 
 <template>
@@ -24,7 +59,7 @@ onBeforeRouteLeave(clearErrorBoxes);
         We don't want to cover the screen with errors unless the user scrolls
         down, so show only the first one above the fold.
       -->
-      <ErrorBox :value="errorBoxes.value[0]!" />
+      <ErrorBox :value="errorBoxes.value[0]!" @close="closeErrorBox" />
     </div>
 
     <div
@@ -36,6 +71,7 @@ onBeforeRouteLeave(clearErrorBoxes);
           v-for="errorBox in errorBoxes.value.slice(1)"
           :key="errorBox.key"
           :value="errorBox"
+          @close="closeErrorBox"
         />
       </div>
     </div>
