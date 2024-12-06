@@ -48,7 +48,7 @@ async function handleCodeInput(
 <template>
   <Input
     v-model="model"
-    :placeholder="'•'.repeat(SHORT_CODE_LENGTH)"
+    :placeholder="'-'.repeat(SHORT_CODE_LENGTH)"
     :minlength="SHORT_CODE_LENGTH"
     :maxlength="SHORT_CODE_LENGTH"
     autocomplete="off"
