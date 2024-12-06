@@ -63,7 +63,7 @@ $SHORT-CODE-LENGTH: 6;
 :deep(input) {
   $letter-spacing: 0.75ch;
 
-  font-family: monospace;
+  font-family: "Roboto Mono", monospace;
   letter-spacing: $letter-spacing;
   text-indent: $letter-spacing;
   width: $letter-spacing + $SHORT-CODE-LENGTH * (1ch + $letter-spacing);
