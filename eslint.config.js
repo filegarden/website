@@ -153,6 +153,13 @@ export default withNuxt([
     },
   },
   {
+    files: ["**/*.vue"],
+    rules: {
+      // `await` in a component's setup script transpiles to not be top-level.
+      "es-x/no-top-level-await": "off",
+    },
+  },
+  {
     languageOptions: {
       parserOptions: {
         projectService: true,
