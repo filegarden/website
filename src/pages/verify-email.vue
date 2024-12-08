@@ -77,7 +77,7 @@ function handleCodeInputClick(
 
     <template v-else-if="email">
       <p>
-        Confirm you're human to verify your email<br />
+        Generate a code to verify your email<br />
         <strong>{{ email }}</strong>
       </p>
 
