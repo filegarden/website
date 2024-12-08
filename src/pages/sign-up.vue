@@ -168,10 +168,6 @@ function tryAgain() {
   text-align: center;
 }
 
-:deep(.code-input) {
-  font-size: min(3em, 10vw);
-}
-
 .code-incorrect {
   color: var(--invalid-text-color);
 }
