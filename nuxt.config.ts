@@ -7,6 +7,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     backendAddress: "",
+
+    public: {
+      turnstileSiteKey: "",
+    },
   },
 
   // Fixes Sass deprecation warnings. I expect this to eventually be default.
