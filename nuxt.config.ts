@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   srcDir: "src",
   modules: ["@nuxt/eslint"],
 
+  runtimeConfig: {
+    backendAddress: "",
+  },
+
   // Fixes Sass deprecation warnings. I expect this to eventually be default.
   vite: {
     css: {
