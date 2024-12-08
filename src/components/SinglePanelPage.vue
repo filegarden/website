@@ -35,7 +35,7 @@ defineProps<SinglePanelPageProps>();
 </template>
 
 <style scoped lang="scss">
-$panel-width: 480px;
+$panel-width: 30rem;
 
 .page {
   position: absolute;
