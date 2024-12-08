@@ -46,7 +46,11 @@ defineProps<ButtonProps>();
   overflow: hidden;
   user-select: none;
 
-  transition: 0.1s ease-out;
+  transition:
+    0.1s ease-out color,
+    0.1s ease-out outline-color,
+    0.1s ease-out box-shadow,
+    0.1s ease-out opacity;
 
   &:hover:not(:disabled) {
     color: var(--input-text-color-hover);
