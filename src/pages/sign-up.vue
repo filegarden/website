@@ -110,10 +110,9 @@ function tryAgain() {
       </p>
 
       <form class="code-form" @submit.prevent="submitCode">
-        <fieldset class="code-input-section" :disabled="loading">
+        <fieldset :disabled="loading">
           <ShortCodeInput
             v-model="code"
-            class="code-input"
             aria-label="Verification Code"
             required
             autofocus

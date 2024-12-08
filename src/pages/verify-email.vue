@@ -65,7 +65,6 @@ function handleCodeInputClick(
 
       <div class="code-input-wrapper">
         <ShortCodeInput
-          class="code-input"
           aria-label="Verification Code"
           readonly
           autofocus
@@ -87,11 +86,7 @@ function handleCodeInputClick(
         </div>
 
         <div class="verify-button-wrapper">
-          <Button
-            class="verify-button"
-            :disabled="!captchaToken"
-            @click="generateCode"
-          >
+          <Button :disabled="!captchaToken" @click="generateCode">
             Get Verification Code
           </Button>
         </div>
