@@ -12,7 +12,7 @@ const { data: email } = await useAsyncData(async () => {
   return data.email as string;
 });
 
-const turnstileSiteKey = useRuntimeConfig().public.turnstileSiteKey as string;
+const turnstileSiteKey = useRuntimeConfig().public.turnstileSiteKey;
 const captchaToken = ref("");
 
 const loading = ref(false);
