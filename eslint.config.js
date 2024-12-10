@@ -6,7 +6,6 @@ import stylistic from "@stylistic/eslint-plugin";
 import prettier from "eslint-config-prettier";
 // @ts-expect-error: This module has no type declarations.
 import esX from "eslint-plugin-es-x";
-import security from "eslint-plugin-security";
 import ts from "typescript-eslint";
 // @ts-expect-error: This module has no type declarations.
 import vueScopedCss from "eslint-plugin-vue-scoped-css";
@@ -15,7 +14,6 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 export default withNuxt([
   comments.recommended,
   esX.configs["flat/restrict-to-es2020"],
-  security.configs.recommended,
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
   ...vueScopedCss.configs["flat/all"],
