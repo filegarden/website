@@ -101,6 +101,10 @@ input {
   }
 }
 
+.warning {
+  color: var(--warning-text-color);
+}
+
 @keyframes fade-in {
   from {
     animation-timing-function: ease;

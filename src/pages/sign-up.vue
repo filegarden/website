@@ -169,7 +169,7 @@ function tryAgain() {
             autofocus
           />
 
-          <p v-if="codeIncorrect" class="code-incorrect">
+          <p v-if="codeIncorrect" class="warning">
             That verification code is incorrect.
           </p>
 
@@ -275,9 +275,5 @@ function tryAgain() {
 
 .code-form {
   margin-bottom: 3em;
-}
-
-.code-incorrect {
-  color: var(--invalid-text-color);
 }
 </style>
