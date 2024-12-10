@@ -24,9 +24,7 @@ const model = defineModel<string>();
       <label :for="id">{{ label }}</label>
     </div>
 
-    <div>
-      <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
-    </div>
+    <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
 
     <slot name="after"></slot>
   </div>
@@ -34,11 +32,11 @@ const model = defineModel<string>();
 
 <style scoped lang="scss">
 .input {
-  margin: 1.25em 0;
+  margin: 1em 0;
 }
 
 .label-wrapper {
-  margin: 0.333em 1px;
+  margin: 0.25em 1px;
   opacity: 0.875;
 }
 </style>
