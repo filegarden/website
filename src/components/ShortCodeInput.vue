@@ -51,7 +51,7 @@ async function handleCodeInput(
     :placeholder="'-'.repeat(SHORT_CODE_LENGTH)"
     :minlength="SHORT_CODE_LENGTH"
     :maxlength="SHORT_CODE_LENGTH"
-    autocomplete="off"
+    autocomplete="one-time-code"
     @beforeinput="handleCodeBeforeInput"
     @input="handleCodeInput"
   />
