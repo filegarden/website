@@ -36,7 +36,7 @@ function openCodePage() {
 }
 
 const code = ref("");
-const codeIncorrect = ref(false);
+const isCodeWrong = ref(false);
 
 const codeResponse = await useAsyncData(
   async () => {
@@ -65,12 +65,14 @@ watchEffect(() => {
   if (codeResponse.status.value === "success") {
     email.value = codeResponse.data.value.email;
     code.value = codeResponse.data.value.code;
+  } else if (codeResponse.status.value === "error") {
+    isCodeWrong.value = true;
   }
 });
 
 watch(code, (code) => {
   if (code !== "") {
-    codeIncorrect.value = false;
+    isCodeWrong.value = false;
   }
 });
 
@@ -95,7 +97,7 @@ async function submitCode(event: Event) {
       isAxiosError(error) &&
       error.response?.data?.code === "RESOURCE_NOT_FOUND"
     ) {
-      codeIncorrect.value = true;
+      isCodeWrong.value = true;
 
       const form = event.target as HTMLFormElement;
       form.getElementsByTagName("input")[0]?.select();
@@ -114,16 +116,42 @@ function tryAgain() {
 const name = ref("");
 const password = ref("");
 const confirmPassword = ref("");
+
+async function completeSignUp() {
+  loading.value = true;
+
+  try {
+    await api
+      .post("/users", {
+        email: email.value,
+        emailVerificationCode: code.value.toUpperCase(),
+        name: name.value,
+        password: password.value,
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+
+    alert("TODO");
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data?.code === "EMAIL_VERIFICATION_CODE_WRONG"
+    ) {
+      isCodeWrong.value = true;
+      return;
+    }
+
+    throw error;
+  }
+}
 </script>
 
 <template>
   <SinglePanelPage
     :class="[
       `page-${page}`,
-      {
-        'invalid-token':
-          page === 'final' && codeResponse.status.value === 'error',
-      },
+      { 'page-final-code-wrong': page === 'final' && isCodeWrong },
     ]"
     title="Sign Up"
     :remove-heading="page !== 'email'"
@@ -173,7 +201,7 @@ const confirmPassword = ref("");
             autofocus
           />
 
-          <p v-if="codeIncorrect" class="warning">
+          <p v-if="isCodeWrong" class="warning">
             That verification code is incorrect.
           </p>
 
@@ -185,58 +213,63 @@ const confirmPassword = ref("");
     </template>
 
     <template v-else-if="page === 'final'">
-      <p v-if="codeResponse.status.value === 'error'" class="distinguished">
+      <p v-if="isCodeWrong" class="distinguished">
         Your email verification request is invalid or expired.
       </p>
 
-      <p v-else class="intro">One last step...</p>
+      <template v-else>
+        <p class="intro">One last step...</p>
 
-      <form v-if="codeResponse.status.value === 'success'" @submit.prevent>
-        <fieldset :disabled="loading">
-          <Input label="Email" type="email" readonly :model-value="email" />
-          <Input
-            v-model="name"
-            label="Display Name"
-            minlength="1"
-            maxlength="64"
-            required
-            autofocus
-            autocomplete="username"
-          />
-          <Input
-            v-model="password"
-            label="Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autocomplete="new-password"
-          />
-          <Input
-            v-model="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autocomplete="new-password"
-          />
+        <form
+          v-if="codeResponse.status.value === 'success'"
+          @submit.prevent="completeSignUp"
+        >
+          <fieldset :disabled="loading">
+            <Input label="Email" type="email" readonly :model-value="email" />
+            <Input
+              v-model="name"
+              label="Display Name"
+              minlength="1"
+              maxlength="64"
+              required
+              autofocus
+              autocomplete="username"
+            />
+            <Input
+              v-model="password"
+              label="Password"
+              type="password"
+              minlength="8"
+              maxlength="256"
+              required
+              autocomplete="new-password"
+            />
+            <Input
+              v-model="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              minlength="8"
+              maxlength="256"
+              required
+              autocomplete="new-password"
+            />
 
-          <p
-            v-if="confirmPassword && password !== confirmPassword"
-            class="warning"
-          >
-            Passwords do not match.
-          </p>
+            <p
+              v-if="confirmPassword && password !== confirmPassword"
+              class="warning"
+            >
+              Passwords do not match.
+            </p>
 
-          <Button
-            type="submit"
-            :disabled="!(confirmPassword && password === confirmPassword)"
-          >
-            Create Account
-          </Button>
-        </fieldset>
-      </form>
+            <Button
+              type="submit"
+              :disabled="!(confirmPassword && password === confirmPassword)"
+            >
+              Create Account
+            </Button>
+          </fieldset>
+        </form>
+      </template>
     </template>
 
     <template v-if="page === 'email'" #bottom-text>
@@ -258,10 +291,7 @@ const confirmPassword = ref("");
       </p>
     </template>
 
-    <template
-      v-else-if="page === 'final' && codeResponse.status.value === 'error'"
-      #bottom-text
-    >
+    <template v-else-if="page === 'final' && isCodeWrong" #bottom-text>
       <p>
         <A href="/sign-up" @click="tryAgain">Back to Sign Up</A>
       </p>
@@ -272,7 +302,7 @@ const confirmPassword = ref("");
 <style scoped lang="scss">
 .page-verification-sent,
 .page-code,
-.page-final.invalid-token {
+.page-final-code-wrong {
   :deep(main) {
     text-align: center;
   }
