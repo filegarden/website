@@ -7,7 +7,7 @@ const loading = ref(false);
 
 <template>
   <SinglePanelPage title="Sign In">
-    <LoadingIndicator v-if="loading"></LoadingIndicator>
+    <LoadingIndicator v-if="loading" />
 
     <form @submit.prevent>
       <fieldset :disabled="loading">

@@ -79,7 +79,7 @@ function tryAgain() {
 
 <template>
   <SinglePanelPage title="Sign Up" :remove-heading="page !== 'email'">
-    <LoadingIndicator v-if="loading"></LoadingIndicator>
+    <LoadingIndicator v-if="loading" />
 
     <form v-if="page === 'email'" @submit.prevent="submitSignUp">
       <fieldset :disabled="loading">

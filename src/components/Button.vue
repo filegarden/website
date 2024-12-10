@@ -8,10 +8,10 @@ defineProps<ButtonProps>();
 
 <template>
   <A v-if="href" class="button" v-bind="$props">
-    <slot />
+    <slot></slot>
   </A>
   <button v-else type="button" class="button">
-    <slot />
+    <slot></slot>
   </button>
 </template>
 

@@ -6,7 +6,7 @@ const loading = ref(false);
 
 <template>
   <SinglePanelPage title="Forgot Password">
-    <LoadingIndicator v-if="loading"></LoadingIndicator>
+    <LoadingIndicator v-if="loading" />
 
     <form @submit.prevent>
       <fieldset :disabled="loading">

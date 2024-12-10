@@ -55,7 +55,7 @@ function handleCodeInputClick(
 
 <template>
   <SinglePanelPage title="Verify Email" remove-heading>
-    <LoadingIndicator v-if="loading"></LoadingIndicator>
+    <LoadingIndicator v-if="loading" />
 
     <template v-if="code">
       <p>

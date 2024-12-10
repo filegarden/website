@@ -23,10 +23,10 @@ defineProps<SinglePanelPageProps>();
         {{ title }}
       </h1>
 
-      <slot />
+      <slot></slot>
 
       <div v-if="$slots['bottom-text']" class="bottom-text">
-        <slot name="bottom-text" />
+        <slot name="bottom-text"></slot>
       </div>
     </main>
 
