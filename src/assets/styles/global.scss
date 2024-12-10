@@ -96,7 +96,8 @@ input {
       0 0 0.4rem var(--glow-color);
   }
 
-  &:disabled {
+  &:disabled,
+  &:read-only {
     opacity: 0.5;
   }
 }
