@@ -110,6 +110,10 @@ function tryAgain() {
   page.value = "email";
   code.value = "";
 }
+
+const name = ref("");
+const password = ref("");
+const confirmPassword = ref("");
 </script>
 
 <template>
@@ -189,29 +193,48 @@ function tryAgain() {
 
       <form v-if="codeResponse.status.value === 'success'" @submit.prevent>
         <fieldset :disabled="loading">
+          <Input label="Email" type="email" readonly :model-value="email" />
           <Input
+            v-model="name"
             label="Display Name"
             minlength="1"
             maxlength="64"
             required
             autofocus
+            autocomplete="username"
           />
           <Input
+            v-model="password"
             label="Password"
             type="password"
             minlength="8"
             maxlength="256"
             required
+            autocomplete="new-password"
           />
           <Input
+            v-model="confirmPassword"
             label="Confirm Password"
             type="password"
             minlength="8"
             maxlength="256"
             required
+            autocomplete="new-password"
           />
 
-          <Button type="submit">Create Account</Button>
+          <p
+            v-if="confirmPassword && password !== confirmPassword"
+            class="warning"
+          >
+            Passwords do not match.
+          </p>
+
+          <Button
+            type="submit"
+            :disabled="!(confirmPassword && password === confirmPassword)"
+          >
+            Create Account
+          </Button>
         </fieldset>
       </form>
     </template>
