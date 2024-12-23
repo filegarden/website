@@ -28,8 +28,8 @@ const loading = ref(false);
           required
         >
           <template #after>
-            <div class="forgot-password-wrapper">
-              <A href="/forgot-password" prefetch>Forgot password?</A>
+            <div class="password-reset-link-wrapper">
+              <A href="/password-reset" prefetch>Forgot password?</A>
             </div>
           </template>
         </Input>
@@ -45,7 +45,7 @@ const loading = ref(false);
 </template>
 
 <style scoped lang="scss">
-.forgot-password-wrapper {
+.password-reset-link-wrapper {
   text-align: right;
   margin: 0.667em 1px;
 
