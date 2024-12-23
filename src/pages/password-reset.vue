@@ -154,6 +154,7 @@ async function submitNewPassword() {
             minlength="8"
             maxlength="256"
             required
+            autofocus
             autocomplete="new-password"
           />
           <Input
