@@ -101,7 +101,9 @@ async function submitNewPassword() {
       { 'page-password-token-wrong': page === 'password' && isTokenWrong },
     ]"
     title="Forgot Password"
-    :remove-heading="page === 'password-reset-sent' || page === 'done'"
+    :remove-heading="
+      !(page === 'email' || (page === 'password' && !isTokenWrong))
+    "
   >
     <LoadingIndicator
       v-if="loading || passwordResetResponse.status.value === 'pending'"
