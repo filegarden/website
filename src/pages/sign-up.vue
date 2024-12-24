@@ -182,7 +182,7 @@ async function completeSignUp() {
     </form>
 
     <p v-else-if="page === 'verification-sent'" class="verification-sent-info">
-      To continue, click the link sent to<br />
+      To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
 

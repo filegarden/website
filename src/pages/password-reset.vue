@@ -134,7 +134,7 @@ async function submitNewPassword() {
       v-else-if="page === 'password-reset-sent'"
       class="password-reset-sent-info"
     >
-      To continue, click the link sent to<br />
+      To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
 
