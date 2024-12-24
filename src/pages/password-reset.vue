@@ -221,6 +221,6 @@ async function submitNewPassword() {
 
 .password-reset-sent-info {
   font-size: 1.25em;
-  padding: 1.5em 0 2em;
+  padding: 0.5em 0 1em;
 }
 </style>
