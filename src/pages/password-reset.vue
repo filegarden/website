@@ -208,7 +208,11 @@ async function submitNewPassword() {
 }
 
 .distinguished {
-  margin: 2em 0 3em;
+  margin: 2em 0;
+
+  + * {
+    margin-top: 3em;
+  }
 }
 
 .captcha-wrapper {

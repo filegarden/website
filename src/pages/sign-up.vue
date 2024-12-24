@@ -311,7 +311,11 @@ async function completeSignUp() {
 }
 
 .distinguished {
-  margin: 2em 0 3em;
+  margin: 2em 0;
+
+  + * {
+    margin-top: 3em;
+  }
 }
 
 .captcha-wrapper {
@@ -329,6 +333,6 @@ async function completeSignUp() {
 }
 
 .code-form {
-  margin-bottom: 3em;
+  margin-bottom: 2.5em;
 }
 </style>
