@@ -58,7 +58,7 @@ watchEffect(() => {
 });
 
 watch(page, (page) => {
-  if (page === "final") {
+  if (page === "final" && route.query.token) {
     void codeResponse.refresh();
   }
 });
@@ -222,10 +222,7 @@ async function completeSignUp() {
       <template v-else>
         <p class="intro">One last step...</p>
 
-        <form
-          v-if="codeResponse.status.value === 'success'"
-          @submit.prevent="completeSignUp"
-        >
+        <form v-if="code" @submit.prevent="completeSignUp">
           <fieldset :disabled="loading">
             <Input label="Email" type="email" disabled :model-value="email" />
             <Input
