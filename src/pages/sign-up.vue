@@ -6,14 +6,9 @@ import VueTurnstile from "vue-turnstile";
 const route = useRoute();
 const page = ref<"email" | "verification-sent" | "code" | "final">("email");
 
-useLeaveConfirmation(
-  () =>
-    // Unsaved changes aren't substantial on the first page.
-    page.value !== "email" &&
-    // It's intended to close the verification sent page since many will
-    // continue signing up from the link emailed to them instead.
-    page.value !== "verification-sent",
-);
+// If you leave the code page, you can't return to it without restarting the
+// sign-up process.
+useLeaveConfirmation(() => page.value === "code");
 
 const loading = ref(false);
 const email = useSignInEmail();
