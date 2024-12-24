@@ -227,7 +227,7 @@ async function completeSignUp() {
           @submit.prevent="completeSignUp"
         >
           <fieldset :disabled="loading">
-            <Input label="Email" type="email" readonly :model-value="email" />
+            <Input label="Email" type="email" disabled :model-value="email" />
             <Input
               v-model="name"
               label="Display Name"
