@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { isAxiosError } from "axios";
-import VueTurnstile from "vue-turnstile";
 
 const route = useRoute();
 const page = ref<"email" | "password-reset-sent" | "password" | "done">(
@@ -10,7 +9,6 @@ const page = ref<"email" | "password-reset-sent" | "password" | "done">(
 const loading = ref(false);
 const email = useSignInEmail();
 
-const { turnstileSiteKey } = useRuntimeConfig().public;
 const captchaToken = ref("");
 
 async function requestPasswordReset() {
@@ -120,9 +118,7 @@ async function submitNewPassword() {
           autofocus
         />
 
-        <div class="captcha-wrapper">
-          <VueTurnstile v-model="captchaToken" :site-key="turnstileSiteKey" />
-        </div>
+        <Captcha v-model="captchaToken" />
 
         <Button type="submit" :disabled="!captchaToken">
           Request Password Reset
@@ -213,10 +209,6 @@ async function submitNewPassword() {
   + * {
     margin-top: 3em;
   }
-}
-
-.captcha-wrapper {
-  margin: 1em 0;
 }
 
 .password-reset-sent-info {

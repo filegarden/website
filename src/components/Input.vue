@@ -20,9 +20,9 @@ const model = defineModel<string>();
 
 <template>
   <div class="input">
-    <div v-if="label" class="label-wrapper">
+    <LabelWrapper>
       <label :for="id">{{ label }}</label>
-    </div>
+    </LabelWrapper>
 
     <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
 
@@ -33,10 +33,5 @@ const model = defineModel<string>();
 <style scoped lang="scss">
 .input {
   margin: 1em 0;
-}
-
-.label-wrapper {
-  margin: 0.25em 1px;
-  opacity: 0.875;
 }
 </style>

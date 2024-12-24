@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { isAxiosError } from "axios";
 import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
-import VueTurnstile from "vue-turnstile";
 
 const route = useRoute();
 const page = ref<"email" | "verification-sent" | "code" | "final">("email");
@@ -14,7 +13,6 @@ const loading = ref(false);
 const email = useSignInEmail();
 const emailCookie = useSignUpEmailCookie();
 
-const { turnstileSiteKey } = useRuntimeConfig().public;
 const captchaToken = ref("");
 
 async function submitSignUp() {
@@ -173,9 +171,7 @@ async function completeSignUp() {
           autofocus
         />
 
-        <div class="captcha-wrapper">
-          <VueTurnstile v-model="captchaToken" :site-key="turnstileSiteKey" />
-        </div>
+        <Captcha v-model="captchaToken" />
 
         <Button type="submit" :disabled="!captchaToken">Create Account</Button>
       </fieldset>
@@ -313,10 +309,6 @@ async function completeSignUp() {
   + * {
     margin-top: 3em;
   }
-}
-
-.captcha-wrapper {
-  margin: 1em 0;
 }
 
 .verification-sent-info {
