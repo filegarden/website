@@ -1,15 +1,50 @@
 <script setup lang="ts">
+import { isAxiosError } from "axios";
+
 const email = useSignInEmail();
 const password = ref("");
 
 const loading = ref(false);
+
+const areCredentialsWrong = ref(false);
+
+watch([email, password], () => {
+  areCredentialsWrong.value = false;
+});
+
+async function submitSignIn() {
+  loading.value = true;
+
+  try {
+    await api
+      .post("/sessions", {
+        email: email.value,
+        password: password.value,
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+
+    alert("TODO");
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data?.code === "USER_CREDENTIALS_WRONG"
+    ) {
+      areCredentialsWrong.value = true;
+      return;
+    }
+
+    throw error;
+  }
+}
 </script>
 
 <template>
   <SinglePanelPage title="Sign In">
     <LoadingIndicator v-if="loading" />
 
-    <form @submit.prevent>
+    <form @submit.prevent="submitSignIn">
       <fieldset :disabled="loading">
         <Input
           v-model="email"
@@ -33,6 +68,10 @@ const loading = ref(false);
             </div>
           </template>
         </Input>
+
+        <p v-if="areCredentialsWrong" class="warning">
+          Incorrect email or password.
+        </p>
 
         <Button type="submit">Sign In</Button>
       </fieldset>
