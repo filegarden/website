@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { isAxiosError } from "axios";
-
 const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
@@ -31,15 +29,9 @@ async function generateCode() {
 
     code.value = data.code;
   } catch (error) {
-    if (
-      isAxiosError(error) &&
-      error.response?.data?.code === "RESOURCE_NOT_FOUND"
-    ) {
+    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
       email.value = "";
-      return;
     }
-
-    throw error;
   }
 }
 

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { isAxiosError } from "axios";
 import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
 const route = useRoute();
@@ -93,18 +92,12 @@ async function submitCode(event: Event) {
 
     page.value = "final";
   } catch (error) {
-    if (
-      isAxiosError(error) &&
-      error.response?.data?.code === "RESOURCE_NOT_FOUND"
-    ) {
+    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
       isCodeWrong.value = true;
 
       const form = event.target as HTMLFormElement;
       form.getElementsByTagName("input")[0]?.select();
-      return;
     }
-
-    throw error;
   }
 }
 
@@ -134,15 +127,9 @@ async function completeSignUp() {
 
     alert("TODO");
   } catch (error) {
-    if (
-      isAxiosError(error) &&
-      error.response?.data?.code === "EMAIL_VERIFICATION_CODE_WRONG"
-    ) {
+    if (getApiErrorCodeOrThrow(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
-      return;
     }
-
-    throw error;
   }
 }
 </script>

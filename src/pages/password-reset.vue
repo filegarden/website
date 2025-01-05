@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { isAxiosError } from "axios";
-
 const route = useRoute();
 const page = ref<"email" | "password-reset-sent" | "password" | "done">(
   "email",
@@ -79,15 +77,9 @@ async function submitNewPassword() {
 
     page.value = "done";
   } catch (error) {
-    if (
-      isAxiosError(error) &&
-      error.response?.data?.code === "RESOURCE_NOT_FOUND"
-    ) {
+    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
       isTokenWrong.value = true;
-      return;
     }
-
-    throw error;
   }
 }
 </script>

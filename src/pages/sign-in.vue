@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { isAxiosError } from "axios";
-
 const email = useSignInEmail();
 const password = ref("");
 
@@ -27,15 +25,9 @@ async function submitSignIn() {
 
     alert("TODO");
   } catch (error) {
-    if (
-      isAxiosError(error) &&
-      error.response?.data?.code === "USER_CREDENTIALS_WRONG"
-    ) {
+    if (getApiErrorCodeOrThrow(error) === "USER_CREDENTIALS_WRONG") {
       areCredentialsWrong.value = true;
-      return;
     }
-
-    throw error;
   }
 }
 </script>
