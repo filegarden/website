@@ -37,10 +37,6 @@ function clearErrorBoxes() {
 }
 
 onBeforeRouteLeave(clearErrorBoxes);
-
-function closeErrorBox(errorBox: ErrorBoxInfo) {
-  errorBoxes.close(errorBox);
-}
 </script>
 
 <template>
@@ -59,7 +55,7 @@ function closeErrorBox(errorBox: ErrorBoxInfo) {
         We don't want to cover the screen with errors unless the user scrolls
         down, so show only the first one above the fold.
       -->
-      <ErrorBox :value="errorBoxes.value[0]!" @close="closeErrorBox" />
+      <ErrorBox :value="errorBoxes.value[0]!" @close="errorBoxes.close" />
     </div>
 
     <div
@@ -71,7 +67,7 @@ function closeErrorBox(errorBox: ErrorBoxInfo) {
           v-for="errorBox in errorBoxes.value.slice(1)"
           :key="errorBox.key"
           :value="errorBox"
-          @close="closeErrorBox"
+          @close="errorBoxes.close"
         />
       </div>
     </div>
