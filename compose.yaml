@@ -1,5 +1,5 @@
 services:
-  server:
+  backend:
     restart: always
     build:
       args:
@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - path: ./.env
+      - path: ./.env.backend
     depends_on:
       db:
         condition: service_healthy
@@ -24,7 +24,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     env_file:
-      - path: ./.env
+      - path: ./.env.backend
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s

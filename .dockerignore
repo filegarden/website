@@ -1,11 +1,29 @@
-**/compose.*.yaml
-**/compose.yaml
-**/Dockerfile
-**/Dockerfile.*
+# Rust dev/build outputs
+/target
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Local env files
+.env*
+
+# Docker configuration
+**/compose*.yaml
+**/Dockerfile*
 /.dockerignore
-/.env*
+
+# Misc
 /.git
+/.gitattributes
 /.github
 /.gitignore
 /.vscode
-/target
+.DS_Store
