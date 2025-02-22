@@ -1,6 +1,6 @@
 //! File Garden's backend web server.
 
-use std::sync::LazyLock;
+use std::{io, sync::LazyLock};
 
 use axum::handler::Handler;
 use tokio::net::TcpListener;
@@ -40,7 +40,16 @@ pub struct AppState {
 /// See implementation.
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenvy::from_filename(".env.backend")?;
+    println!("Loading environment variables...");
+
+    match dotenvy::from_filename(".env.backend") {
+        Ok(_) => Ok(()),
+
+        // If the file isn't found, environment variables can be used directly instead.
+        Err(dotenvy::Error::Io(error)) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+
+        Err(error) => Err(error),
+    }?;
 
     let db_url = dotenvy::var("DATABASE_URL")?;
     let address = dotenvy::var("ADDRESS")?;
