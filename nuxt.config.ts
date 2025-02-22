@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2024-10-29",
   devtools: { enabled: true },
-  srcDir: "src",
+  srcDir: "frontend",
   modules: ["@nuxt/eslint"],
 
   runtimeConfig: {

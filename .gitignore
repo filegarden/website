@@ -1,3 +1,6 @@
+# Rust dev/build outputs
+/target
+
 # Nuxt dev/build outputs
 .output
 .data
@@ -9,16 +12,9 @@ dist
 # Node dependencies
 node_modules
 
-# Logs
-logs
-*.log
+# Local env files
+.env*
+!.env*.example
 
 # Misc
 .DS_Store
-.fleet
-.idea
-
-# Local env files
-.env
-.env.*
-!.env.example

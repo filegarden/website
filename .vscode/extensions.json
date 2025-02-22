@@ -3,6 +3,7 @@
     "antfu.goto-alias",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "rust-lang.rust-analyzer",
     "vue.volar"
   ]
 }
