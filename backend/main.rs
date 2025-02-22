@@ -40,6 +40,8 @@ pub struct AppState {
 /// See implementation.
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    dotenvy::from_filename(".env.backend")?;
+
     let db_url = dotenvy::var("DATABASE_URL")?;
     let address = dotenvy::var("ADDRESS")?;
 
