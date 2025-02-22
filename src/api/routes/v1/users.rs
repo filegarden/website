@@ -48,7 +48,7 @@ pub async fn post(
 
     let password_hash = hash_with_salt(&body.password);
 
-    db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
         let does_code_match = sqlx::query!(
             "DELETE FROM unverified_emails
                 WHERE user_id IS NULL AND email = $1

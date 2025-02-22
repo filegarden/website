@@ -51,7 +51,7 @@ pub async fn post(
     cookies: Cookies,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
-    let token = db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    let token = db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
             "SELECT id, password_hash FROM users
                 WHERE email = $1",

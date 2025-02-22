@@ -36,7 +36,7 @@ pub async fn post(
     let code_hash = hash_with_salt(&code);
 
     let Some(unverified_email) =
-        db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+        db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
             Ok(sqlx::query!(
                 "UPDATE unverified_emails
                     SET code_hash = $1

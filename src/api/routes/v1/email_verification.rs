@@ -56,7 +56,7 @@ pub async fn get(
             let token_hash = hash_without_salt(&token);
 
             let Some(unverified_email) =
-                db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+                db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
                     Ok(sqlx::query!(
                         "SELECT email FROM unverified_emails
                             WHERE token_hash = $1 AND user_id IS NULL",
@@ -75,7 +75,7 @@ pub async fn get(
 
         GetQuery::EmailAndCode { email, code } => {
             let Some(unverified_email) =
-                db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+                db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
                     Ok(sqlx::query!(
                         r#"SELECT email, code_hash as "code_hash!" FROM unverified_emails
                             WHERE user_id IS NULL AND email = $1 AND code_hash IS NOT NULL"#,
@@ -131,7 +131,7 @@ pub async fn post(
         return Err(api::Error::CaptchaFailed);
     }
 
-    db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
         let existing_user = sqlx::query!(
             "SELECT name FROM users
                 WHERE email = $1",

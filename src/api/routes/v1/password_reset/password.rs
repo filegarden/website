@@ -43,7 +43,7 @@ pub async fn post(
 
     let password_hash = hash_with_salt(&body.password);
 
-    db::transaction!(state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
         let Some(password_reset) = sqlx::query!(
             "DELETE FROM password_resets
                 WHERE token_hash = $1
