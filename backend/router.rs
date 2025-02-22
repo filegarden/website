@@ -1,0 +1,52 @@
+//! See [`handle`].
+
+use std::sync::LazyLock;
+
+use axum::{
+    extract::{Request, State},
+    http::{header::HOST, StatusCode},
+    response::{IntoResponse, Response},
+};
+use axum_macros::debug_handler;
+
+use crate::{api, content, website, AppState, CONTENT_ORIGIN, WEBSITE_ORIGIN};
+
+/// The URI host for user-uploaded content.
+static CONTENT_HOST: LazyLock<&str> = LazyLock::new(|| host_from_origin(&CONTENT_ORIGIN));
+
+/// The URI host for the website.
+static WEBSITE_HOST: LazyLock<&str> = LazyLock::new(|| host_from_origin(&WEBSITE_ORIGIN));
+
+/// Handles all incoming requests and routes them to other services based on the request URI.
+#[debug_handler]
+pub(super) async fn handle(State(state): State<AppState>, request: Request) -> Response {
+    let host = request
+        .headers()
+        .get(HOST)
+        .and_then(|host| host.to_str().ok());
+
+    if host == Some(*CONTENT_HOST) {
+        return content::handle(request).into_response();
+    }
+
+    if host == Some(*WEBSITE_HOST) {
+        if request.uri().path().starts_with("/api/") {
+            return api::handle(State(state), request).await;
+        }
+
+        return website::handle(request).await;
+    }
+
+    StatusCode::MISDIRECTED_REQUEST.into_response()
+}
+
+/// Returns the host from an origin URI string.
+///
+/// # Panics
+///
+/// Panics if the origin string doesn't contain "//".
+fn host_from_origin(origin: &str) -> &str {
+    let start = origin.find("//").expect("origin should contain \"//\"") + 2;
+
+    &origin[start..]
+}

@@ -1,0 +1,35 @@
+services:
+  server:
+    restart: always
+    build:
+      args:
+        PACKAGE: backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+
+  db:
+    image: postgres:17-alpine
+    restart: always
+    user: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - path: ./.env
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:

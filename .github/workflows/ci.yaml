@@ -1,0 +1,24 @@
+on: [pull_request, push]
+name: Continuous Integration
+
+env:
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo clippy --all-features --all-targets --locked --workspace
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo fmt --all --check
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo test --all-features --all-targets --locked --workspace

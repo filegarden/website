@@ -1,0 +1,11 @@
+**/compose.*.yaml
+**/compose.yaml
+**/Dockerfile
+**/Dockerfile.*
+/.dockerignore
+/.env*
+/.git
+/.github
+/.gitignore
+/.vscode
+/target
