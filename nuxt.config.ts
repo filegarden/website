@@ -24,6 +24,9 @@ export default defineNuxtConfig({
     },
 
     server: {
+      // The backend manages allowed hosts, so the frontend doesn't need to.
+      allowedHosts: true,
+
       hmr: {
         // The backend's reverse proxy can't handle WebSocket traffic, which HMR
         // uses. This tells HMR to connect directly to Nuxt's port for WebSocket
