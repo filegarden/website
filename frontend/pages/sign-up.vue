@@ -17,14 +17,15 @@ const captchaToken = ref("");
 async function submitSignUp() {
   loading.value = true;
 
-  await api
-    .post("/email-verification", {
+  await api("/email-verification", {
+    method: "POST",
+    body: {
       email: email.value,
       captchaToken: captchaToken.value,
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
 
   page.value = "verification-sent";
   emailCookie.value = email.value;
@@ -38,13 +39,11 @@ const code = ref("");
 const isCodeWrong = ref(false);
 
 const codeResponse = await useAsyncData(
-  async () => {
-    const { data } = await api.post("/email-verification/code", undefined, {
+  () =>
+    api("/email-verification/code", {
+      method: "POST",
       params: { token: route.query.token },
-    });
-
-    return data;
-  },
+    }),
   { immediate: route.query.token !== undefined },
 );
 
@@ -79,16 +78,14 @@ async function submitCode(event: Event) {
   loading.value = true;
 
   try {
-    await api
-      .get("/email-verification", {
-        params: {
-          email: email.value,
-          code: code.value.toUpperCase(),
-        },
-      })
-      .finally(() => {
-        loading.value = false;
-      });
+    await api("/email-verification", {
+      params: {
+        email: email.value,
+        code: code.value.toUpperCase(),
+      },
+    }).finally(() => {
+      loading.value = false;
+    });
 
     page.value = "final";
   } catch (error) {
@@ -114,16 +111,17 @@ async function completeSignUp() {
   loading.value = true;
 
   try {
-    await api
-      .post("/users", {
+    await api("/users", {
+      method: "POST",
+      body: {
         email: email.value,
         emailVerificationCode: code.value.toUpperCase(),
         name: name.value,
         password: password.value,
-      })
-      .finally(() => {
-        loading.value = false;
-      });
+      },
+    }).finally(() => {
+      loading.value = false;
+    });
 
     alert("TODO");
   } catch (error) {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { isAxiosError } from "axios";
+import { FetchError } from "ofetch";
 
 const errorBoxes = useErrorBoxes();
 
 function handleRejection(event: PromiseRejectionEvent) {
   const error = event.reason as unknown;
-  if (!isAxiosError<unknown>(error)) {
+  if (!(error instanceof FetchError)) {
     return;
   }
 
@@ -13,9 +13,7 @@ function handleRejection(event: PromiseRejectionEvent) {
     errorBoxes.open({
       message: error.response.status + " " + error.response.statusText,
       code:
-        typeof error.response.data === "object"
-          ? JSON.stringify(error.response.data)
-          : undefined,
+        typeof error.data === "object" ? JSON.stringify(error.data) : undefined,
     });
   } else {
     errorBoxes.open({

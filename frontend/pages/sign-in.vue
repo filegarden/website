@@ -14,14 +14,15 @@ async function submitSignIn() {
   loading.value = true;
 
   try {
-    await api
-      .post("/sessions", {
+    await api("/sessions", {
+      method: "POST",
+      body: {
         email: email.value,
         password: password.value,
-      })
-      .finally(() => {
-        loading.value = false;
-      });
+      },
+    }).finally(() => {
+      loading.value = false;
+    });
 
     alert("TODO");
   } catch (error) {

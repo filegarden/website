@@ -9,7 +9,6 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
-    "axios": "^1.7.9",
     "vue-turnstile": "^1.0.11"
   },
   "devDependencies": {
@@ -24,12 +23,12 @@
     "eslint-plugin-es-x": "^8.5.0",
     "eslint-plugin-vue-scoped-css": "^2.9.0",
     "nuxt": "^3.15.4",
-    "prettier": "3.5.1",
+    "prettier": "3.5.2",
     "sass-embedded": "^1.85.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "vue-tsc": "^2.2.2"
+    "vue-tsc": "^2.2.4"
   }
 }

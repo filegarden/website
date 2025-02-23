@@ -12,14 +12,15 @@ const captchaToken = ref("");
 async function requestPasswordReset() {
   loading.value = true;
 
-  await api
-    .post("/password-reset", {
+  await api("/password-reset", {
+    method: "POST",
+    body: {
       email: email.value,
       captchaToken: captchaToken.value,
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
 
   page.value = "password-reset-sent";
 }
@@ -27,13 +28,10 @@ async function requestPasswordReset() {
 const isTokenWrong = ref(false);
 
 const passwordResetResponse = await useAsyncData(
-  async () => {
-    const { data } = await api.get("/password-reset", {
+  () =>
+    api("/password-reset", {
       params: { token: route.query.token },
-    });
-
-    return data;
-  },
+    }),
   { immediate: route.query.token !== undefined },
 );
 
@@ -65,15 +63,13 @@ async function submitNewPassword() {
   loading.value = true;
 
   try {
-    await api
-      .post(
-        "/password-reset/password",
-        { password: password.value },
-        { params: { token: route.query.token } },
-      )
-      .finally(() => {
-        loading.value = false;
-      });
+    await api("/password-reset/password", {
+      method: "POST",
+      params: { token: route.query.token },
+      body: { password: password.value },
+    }).finally(() => {
+      loading.value = false;
+    });
 
     page.value = "done";
   } catch (error) {

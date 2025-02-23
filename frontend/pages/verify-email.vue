@@ -3,11 +3,11 @@ const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
 const { data: email } = await useAsyncData(async () => {
-  const { data } = await api.get("/email-verification", {
+  const { email } = await api("/email-verification", {
     params: { token: route.query.token },
   });
 
-  return data.email as string;
+  return email as string;
 });
 
 const isSameBrowser = computed(() => email.value === emailCookie.value);
@@ -19,15 +19,14 @@ async function generateCode() {
   loading.value = true;
 
   try {
-    const { data } = await api
-      .post("/email-verification/code", undefined, {
-        params: { token: route.query.token },
-      })
-      .finally(() => {
-        loading.value = false;
-      });
+    const { code } = await api("/email-verification/code", {
+      method: "POST",
+      params: { token: route.query.token },
+    }).finally(() => {
+      loading.value = false;
+    });
 
-    code.value = data.code;
+    code.value = code;
   } catch (error) {
     if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
       email.value = "";
