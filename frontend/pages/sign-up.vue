@@ -38,14 +38,11 @@ function openCodePage() {
 const code = ref("");
 const isCodeWrong = ref(false);
 
-const codeResponse = await useAsyncData(
-  () =>
-    api("/email-verification/code", {
-      method: "POST",
-      params: { token: route.query.token },
-    }),
-  { immediate: route.query.token !== undefined },
-);
+const codeResponse = await useApi("/email-verification/code", {
+  method: "POST",
+  params: { token: route.query.token },
+  immediate: route.query.token !== undefined,
+});
 
 watchEffect(() => {
   if (route.query.token) {

@@ -2,13 +2,11 @@
 const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
-const { data: email } = await useAsyncData(async () => {
-  const { email } = await api("/email-verification", {
-    params: { token: route.query.token },
-  });
-
-  return email as string;
+const { data: emailVerification } = await useApi("/email-verification", {
+  params: { token: route.query.token },
 });
+
+const email = ref(emailVerification.value.email as string);
 
 const isSameBrowser = computed(() => email.value === emailCookie.value);
 

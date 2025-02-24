@@ -27,13 +27,10 @@ async function requestPasswordReset() {
 
 const isTokenWrong = ref(false);
 
-const passwordResetResponse = await useAsyncData(
-  () =>
-    api("/password-reset", {
-      params: { token: route.query.token },
-    }),
-  { immediate: route.query.token !== undefined },
-);
+const passwordResetResponse = await useApi("/password-reset", {
+  params: { token: route.query.token },
+  immediate: route.query.token !== undefined,
+});
 
 watchEffect(() => {
   if (route.query.token) {
