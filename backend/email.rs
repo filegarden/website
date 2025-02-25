@@ -116,9 +116,14 @@ static MAILER: LazyLock<AsyncSmtpTransport<Tokio1Executor>> = LazyLock::new(|| {
         .expect("environment variable `SMTP_USERNAME` should be a valid string");
     let password = dotenvy::var("SMTP_PASSWORD")
         .expect("environment variable `SMTP_PASSWORD` should be a valid string");
+    let port = dotenvy::var("SMTP_PORT")
+        .expect("environment variable `SMTP_PORT` should be a valid string")
+        .parse::<u16>()
+        .expect("environment variable `SMTP_PORT` should be a valid integer");
 
     let mut smtp_transport = AsyncSmtpTransport::<Tokio1Executor>::relay(&hostname)
-        .expect("SMTP relay couldn't be initialized")
+        .expect("unable to create SMTP relay")
+        .port(port)
         .credentials(Credentials::new(username, password));
 
     match dotenvy::var("SMTP_HELO_DOMAIN") {
