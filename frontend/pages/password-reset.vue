@@ -70,8 +70,10 @@ async function submitNewPassword() {
 
     page.value = "done";
   } catch (error) {
-    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
+    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
       isTokenWrong.value = true;
+    } else {
+      throw error;
     }
   }
 }

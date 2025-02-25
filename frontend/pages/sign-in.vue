@@ -26,8 +26,10 @@ async function submitSignIn() {
 
     alert("TODO");
   } catch (error) {
-    if (getApiErrorCodeOrThrow(error) === "USER_CREDENTIALS_WRONG") {
+    if (getApiErrorCode(error) === "USER_CREDENTIALS_WRONG") {
       areCredentialsWrong.value = true;
+    } else {
+      throw error;
     }
   }
 }

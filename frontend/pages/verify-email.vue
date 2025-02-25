@@ -26,8 +26,10 @@ async function generateCode() {
 
     code.value = code;
   } catch (error) {
-    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
+    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
       email.value = "";
+    } else {
+      throw error;
     }
   }
 }

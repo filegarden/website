@@ -86,11 +86,13 @@ async function submitCode(event: Event) {
 
     page.value = "final";
   } catch (error) {
-    if (getApiErrorCodeOrThrow(error) === "RESOURCE_NOT_FOUND") {
+    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
       isCodeWrong.value = true;
 
       const form = event.target as HTMLFormElement;
       form.getElementsByTagName("input")[0]?.select();
+    } else {
+      throw error;
     }
   }
 }
@@ -122,7 +124,7 @@ async function completeSignUp() {
 
     alert("TODO");
   } catch (error) {
-    if (getApiErrorCodeOrThrow(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
+    if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
     }
   }
