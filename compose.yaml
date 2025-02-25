@@ -24,7 +24,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     env_file:
-      - path: ./.env.backend
+      - path: ./.env.db
     healthcheck:
       test: [ "CMD", "pg_isready" ]
       interval: 10s
