@@ -6,7 +6,7 @@
     "build-preview": "npm run build && npm run preview",
     "check": "vue-tsc && eslint && prettier --check .",
     "build": "nuxt build",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview --dotenv .env.frontend"
   },
   "dependencies": {
     "vue-turnstile": "^1.0.11"
