@@ -19,12 +19,12 @@ use crate::{
     AppState, WEBSITE_ORIGIN,
 };
 
-pub mod code;
+pub(crate) mod code;
 
 /// A `GET` request query for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(untagged, rename_all = "camelCase")]
-pub enum GetQuery {
+pub(crate) enum GetQuery {
     /// Identifies an email verification request by its verification token.
     Token {
         /// The email verification token.
@@ -47,7 +47,7 @@ pub enum GetQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn get(
+pub(crate) async fn get(
     State(state): State<AppState>,
     Query(query): Query<GetQuery>,
 ) -> Response<GetResponse> {
@@ -100,7 +100,7 @@ pub async fn get(
 /// A `GET` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct GetResponse {
+pub(crate) struct GetResponse {
     /// The email address to verify.
     pub email: String,
 }
@@ -108,7 +108,7 @@ pub struct GetResponse {
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PostRequest {
+pub(crate) struct PostRequest {
     /// The email address to verify.
     pub email: UserEmail,
 
@@ -122,7 +122,7 @@ pub struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
@@ -208,7 +208,7 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {
+pub(crate) struct PostResponse {
     /// The email address to verify.
     pub email: UserEmail,
 }

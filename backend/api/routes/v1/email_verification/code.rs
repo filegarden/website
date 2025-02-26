@@ -15,7 +15,7 @@ use crate::{
 /// A `POST` request query for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostQuery {
+pub(crate) struct PostQuery {
     /// The email verification token.
     pub token: Token,
 }
@@ -26,7 +26,7 @@ pub struct PostQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     Query(query): Query<PostQuery>,
 ) -> Response<PostResponse> {
@@ -65,7 +65,7 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {
+pub(crate) struct PostResponse {
     /// The email address to verify.
     pub email: String,
 

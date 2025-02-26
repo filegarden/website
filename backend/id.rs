@@ -15,7 +15,7 @@ use thiserror::Error;
 pub(crate) type NewUserId = Id<[u8; 8]>;
 
 /// A 128-byte token.
-pub type Token = Id<[u8; 128]>;
+pub(crate) type Token = Id<[u8; 128]>;
 
 /// An ID that can be deserialized from and serialized to `base64url` (without padding).
 #[derive(
@@ -35,11 +35,11 @@ pub type Token = Id<[u8; 128]>;
 )]
 #[as_ref(forward)]
 #[as_mut(forward)]
-pub struct Id<T = Vec<u8>>(T);
+pub(crate) struct Id<T = Vec<u8>>(T);
 
 impl<const N: usize> Id<[u8; N]> {
     /// Generates a cryptographically secure pseudorandom ID.
-    pub fn generate() -> Self {
+    pub(crate) fn generate() -> Self {
         let mut id = Self([0; N]);
         id.reroll();
         id
@@ -49,7 +49,7 @@ impl<const N: usize> Id<[u8; N]> {
 impl<T: AsMut<[u8]>> Id<T> {
     /// Overwrites this ID with a new cryptographically secure pseudorandom ID, reusing the existing
     /// memory.
-    pub fn reroll(&mut self) {
+    pub(crate) fn reroll(&mut self) {
         rand::rng().fill_bytes(self.as_mut());
     }
 }
@@ -69,7 +69,7 @@ impl<T> From<T> for Id<T> {
 /// An error constructing an [`Id`].
 #[derive(Error, Clone, Debug)]
 #[non_exhaustive]
-pub enum Error {
+pub(crate) enum Error {
     /// The ID isn't valid Base64.
     #[error("failed to construct ID from Base64: {0}")]
     Base64(#[from] base64::DecodeError),

@@ -20,7 +20,7 @@ use crate::{
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PostRequest {
+pub(crate) struct PostRequest {
     /// The user's email address.
     pub email: UserEmail,
 
@@ -40,7 +40,7 @@ pub struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
@@ -102,7 +102,7 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {
+pub(crate) struct PostResponse {
     /// The user's ID.
     pub id: NewUserId,
 }

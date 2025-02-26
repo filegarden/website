@@ -10,13 +10,13 @@ use tower_cookies::CookieManagerLayer;
 
 use crate::{api, AppState};
 
-pub mod v1 {
+mod v1 {
     //! The routes for version 1 of the HTTP API.
 
-    pub mod email_verification;
-    pub mod password_reset;
-    pub mod sessions;
-    pub mod users;
+    pub(crate) mod email_verification;
+    pub(crate) mod password_reset;
+    pub(crate) mod sessions;
+    pub(crate) mod users;
 }
 
 /// The API router.

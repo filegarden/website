@@ -32,7 +32,7 @@ const SESSION_MAX_AGE: Duration = Duration::days(60);
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PostRequest {
+pub(crate) struct PostRequest {
     /// The email address of the user signing in.
     pub email: UserEmail,
 
@@ -46,7 +46,7 @@ pub struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     cookies: Cookies,
     Json(body): Json<PostRequest>,
@@ -117,7 +117,7 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {
+pub(crate) struct PostResponse {
     // To reduce the session token's attack surface, it isn't included in the response. It's set as
     // an `HttpOnly` cookie instead so browser scripts can't access it.
 }

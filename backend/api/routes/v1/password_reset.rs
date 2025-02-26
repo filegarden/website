@@ -19,12 +19,12 @@ use crate::{
     AppState, WEBSITE_ORIGIN,
 };
 
-pub mod password;
+pub(crate) mod password;
 
 /// A `GET` request query for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct GetQuery {
+pub(crate) struct GetQuery {
     /// The password reset token.
     token: Token,
 }
@@ -35,7 +35,7 @@ pub struct GetQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn get(
+pub(crate) async fn get(
     State(state): State<AppState>,
     Query(query): Query<GetQuery>,
 ) -> Response<GetResponse> {
@@ -68,7 +68,7 @@ pub async fn get(
 /// A `GET` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct GetResponse {
+pub(crate) struct GetResponse {
     /// The email of the user whose password reset was requested.
     pub email: String,
 }
@@ -76,7 +76,7 @@ pub struct GetResponse {
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PostRequest {
+pub(crate) struct PostRequest {
     /// The email address of the user to request a password reset for.
     pub email: UserEmail,
 
@@ -91,7 +91,7 @@ pub struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
@@ -177,4 +177,4 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {}
+pub(crate) struct PostResponse {}

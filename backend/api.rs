@@ -20,14 +20,14 @@ use tower::ServiceExt;
 use crate::AppState;
 
 mod captcha;
-pub mod routes;
-pub mod validation;
+mod routes;
+mod validation;
 
 /// An API error.
 #[derive(Error, IntoStaticStr, Debug)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
-pub enum Error {
+enum Error {
     /// The request body is too large.
     #[error("The request body is too large.")]
     BodyTooLarge,
@@ -78,7 +78,7 @@ pub enum Error {
 
 impl Error {
     /// Gets the HTTP response status code corresponding to the API error.
-    pub const fn status(&self) -> StatusCode {
+    const fn status(&self) -> StatusCode {
         match self {
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,
@@ -150,7 +150,7 @@ impl From<reqwest::Error> for Error {
 /// An API error's response body.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct ErrorBody {
+struct ErrorBody {
     /// The computer-friendly error code in `SCREAMING_SNAKE_CASE`. See [`Error`] for error codes.
     pub code: &'static str,
 
@@ -173,7 +173,7 @@ impl IntoResponse for Error {
 /// response.
 #[derive(FromRequest, Clone, Copy, Default, Debug)]
 #[from_request(via(axum::Json), rejection(Error))]
-pub struct Json<T>(pub T);
+struct Json<T>(pub T);
 
 impl<T: Serialize> IntoResponse for Json<T> {
     fn into_response(self) -> axum::response::Response {
@@ -186,10 +186,10 @@ impl<T: Serialize> IntoResponse for Json<T> {
 /// plain text response.
 #[derive(FromRequestParts, Clone, Copy, Default, Debug)]
 #[from_request(via(axum::extract::Query), rejection(Error))]
-pub struct Query<T>(pub T);
+struct Query<T>(pub T);
 
 /// An API response type.
-pub type Response<T> = std::result::Result<(StatusCode, Json<T>), Error>;
+type Response<T> = std::result::Result<(StatusCode, Json<T>), Error>;
 
 /// Routes a request to an API endpoint.
 pub(super) async fn handle(

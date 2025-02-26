@@ -5,12 +5,12 @@ use std::sync::LazyLock;
 use axum::handler::Handler;
 use tokio::net::TcpListener;
 
-pub mod api;
+mod api;
 mod content;
 mod crypto;
 mod db;
 mod email;
-pub mod id;
+mod id;
 mod percent_encoding;
 mod response;
 mod router;
@@ -30,7 +30,7 @@ pub(crate) static WEBSITE_ORIGIN: LazyLock<String> = LazyLock::new(|| {
 
 /// The state passed to all of the routes.
 #[derive(Clone, Debug)]
-pub struct AppState {
+struct AppState {
     /// The database pool shared between all routes.
     db_pool: sqlx::PgPool,
 }

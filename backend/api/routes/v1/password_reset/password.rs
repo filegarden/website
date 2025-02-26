@@ -15,7 +15,7 @@ use crate::{
 /// A `POST` request query for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostQuery {
+pub(crate) struct PostQuery {
     /// The password reset token.
     pub token: Token,
 }
@@ -23,7 +23,7 @@ pub struct PostQuery {
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-pub struct PostRequest {
+pub(crate) struct PostRequest {
     /// The user's new password in plain text.
     pub password: NewUserPassword,
 }
@@ -34,7 +34,7 @@ pub struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub async fn post(
+pub(crate) async fn post(
     State(state): State<AppState>,
     Query(query): Query<PostQuery>,
     Json(body): Json<PostRequest>,
@@ -76,4 +76,4 @@ pub async fn post(
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct PostResponse {}
+pub(crate) struct PostResponse {}

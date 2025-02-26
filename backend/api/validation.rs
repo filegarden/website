@@ -11,19 +11,19 @@ use serde_with::{DeserializeFromStr, SerializeDisplay};
 use thiserror::Error;
 
 /// A user's name.
-pub type UserName = BoundedString<1, 64>;
+pub(crate) type UserName = BoundedString<1, 64>;
 
 /// A user's new password in plain text.
-pub type NewUserPassword = BoundedString<8, 256>;
+pub(crate) type NewUserPassword = BoundedString<8, 256>;
 
 /// A user's password in plain text.
-pub type UserPassword = BoundedString<0, 256>;
+pub(crate) type UserPassword = BoundedString<0, 256>;
 
 /// An unverified email's verification code in plain text.
-pub type EmailVerificationCode = BoundedString<6, 6>;
+pub(crate) type EmailVerificationCode = BoundedString<6, 6>;
 
 /// A CAPTCHA token.
-pub type CaptchaToken = BoundedString<1, 2048>;
+pub(crate) type CaptchaToken = BoundedString<1, 2048>;
 
 /// A [`String`] newtype that guarantees its length is within a certain range.
 #[derive(
@@ -42,18 +42,19 @@ pub type CaptchaToken = BoundedString<1, 2048>;
 )]
 #[as_ref(forward)]
 #[serde(try_from = "String")]
-pub struct BoundedString<const MIN: usize, const MAX: usize>(String);
+pub(crate) struct BoundedString<const MIN: usize, const MAX: usize>(String);
 
 impl<const MIN: usize, const MAX: usize> BoundedString<MIN, MAX> {
     /// Consumes the [`BoundedString`], returning the wrapped [`String`].
-    pub fn into_inner(self) -> String {
+    #[expect(dead_code, reason = "This should be part of the interface regardless.")]
+    pub(crate) fn into_inner(self) -> String {
         self.0
     }
 }
 
 /// An error constructing a [`BoundedString`].
 #[derive(Error, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
-pub enum BoundedStringError<const MIN: usize, const MAX: usize> {
+pub(crate) enum BoundedStringError<const MIN: usize, const MAX: usize> {
     /// The length was less than the [`BoundedString`]'s `MIN`.
     #[error("invalid length {0}, expected at least {MIN}")]
     TooShort(usize),
@@ -94,21 +95,22 @@ impl<const MIN: usize, const MAX: usize> TryFrom<String> for BoundedString<MIN, 
     Debug,
 )]
 #[as_ref(forward)]
-pub struct UserEmail(Address);
+pub(crate) struct UserEmail(Address);
 
 impl UserEmail {
     /// The maximum length of a [`UserEmail`].
     ///
     /// As per RFC 3696 erratum 1690, the theoretical maximum is 254.
-    pub const MAX_LENGTH: usize = 254;
+    pub(crate) const MAX_LENGTH: usize = 254;
 
     /// Gets a reference to the email address string.
-    pub fn as_str(&self) -> &str {
+    pub(crate) fn as_str(&self) -> &str {
         self.as_ref()
     }
 
     /// Consumes the [`UserEmail`], returning the wrapped [`Address`].
-    pub fn into_inner(self) -> Address {
+    #[expect(dead_code, reason = "This should be part of the interface regardless.")]
+    pub(crate) fn into_inner(self) -> Address {
         self.0
     }
 }
@@ -116,7 +118,7 @@ impl UserEmail {
 /// An error constructing a [`UserEmail`].
 #[derive(Error, Copy, Clone, Debug)]
 #[non_exhaustive]
-pub enum UserEmailError {
+pub(crate) enum UserEmailError {
     /// The email address was invalid.
     #[error("invalid email address")]
     Invalid,
