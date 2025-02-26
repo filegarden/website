@@ -3,8 +3,10 @@
 use std::{env::VarError, sync::LazyLock};
 
 use askama::Template;
+use async_trait::async_trait;
 use html2text::render::text_renderer::TrivialDecorator;
 use lettre::{
+    address::Envelope,
     message::{Mailbox, MultiPart},
     transport::smtp::{authentication::Credentials, extension::ClientId},
     AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor,
@@ -109,7 +111,11 @@ pub(crate) trait MessageTemplate: Template {
 }
 
 /// The SMTP transport used to send automated emails.
-static MAILER: LazyLock<AsyncSmtpTransport<Tokio1Executor>> = LazyLock::new(|| {
+static MAILER: LazyLock<AsyncOptionalSmtpTransport> = LazyLock::new(|| {
+    if cfg!(debug_assertions) {
+        return AsyncOptionalSmtpTransport::Debug;
+    }
+
     let hostname = dotenvy::var("SMTP_HOSTNAME")
         .expect("environment variable `SMTP_HOSTNAME` should be a valid string");
     let username = dotenvy::var("SMTP_USERNAME")
@@ -133,8 +139,39 @@ static MAILER: LazyLock<AsyncSmtpTransport<Tokio1Executor>> = LazyLock::new(|| {
         }
     }
 
-    smtp_transport.build()
+    AsyncOptionalSmtpTransport::Smtp(smtp_transport.build())
 });
+
+/// An async mail transport with the option to either send mail over SMTP or simply print all sent
+/// messages.
+enum AsyncOptionalSmtpTransport {
+    /// An async mail transport that prints all sent messages.
+    Debug,
+
+    /// An async mail transport that sends messages over SMTP.
+    Smtp(AsyncSmtpTransport<Tokio1Executor>),
+}
+
+#[async_trait]
+impl AsyncTransport for AsyncOptionalSmtpTransport {
+    type Ok = ();
+    type Error = <AsyncSmtpTransport<Tokio1Executor> as AsyncTransport>::Error;
+
+    async fn send_raw(&self, envelope: &Envelope, email: &[u8]) -> Result<Self::Ok, Self::Error> {
+        match self {
+            Self::Debug => {
+                println!(
+                    "======== DEBUG MAIL START ========\n{}\n======== DEBUG MAIL END ========",
+                    String::from_utf8_lossy(email),
+                );
+            }
+            Self::Smtp(smtp_transport) => {
+                smtp_transport.send_raw(envelope, email).await?;
+            }
+        }
+        Ok(())
+    }
+}
 
 /// A trait for sending messages using the SMTP configuration from `.env`.
 pub(crate) trait SendMessage {
