@@ -1,25 +1,8 @@
 <script setup lang="ts">
-import { FetchError } from "ofetch";
-
 const errorBoxes = useErrorBoxes();
 
 function handleRejection(event: PromiseRejectionEvent) {
-  const error = event.reason as unknown;
-  if (!(error instanceof FetchError)) {
-    return;
-  }
-
-  if (error.response) {
-    errorBoxes.open({
-      message: error.response.status + " " + error.response.statusText,
-      code:
-        typeof error.data === "object" ? JSON.stringify(error.data) : undefined,
-    });
-  } else {
-    errorBoxes.open({
-      message: error.message,
-    });
-  }
+  errorBoxes.handleError(event.reason);
 }
 
 onMounted(() => {
