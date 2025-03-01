@@ -63,7 +63,7 @@ onBeforeRouteLeave(clearErrorBoxes);
       <div class="error-boxes-below-the-fold">
         <ErrorBox
           v-for="errorBox in errorBoxes.value.slice(1)"
-          :key="errorBox.key"
+          :key="keyFromIdentity(errorBox)"
           :value="errorBox"
           @close="errorBoxes.close"
         />

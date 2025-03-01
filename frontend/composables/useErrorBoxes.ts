@@ -1,10 +1,10 @@
+import { FetchError } from "ofetch";
+
 export interface ErrorBoxInfo {
-  /** A unique key for this error. */
-  readonly key: symbol;
   /** A short description of the error. */
-  message?: string;
+  readonly message?: string;
   /** Any code relating to the error. */
-  code?: string;
+  readonly code?: string;
 }
 
 /** The information for the error boxes. */
@@ -12,12 +12,8 @@ export default function useErrorBoxes() {
   const errorBoxes = {
     value: useState<ErrorBoxInfo[]>(() => []).value,
 
-    /** Opens an error box using the specified information. */
-    open(errorBox: Omit<ErrorBoxInfo, "key">) {
-      errorBoxes.value.push({
-        key: Symbol(),
-        ...errorBox,
-      });
+    open(errorBox: ErrorBoxInfo) {
+      errorBoxes.value.push(errorBox);
     },
 
     close(errorBox: ErrorBoxInfo) {
