@@ -4,7 +4,7 @@ export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
-const model = defineModel<string>();
+const model = defineModel<string>({ default: "" });
 
 function handleCodeBeforeInput(event: InputEvent) {
   // Even though the input handler removes invalid characters, preventing them

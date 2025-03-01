@@ -15,7 +15,7 @@ defineProps<InputProps>();
 
 const id = useId();
 
-const model = defineModel<string>();
+const model = defineModel<string>({ default: "" });
 </script>
 
 <template>
