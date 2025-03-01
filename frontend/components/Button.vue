@@ -27,7 +27,7 @@ defineProps<ButtonProps>();
   font-family: var(--font-family);
   color: var(--input-text-color);
 
-  border-radius: 0.5em;
+  border-radius: 0.6em;
   padding: 0.667em 1.5em;
   background-color: var(--surface-color);
   cursor: pointer;
