@@ -60,7 +60,7 @@ input {
   background-color: var(--input-background-color);
 
   $box-shadow:
-    0 0.6px var(--edge-color),
+    0 1px var(--inner-edge-color),
     inset 0 1px 0.6rem -1px var(--shadow-medium-color);
 
   border: none;
