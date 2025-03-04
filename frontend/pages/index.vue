@@ -201,8 +201,6 @@ h1 {
 .advantages {
   margin: 0 auto;
   padding: 1.5rem 0;
-
-  font-size: 1.25em;
 }
 
 h2 {
@@ -227,7 +225,7 @@ h2 {
 }
 
 .advantage-heading {
-  font-size: 1.2em;
+  font-size: 1.5em;
   margin: 0.83em 0;
 }
 </style>
