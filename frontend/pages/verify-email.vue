@@ -17,14 +17,14 @@ async function generateCode() {
   loading.value = true;
 
   try {
-    const { code } = await api("/email-verification/code", {
+    const codeResponse = await api("/email-verification/code", {
       method: "POST",
       params: { token: route.query.token },
     }).finally(() => {
       loading.value = false;
     });
 
-    code.value = code;
+    code.value = codeResponse.code;
   } catch (error) {
     if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
       email.value = "";
