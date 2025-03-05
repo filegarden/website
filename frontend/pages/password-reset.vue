@@ -29,6 +29,12 @@ const isTokenWrong = ref(false);
 
 const passwordResetResponse = await useApi("/password-reset", {
   params: { token: route.query.token },
+
+  shouldIgnoreResponseError: (error) => {
+    const code = getApiErrorCode(error);
+    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+  },
+
   immediate: route.query.token !== undefined,
 });
 

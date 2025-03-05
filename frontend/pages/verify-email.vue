@@ -2,11 +2,16 @@
 const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
-const { data: emailVerification } = await useApi("/email-verification", {
+const { data: email } = await useApi("/email-verification", {
   params: { token: route.query.token },
-});
 
-const email = ref(emailVerification.value.email as string);
+  transform: (emailVerification) => emailVerification.email || "",
+
+  shouldIgnoreResponseError: (error) => {
+    const code = getApiErrorCode(error);
+    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+  },
+});
 
 const isSameBrowser = computed(() => email.value === emailCookie.value);
 

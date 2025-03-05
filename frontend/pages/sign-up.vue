@@ -41,6 +41,12 @@ const isCodeWrong = ref(false);
 const codeResponse = await useApi("/email-verification/code", {
   method: "POST",
   params: { token: route.query.token },
+
+  shouldIgnoreResponseError: (error) => {
+    const code = getApiErrorCode(error);
+    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+  },
+
   immediate: route.query.token !== undefined,
 });
 
