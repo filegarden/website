@@ -76,7 +76,7 @@ header {
   height: 3rem;
 }
 
-.panel {
+main {
   box-sizing: border-box;
   width: $panel-width;
   max-width: 100%;
