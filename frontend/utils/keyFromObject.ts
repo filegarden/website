@@ -1,8 +1,8 @@
 /** A mapping from each object to its unique key. */
 const keysByObject = new WeakMap<object, symbol>();
 
-/** Gets a unique key for an object. */
-export default function keyFromIdentity(errorBox: object): symbol {
+/** Gets a key which is unique to the identity of an object. */
+export default function keyFromObject(errorBox: object): symbol {
   let key = keysByObject.get(errorBox);
 
   if (key === undefined) {
