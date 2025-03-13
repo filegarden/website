@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface SinglePanelPageProps {
+export interface SmallPanelPageProps {
   /** The name of this page. */
   title: string;
 
@@ -7,7 +7,7 @@ export interface SinglePanelPageProps {
   removeHeading?: boolean;
 }
 
-defineProps<SinglePanelPageProps>();
+defineProps<SmallPanelPageProps>();
 </script>
 
 <template>

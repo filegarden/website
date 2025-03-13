@@ -86,7 +86,7 @@ async function submitNewPassword() {
 </script>
 
 <template>
-  <SinglePanelPage
+  <SmallPanelPage
     :class="[
       `page-${page}`,
       { 'page-password-token-wrong': page === 'password' && isTokenWrong },
@@ -184,7 +184,7 @@ async function submitNewPassword() {
         <A href="/sign-in" prefetch>Back to Sign In</A>
       </p>
     </template>
-  </SinglePanelPage>
+  </SmallPanelPage>
 </template>
 
 <style scoped lang="scss">
