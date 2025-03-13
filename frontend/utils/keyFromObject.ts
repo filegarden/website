@@ -6,7 +6,7 @@ export default function keyFromObject(errorBox: object): symbol {
   let key = keysByObject.get(errorBox);
 
   if (key === undefined) {
-    key = Symbol();
+    key = Symbol("keyFromObject");
     keysByObject.set(errorBox, key);
   }
 
