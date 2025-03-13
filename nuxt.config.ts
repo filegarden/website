@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-10-29",
   devtools: { enabled: true },
   srcDir: "frontend",
-  modules: ["@nuxt/eslint"],
+  modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
 
   runtimeConfig: {
     backendAddress: "",
