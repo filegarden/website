@@ -2,6 +2,8 @@
 
 Your use of any online services provided by us ("Services") is subject to these Terms of Service ("Terms").
 
+"We", "us", or "our" refers to the File Garden organization and its successors and assigns. "You" or "your" refers to any person who has consented to these Terms or has become contractually bound to them, whether such person is identified or not at the time.
+
 ## Acceptable Use
 
 You must not use our Services in a manner that violates our Terms or applicable policies, including but not limited to the following:
@@ -19,7 +21,7 @@ In our sole discretion, we may at any time change, eliminate, or restrict access
 
 ## Your Content
 
-You grant, and you represent and warrant that you have the right to grant, to us a non-exclusive, royalty-free, worldwide license to store, perform, display, reproduce, distribute, and prepare derivative works of any content you upload to our Services, solely for the purposes necessary to provide our Services. We don't sell your content to third parties, and we don't use your content for advertising purposes. We can disclose your files only in the limited circumstances described in our [Privacy Notice](/privacy).
+You grant us, and you represent and warrant that you have the right to grant us, a non-exclusive, royalty-free, worldwide license to store, perform, display, reproduce, distribute, and prepare derivative works of any content you upload to our Services, solely for the purposes necessary to provide our Services. We don't sell your content to third parties, and we don't use your content for advertising purposes. We can disclose your files only in the limited circumstances described in our [Privacy Notice](/privacy).
 
 ## Your Responsibilities
 
@@ -46,5 +48,3 @@ We want to address your concerns without needing a formal legal case. Before fil
 These Terms will be governed by Michigan law except for its conflicts of laws principles. However, some countries have laws that require agreements to be governed by the local laws of the consumer's country. This paragraph doesn't override those laws.
 
 These Terms constitute the entire agreement between you and us with respect to the subject matter of these Terms, and supersede and replace any other prior or contemporaneous agreements or terms and conditions applicable to the subject matter of these Terms. Our failure to enforce a provision is not a waiver of our right to do so later. We may assign any or all of our rights and obligations to others at any time. If any provision or part of a provision of these Terms is determined to be unlawful, void, or unenforceable, that provision or part of the provision is deemed severable from these Terms and does not affect the validity and enforceability of any remaining provisions.
-
-"We", "us", or "our" refers to the File Garden organization and its successors and assigns. "You" or "your" refers to any person who has consented to these Terms or has become contractually bound to them, whether such person is identified or not at the time.
