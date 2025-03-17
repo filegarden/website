@@ -22,7 +22,7 @@ In our sole discretion, we may at any time change, eliminate, or restrict access
 
 Your "Content" refers to any files or data you upload or provide to our Services.
 
-We don't sell your Content to third parties, and we don't use your Content for advertising purposes. We can disclose your Content only in the limited circumstances described in our [Privacy Notice](/privacy).
+We don't sell your Content to third parties, and we don't use your Content for advertising purposes. We can disclose your Content only in the limited circumstances described in our [Privacy Notice](/privacy), which is incorporated into these Terms.
 
 To provide the functionality you expect from our Services (including but not limited to file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. You grant us a non-exclusive, royalty-free, worldwide license (with sublicense and assignment rights) to store, perform, display, reproduce, distribute, and modify any of your Content, solely to the extent necessary to provide our Services. You represent and warrant that you have the right to grant us that license.
 
@@ -50,6 +50,6 @@ We want to address your concerns without needing a formal legal case. Before fil
 
 These Terms will be governed by Michigan law except for its conflicts of laws principles. However, some countries have laws that require agreements to be governed by the local laws of the consumer's country. This paragraph doesn't override those laws.
 
-These Terms constitute the entire agreement between you and us with respect to the subject matter of these Terms, and supersede and replace any other prior or contemporaneous agreements or terms and conditions applicable to the subject matter of these Terms. Our failure to enforce a provision is not a waiver of our right to do so later. We may assign any or all of our rights and obligations to others at any time. If any provision or part of a provision of these Terms is determined to be unlawful, void, or unenforceable, that provision or part of the provision is deemed severable from these Terms and does not affect the validity and enforceability of any remaining provisions.
+These Terms and our [Privacy Notice](/privacy) constitute the entire agreement between you and us with respect to the subject matter of these Terms, and supersede and replace any other prior or contemporaneous agreements or terms and conditions applicable to the subject matter of these Terms. Our failure to enforce a provision is not a waiver of our right to do so later. We may assign any or all of our rights and obligations to others at any time. If any provision or part of a provision of these Terms is determined to be unlawful, void, or unenforceable, that provision or part of the provision is deemed severable from these Terms and does not affect the validity and enforceability of any remaining provisions.
 
 If you have any questions or concerns regarding these Terms, we encourage you to reach out to us at support@filegarden.com.
