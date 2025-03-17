@@ -18,6 +18,10 @@ You must not use our Services in a manner that violates our Terms or applicable 
 
 In our sole discretion, we may at any time change, eliminate, or restrict access to our Services, or modify, suspend, or terminate a user account. If you violate any of our Terms or applicable policies, we reserve the right to suspend or terminate your account and may delete your data. We are not liable for any damages as a result of these actions.
 
+## Age Requirement
+
+By accessing our Services, you confirm that you're at least 13 years old and meet the minimum age required by the laws in your country. If you are old enough to access our Services in your country, but not old enough to have authority to consent to our Terms, your parent or legal guardian must agree to our Terms on your behalf. Please ask your parent or legal guardian to read these Terms with you. If you're a parent or legal guardian, and you allow your child (who must meet the minimum age for your country) to use the Services, then these Terms also apply to you, and you're responsible for your child's activity on the Services, including purchases made by them.
+
 ## Your Content
 
 Your "Content" refers to any files or data you upload or provide to our Services.
