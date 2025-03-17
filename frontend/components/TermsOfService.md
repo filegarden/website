@@ -28,7 +28,14 @@ Your "Content" refers to any files or data you upload or provide to our Services
 
 We don't sell your Content to third parties, and we don't use your Content for advertising purposes. We can disclose your Content only in the limited circumstances described in our [Privacy Notice](/privacy), which is incorporated into these Terms.
 
-To provide the functionality you expect from our Services (including but not limited to file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. You grant us a non-exclusive, royalty-free, worldwide license (with sublicense and assignment rights) to store, perform, display, reproduce, distribute, and modify any of your Content, solely to the extent necessary to provide our Services. You represent and warrant that you have the right to grant us that license.
+To provide the functionality you expect from our Services (for example, file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. By using our Services, you grant us a non-exclusive, royalty-free, worldwide, transferable, perpetual license to do the following with your Content, in accordance with applicable legal requirements, in connection with operating, developing, and improving our Services:
+
+- Use, copy, store, distribute, and communicate your Content in manners consistent with your use of the Services. (For example, so we can let you store and download your files.)
+- Publish, publicly perform, and publicly display your Content if you've chosen to make it visible to others. (For example, so we can display your files to others if you share them.)
+- Monitor, modify, translate, and reformat your Content. (For example, so we can resize an image you upload to fit in a thumbnail.)
+- Sublicense your Content, to allow our Services to work as intended. (For example, so we can store your Content with our cloud service providers.)
+
+You also represent and warrant that you have the right to grant us that license.
 
 ## Your Responsibilities
 
