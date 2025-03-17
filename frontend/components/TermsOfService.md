@@ -14,7 +14,7 @@ You must not use our Services in a manner that violates our Terms or applicable 
 - Don't interfere with the proper functioning of any of our software, hardware, or equipment.
 - Don't engage in any conduct that inhibits anyone else's use or enjoyment of our Services, or which we determine may harm anyone.
 - Don't circumvent, or attempt to circumvent, account restrictions, storage space limits, or pricing.
-- Don't automatically/programmatically upload files that you didn't manually decide to upload. If you need cloud storage for your app (e.g., to handle user-uploaded content), please use a cloud service intended for object storage (such as Backblaze B2, Cloudflare R2, or Amazon S3).
+- Don't automatically or programmatically upload files that you didn't manually decide to upload. If you need cloud storage for your app (e.g., to handle user-uploaded content), please use a cloud service intended for object storage (such as Backblaze B2, Cloudflare R2, or Amazon S3).
 
 In our sole discretion, we may at any time change, eliminate, or restrict access to our Services, or modify, suspend, or terminate a user account. If you violate any of our Terms or applicable policies, we reserve the right to suspend or terminate your account and may delete your data. We are not liable for any damages as a result of these actions.
 
