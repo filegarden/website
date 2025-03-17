@@ -20,19 +20,23 @@ In our sole discretion, we may at any time change, eliminate, or restrict access
 
 ## Your Content
 
-You grant us, and you represent and warrant that you have the right to grant us, a non-exclusive, royalty-free, worldwide license to store, perform, display, reproduce, distribute, and prepare derivative works of any content you upload to our Services, solely for the purposes necessary to provide our Services. We don't sell your content to third parties, and we don't use your content for advertising purposes. We can disclose your files only in the limited circumstances described in our [Privacy Notice](/privacy).
+Your "Content" refers to any files or data you upload or provide to our Services.
+
+We don't sell your Content to third parties, and we don't use your Content for advertising purposes. We can disclose your Content only in the limited circumstances described in our [Privacy Notice](/privacy).
+
+To provide the functionality you expect from our Services (including but not limited to file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. You grant us a non-exclusive, royalty-free, worldwide license to store, perform, display, reproduce, distribute, and modify any of your Content, solely to the extent necessary to provide our Services. You represent and warrant that you have the right to grant us that license.
 
 ## Your Responsibilities
 
-You are solely responsible for the development, content, and use of the files you upload to our Services, and you assume all risks associated with them, including intellectual property or other legal claims. Our Services will allow you to share your files with others, which is in your sole control and discretion. We assume no liability for any content that you or anyone else stores with our Services.
+You are solely responsible for the development, content, and use of your Content, and you assume all risks associated with your Content, including intellectual property or other legal claims. You will ensure that any use of your Content complies with all applicable laws and these Terms. We assume no liability for any data that you or anyone else stores with our Services.
 
 ## Indemnification
 
-You agree to defend, indemnify, and hold harmless us, our contractors, contributors, licensors, and partners, and their respective directors, officers, employees, and agents ("Indemnified Parties") from and against any and all third party claims and expenses, including attorneys' fees, arising out of or related to your use of our Services (including, but not limited to, from any content uploaded by you).
+You agree to defend, indemnify, and hold harmless us, our contractors, contributors, licensors, and partners, and their respective directors, officers, employees, and agents ("Indemnified Parties") from and against any and all third party claims and expenses, including attorneys' fees, arising out of or related to your use of our Services (including, but not limited to, from any of your Content).
 
 ## **Disclaimers**
 
-**The Services are provided "AS IS" WITH ALL FAULTS. To the extent permitted by law, we and the Indemnified Parties hereby disclaim all warranties, whether express or implied, including without limitation warranties that the Services are free of defects, merchantable, fit for a particular purpose, and non-infringing. You bear the entire risk as to selecting the Services for your purposes and as to the quality and performance of the Services, including without limitation the risk that your content is deleted or corrupted or that someone else accesses your online accounts. This limitation will apply notwithstanding the failure of essential purpose of any remedy. Some jurisdictions do not allow the exclusion or limitation of implied warranties, so this disclaimer may not apply to you.**
+**The Services are provided "AS IS" WITH ALL FAULTS. To the extent permitted by law, we and the Indemnified Parties hereby disclaim all warranties, whether express or implied, including without limitation warranties that the Services are free of defects, merchantable, fit for a particular purpose, and non-infringing. You bear the entire risk as to selecting the Services for your purposes and as to the quality and performance of the Services, including without limitation the risk that your Content is deleted or corrupted or that someone else accesses your online accounts. This limitation will apply notwithstanding the failure of essential purpose of any remedy. Some jurisdictions do not allow the exclusion or limitation of implied warranties, so this disclaimer may not apply to you.**
 
 ## **Limitations of Liability**
 
