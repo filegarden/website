@@ -10,7 +10,7 @@ You must not use our Services in a manner that violates our Terms or applicable 
 
 - Don't violate any laws, regulations, ordinances, or directives.
 - Don't do anything threatening, abusive, harassing, defamatory, tortious, or invasive of another person's privacy.
-- Don't do anything in support of malware, phishing, spam, and similar activities.
+- Don't do anything in support of malware, phishing, spam, or similar activities.
 - Don't interfere with the proper functioning of any of our software, hardware, or equipment.
 - Don't engage in any conduct that inhibits anyone else's use or enjoyment of our Services, or which we determine may harm anyone.
 - Don't circumvent, or attempt to circumvent, account restrictions, storage space limits, or pricing.
