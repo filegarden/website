@@ -21,8 +21,6 @@ useServerSeoMeta({
 
 <template>
   <div class="app">
-    <TheFont />
-
     <NuxtPage />
   </div>
 </template>
