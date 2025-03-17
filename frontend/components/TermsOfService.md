@@ -24,7 +24,7 @@ Your "Content" refers to any files or data you upload or provide to our Services
 
 We don't sell your Content to third parties, and we don't use your Content for advertising purposes. We can disclose your Content only in the limited circumstances described in our [Privacy Notice](/privacy).
 
-To provide the functionality you expect from our Services (including but not limited to file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. You grant us a non-exclusive, royalty-free, worldwide license to store, perform, display, reproduce, distribute, and modify any of your Content, solely to the extent necessary to provide our Services. You represent and warrant that you have the right to grant us that license.
+To provide the functionality you expect from our Services (including but not limited to file storage and file sharing), we are required to have a license that gives us permission to handle your Content accordingly. You grant us a non-exclusive, royalty-free, worldwide license (with sublicense and assignment rights) to store, perform, display, reproduce, distribute, and modify any of your Content, solely to the extent necessary to provide our Services. You represent and warrant that you have the right to grant us that license.
 
 ## Your Responsibilities
 
