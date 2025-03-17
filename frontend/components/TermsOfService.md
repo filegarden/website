@@ -8,13 +8,19 @@ Your use of any online services provided by us ("Services") is subject to these 
 
 You must not use our Services in a manner that violates our Terms or applicable policies, including but not limited to the following:
 
-- Don't violate any laws, regulations, ordinances, or directives.
+- Don't violate any applicable laws, regulations, ordinances, or directives.
 - Don't do anything threatening, abusive, harassing, defamatory, tortious, or invasive of another person's privacy.
 - Don't do anything in support of malware, phishing, spam, or similar activities.
 - Don't interfere with the proper functioning of any of our software, hardware, or equipment.
 - Don't engage in any conduct that inhibits anyone else's use or enjoyment of our Services, or which we determine may harm anyone.
 - Don't circumvent, or attempt to circumvent, account restrictions, storage space limits, or pricing.
 - Don't automatically or programmatically upload files that you didn't manually decide to upload. If you need cloud storage for your app (e.g., to handle user-uploaded content), please use a cloud service intended for object storage (such as Backblaze B2, Cloudflare R2, or Amazon S3).
+- You may upload and share sexually explicit content (while still complying with these Terms) if you're not under the age of 18, but don't make sexually explicit content available to anyone under the age of 18.
+- Don't do anything that sexualizes children in any way (real or fictional), or that we determine may contribute to the normalization of child sexual abuse.
+- Don't violate anyone's intellectual property or other rights, such as by participating in copyright infringement or piracy. (Regardless of the ethics of piracy, we're required to act against it, so please be mindful that using our Services for piracy puts additional strain on us.)
+- Don't share real media depicting gore, excessive violence, or animal harm, especially with the intention to harass or shock others.
+
+If you find content on our Services that violates these Terms, please report it to us at abuse@filegarden.com.
 
 In our sole discretion, we may at any time change, eliminate, or restrict access to our Services, or modify, suspend, or terminate a user account. If you violate any of our Terms or applicable policies, we reserve the right to suspend or terminate your account and may delete your data. We are not liable for any damages as a result of these actions.
 
