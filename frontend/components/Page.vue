@@ -11,10 +11,11 @@ useSeoMeta({
     props.title === undefined ? "File Garden" : `${props.title} | File Garden`,
 });
 
-// eslint-disable-next-line vue/no-setup-props-reactivity-loss -- SSR has no reactivity.
-useServerSeoMeta({
-  ogTitle: props.title,
-});
+if (import.meta.server) {
+  useSeoMeta({
+    ogTitle: props.title,
+  });
+}
 </script>
 
 <template>

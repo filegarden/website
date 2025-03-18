@@ -1,22 +1,24 @@
 <script setup lang="ts">
-const appConfig = useAppConfig();
-const requestUrl = useRequestURL();
+if (import.meta.server) {
+  const appConfig = useAppConfig();
+  const requestUrl = useRequestURL();
 
-useServerHead({
-  htmlAttrs: { lang: "en" },
-  link: [{ rel: "icon", href: "/assets/brand/icon.svg" }],
-});
+  useHead({
+    htmlAttrs: { lang: "en" },
+    link: [{ rel: "icon", href: "/assets/brand/icon.svg" }],
+  });
 
-useServerSeoMeta({
-  title: "File Garden",
+  useSeoMeta({
+    title: "File Garden",
 
-  ogType: "website",
-  ogSiteName: "File Garden",
-  ogTitle: "File Garden",
-  ogUrl: appConfig.SITE_URL_BASE + requestUrl.pathname + requestUrl.search,
-  // TODO: Set an `ogImage`.
-  ogImage: "",
-});
+    ogType: "website",
+    ogSiteName: "File Garden",
+    ogTitle: "File Garden",
+    ogUrl: appConfig.SITE_URL_BASE + requestUrl.pathname + requestUrl.search,
+    // TODO: Set an `ogImage`.
+    ogImage: "",
+  });
+}
 </script>
 
 <template>
