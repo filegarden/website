@@ -5,20 +5,27 @@ env:
   RUSTFLAGS: -Dwarnings
 
 jobs:
-  clippy:
+  cargo-clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: cargo clippy --all-features --all-targets --locked --workspace
 
-  fmt:
+  cargo-fmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: cargo fmt --all --check
 
-  test:
+  cargo-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: cargo test --all-features --all-targets --locked --workspace
+
+  npm-run-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run check
