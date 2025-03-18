@@ -4,12 +4,10 @@
 <p>
     If you tried to sign up to File Garden with your email <a style="font-weight: bold;">{{ email }}</a>, the sign-up request couldn't be fulfilled because you already have a verified File Garden account.
 </p>
-<p>
-    <ul style="padding-left: 1em;">
-        <li>If this was you, try <a href="{{ WEBSITE_ORIGIN.as_str() }}/sign-in">signing in</a> instead of signing up. If you forgot your account's password, use the <a href="{{ WEBSITE_ORIGIN.as_str() }}/password-reset">forgot password</a> link in our sign-in form.</li>
-        <li>If this wasn't you, you can safely ignore this email.</li>
-    </ul>
-</p>
+<ul style="padding-left: 1em;">
+    <li>If this was you, try <a href="{{ WEBSITE_ORIGIN.as_str() }}/sign-in">signing in</a> instead of signing up. If you forgot your account's password, use the <a href="{{ WEBSITE_ORIGIN.as_str() }}/password-reset">forgot password</a> link in our sign-in form.</li>
+    <li>If this wasn't you, you can safely ignore this email.</li>
+</ul>
 <p>
     Thanks for using File Garden. :)
 </p>
