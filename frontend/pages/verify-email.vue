@@ -5,7 +5,7 @@ const emailCookie = useSignUpEmailCookie();
 const { data: email } = await useApi("/email-verification", {
   params: { token: route.query.token },
 
-  transform: (emailVerification) => emailVerification.email || "",
+  transform: (emailVerification) => emailVerification.email ?? "",
 
   shouldIgnoreResponseError: (error) => {
     const code = getApiErrorCode(error);
