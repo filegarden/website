@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "nuxi dev --dotenv .env.frontend",
     "build-preview": "npm run build && npm run preview",
-    "check": "vue-tsc && eslint && prettier --check .",
+    "check": "nuxi prepare && vue-tsc && eslint && prettier --check .",
     "build": "nuxi build",
     "preview": "nuxi preview --dotenv .env.frontend"
   },
