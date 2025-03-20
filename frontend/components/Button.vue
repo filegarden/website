@@ -22,13 +22,13 @@ defineProps<ButtonProps>();
   text-decoration: none;
 
   vertical-align: middle;
-  line-height: 1.2;
+  line-height: 2.5;
   font-size: 1em;
   font-family: var(--font-family);
   color: var(--input-text-color);
 
   border-radius: 0.6em;
-  padding: 0.667em 1.5em;
+  padding: 0 1.5em;
   background-color: var(--surface-color);
   cursor: pointer;
 
