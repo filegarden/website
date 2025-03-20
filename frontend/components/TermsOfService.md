@@ -15,7 +15,7 @@ You must not use our Services in a manner that violates our Terms or applicable 
 - Don't engage in any conduct that inhibits anyone else's use or enjoyment of our Services, or which we determine may harm anyone.
 - Don't circumvent, or attempt to circumvent, account restrictions, storage space limits, or pricing.
 - Don't automatically or programmatically upload files that you didn't manually decide to upload. If you need cloud storage for your app (e.g., to handle user-uploaded content), please use a cloud service intended for object storage (such as Backblaze B2, Cloudflare R2, or Amazon S3).
-- You may upload and share sexually explicit content (while still complying with these Terms) if you're not under the age of 18, but don't make sexually explicit content available to anyone under the age of 18.
+- Don't make sexually explicit content available to anyone under the age of 18.
 - Don't do anything that sexualizes children in any way (real or fictional), or that we determine may contribute to the normalization of child sexual abuse.
 - Don't violate anyone's intellectual property or other rights, such as by participating in copyright infringement or piracy. (Regardless of the ethics of piracy, we're required to act against it, so please be mindful that using our Services for piracy puts additional strain on us.)
 - Don't share real media depicting gore, excessive violence, or animal harm, especially with the intention to harass or shock others.
