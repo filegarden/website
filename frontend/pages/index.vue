@@ -154,6 +154,6 @@ h2 {
 
 .advantage-heading {
   font-size: 1.5em;
-  margin: 0.83em 0;
+  margin: 1rem 0;
 }
 </style>
