@@ -13,6 +13,8 @@ defineProps<LargePanelPageProps>();
     <main class="panel">
       <slot></slot>
     </main>
+
+    <Footer />
   </Page>
 </template>
 

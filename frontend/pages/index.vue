@@ -65,6 +65,8 @@ useHead({
         </div>
       </section>
     </main>
+
+    <Footer />
   </Page>
 </template>
 
