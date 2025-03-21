@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
 
+  routeRules: {
+    "/discord": { redirect: "https://discord.gg/fWexzeh" },
+  },
+
   runtimeConfig: {
     backendAddress: "",
 
