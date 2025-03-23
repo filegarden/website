@@ -91,8 +91,8 @@ useHead({
 </style>
 
 <style scoped lang="scss">
-main {
-  padding-bottom: 8vh;
+main > section {
+  padding: 3rem 0;
 }
 
 .hero {
@@ -126,11 +126,6 @@ h1 {
   // This must take priority over `.button` so a flash of incorrect font size
   // can't happen depending on the order of `style` tags.
   font-size: 1.333rem !important;
-}
-
-.advantages {
-  margin: 0 auto;
-  padding: 1.5rem 0;
 }
 
 h2 {
