@@ -2,12 +2,12 @@
 const keysByObject = new WeakMap<object, symbol>();
 
 /** Gets a key which is unique to the identity of an object. */
-export default function keyFromObject(errorBox: object): symbol {
-  let key = keysByObject.get(errorBox);
+export default function keyFromObject(object: object): symbol {
+  let key = keysByObject.get(object);
 
   if (key === undefined) {
     key = Symbol("keyFromObject");
-    keysByObject.set(errorBox, key);
+    keysByObject.set(object, key);
   }
 
   return key;
