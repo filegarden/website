@@ -8,7 +8,7 @@ useHead({
 
 <template>
   <Page>
-    <Header collapsed />
+    <Header />
 
     <main>
       <section class="hero">
