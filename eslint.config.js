@@ -14,6 +14,8 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 export default withNuxt([
   comments.recommended,
   esX.configs["flat/restrict-to-es2020"],
+  // This is needed because of eslint-community/eslint-plugin-es-x#246.
+  esX.configs["flat/no-new-in-esnext"],
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
   ...vueScopedCss.configs["flat/all"],
