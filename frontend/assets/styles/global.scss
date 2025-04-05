@@ -69,7 +69,6 @@ input {
   font-family: var(--font-family);
   color: var(--input-text-color);
 
-  width: stretch;
   border-radius: 0.25rem;
   padding: 0.6rem;
   background-color: var(--input-background-color);
@@ -81,6 +80,8 @@ input {
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
   outline: 1px solid transparent;
+  // Override any user agent defaults.
+  outline-offset: 0;
   margin: 1px;
   box-shadow: $box-shadow;
 
@@ -113,6 +114,61 @@ input {
 
   &:disabled {
     opacity: 0.5;
+  }
+}
+
+input:not([type]),
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="text"],
+input[type="url"] {
+  width: stretch;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  appearance: none;
+
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: 0.125em;
+
+  margin: 0.25em;
+  vertical-align: middle;
+
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  &::before {
+    opacity: 0;
+    transition: 0.1s ease-out opacity;
+  }
+
+  &:checked::before {
+    opacity: 1;
+  }
+}
+
+input[type="checkbox"]::before {
+  content: "✔";
+}
+
+input[type="radio"] {
+  border-radius: 50%;
+
+  &::before {
+    content: "";
+
+    background-color: currentColor;
+    width: 50%;
+    height: 50%;
+    border-radius: inherit;
   }
 }
 
