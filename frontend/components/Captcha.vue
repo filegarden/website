@@ -7,16 +7,15 @@ const model = defineModel<string>({ required: true });
 </script>
 
 <template>
-  <div class="captcha-wrapper">
-    <LabelBlock>
-      <span class="captcha-label">Verify you're human</span>
-    </LabelBlock>
+  <div class="captcha">
+    <LabelBlock class="captcha-label">Verify you're human</LabelBlock>
+
     <VueTurnstile v-model="model" :site-key="turnstileSiteKey" />
   </div>
 </template>
 
 <style scoped lang="scss">
-.captcha-wrapper {
+.captcha {
   margin: 1em 0;
 }
 
