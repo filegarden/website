@@ -8,7 +8,7 @@ use sqlx::Acquire;
 use crate::{
     api::{
         self,
-        validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
+        validation::{EmailVerificationCode, NewUserPassword, True, UserEmail, UserName},
         Json, Response,
     },
     crypto::{hash_with_salt, verify_hash},
@@ -21,6 +21,12 @@ use crate::{
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
+    /// Whether the user agrees to our terms of service.
+    ///
+    /// This is part of the API so users can't use the API to get around accepting the terms.
+    #[expect(dead_code, reason = "This isn't dead code; it's used for validation.")]
+    pub accept_terms: True,
+
     /// The user's email address.
     pub email: UserEmail,
 

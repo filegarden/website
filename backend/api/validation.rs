@@ -78,6 +78,28 @@ impl<const MIN: usize, const MAX: usize> TryFrom<String> for BoundedString<MIN, 
     }
 }
 
+/// A [`bool`] newtype that guarantees the Boolean is `true`.
+#[derive(Display, Deserialize, SerializeDisplay, Clone, PartialEq, Eq, Hash, Debug)]
+#[serde(try_from = "bool")]
+pub(crate) struct True;
+
+/// An error constructing a [`True`].
+#[derive(Error, Clone, Copy, Debug)]
+#[error("expected true")]
+pub(crate) struct TrueError;
+
+impl TryFrom<bool> for True {
+    type Error = TrueError;
+
+    fn try_from(value: bool) -> Result<Self, Self::Error> {
+        if value {
+            Ok(Self)
+        } else {
+            Err(TrueError)
+        }
+    }
+}
+
 /// A user-inputted email address. Ensures the address uses a domain name with a TLD, and normalizes
 /// the domain name (for non-ASCII characters).
 #[derive(
