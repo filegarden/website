@@ -167,13 +167,12 @@ async function completeSignUp() {
 
         <Captcha v-model="captchaToken" />
 
-        <p>
-          <label>
-            <input v-model="acceptTerms" type="checkbox" required />
+        <BooleanInput v-model="acceptTerms" required>
+          <template #label>
             I agree to the
             <A href="/terms" target="_blank">terms of service</A>.
-          </label>
-        </p>
+          </template>
+        </BooleanInput>
 
         <Button type="submit" :disabled="!captchaToken">Create Account</Button>
       </fieldset>

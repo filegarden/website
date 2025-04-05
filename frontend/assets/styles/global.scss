@@ -129,16 +129,14 @@ input[type="url"] {
 input[type="checkbox"],
 input[type="radio"] {
   appearance: none;
+  cursor: pointer;
 
   box-sizing: content-box;
   width: 1em;
   height: 1em;
   padding: 0.125em;
 
-  margin: 0.2em;
   vertical-align: middle;
-
-  cursor: pointer;
 
   display: inline-flex;
   align-items: center;
