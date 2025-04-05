@@ -41,7 +41,7 @@ async function submitSignIn() {
 
     <form @submit.prevent="submitSignIn">
       <fieldset :disabled="loading">
-        <Input
+        <TextInput
           v-model="email"
           label="Email"
           type="email"
@@ -50,7 +50,7 @@ async function submitSignIn() {
           autofocus
         />
 
-        <Input
+        <TextInput
           v-model="password"
           label="Password"
           type="password"
@@ -62,7 +62,7 @@ async function submitSignIn() {
               <A href="/password-reset" prefetch>Forgot password?</A>
             </div>
           </template>
-        </Input>
+        </TextInput>
 
         <p v-if="areCredentialsWrong" class="warning">
           Incorrect email or password.

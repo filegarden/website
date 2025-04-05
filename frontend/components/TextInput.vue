@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface InputProps {
+export interface TextInputProps {
   /** The label's content. If undefined, an `aria-label` should be set. */
   label?: string;
 
@@ -11,7 +11,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-defineProps<InputProps>();
+defineProps<TextInputProps>();
 
 const id = useId();
 
@@ -19,7 +19,7 @@ const model = defineModel<string>({ default: "" });
 </script>
 
 <template>
-  <div class="input">
+  <div class="text-input">
     <LabelBlock>
       <label :for="id">{{ label }}</label>
     </LabelBlock>
@@ -31,7 +31,7 @@ const model = defineModel<string>({ default: "" });
 </template>
 
 <style scoped lang="scss">
-.input {
+.text-input {
   margin: 1em 0;
 }
 </style>

@@ -46,7 +46,7 @@ async function handleCodeInput(
 </script>
 
 <template>
-  <Input
+  <TextInput
     v-model="model"
     :placeholder="'-'.repeat(SHORT_CODE_LENGTH)"
     :minlength="SHORT_CODE_LENGTH"

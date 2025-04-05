@@ -156,7 +156,7 @@ async function completeSignUp() {
 
     <form v-if="page === 'email'" @submit.prevent="submitSignUp">
       <fieldset :disabled="loading">
-        <Input
+        <TextInput
           v-model="email"
           label="Email"
           type="email"
@@ -222,8 +222,13 @@ async function completeSignUp() {
 
         <form v-if="code" @submit.prevent="completeSignUp">
           <fieldset :disabled="loading">
-            <Input label="Email" type="email" disabled :model-value="email" />
-            <Input
+            <TextInput
+              label="Email"
+              type="email"
+              disabled
+              :model-value="email"
+            />
+            <TextInput
               v-model="name"
               label="Display Name"
               minlength="1"
@@ -232,7 +237,7 @@ async function completeSignUp() {
               autofocus
               autocomplete="username"
             />
-            <Input
+            <TextInput
               v-model="password"
               label="Password"
               type="password"
@@ -241,7 +246,7 @@ async function completeSignUp() {
               required
               autocomplete="new-password"
             />
-            <Input
+            <TextInput
               v-model="confirmPassword"
               label="Confirm Password"
               type="password"
