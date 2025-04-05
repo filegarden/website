@@ -20,9 +20,9 @@ const model = defineModel<string>({ default: "" });
 
 <template>
   <div class="input">
-    <LabelWrapper>
+    <LabelBlock>
       <label :for="id">{{ label }}</label>
-    </LabelWrapper>
+    </LabelBlock>
 
     <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
 

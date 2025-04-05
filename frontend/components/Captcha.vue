@@ -8,9 +8,9 @@ const model = defineModel<string>({ required: true });
 
 <template>
   <div class="captcha-wrapper">
-    <LabelWrapper>
+    <LabelBlock>
       <span class="captcha-label">Verify you're human</span>
-    </LabelWrapper>
+    </LabelBlock>
     <VueTurnstile v-model="model" :site-key="turnstileSiteKey" />
   </div>
 </template>
