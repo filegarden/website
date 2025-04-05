@@ -132,6 +132,8 @@ async function completeSignUp() {
   } catch (error) {
     if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
+    } else {
+      throw error;
     }
   }
 }
