@@ -146,6 +146,8 @@ input[type="radio"] {
   overflow: hidden;
 
   &::before {
+    pointer-events: none;
+
     opacity: 0;
     transition: 0.1s ease-out opacity;
   }
