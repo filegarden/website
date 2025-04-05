@@ -63,11 +63,12 @@ fieldset {
 }
 
 input {
-  vertical-align: middle;
   line-height: 1.2;
   font-size: 1em;
   font-family: var(--font-family);
   color: var(--input-text-color);
+
+  vertical-align: middle;
 
   border-radius: 0.25rem;
   padding: 0.6rem;
@@ -135,8 +136,6 @@ input[type="radio"] {
   width: 1em;
   height: 1em;
   padding: 0.125em;
-
-  vertical-align: middle;
 
   display: inline-flex;
   align-items: center;
