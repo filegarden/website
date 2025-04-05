@@ -63,15 +63,17 @@ fieldset {
 }
 
 input {
-  line-height: 1.2;
   font-size: 1em;
   font-family: var(--font-family);
   color: var(--input-text-color);
+  // Use line height instead of vertical padding so certain glyphs aren't cut
+  // off.
+  line-height: 2.4;
 
   vertical-align: middle;
 
   border-radius: 0.25rem;
-  padding: 0.6rem;
+  padding: 0 0.6rem;
   background-color: var(--input-background-color);
 
   $box-shadow:
