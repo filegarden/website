@@ -9,7 +9,7 @@ use sqlx::Acquire;
 use crate::{
     api::{
         self, captcha,
-        validation::{CaptchaToken, EmailVerificationCode, UserEmail},
+        validation::{CaptchaToken, EmailVerificationCode, True, UserEmail},
         Json, Query, Response,
     },
     crypto::{hash_without_salt, verify_hash},
@@ -109,6 +109,12 @@ pub(crate) struct GetResponse {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
+    /// Whether the user agrees to our terms of service.
+    ///
+    /// This is part of the API so users can't use the API to get around accepting the terms.
+    #[expect(dead_code, reason = "This isn't dead code; it's used for validation.")]
+    pub accept_terms: True,
+
     /// The email address to verify.
     pub email: UserEmail,
 

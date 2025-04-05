@@ -13,6 +13,7 @@ const email = useSignInEmail();
 const emailCookie = useSignUpEmailCookie();
 
 const captchaToken = ref("");
+const acceptTerms = ref(false);
 
 async function submitSignUp() {
   loading.value = true;
@@ -20,6 +21,7 @@ async function submitSignUp() {
   await api("/email-verification", {
     method: "POST",
     body: {
+      acceptTerms: acceptTerms.value,
       email: email.value,
       captchaToken: captchaToken.value,
     },
@@ -111,7 +113,6 @@ function tryAgain() {
 const name = ref("");
 const password = ref("");
 const confirmPassword = ref("");
-const acceptTerms = ref(false);
 
 async function completeSignUp() {
   loading.value = true;
@@ -120,7 +121,6 @@ async function completeSignUp() {
     await api("/users", {
       method: "POST",
       body: {
-        acceptTerms: acceptTerms.value,
         email: email.value,
         emailVerificationCode: code.value.toUpperCase(),
         name: name.value,
@@ -166,6 +166,14 @@ async function completeSignUp() {
         />
 
         <Captcha v-model="captchaToken" />
+
+        <p>
+          <label>
+            <input v-model="acceptTerms" type="checkbox" required />
+            I agree to the
+            <A href="/terms" target="_blank">terms of service</A>.
+          </label>
+        </p>
 
         <Button type="submit" :disabled="!captchaToken">Create Account</Button>
       </fieldset>
@@ -242,14 +250,6 @@ async function completeSignUp() {
               required
               autocomplete="new-password"
             />
-
-            <p>
-              <label>
-                <input v-model="acceptTerms" type="checkbox" required />
-                I agree to the
-                <A href="/terms" target="_blank">terms of service</A>.
-              </label>
-            </p>
 
             <p
               v-if="confirmPassword && password !== confirmPassword"
