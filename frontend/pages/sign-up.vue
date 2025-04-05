@@ -2,7 +2,9 @@
 import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
 const route = useRoute();
-const page = ref<"email" | "verification-sent" | "code" | "final">("email");
+const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
+  "email",
+);
 
 // If you leave the code page, you can't return to it without restarting the
 // sign-up process.
@@ -10,10 +12,32 @@ useLeaveConfirmation(() => page.value === "code");
 
 const loading = ref(false);
 const email = useSignInEmail();
-const emailCookie = useSignUpEmailCookie();
-
-const captchaToken = ref("");
 const acceptTerms = ref(false);
+const captchaToken = ref("");
+
+function openCaptchaPage() {
+  page.value = "captcha";
+}
+
+watch(captchaToken, async () => {
+  if (!captchaToken.value) {
+    return;
+  }
+
+  try {
+    await submitSignUp();
+  } catch (error) {
+    page.value = "email";
+
+    throw error;
+  }
+
+  // Reset the value so this callback runs again if the same value is set next
+  // time the CAPTCHA is completed.
+  captchaToken.value = "";
+});
+
+const emailCookie = useSignUpEmailCookie();
 
 async function submitSignUp() {
   loading.value = true;
@@ -154,7 +178,7 @@ async function completeSignUp() {
       v-if="loading || codeResponse.status.value === 'pending'"
     />
 
-    <form v-if="page === 'email'" @submit.prevent="submitSignUp">
+    <form v-if="page === 'email'" @submit.prevent="openCaptchaPage">
       <fieldset :disabled="loading">
         <TextInput
           v-model="email"
@@ -165,8 +189,6 @@ async function completeSignUp() {
           autofocus
         />
 
-        <Captcha v-model="captchaToken" />
-
         <BooleanInput v-model="acceptTerms" required>
           <template #label>
             I agree to the
@@ -174,9 +196,13 @@ async function completeSignUp() {
           </template>
         </BooleanInput>
 
-        <Button type="submit" :disabled="!captchaToken">Create Account</Button>
+        <Button type="submit">Create Account</Button>
       </fieldset>
     </form>
+
+    <div v-else-if="page === 'captcha'" class="captcha-wrapper">
+      <Captcha v-model="captchaToken" />
+    </div>
 
     <p v-else-if="page === 'verification-sent'" class="verification-sent-info">
       To continue, check the email sent to<br />
@@ -315,6 +341,11 @@ async function completeSignUp() {
   + * {
     margin-top: 3em;
   }
+}
+
+.captcha-wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .verification-sent-info {
