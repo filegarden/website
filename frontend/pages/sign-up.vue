@@ -30,11 +30,11 @@ watch(captchaToken, async () => {
     page.value = "email";
 
     throw error;
+  } finally {
+    // Reset the value so this callback runs again if the same value is set next
+    // time the CAPTCHA is completed.
+    captchaToken.value = "";
   }
-
-  // Reset the value so this callback runs again if the same value is set next
-  // time the CAPTCHA is completed.
-  captchaToken.value = "";
 });
 
 const emailCookie = useSignUpEmailCookie();
