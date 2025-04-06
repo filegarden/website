@@ -2,6 +2,7 @@ CREATE EXTENSION citext;
 
 CREATE TABLE users (
     created_at timestamptz NOT NULL DEFAULT now(),
+    accepted_terms_at
     id bytea PRIMARY KEY,
     email citext NOT NULL UNIQUE,
     name text NOT NULL,
@@ -11,6 +12,7 @@ CREATE TABLE users (
 
 CREATE TABLE unverified_emails (
     created_at timestamptz NOT NULL DEFAULT now(),
+    user_accepted_terms_at
     token_hash bytea PRIMARY KEY,
     user_id bytea UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     email citext NOT NULL,

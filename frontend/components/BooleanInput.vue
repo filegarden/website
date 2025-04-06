@@ -16,29 +16,33 @@ const model = defineModel<boolean>({ default: false });
 </script>
 
 <template>
-  <label class="boolean-input">
-    <div class="boolean-input-content">
-      <input
-        :id="id"
-        v-model="model"
-        v-autofocus="autofocus"
-        type="checkbox"
-        v-bind="$attrs"
-      />
-    </div>
+  <div class="boolean-input">
+    <label class="boolean-input-label">
+      <div class="boolean-input-content">
+        <input
+          :id="id"
+          v-model="model"
+          v-autofocus="autofocus"
+          type="checkbox"
+          v-bind="$attrs"
+        />
+      </div>
 
-    <div class="boolean-input-label-content">
-      <slot name="label"></slot>
-    </div>
-  </label>
+      <div class="boolean-input-label-content">
+        <slot name="label"></slot>
+      </div>
+    </label>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .boolean-input {
-  display: flex;
-  align-items: center;
-
   margin: 1em 0;
+}
+
+.boolean-input-label {
+  display: inline-flex;
+  align-items: center;
 }
 
 .boolean-input-content {
