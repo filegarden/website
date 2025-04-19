@@ -15,7 +15,7 @@ lto = "fat"
 [dependencies]
 anyhow = "1"
 argon2 = "0.5"
-askama = "0.12"
+askama = "0.13"
 async-trait = "0.1"
 axum = "0.8"
 axum-macros = "0.5"
@@ -28,7 +28,7 @@ idna = "1"
 lettre = { version = "0.11", features = ["serde", "tokio1", "tokio1-native-tls"] }
 percent-encoding = "2"
 rand = "0.9"
-regex-macro = "0.2"
+regex-macro = "0.3"
 reqwest = { version = "0.12", features = ["brotli", "deflate", "gzip", "json", "stream", "zstd"] }
 ring = "0.17"
 serde = "1"
