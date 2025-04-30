@@ -1,8 +1,15 @@
 CREATE EXTENSION citext;
 
-CREATE TABLE terms_versions (
-    created_at timestamptz PRIMARY KEY DEFAULT now(),
-    sha256_hash bytea NOT NULL
+CREATE TABLE user_agreement (
+    constrain_table_to_one_row boolean NOT NULL UNIQUE DEFAULT TRUE
+        CHECK (constrain_table_to_one_row),
+    updated_at timestamptz PRIMARY KEY
+        GENERATED ALWAYS AS (GREATEST(terms_updated_at, privacy_updated_at))
+        STORED,
+    terms_updated_at timestamptz NOT NULL DEFAULT now(),
+    privacy_updated_at timestamptz NOT NULL DEFAULT now(),
+    terms_hash bytea NOT NULL,
+    privacy_hash bytea NOT NULL
 );
 
 CREATE TABLE users (

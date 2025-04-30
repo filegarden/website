@@ -36,8 +36,8 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error
     Ok(pool)
 }
 
-/// Updates the information about the latest version of the terms of service in the database if the
-/// terms have changed since this was last ran.
+/// Checks for any updates to the terms of service and privacy notice and updates the database
+/// accordingly.
 ///
 /// # Errors
 ///
@@ -46,32 +46,52 @@ async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
     let terms_hash = hasher.finalize();
+    let terms_hash = terms_hash.as_slice();
+
+    let mut hasher = Sha256::new();
+    hasher.update(include_bytes!("../frontend/components/PrivacyNotice.md"));
+    let privacy_hash = hasher.finalize();
+    let privacy_hash = privacy_hash.as_slice();
 
     transaction!(&db_pool, async |tx| -> TxResult<_, sqlx::Error> {
-        let Some(new_terms_version) = sqlx::query!(
-            "INSERT INTO terms_versions (sha256_hash)
-                SELECT $1 WHERE $1 IS DISTINCT FROM (
-                    SELECT sha256_hash FROM terms_versions
-                        ORDER BY created_at DESC
-                        LIMIT 1
-                )
-                RETURNING created_at",
-            terms_hash.as_slice(),
-        )
-        .fetch_optional(tx.as_mut())
-        .await?
+        let Some(user_agreement) =
+            sqlx::query!("SELECT terms_hash, privacy_hash FROM user_agreement")
+                .fetch_optional(tx.as_mut())
+                .await?
         else {
+            sqlx::query!(
+                "INSERT INTO user_agreement (terms_hash, privacy_hash)
+                    VALUES ($1, $2)",
+                terms_hash,
+                privacy_hash,
+            )
+            .execute(tx.as_mut())
+            .await?;
+
             return Ok(());
         };
 
-        // Though not strictly necessary, delete all outdated terms versions since they'd be unused.
-        sqlx::query!(
-            "DELETE FROM terms_versions
-                WHERE created_at != $1",
-            new_terms_version.created_at,
-        )
-        .execute(tx.as_mut())
-        .await?;
+        if user_agreement.terms_hash != terms_hash {
+            sqlx::query!(
+                "UPDATE user_agreement
+                    SET terms_hash = $1,
+                        terms_updated_at = now()",
+                terms_hash,
+            )
+            .execute(tx.as_mut())
+            .await?;
+        }
+
+        if user_agreement.privacy_hash != privacy_hash {
+            sqlx::query!(
+                "UPDATE user_agreement
+                    SET privacy_hash = $1,
+                        privacy_updated_at = now()",
+                privacy_hash,
+            )
+            .execute(tx.as_mut())
+            .await?;
+        }
 
         Ok(())
     })

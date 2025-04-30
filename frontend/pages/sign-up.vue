@@ -192,7 +192,8 @@ async function completeSignUp() {
         <BooleanInput v-model="acceptTerms" required>
           <template #label>
             I agree to the
-            <A href="/terms" target="_blank">terms of service</A>.
+            <A href="/terms" target="_blank">terms of service</A> and
+            <A href="/privacy" target="_blank">privacy notice</A>.
           </template>
         </BooleanInput>
 
