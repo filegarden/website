@@ -64,7 +64,7 @@ async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
             return Ok(());
         };
 
-        // While not strictly necessary, delete all outdated terms versions since they'd be unused.
+        // Though not strictly necessary, delete all outdated terms versions since they'd be unused.
         sqlx::query!(
             "DELETE FROM terms_versions
                 WHERE created_at != $1",
