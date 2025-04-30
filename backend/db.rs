@@ -3,17 +3,19 @@
 use std::error::Error;
 
 use castaway::cast;
+use sha2::{Digest, Sha256};
 use sqlx::{postgres::PgPoolOptions, Executor, PgPool};
 
-/// Initializes the SQLx database pool and runs pending database migrations, returning the pool once complete.
+/// Initializes the SQLx database pool, runs pending database migrations, and performs some initial
+/// data population. Returns the pool once complete.
 ///
 /// # Errors
 ///
-/// Returns an error if the initial database connection or its migrations fail.
+/// Returns an error if the database connection or initial database operations fail.
 ///
 /// # Panics
 ///
-/// Panics if the database is already initialized.
+/// May panic if the database is already initialized.
 pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error> {
     let pool = PgPoolOptions::new()
         .after_connect(|conn, _| {
@@ -29,7 +31,53 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error
 
     sqlx::migrate!().run(&pool).await?;
 
+    sync_terms_version_to_db(&pool).await?;
+
     Ok(pool)
+}
+
+/// Updates the information about the latest version of the terms of service in the database if the
+/// terms have changed since this was last ran.
+///
+/// # Errors
+///
+/// Returns an error if the database operations fail.
+async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
+    let mut hasher = Sha256::new();
+    hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
+    let terms_hash = hasher.finalize();
+
+    transaction!(&db_pool, async |tx| -> TxResult<_, sqlx::Error> {
+        match sqlx::query!(
+            "INSERT INTO terms_versions (sha256_hash)
+                VALUES ($1)",
+            terms_hash.as_slice(),
+        )
+        .execute(tx.as_mut())
+        .await
+        {
+            Err(sqlx::Error::Database(error))
+                if error.constraint() == Some("terms_versions_pkey") =>
+            {
+                return Ok(());
+            }
+            result => result?,
+        };
+
+        // While not strictly necessary, delete all outdated terms versions since they'd be unused.
+        sqlx::query!(
+            "DELETE FROM terms_versions
+                WHERE sha256_hash != $1",
+            terms_hash.as_slice(),
+        )
+        .execute(tx.as_mut())
+        .await?;
+
+        Ok(())
+    })
+    .await?;
+
+    Ok(())
 }
 
 /// The error result of a database transaction.

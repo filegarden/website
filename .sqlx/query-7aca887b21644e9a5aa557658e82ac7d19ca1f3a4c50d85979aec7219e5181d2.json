@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO terms_versions (sha256_hash)\n                VALUES ($1)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7aca887b21644e9a5aa557658e82ac7d19ca1f3a4c50d85979aec7219e5181d2"
+}

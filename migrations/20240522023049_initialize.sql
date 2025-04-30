@@ -1,7 +1,13 @@
 CREATE EXTENSION citext;
 
+CREATE TABLE terms_versions (
+    created_at timestamptz NOT NULL UNIQUE DEFAULT now(),
+    sha256_hash bytea PRIMARY KEY
+);
+
 CREATE TABLE users (
     created_at timestamptz NOT NULL DEFAULT now(),
+    accepted_terms_at timestamptz NOT NULL,
     id bytea PRIMARY KEY,
     email citext NOT NULL UNIQUE,
     name text NOT NULL,
@@ -12,6 +18,7 @@ CREATE TABLE users (
 CREATE TABLE unverified_emails (
     created_at timestamptz NOT NULL DEFAULT now(),
     token_hash bytea PRIMARY KEY,
+    user_accepted_terms_at timestamptz NOT NULL DEFAULT now(),
     user_id bytea UNIQUE REFERENCES users (id) ON DELETE CASCADE,
     email citext NOT NULL,
     code_hash text

@@ -1,10 +1,11 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO users (id, email, name, password_hash)\n                    VALUES ($1, $2, $3, $4)",
+  "query": "INSERT INTO users (accepted_terms_at, id, email, name, password_hash)\n                    VALUES ($1, $2, $3, $4, $5)",
   "describe": {
     "columns": [],
     "parameters": {
       "Left": [
+        "Timestamptz",
         "Bytea",
         {
           "Custom": {
@@ -18,5 +19,5 @@
     },
     "nullable": []
   },
-  "hash": "9e2206b4eb869fd2212a1e66431b8ca8c39b816fb90d5fe9c75cce3c53bdcaec"
+  "hash": "60f15ab9e85ddef7a769b8ac0dc8f3d31d2846b05e55e5da9694d1f4523d1d3a"
 }

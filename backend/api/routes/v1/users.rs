@@ -49,16 +49,21 @@ pub(crate) async fn post(
     let password_hash = hash_with_salt(&body.password);
 
     db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
-        let does_code_match = sqlx::query!(
+        let Some(unverified_email) = sqlx::query!(
             "DELETE FROM unverified_emails
                 WHERE user_id IS NULL AND email = $1
-                RETURNING code_hash",
+                RETURNING user_accepted_terms_at, code_hash",
             body.email.as_str(),
         )
         .fetch_optional(tx.as_mut())
         .await?
-        .and_then(|unverified_email| unverified_email.code_hash)
-        .is_some_and(|code_hash| verify_hash(&body.email_verification_code, &code_hash));
+        else {
+            return Err(TxError::Abort(api::Error::EmailVerificationCodeWrong));
+        };
+
+        let does_code_match = unverified_email
+            .code_hash
+            .is_some_and(|code_hash| verify_hash(&body.email_verification_code, &code_hash));
 
         if !does_code_match {
             return Err(TxError::Abort(api::Error::EmailVerificationCodeWrong));
@@ -70,8 +75,9 @@ pub(crate) async fn post(
             let mut savepoint = tx.begin().await?;
 
             match sqlx::query!(
-                "INSERT INTO users (id, email, name, password_hash)
-                    VALUES ($1, $2, $3, $4)",
+                "INSERT INTO users (accepted_terms_at, id, email, name, password_hash)
+                    VALUES ($1, $2, $3, $4, $5)",
+                unverified_email.user_accepted_terms_at,
                 user_id.as_slice(),
                 body.email.as_str(),
                 *body.name,

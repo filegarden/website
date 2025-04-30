@@ -34,6 +34,7 @@ ring = "0.17"
 serde = "1"
 serde_json = "1"
 serde_with = "3"
+sha2 = "0.10"
 sqlx = { version = "0.8", features = ["chrono", "macros", "postgres", "runtime-tokio"] }
 strum_macros = "0.27"
 thiserror = "2"

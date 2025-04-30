@@ -1,10 +1,15 @@
 {
   "db_name": "PostgreSQL",
-  "query": "DELETE FROM unverified_emails\n                WHERE user_id IS NULL AND email = $1\n                RETURNING code_hash",
+  "query": "DELETE FROM unverified_emails\n                WHERE user_id IS NULL AND email = $1\n                RETURNING user_accepted_terms_at, code_hash",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
+        "name": "user_accepted_terms_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 1,
         "name": "code_hash",
         "type_info": "Text"
       }
@@ -20,8 +25,9 @@
       ]
     },
     "nullable": [
+      false,
       true
     ]
   },
-  "hash": "3944ae9944c7ff8061a87b996c66fd077ed63974d8dbaeae97fda908c5b3ba3f"
+  "hash": "47aedd873df7008859ca67db0624ceb5cd6c6a2a6b51b554496568a4255f5bca"
 }
