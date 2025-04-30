@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO terms_versions (sha256_hash)\n                SELECT $1 WHERE $1 IS DISTINCT FROM (\n                    SELECT sha256_hash FROM terms_versions\n                        ORDER BY created_at DESC\n                        LIMIT 1\n                )\n                RETURNING created_at",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "5ced9c3ed301b24bb6de551dee4779e95b3fe93f28f5bee7616b8f392fd6563a"
+}

@@ -48,27 +48,27 @@ async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
     let terms_hash = hasher.finalize();
 
     transaction!(&db_pool, async |tx| -> TxResult<_, sqlx::Error> {
-        match sqlx::query!(
+        let Some(new_terms_version) = sqlx::query!(
             "INSERT INTO terms_versions (sha256_hash)
-                VALUES ($1)",
+                SELECT $1 WHERE $1 IS DISTINCT FROM (
+                    SELECT sha256_hash FROM terms_versions
+                        ORDER BY created_at DESC
+                        LIMIT 1
+                )
+                RETURNING created_at",
             terms_hash.as_slice(),
         )
-        .execute(tx.as_mut())
-        .await
-        {
-            Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("terms_versions_pkey") =>
-            {
-                return Ok(());
-            }
-            result => result?,
+        .fetch_optional(tx.as_mut())
+        .await?
+        else {
+            return Ok(());
         };
 
         // While not strictly necessary, delete all outdated terms versions since they'd be unused.
         sqlx::query!(
             "DELETE FROM terms_versions
-                WHERE sha256_hash != $1",
-            terms_hash.as_slice(),
+                WHERE created_at != $1",
+            new_terms_version.created_at,
         )
         .execute(tx.as_mut())
         .await?;

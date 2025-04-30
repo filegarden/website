@@ -1,8 +1,8 @@
 CREATE EXTENSION citext;
 
 CREATE TABLE terms_versions (
-    created_at timestamptz NOT NULL UNIQUE DEFAULT now(),
-    sha256_hash bytea PRIMARY KEY
+    created_at timestamptz PRIMARY KEY DEFAULT now(),
+    sha256_hash bytea NOT NULL
 );
 
 CREATE TABLE users (
