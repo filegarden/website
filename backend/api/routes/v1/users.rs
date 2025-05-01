@@ -1,6 +1,6 @@
 //! The set of all users.
 
-use axum::http::StatusCode;
+use axum::http::{header, StatusCode};
 use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 use sqlx::Acquire;
@@ -97,8 +97,11 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     })
     .await?;
 
-    // TODO: Set `Location` header.
-    Ok((StatusCode::CREATED, Json(PostResponse { id: user_id })))
+    Ok((
+        StatusCode::CREATED,
+        [(header::LOCATION, format!("/api/v1/users/{user_id}"))],
+        Json(PostResponse { id: user_id }),
+    ))
 }
 
 /// A `POST` response body for this API route.
