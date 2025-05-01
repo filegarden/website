@@ -47,7 +47,7 @@ pub(crate) enum GetQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(Query(query): Query<GetQuery>) -> Response<GetResponse> {
+pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetResponse> {
     let email = match query {
         GetQuery::Token { token } => {
             let token_hash = hash_without_salt(&token);
@@ -122,7 +122,7 @@ pub(crate) struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(Json(body): Json<PostRequest>) -> Response<PostResponse> {
+pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     // We don't want bots creating accounts or spamming people with verification emails.
     if !captcha::verify(&body.captcha_token).await? {
         return Err(api::Error::CaptchaFailed);

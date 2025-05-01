@@ -35,7 +35,7 @@ pub(crate) struct GetQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(Query(query): Query<GetQuery>) -> Response<GetResponse> {
+pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetResponse> {
     let token_hash = hash_without_salt(&query.token);
 
     let Some(password_reset) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
@@ -87,7 +87,7 @@ pub(crate) struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(Json(body): Json<PostRequest>) -> Response<PostResponse> {
+pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     // We don't want bots spamming people with password reset emails.
     if !captcha::verify(&body.captcha_token).await? {
         return Err(api::Error::CaptchaFailed);

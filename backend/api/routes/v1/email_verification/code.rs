@@ -25,7 +25,7 @@ pub(crate) struct PostQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(Query(query): Query<PostQuery>) -> Response<PostResponse> {
+pub(crate) async fn post(Query(query): Query<PostQuery>) -> impl Response<PostResponse> {
     let token_hash = hash_without_salt(&query.token);
 
     let code = generate_short_code();

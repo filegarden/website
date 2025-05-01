@@ -187,7 +187,31 @@ impl<T: Serialize> IntoResponse for Json<T> {
 struct Query<T>(pub T);
 
 /// An API response type.
-type Response<T> = std::result::Result<(StatusCode, Json<T>), Error>;
+trait Response<T>: IntoResponse {}
+
+/// Implements [`Response`] for types with various tuple lengths.
+macro_rules! impl_response {
+    ( $($ty:ident),* $(,)? ) => {
+        // Always require an explicit status code in `Ok` responses so the most appropriate
+        // successful status code is more likely to be considered each time.
+        impl<R, $($ty,)*> Response<R> for std::result::Result<(StatusCode, $($ty,)* Json<R>), Error>
+        where
+            std::result::Result<(StatusCode, $($ty,)* Json<R>), Error>: IntoResponse,
+        {
+        }
+    }
+}
+
+impl_response!();
+impl_response!(T1);
+impl_response!(T1, T2);
+impl_response!(T1, T2, T3);
+impl_response!(T1, T2, T3, T4);
+impl_response!(T1, T2, T3, T4, T5);
+impl_response!(T1, T2, T3, T4, T5, T6);
+impl_response!(T1, T2, T3, T4, T5, T6, T7);
+impl_response!(T1, T2, T3, T4, T5, T6, T7, T8);
+impl_response!(T1, T2, T3, T4, T5, T6, T7, T8, T9);
 
 /// Routes a request to an API endpoint.
 pub(super) async fn handle(request: Request) -> axum::response::Response {

@@ -39,7 +39,7 @@ pub(crate) struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(Json(body): Json<PostRequest>) -> Response<PostResponse> {
+pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     let mut user_id = NewUserId::generate();
 
     let password_hash = hash_with_salt(&body.password);

@@ -36,7 +36,7 @@ pub(crate) struct PostRequest {
 pub(crate) async fn post(
     Query(query): Query<PostQuery>,
     Json(body): Json<PostRequest>,
-) -> Response<PostResponse> {
+) -> impl Response<PostResponse> {
     let token_hash = hash_without_salt(&query.token);
 
     let password_hash = hash_with_salt(&body.password);

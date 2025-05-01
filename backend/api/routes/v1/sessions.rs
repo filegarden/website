@@ -49,7 +49,7 @@ pub(crate) struct PostRequest {
 pub(crate) async fn post(
     cookies: Cookies,
     Json(body): Json<PostRequest>,
-) -> Response<PostResponse> {
+) -> impl Response<PostResponse> {
     let token = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
             "SELECT id, password_hash FROM users
