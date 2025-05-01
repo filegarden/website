@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO user_agreement (terms_hash, privacy_hash)\n                    VALUES ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "72eb1e45d1850cd0153a267519db593ad16b788486628a4089f06a2026d98d00"
+}

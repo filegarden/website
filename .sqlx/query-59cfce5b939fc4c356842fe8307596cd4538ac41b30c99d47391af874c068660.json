@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE user_agreement\n                    SET terms_hash = $1,\n                        terms_updated_at = now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "59cfce5b939fc4c356842fe8307596cd4538ac41b30c99d47391af874c068660"
+}
