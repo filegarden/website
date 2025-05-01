@@ -49,7 +49,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
 /// # Errors
 ///
 /// Returns an error if the database operations fail.
-async fn sync_terms_version_to_db() -> Result<(), sqlx::Error> {
+async fn sync_terms_version_to_db() -> sqlx::Result<()> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
     let terms_hash = hasher.finalize();
@@ -60,7 +60,7 @@ async fn sync_terms_version_to_db() -> Result<(), sqlx::Error> {
     let privacy_hash = hasher.finalize();
     let privacy_hash = privacy_hash.as_slice();
 
-    transaction!(async |tx| -> TxResult<_, sqlx::Error> {
+    transaction!(async |tx| -> TxResult<_> {
         let Some(terms_version) =
             sqlx::query!("SELECT terms_hash, privacy_hash FROM terms_version")
                 .fetch_optional(tx.as_mut())
@@ -154,7 +154,7 @@ where
 }
 
 /// The result of a database transaction.
-pub(crate) type TxResult<T, E> = Result<T, TxError<E>>;
+pub(crate) type TxResult<T, E = sqlx::Error> = Result<T, TxError<E>>;
 
 /// Begins a database transaction with the maximum isolation level (`SERIALIZABLE`), retrying if the
 /// database detects a race condition (serialization failure).
