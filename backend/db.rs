@@ -43,8 +43,8 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
     Ok(())
 }
 
-/// Checks for any updates to the terms of service and privacy notice and updates the database
-/// accordingly.
+/// Checks for changes to the terms of service and privacy notice, and updates the `terms_version`
+/// in the database accordingly.
 ///
 /// # Errors
 ///
