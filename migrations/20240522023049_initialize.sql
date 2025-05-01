@@ -1,6 +1,6 @@
 CREATE EXTENSION citext;
 
-CREATE TABLE user_agreement (
+CREATE TABLE terms_version (
     constrain_table_to_one_row boolean NOT NULL UNIQUE DEFAULT TRUE
         CHECK (constrain_table_to_one_row),
     updated_at timestamptz PRIMARY KEY

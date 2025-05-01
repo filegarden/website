@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO terms_version (terms_hash, privacy_hash)\n                    VALUES ($1, $2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "edab79efbe723f6aac26cc17ef9e788e2a969899fdb78ffdacc223f22ee290eb"
+}

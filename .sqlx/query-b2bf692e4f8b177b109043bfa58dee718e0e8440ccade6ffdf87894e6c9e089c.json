@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE terms_version\n                    SET terms_hash = $1,\n                        terms_updated_at = now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b2bf692e4f8b177b109043bfa58dee718e0e8440ccade6ffdf87894e6c9e089c"
+}

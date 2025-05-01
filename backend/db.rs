@@ -38,7 +38,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
         .set(pool)
         .expect("database pool shouldn't already be initialized");
 
-    sync_terms_updates_to_db().await?;
+    sync_terms_version_to_db().await?;
 
     Ok(())
 }
@@ -49,7 +49,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
 /// # Errors
 ///
 /// Returns an error if the database operations fail.
-async fn sync_terms_updates_to_db() -> Result<(), sqlx::Error> {
+async fn sync_terms_version_to_db() -> Result<(), sqlx::Error> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
     let terms_hash = hasher.finalize();
@@ -61,13 +61,13 @@ async fn sync_terms_updates_to_db() -> Result<(), sqlx::Error> {
     let privacy_hash = privacy_hash.as_slice();
 
     transaction!(async |tx| -> TxResult<_, sqlx::Error> {
-        let Some(user_agreement) =
-            sqlx::query!("SELECT terms_hash, privacy_hash FROM user_agreement")
+        let Some(terms_version) =
+            sqlx::query!("SELECT terms_hash, privacy_hash FROM terms_version")
                 .fetch_optional(tx.as_mut())
                 .await?
         else {
             sqlx::query!(
-                "INSERT INTO user_agreement (terms_hash, privacy_hash)
+                "INSERT INTO terms_version (terms_hash, privacy_hash)
                     VALUES ($1, $2)",
                 terms_hash,
                 privacy_hash,
@@ -78,9 +78,9 @@ async fn sync_terms_updates_to_db() -> Result<(), sqlx::Error> {
             return Ok(());
         };
 
-        if user_agreement.terms_hash != terms_hash {
+        if terms_version.terms_hash != terms_hash {
             sqlx::query!(
-                "UPDATE user_agreement
+                "UPDATE terms_version
                     SET terms_hash = $1,
                         terms_updated_at = now()",
                 terms_hash,
@@ -89,9 +89,9 @@ async fn sync_terms_updates_to_db() -> Result<(), sqlx::Error> {
             .await?;
         }
 
-        if user_agreement.privacy_hash != privacy_hash {
+        if terms_version.privacy_hash != privacy_hash {
             sqlx::query!(
-                "UPDATE user_agreement
+                "UPDATE terms_version
                     SET privacy_hash = $1,
                         privacy_updated_at = now()",
                 privacy_hash,

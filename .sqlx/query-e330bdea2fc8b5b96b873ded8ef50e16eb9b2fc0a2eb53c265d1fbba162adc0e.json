@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE terms_version\n                    SET privacy_hash = $1,\n                        privacy_updated_at = now()",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e330bdea2fc8b5b96b873ded8ef50e16eb9b2fc0a2eb53c265d1fbba162adc0e"
+}

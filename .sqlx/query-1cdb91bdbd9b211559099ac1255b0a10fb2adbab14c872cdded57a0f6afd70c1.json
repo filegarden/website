@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT terms_hash, privacy_hash FROM user_agreement",
+  "query": "SELECT terms_hash, privacy_hash FROM terms_version",
   "describe": {
     "columns": [
       {
@@ -22,5 +22,5 @@
       false
     ]
   },
-  "hash": "fcafcbd1c2e15f5a68d716e8f4fcfe36cc1181a5d2a31e34394d2d65188e8116"
+  "hash": "1cdb91bdbd9b211559099ac1255b0a10fb2adbab14c872cdded57a0f6afd70c1"
 }
