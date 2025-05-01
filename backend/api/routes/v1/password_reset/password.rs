@@ -1,6 +1,6 @@
 //! The new password for a user's password reset request.
 
-use axum::{extract::State, http::StatusCode};
+use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +9,6 @@ use crate::{
     crypto::{hash_with_salt, hash_without_salt},
     db::{self, TxError, TxResult},
     id::Token,
-    AppState,
 };
 
 /// A `POST` request query for this API route.
@@ -35,7 +34,6 @@ pub(crate) struct PostRequest {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn post(
-    State(state): State<AppState>,
     Query(query): Query<PostQuery>,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
@@ -43,7 +41,7 @@ pub(crate) async fn post(
 
     let password_hash = hash_with_salt(&body.password);
 
-    db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(password_reset) = sqlx::query!(
             "DELETE FROM password_resets
                 WHERE token_hash = $1

@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use axum::handler::Handler;
+use axum::handler::HandlerWithoutStateExt;
 use tokio::net::TcpListener;
 
 mod api;
@@ -28,13 +28,6 @@ pub(crate) static WEBSITE_ORIGIN: LazyLock<String> = LazyLock::new(|| {
         .expect("environment variable `WEBSITE_ORIGIN` should be a valid string")
 });
 
-/// The state passed to all of the routes.
-#[derive(Clone, Debug)]
-struct AppState {
-    /// The database pool shared between all routes.
-    db_pool: sqlx::PgPool,
-}
-
 /// # Errors
 ///
 /// See implementation.
@@ -47,7 +40,7 @@ async fn main() -> anyhow::Result<()> {
 
     println!("Initializing database...");
 
-    let db_pool = db::initialize(&db_url).await?;
+    db::initialize(&db_url).await?;
 
     println!("Listening to {address}...");
 
@@ -55,13 +48,7 @@ async fn main() -> anyhow::Result<()> {
 
     println!("Ready!");
 
-    axum::serve(
-        listener,
-        router::handle
-            .with_state(AppState { db_pool })
-            .into_make_service(),
-    )
-    .await?;
+    axum::serve(listener, router::handle.into_make_service()).await?;
 
     Ok(())
 }

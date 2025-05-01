@@ -1,6 +1,6 @@
 //! The verification code of a new user's email verification request.
 
-use axum::{extract::State, http::StatusCode};
+use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 
@@ -9,7 +9,6 @@ use crate::{
     crypto::{generate_short_code, hash_with_salt, hash_without_salt},
     db::{self, TxResult},
     id::Token,
-    AppState,
 };
 
 /// A `POST` request query for this API route.
@@ -26,29 +25,25 @@ pub(crate) struct PostQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(
-    State(state): State<AppState>,
-    Query(query): Query<PostQuery>,
-) -> Response<PostResponse> {
+pub(crate) async fn post(Query(query): Query<PostQuery>) -> Response<PostResponse> {
     let token_hash = hash_without_salt(&query.token);
 
     let code = generate_short_code();
     let code_hash = hash_with_salt(&code);
 
-    let Some(unverified_email) =
-        db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
-            Ok(sqlx::query!(
-                "UPDATE unverified_emails
-                    SET code_hash = $1
-                    WHERE token_hash = $2 AND user_id IS NULL
-                    RETURNING email",
-                code_hash,
-                token_hash.as_ref(),
-            )
-            .fetch_optional(tx.as_mut())
-            .await?)
-        })
-        .await?
+    let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        Ok(sqlx::query!(
+            "UPDATE unverified_emails
+                SET code_hash = $1
+                WHERE token_hash = $2 AND user_id IS NULL
+                RETURNING email",
+            code_hash,
+            token_hash.as_ref(),
+        )
+        .fetch_optional(tx.as_mut())
+        .await?)
+    })
+    .await?
     else {
         return Err(api::Error::ResourceNotFound);
     };

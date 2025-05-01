@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use axum::{extract::State, http::StatusCode};
+use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 use sqlx::Acquire;
@@ -20,7 +20,7 @@ use crate::{
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
     id::Token,
-    AppState, WEBSITE_ORIGIN,
+    WEBSITE_ORIGIN,
 };
 
 /// The domain for the website.
@@ -47,11 +47,10 @@ pub(crate) struct PostRequest {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn post(
-    State(state): State<AppState>,
     cookies: Cookies,
     Json(body): Json<PostRequest>,
 ) -> Response<PostResponse> {
-    let token = db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    let token = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
             "SELECT id, password_hash FROM users
                 WHERE email = $1",

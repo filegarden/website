@@ -3,13 +3,13 @@
 use std::sync::LazyLock;
 
 use axum::{
-    extract::{Request, State},
+    extract::Request,
     http::{header::HOST, StatusCode},
     response::{IntoResponse, Response},
 };
 use axum_macros::debug_handler;
 
-use crate::{api, content, website, AppState, CONTENT_ORIGIN, WEBSITE_ORIGIN};
+use crate::{api, content, website, CONTENT_ORIGIN, WEBSITE_ORIGIN};
 
 /// The URI host for user-uploaded content.
 static CONTENT_HOST: LazyLock<&str> = LazyLock::new(|| host_from_origin(&CONTENT_ORIGIN));
@@ -19,7 +19,7 @@ static WEBSITE_HOST: LazyLock<&str> = LazyLock::new(|| host_from_origin(&WEBSITE
 
 /// Handles all incoming requests and routes them to other services based on the request URI.
 #[debug_handler]
-pub(super) async fn handle(State(state): State<AppState>, request: Request) -> Response {
+pub(super) async fn handle(request: Request) -> Response {
     let host = request
         .headers()
         .get(HOST)
@@ -31,7 +31,7 @@ pub(super) async fn handle(State(state): State<AppState>, request: Request) -> R
 
     if host == Some(*WEBSITE_HOST) {
         if request.uri().path().starts_with("/api/") {
-            return api::handle(State(state), request).await;
+            return api::handle(request).await;
         }
 
         return website::handle(request).await;

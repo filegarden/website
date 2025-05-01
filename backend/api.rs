@@ -5,7 +5,7 @@ use std::error::Error as _;
 use axum::{
     extract::{
         rejection::{JsonRejection, QueryRejection},
-        Request, State,
+        Request,
     },
     http::StatusCode,
     response::IntoResponse,
@@ -16,8 +16,6 @@ use serde::Serialize;
 use strum_macros::IntoStaticStr;
 use thiserror::Error;
 use tower::ServiceExt;
-
-use crate::AppState;
 
 mod captcha;
 mod routes;
@@ -192,17 +190,9 @@ struct Query<T>(pub T);
 type Response<T> = std::result::Result<(StatusCode, Json<T>), Error>;
 
 /// Routes a request to an API endpoint.
-pub(super) async fn handle(
-    State(state): State<AppState>,
-    request: Request,
-) -> axum::response::Response {
+pub(super) async fn handle(request: Request) -> axum::response::Response {
     // Calling the router needs a mutable reference to it (even though it shouldn't), so the router
     // must either have restricted access via a mutex or be cloned on each request. The former would
     // allow only one request at a time, so the latter is faster.
-    ROUTER
-        .clone()
-        .with_state(state)
-        .oneshot(request)
-        .await
-        .into_response()
+    ROUTER.clone().oneshot(request).await.into_response()
 }

@@ -1,13 +1,16 @@
 //! General database handling.
 
-use std::error::Error;
+use std::{error::Error, sync::OnceLock};
 
 use castaway::cast;
 use sha2::{Digest, Sha256};
 use sqlx::{postgres::PgPoolOptions, Executor, PgPool};
 
+/// The SQLx database pool.
+static DB_POOL: OnceLock<PgPool> = OnceLock::new();
+
 /// Initializes the SQLx database pool, runs pending database migrations, and performs some initial
-/// data population. Returns the pool once complete.
+/// data population.
 ///
 /// # Errors
 ///
@@ -16,7 +19,7 @@ use sqlx::{postgres::PgPoolOptions, Executor, PgPool};
 /// # Panics
 ///
 /// May panic if the database is already initialized.
-pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error> {
+pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
     let pool = PgPoolOptions::new()
         .after_connect(|conn, _| {
             Box::pin(async move {
@@ -31,9 +34,13 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error
 
     sqlx::migrate!().run(&pool).await?;
 
-    sync_terms_version_to_db(&pool).await?;
+    DB_POOL
+        .set(pool)
+        .expect("database pool shouldn't already be initialized");
 
-    Ok(pool)
+    sync_terms_updates_to_db().await?;
+
+    Ok(())
 }
 
 /// Checks for any updates to the terms of service and privacy notice and updates the database
@@ -42,7 +49,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<PgPool, sqlx::Error
 /// # Errors
 ///
 /// Returns an error if the database operations fail.
-async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
+async fn sync_terms_updates_to_db() -> Result<(), sqlx::Error> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
     let terms_hash = hasher.finalize();
@@ -53,7 +60,7 @@ async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
     let privacy_hash = hasher.finalize();
     let privacy_hash = privacy_hash.as_slice();
 
-    transaction!(&db_pool, async |tx| -> TxResult<_, sqlx::Error> {
+    transaction!(async |tx| -> TxResult<_, sqlx::Error> {
         let Some(user_agreement) =
             sqlx::query!("SELECT terms_hash, privacy_hash FROM user_agreement")
                 .fetch_optional(tx.as_mut())
@@ -100,6 +107,17 @@ async fn sync_terms_version_to_db(db_pool: &PgPool) -> Result<(), sqlx::Error> {
     Ok(())
 }
 
+/// Gets the SQLx database pool.
+///
+/// # Panics
+///
+/// Panics if called before the database pool is initialized.
+pub(crate) fn pool() -> &'static PgPool {
+    DB_POOL
+        .get()
+        .expect("database pool should be initialized before use")
+}
+
 /// The error result of a database transaction.
 ///
 /// Doesn't implement [`Error`] to prevent an impl conflict.
@@ -144,18 +162,17 @@ pub(crate) type TxResult<T, E> = Result<T, TxError<E>>;
 /// Maximum isolation is used to minimize the possibility of data races. This generally greatly
 /// simplifies database operations and reduces the mental overhead of working with them.
 macro_rules! transaction {
-    ($db_pool:expr, $($ident:ident)* |$tx:ident| $(-> $Return:ty)? $block:block$(,)?) => {
+    ($($ident:ident)* |$tx:ident| $(-> $Return:ty)? $block:block$(,)?) => {
         $crate::db::transaction!(
-            $db_pool,
             $($ident)* |$tx: &mut ::sqlx::PgTransaction<'static>| $(-> $Return)? {
                 $block
             },
         )
     };
 
-    ($db_pool:expr, $callback:expr$(,)?) => {
+    ($callback:expr$(,)?) => {
         async {
-            let db_pool: &::sqlx::PgPool = $db_pool;
+            let db_pool: &::sqlx::PgPool = $crate::db::pool();
 
             #[expect(clippy::allow_attributes, reason = "`unused_mut` isn't always expected")]
             #[allow(unused_mut, reason = "some callers need this to be `mut`")]

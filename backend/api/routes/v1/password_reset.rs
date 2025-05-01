@@ -1,6 +1,6 @@
 //! The set of email verification requests for new users.
 
-use axum::{extract::State, http::StatusCode};
+use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use lettre::message::Mailbox;
 use serde::{Deserialize, Serialize};
@@ -16,7 +16,7 @@ use crate::{
     db::{self, TxResult},
     email::{MessageTemplate, PasswordResetFailedMessage, PasswordResetMessage, SendMessage},
     id::Token,
-    AppState, WEBSITE_ORIGIN,
+    WEBSITE_ORIGIN,
 };
 
 pub(crate) mod password;
@@ -35,24 +35,20 @@ pub(crate) struct GetQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(
-    State(state): State<AppState>,
-    Query(query): Query<GetQuery>,
-) -> Response<GetResponse> {
+pub(crate) async fn get(Query(query): Query<GetQuery>) -> Response<GetResponse> {
     let token_hash = hash_without_salt(&query.token);
 
-    let Some(password_reset) =
-        db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
-            Ok(sqlx::query!(
-                "SELECT users.email
-                    FROM password_resets JOIN users ON users.id = password_resets.user_id
-                    WHERE password_resets.token_hash = $1",
-                token_hash.as_ref(),
-            )
-            .fetch_optional(tx.as_mut())
-            .await?)
-        })
-        .await?
+    let Some(password_reset) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        Ok(sqlx::query!(
+            "SELECT users.email
+                FROM password_resets JOIN users ON users.id = password_resets.user_id
+                WHERE password_resets.token_hash = $1",
+            token_hash.as_ref(),
+        )
+        .fetch_optional(tx.as_mut())
+        .await?)
+    })
+    .await?
     else {
         return Err(api::Error::ResourceNotFound);
     };
@@ -91,16 +87,13 @@ pub(crate) struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(
-    State(state): State<AppState>,
-    Json(body): Json<PostRequest>,
-) -> Response<PostResponse> {
+pub(crate) async fn post(Json(body): Json<PostRequest>) -> Response<PostResponse> {
     // We don't want bots spamming people with password reset emails.
     if !captcha::verify(&body.captcha_token).await? {
         return Err(api::Error::CaptchaFailed);
     }
 
-    db::transaction!(&state.db_pool, async |tx| -> TxResult<_, api::Error> {
+    db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
             "SELECT id, name FROM users
                 WHERE email = $1",
