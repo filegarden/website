@@ -9,28 +9,28 @@
     "preview": "nuxi preview --dotenv .env.frontend"
   },
   "dependencies": {
-    "vue-turnstile": "^1.0.11"
+    "vue-turnstile": "^1"
   },
   "devDependencies": {
-    "@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4",
     "@nuxt/devtools": "latest",
-    "@nuxt/eslint": "^1.2.0",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/eslint": "^9.6.1",
-    "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.13.10",
-    "eslint": "^9.22.0",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-es-x": "^8.6.1",
-    "eslint-plugin-vue-scoped-css": "^2.9.0",
-    "nuxt": "^3.16.1",
-    "nuxt-compile-markdown": "^0.1.1",
+    "@nuxt/eslint": "^1",
+    "@stylistic/eslint-plugin": "^4",
+    "@types/eslint": "^9",
+    "@types/eslint-config-prettier": "^6",
+    "@types/node": "^22",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10",
+    "eslint-plugin-es-x": "^8",
+    "eslint-plugin-vue-scoped-css": "^2",
+    "nuxt": "^3",
+    "nuxt-compile-markdown": "^0.1",
     "prettier": "3.5.3",
-    "sass-embedded": "^1.86.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.27.0",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0",
-    "vue-tsc": "^2.2.8"
+    "sass-embedded": "^1",
+    "typescript": "^5",
+    "typescript-eslint": "^8",
+    "vue": "^3",
+    "vue-router": "^4",
+    "vue-tsc": "^2"
   }
 }
