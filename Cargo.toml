@@ -15,7 +15,7 @@ lto = "fat"
 [dependencies]
 anyhow = "1"
 argon2 = "0.5"
-askama = "0.13"
+askama = "0.14"
 async-trait = "0.1"
 axum = "0.8"
 axum-macros = "0.5"
