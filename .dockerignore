@@ -1,5 +1,5 @@
 # Rust dev/build outputs
-/target
+target
 
 # Nuxt dev/build outputs
 .output
@@ -16,15 +16,15 @@ node_modules
 .env*
 
 # Docker configuration
+.dockerignore
 **/compose*.yaml
 **/Dockerfile*
-/.dockerignore
 
 # Misc
-/.git
-/.gitattributes
-/.github
-/.gitignore
-/.prettierignore
-/.vscode
-.DS_Store
+.git
+.gitattributes
+.github
+.gitignore
+.prettierignore
+.vscode
+**/.DS_Store
