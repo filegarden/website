@@ -3,10 +3,8 @@
 use std::{env::VarError, sync::LazyLock};
 
 use askama::Template;
-use async_trait::async_trait;
 use html2text::render::text_renderer::TrivialDecorator;
 use lettre::{
-    address::Envelope,
     message::{Mailbox, MultiPart},
     transport::smtp::{authentication::Credentials, extension::ClientId},
     AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor,
@@ -92,30 +90,71 @@ pub(crate) trait MessageTemplate: Template {
     fn subject(&self) -> String;
 
     /// Generates a subject and multipart HTML and plain text body for the email message template.
-    fn to(&self, mailbox: Mailbox) -> Message {
-        let mut subject = self.subject();
+    fn to(self, mailbox: Mailbox) -> AddressedMessageTemplate<Self>
+    where
+        Self: Sized,
+    {
+        AddressedMessageTemplate {
+            template: self,
+            to: mailbox,
+        }
+    }
+}
+
+/// A [`MessageTemplate`] together with a recipient [`Mailbox`].
+pub(crate) struct AddressedMessageTemplate<T> {
+    /// The [`MessageTemplate`].
+    template: T,
+    /// The recipient mailbox.
+    to: Mailbox,
+}
+
+impl<T: MessageTemplate> AddressedMessageTemplate<T> {
+    /// Sends the message in the background.
+    ///
+    /// Errors are ignored so they can't propagate to end users. Otherwise, users could tell if an
+    /// email sent successfully or not, which can allow for user enumeration in some circumstances.
+    ///
+    /// During development, this prints the message and sends nothing.
+    pub(crate) fn send(self) {
+        let mut subject = self.template.subject();
         subject.push_str(" | File Garden");
 
-        let html = self.to_string();
+        let html = self.template.to_string();
         let plain = html2text::config::with_decorator(TrivialDecorator::new())
             .string_from_read(html.as_bytes(), usize::MAX)
             .expect("message HTML should be convertible to text");
 
-        Message::builder()
-            .from(FROM_MAILBOX.clone())
-            .to(mailbox)
+        let from_mailbox = FROM_MAILBOX.clone();
+
+        if cfg!(debug_assertions) {
+            println!(
+                "======== DEBUG MAIL START ========\n\
+                From: {from_mailbox}\n\
+                To: {}\n\
+                Subject: {subject}\n\
+                \n\
+                {}\n\
+                ======== DEBUG MAIL END ========",
+                self.to,
+                plain.trim_end_matches('\n'),
+            );
+            return;
+        }
+
+        let message = Message::builder()
+            .from(from_mailbox)
+            .to(self.to)
             .subject(subject)
             .multipart(MultiPart::alternative_plain_html(plain, html))
-            .expect("message should be valid")
+            .expect("message should be valid");
+
+        tokio::spawn(MAILER.send(message));
     }
 }
 
 /// The SMTP transport used to send automated emails.
-static MAILER: LazyLock<AsyncOptionalSmtpTransport> = LazyLock::new(|| {
-    if cfg!(debug_assertions) {
-        return AsyncOptionalSmtpTransport::Debug;
-    }
-
+static MAILER: LazyLock<AsyncSmtpTransport<Tokio1Executor>> = LazyLock::new(|| {
     let hostname = dotenvy::var("SMTP_HOSTNAME")
         .expect("environment variable `SMTP_HOSTNAME` should be a valid string");
     let username = dotenvy::var("SMTP_USERNAME")
@@ -139,51 +178,5 @@ static MAILER: LazyLock<AsyncOptionalSmtpTransport> = LazyLock::new(|| {
         }
     }
 
-    AsyncOptionalSmtpTransport::Smtp(smtp_transport.build())
+    smtp_transport.build()
 });
-
-/// An async mail transport with the option to either send mail over SMTP or simply print all sent
-/// messages.
-enum AsyncOptionalSmtpTransport {
-    /// An async mail transport that prints all sent messages.
-    Debug,
-
-    /// An async mail transport that sends messages over SMTP.
-    Smtp(AsyncSmtpTransport<Tokio1Executor>),
-}
-
-#[async_trait]
-impl AsyncTransport for AsyncOptionalSmtpTransport {
-    type Ok = ();
-    type Error = <AsyncSmtpTransport<Tokio1Executor> as AsyncTransport>::Error;
-
-    async fn send_raw(&self, envelope: &Envelope, email: &[u8]) -> Result<Self::Ok, Self::Error> {
-        match self {
-            Self::Debug => {
-                println!(
-                    "======== DEBUG MAIL START ========\n{}\n======== DEBUG MAIL END ========",
-                    String::from_utf8_lossy(email),
-                );
-            }
-            Self::Smtp(smtp_transport) => {
-                smtp_transport.send_raw(envelope, email).await?;
-            }
-        }
-        Ok(())
-    }
-}
-
-/// A trait for sending messages using the SMTP configuration from `.env`.
-pub(crate) trait SendMessage {
-    /// Sends the message in the background.
-    ///
-    /// Errors are ignored so they can't propagate to end users. Otherwise, users could tell if an
-    /// email sent successfully or not, which can allow for user enumeration in some circumstances.
-    fn send(self);
-}
-
-impl SendMessage for Message {
-    fn send(self) {
-        tokio::spawn(MAILER.send(self));
-    }
-}

@@ -14,7 +14,7 @@ use crate::{
     },
     crypto::hash_without_salt,
     db::{self, TxResult},
-    email::{MessageTemplate, PasswordResetFailedMessage, PasswordResetMessage, SendMessage},
+    email::{MessageTemplate, PasswordResetFailedMessage, PasswordResetMessage},
     id::Token,
     WEBSITE_ORIGIN,
 };

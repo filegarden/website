@@ -14,7 +14,7 @@ use crate::{
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
-    email::{EmailTakenMessage, MessageTemplate, SendMessage, VerificationMessage},
+    email::{EmailTakenMessage, MessageTemplate, VerificationMessage},
     id::Token,
     WEBSITE_ORIGIN,
 };
