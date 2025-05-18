@@ -10,7 +10,7 @@ use tower_cookies::CookieManagerLayer;
 
 use crate::api;
 
-mod v1 {
+mod v0 {
     //! The routes for version 1 of the HTTP API.
 
     pub(crate) mod email_verification;
@@ -23,23 +23,23 @@ mod v1 {
 pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
     Router::new()
         .route(
-            "/api/v1/email-verification",
-            get(v1::email_verification::get).post(v1::email_verification::post),
+            "/api/v0/email-verification",
+            get(v0::email_verification::get).post(v0::email_verification::post),
         )
         .route(
-            "/api/v1/email-verification/code",
-            post(v1::email_verification::code::post),
+            "/api/v0/email-verification/code",
+            post(v0::email_verification::code::post),
         )
         .route(
-            "/api/v1/password-reset",
-            get(v1::password_reset::get).post(v1::password_reset::post),
+            "/api/v0/password-reset",
+            get(v0::password_reset::get).post(v0::password_reset::post),
         )
         .route(
-            "/api/v1/password-reset/password",
-            post(v1::password_reset::password::post),
+            "/api/v0/password-reset/password",
+            post(v0::password_reset::password::post),
         )
-        .route("/api/v1/sessions", post(v1::sessions::post))
-        .route("/api/v1/users", post(v1::users::post))
+        .route("/api/v0/sessions", post(v0::sessions::post))
+        .route("/api/v0/users", post(v0::users::post))
         .fallback(|| async { api::Error::RouteNotFound })
         .layer(CookieManagerLayer::new())
 });

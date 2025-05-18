@@ -99,7 +99,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 
     Ok((
         StatusCode::CREATED,
-        [(header::LOCATION, format!("/api/v1/users/{user_id}"))],
+        [(header::LOCATION, format!("/api/v0/users/{user_id}"))],
         Json(PostResponse { id: user_id }),
     ))
 }

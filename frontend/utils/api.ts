@@ -8,7 +8,7 @@ const baseOrigin = import.meta.server
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We don't have an accurate type for this, and using `unknown` would require many pointless type assertions or runtime checks.
 const api = $fetch.create<any>({
-  baseURL: `${baseOrigin}/api/v1`,
+  baseURL: `${baseOrigin}/api/v0`,
   headers: {
     Accept: "application/json",
   },
