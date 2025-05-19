@@ -62,6 +62,10 @@ enum Error {
     #[error("Invalid JSON syntax in request body: {0}")]
     JsonSyntax(String),
 
+    /// The requested API route doesn't allow the HTTP method used.
+    #[error("The requested API route doesn't allow that HTTP method.")]
+    MethodNotAllowed,
+
     /// The requested API route exists, but the specified resource was not found.
     #[error("Resource not found.")]
     ResourceNotFound,
@@ -87,6 +91,7 @@ impl Error {
             Self::InvalidQueryData(_) => StatusCode::BAD_REQUEST,
             Self::JsonContentType => StatusCode::UNSUPPORTED_MEDIA_TYPE,
             Self::JsonSyntax(_) => StatusCode::BAD_REQUEST,
+            Self::MethodNotAllowed => StatusCode::METHOD_NOT_ALLOWED,
             Self::ResourceNotFound => StatusCode::NOT_FOUND,
             Self::RouteNotFound => StatusCode::NOT_FOUND,
             Self::UserCredentialsWrong => StatusCode::FORBIDDEN,
