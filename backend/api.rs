@@ -4,7 +4,7 @@ use std::error::Error as _;
 
 use axum::{
     extract::{
-        rejection::{JsonRejection, QueryRejection},
+        rejection::{JsonRejection, PathRejection, QueryRejection},
         Request,
     },
     http::StatusCode,
@@ -50,6 +50,10 @@ enum Error {
     #[error("Invalid request body: {0}")]
     InvalidBodyData(String),
 
+    /// The request URI path doesn't match the required target type.
+    #[error("Invalid URI path: {0}")]
+    InvalidPathData(String),
+
     /// The request URI query doesn't match the required target type.
     #[error("Invalid URI query: {0}")]
     InvalidQueryData(String),
@@ -88,6 +92,7 @@ impl Error {
             Self::EmailVerificationCodeWrong => StatusCode::FORBIDDEN,
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::InvalidBodyData(_) => StatusCode::BAD_REQUEST,
+            Self::InvalidPathData(_) => StatusCode::BAD_REQUEST,
             Self::InvalidQueryData(_) => StatusCode::BAD_REQUEST,
             Self::JsonContentType => StatusCode::UNSUPPORTED_MEDIA_TYPE,
             Self::JsonSyntax(_) => StatusCode::BAD_REQUEST,
@@ -101,6 +106,20 @@ impl Error {
     /// Gets the API error's code in `SCREAMING_SNAKE_CASE`.
     fn code(&self) -> &'static str {
         self.into()
+    }
+}
+
+impl From<PathRejection> for Error {
+    fn from(error: PathRejection) -> Self {
+        match error {
+            PathRejection::FailedToDeserializePathParams(_) => {
+                Self::InvalidPathData(match error.source() {
+                    Some(source) => source.to_string(),
+                    None => error.body_text(),
+                })
+            }
+            error => Self::Internal(error.into()),
+        }
     }
 }
 
