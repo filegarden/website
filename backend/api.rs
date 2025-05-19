@@ -10,7 +10,7 @@ use axum::{
     http::StatusCode,
     response::IntoResponse,
 };
-use axum_macros::{FromRequest, FromRequestParts};
+use axum_macros::FromRequest;
 use routes::ROUTER;
 use serde::Serialize;
 use strum_macros::IntoStaticStr;
@@ -18,6 +18,7 @@ use thiserror::Error;
 use tower::ServiceExt;
 
 mod captcha;
+mod extract;
 mod routes;
 mod validation;
 
@@ -179,12 +180,6 @@ impl<T: Serialize> IntoResponse for Json<T> {
         axum::Json(value).into_response()
     }
 }
-
-/// Equivalent to [`axum::extract::Query`], but fails with an [`Error`] JSON response instead of a
-/// plain text response.
-#[derive(FromRequestParts, Clone, Copy, Default, Debug)]
-#[from_request(via(axum::extract::Query), rejection(Error))]
-struct Query<T>(pub T);
 
 /// An API response type.
 trait Response<T>: IntoResponse {}

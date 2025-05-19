@@ -9,8 +9,9 @@ use sqlx::Acquire;
 use crate::{
     api::{
         self, captcha,
+        extract::Query,
         validation::{CaptchaToken, EmailVerificationCode, True, UserEmail},
-        Json, Query, Response,
+        Json, Response,
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
