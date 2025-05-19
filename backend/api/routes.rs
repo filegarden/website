@@ -21,26 +21,28 @@ mod v0 {
 
 /// The API router.
 pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
-    Router::new()
+    let v0_router = Router::new()
         .route(
-            "/api/v0/email-verification",
+            "/email-verification",
             get(v0::email_verification::get).post(v0::email_verification::post),
         )
         .route(
-            "/api/v0/email-verification/code",
+            "/email-verification/code",
             post(v0::email_verification::code::post),
         )
         .route(
-            "/api/v0/password-reset",
+            "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
         )
         .route(
-            "/api/v0/password-reset/password",
+            "/password-reset/password",
             post(v0::password_reset::password::post),
         )
-        .route("/api/v0/sessions", post(v0::sessions::post))
-        .route("/api/v0/users", post(v0::users::post))
+        .route("/sessions", post(v0::sessions::post))
+        .route("/users", post(v0::users::post))
         .fallback(|| async { api::Error::RouteNotFound })
         .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed })
-        .layer(CookieManagerLayer::new())
+        .layer(CookieManagerLayer::new());
+
+    Router::new().nest("/api/v0", v0_router)
 });
