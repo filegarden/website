@@ -27,6 +27,10 @@ mod validation;
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 enum Error {
+    /// The request body doesn't match the required target type.
+    #[error("Invalid request body: {0}")]
+    BodyDataInvalid(String),
+
     /// The request body is too large.
     #[error("The request body is too large.")]
     BodyTooLarge,
@@ -46,18 +50,6 @@ enum Error {
     #[error("An unexpected internal server error occurred. Please try again.")]
     Internal(#[source] Box<dyn std::error::Error>),
 
-    /// The request body doesn't match the required target type.
-    #[error("Invalid request body: {0}")]
-    InvalidBodyData(String),
-
-    /// The request URI path doesn't match the required target type.
-    #[error("Invalid URI path: {0}")]
-    InvalidPathData(String),
-
-    /// The request URI query doesn't match the required target type.
-    #[error("Invalid URI query: {0}")]
-    InvalidQueryData(String),
-
     /// The `Content-Type` header isn't set to `application/json`.
     #[error("Header `Content-Type: application/json` must be set.")]
     JsonContentType,
@@ -69,6 +61,14 @@ enum Error {
     /// The requested API route doesn't allow the HTTP method used.
     #[error("The requested API route doesn't allow that HTTP method.")]
     MethodNotAllowed,
+
+    /// The request URI path doesn't match the required target type.
+    #[error("Invalid URI path: {0}")]
+    PathDataInvalid(String),
+
+    /// The request URI query doesn't match the required target type.
+    #[error("Invalid URI query: {0}")]
+    QueryDataInvalid(String),
 
     /// The requested API route exists, but the specified resource was not found.
     #[error("Resource not found.")]
@@ -87,16 +87,16 @@ impl Error {
     /// Gets the HTTP response status code corresponding to the API error.
     const fn status(&self) -> StatusCode {
         match self {
+            Self::BodyDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,
             Self::EmailVerificationCodeWrong => StatusCode::FORBIDDEN,
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            Self::InvalidBodyData(_) => StatusCode::BAD_REQUEST,
-            Self::InvalidPathData(_) => StatusCode::BAD_REQUEST,
-            Self::InvalidQueryData(_) => StatusCode::BAD_REQUEST,
             Self::JsonContentType => StatusCode::UNSUPPORTED_MEDIA_TYPE,
             Self::JsonSyntax(_) => StatusCode::BAD_REQUEST,
             Self::MethodNotAllowed => StatusCode::METHOD_NOT_ALLOWED,
+            Self::PathDataInvalid(_) => StatusCode::BAD_REQUEST,
+            Self::QueryDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::ResourceNotFound => StatusCode::NOT_FOUND,
             Self::RouteNotFound => StatusCode::NOT_FOUND,
             Self::UserCredentialsWrong => StatusCode::FORBIDDEN,
@@ -113,7 +113,7 @@ impl From<PathRejection> for Error {
     fn from(error: PathRejection) -> Self {
         match error {
             PathRejection::FailedToDeserializePathParams(_) => {
-                Self::InvalidPathData(match error.source() {
+                Self::PathDataInvalid(match error.source() {
                     Some(source) => source.to_string(),
                     None => error.body_text(),
                 })
@@ -127,7 +127,7 @@ impl From<QueryRejection> for Error {
     fn from(error: QueryRejection) -> Self {
         match error {
             QueryRejection::FailedToDeserializeQueryString(_) => {
-                Self::InvalidQueryData(match error.source() {
+                Self::QueryDataInvalid(match error.source() {
                     Some(source) => source.to_string(),
                     None => error.body_text(),
                 })
@@ -144,7 +144,7 @@ impl From<JsonRejection> for Error {
         }
 
         match error {
-            JsonRejection::JsonDataError(error) => Self::InvalidBodyData(match error.source() {
+            JsonRejection::JsonDataError(error) => Self::BodyDataInvalid(match error.source() {
                 Some(source) => source.to_string(),
                 None => error.body_text(),
             }),
