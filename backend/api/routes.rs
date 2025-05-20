@@ -40,6 +40,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         )
         .route("/sessions", post(v0::sessions::post))
         .route("/users", post(v0::users::post))
+        .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
         .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed })
         .layer(CookieManagerLayer::new());
