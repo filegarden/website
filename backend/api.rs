@@ -26,7 +26,17 @@ mod validation;
 #[derive(Error, IntoStaticStr, Debug)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
-enum Error {
+pub(crate) enum Error {
+    /// The user is authenticated but has insufficient permission to access the requested resource.
+    #[error("You don't have permission to access the requested resource.")]
+    #[expect(dead_code, reason = "I'll use it in the future.")]
+    AccessDenied,
+
+    /// Authentication credentials are required but either unspecified, invalid, or don't match any
+    /// user.
+    #[error("Authentication failed: {0}")]
+    AuthFailed(String),
+
     /// The request body doesn't match the required target type.
     #[error("Invalid request body: {0}")]
     BodyDataInvalid(String),
@@ -78,7 +88,8 @@ enum Error {
     #[error("The requested API route doesn't exist.")]
     RouteNotFound,
 
-    /// Credentials specified in the request (such as email and password) don't match any user.
+    /// User credentials (such as email and password, not session credentials) specified in the
+    /// request don't match any user.
     #[error("The specified user credentials are incorrect.")]
     UserCredentialsWrong,
 }
@@ -87,6 +98,8 @@ impl Error {
     /// Gets the HTTP response status code corresponding to the API error.
     const fn status(&self) -> StatusCode {
         match self {
+            Self::AccessDenied => StatusCode::FORBIDDEN,
+            Self::AuthFailed(_) => StatusCode::UNAUTHORIZED,
             Self::BodyDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,
