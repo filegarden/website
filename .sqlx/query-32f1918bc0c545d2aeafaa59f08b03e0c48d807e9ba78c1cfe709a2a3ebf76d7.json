@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT users.id, users.name FROM sessions\n                        INNER JOIN users ON users.id = sessions.user_id\n                        WHERE sessions.token_hash = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Bytea"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "32f1918bc0c545d2aeafaa59f08b03e0c48d807e9ba78c1cfe709a2a3ebf76d7"
+}
