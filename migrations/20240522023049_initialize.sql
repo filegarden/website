@@ -77,8 +77,8 @@ CREATE TABLE folders (
     id bytea PRIMARY KEY,
     name text NOT NULL,
     owner_id bytea NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    parent_id_path bytea[] NOT NULL UNIQUE,
-    parent_name_path text[] NOT NULL UNIQUE,
+    parent_id_path bytea[] NOT NULL,
+    parent_name_path text[] NOT NULL,
     share_key bytea UNIQUE,
     size bigint NOT NULL DEFAULT 0,
 
