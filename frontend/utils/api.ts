@@ -1,7 +1,7 @@
 // It would be nice if this could be imported directly instead.
 type FetchContext =
   NonNullable<NonNullable<Parameters<typeof api>[1]>["onRequest"]> extends
-    | ((context: infer C) => unknown)
+    | ((ctx: infer C) => unknown)
     | unknown[]
     ? C
     : never;
@@ -25,25 +25,25 @@ const api = $fetch.create<any>({
     Accept: "application/json",
   },
   onRequest: import.meta.server
-    ? (context) => {
+    ? (ctx) => {
         const { cookie } = useRequestHeaders(["Cookie"]);
         if (cookie) {
           // Forward the request cookies to the backend.
-          context.options.headers.set("Cookie", cookie);
+          ctx.options.headers.set("Cookie", cookie);
         }
 
         // Save the event for later use in the response hook.
-        requestEventsByContext.set(context, useRequestEvent());
+        requestEventsByContext.set(ctx, useRequestEvent());
       }
     : undefined,
   onResponse: import.meta.server
-    ? (context) => {
-        const setCookie = context.response.headers.get("Set-Cookie");
+    ? (ctx) => {
+        const setCookie = ctx.response.headers.get("Set-Cookie");
         if (!setCookie) {
           return;
         }
 
-        const requestEvent = requestEventsByContext.get(context);
+        const requestEvent = requestEventsByContext.get(ctx);
         if (!requestEvent) {
           return;
         }
