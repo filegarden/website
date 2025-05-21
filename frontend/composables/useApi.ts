@@ -16,13 +16,13 @@ export interface UseApiOptions<ResT> extends UseFetchOptions<ResT> {
  * A custom [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch)
  * wrapper for our API.
  */
-export default function useApi(
+export default function useApi<ResT = DefaultResT>(
   url: MaybeRefOrGetter<string>,
-  { shouldIgnoreResponseError, ...options }: UseApiOptions<DefaultResT> = {},
+  { shouldIgnoreResponseError, ...options }: UseApiOptions<ResT> = {},
 ) {
   const errorBoxes = useErrorBoxes();
 
-  return useFetch<DefaultResT>(url, {
+  return useFetch<ResT>(url, {
     onResponseError(ctx) {
       const error = createFetchError(ctx);
 
@@ -33,7 +33,8 @@ export default function useApi(
       errorBoxes.handleError(error);
     },
 
-    ...options,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- The error from removing this assertion is too convoluted for me to decipher, and I see no reason this shouldn't work at runtime.
+    ...(options as any),
     $fetch: api,
   });
 }
