@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const style = useCssModule();
 
+// Work around nuxt/nuxt#22817.
 useHead({
   bodyAttrs: { class: style.body },
 });
