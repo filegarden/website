@@ -23,6 +23,11 @@ export default function useApi<ResT = DefaultResT>(
   const errorBoxes = useErrorBoxes();
 
   return useFetch<ResT>(url, {
+    // The default is `cancel`, but canceling previous requests doesn't stop the
+    // backend from processing them. This lets any previous request finish and
+    // reuses it, which is quicker since it already started.
+    dedupe: "defer",
+
     onResponseError(ctx) {
       const error = createFetchError(ctx);
 
