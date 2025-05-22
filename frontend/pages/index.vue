@@ -42,8 +42,10 @@ useHead({
           <section class="panel advantage">
             <h3 class="advantage-heading">Free and open.</h3>
             <p class="advantage-content">
-              We're <u>open-source</u>, funded by users who choose to
-              <u>support us</u>.
+              We're
+              <A href="https://github.com/filegarden/website" target="_blank">
+                open-source</A
+              >, funded by users who choose to <u>support us</u>.
             </p>
           </section>
 
