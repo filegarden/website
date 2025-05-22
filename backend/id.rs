@@ -39,6 +39,8 @@ pub(crate) struct Id<T = Vec<u8>>(T);
 
 impl<const N: usize> Id<[u8; N]> {
     /// Generates a cryptographically secure pseudorandom ID.
+    ///
+    /// Cryptographic security is important so that IDs are unguessable.
     pub(crate) fn generate() -> Self {
         let mut id = Self([0; N]);
         id.reroll();
