@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const me = await useMe();
+</script>
+
 <template>
   <header>
     <nav class="panel">
@@ -11,7 +15,9 @@
         </li>
 
         <li class="nav-item">
-          <Button>Your Garden</Button>
+          <Button :href="me ? `/files/u/${me.id}` : '/sign-in'">
+            Your Garden
+          </Button>
         </li>
       </ul>
     </nav>

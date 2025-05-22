@@ -1,6 +1,8 @@
 <script setup lang="ts">
 const style = useCssModule();
 
+const me = await useMe();
+
 // Work around nuxt/nuxt#22817.
 useHead({
   bodyAttrs: { class: style.body },
@@ -24,7 +26,10 @@ useHead({
         <p class="slogan">an open-source place to plant your file trees</p>
 
         <p class="call-to-action">
-          <Button class="call-to-action-button" href="/sign-up">
+          <Button
+            class="call-to-action-button"
+            :href="me ? `/files/u/${me.id}` : '/sign-up'"
+          >
             Upload Files
           </Button>
         </p>
