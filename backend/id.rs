@@ -14,7 +14,7 @@ use thiserror::Error;
 /// The type to create new user IDs with.
 pub(crate) type NewUserId = Id<[u8; 8]>;
 
-/// A 128-byte token.
+/// A 1024-bit token.
 pub(crate) type Token = Id<[u8; 128]>;
 
 /// An ID that can be deserialized from and serialized to `base64url` (without padding).
