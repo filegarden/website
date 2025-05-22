@@ -65,9 +65,11 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3 class="advantage-heading">All file types supported.</h3>
+            <h3 class="advantage-heading">All file types supported.*</h3>
             <p class="advantage-content">
               Images, videos, entire web pages, browser games, you name it.
+              <br />
+              (*Except file types often used for malware.)
             </p>
           </section>
         </div>
