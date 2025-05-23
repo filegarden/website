@@ -153,12 +153,16 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
 
-  width: clamp(60%, 500px, 90%);
+  box-sizing: border-box;
+  min-width: 60%;
+  width: 560px;
+  max-width: 100%;
   margin: 0 auto;
+  padding: 0.75rem;
 }
 
 .advantage {
-  margin: 1.5rem;
+  margin: 0.75rem;
   padding: 1rem 2rem;
 }
 

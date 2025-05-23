@@ -72,7 +72,7 @@ header {
 }
 
 .logo {
-  max-width: 90vw;
+  max-width: 80vw;
   height: 3rem;
 }
 
