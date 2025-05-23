@@ -65,10 +65,13 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3 class="advantage-heading">All file types supported.*</h3>
+            <h3 class="advantage-heading">
+              All file types supported.<span class="footnote">*</span>
+            </h3>
             <p class="advantage-content">
               Images, videos, entire web pages, browser games, you name it.
-              <br />
+            </p>
+            <p class="advantage-content footnote">
               (*Except file types often used for malware.)
             </p>
           </section>
@@ -162,5 +165,11 @@ h2 {
 .advantage-heading {
   font-size: 1.5em;
   margin: 1rem 0;
+}
+
+.footnote {
+  opacity: 0.5;
+  font-size: 0.75em;
+  vertical-align: top;
 }
 </style>
