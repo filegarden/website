@@ -40,16 +40,6 @@ useHead({
 
         <div class="advantages-content">
           <section class="panel advantage">
-            <h3 class="advantage-heading">Free and open.</h3>
-            <p class="advantage-content">
-              We're
-              <A href="https://github.com/filegarden/website" target="_blank">
-                open-source</A
-              >, funded by users who choose to <u>support us</u>.
-            </p>
-          </section>
-
-          <section class="panel advantage">
             <h3 class="advantage-heading">No sharing restrictions.</h3>
             <p class="advantage-content">
               Get direct permalinks to your files, and use them anywhere on the
@@ -58,9 +48,12 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3 class="advantage-heading">Full quality.</h3>
+            <h3 class="advantage-heading">Free and open.</h3>
             <p class="advantage-content">
-              No lossy compression or watermarks. Files are served unmodified.
+              We're
+              <A href="https://github.com/filegarden/website" target="_blank">
+                open-source</A
+              >, funded by users who choose to <u>support us</u>.
             </p>
           </section>
 
@@ -73,6 +66,13 @@ useHead({
             </p>
             <p class="advantage-content footnote">
               (*Except file types often used for malware.)
+            </p>
+          </section>
+
+          <section class="panel advantage">
+            <h3 class="advantage-heading">Full quality.</h3>
+            <p class="advantage-content">
+              No lossy compression or watermarks. Files are served unmodified.
             </p>
           </section>
         </div>
