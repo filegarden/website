@@ -91,7 +91,7 @@ async function submitNewPassword() {
       `page-${page}`,
       { 'page-password-token-wrong': page === 'password' && isTokenWrong },
     ]"
-    title="Forgot Password"
+    title="Reset Password"
     :remove-heading="
       !(page === 'email' || (page === 'password' && !isTokenWrong))
     "
