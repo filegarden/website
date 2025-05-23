@@ -58,8 +58,8 @@ async function submitSignIn() {
           required
         >
           <template #after>
-            <div class="password-reset-link-wrapper">
-              <A href="/password-reset" prefetch>Forgot password?</A>
+            <div class="reset-password-link-wrapper">
+              <A href="/reset-password" prefetch>Forgot password?</A>
             </div>
           </template>
         </TextInput>
@@ -79,7 +79,7 @@ async function submitSignIn() {
 </template>
 
 <style scoped lang="scss">
-.password-reset-link-wrapper {
+.reset-password-link-wrapper {
   text-align: right;
   margin: 0.667em 1px;
 
