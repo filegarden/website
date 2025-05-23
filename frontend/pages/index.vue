@@ -154,7 +154,7 @@ h2 {
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
 
   box-sizing: border-box;
-  min-width: 60%;
+  min-width: min(1200px, 60%);
   width: 560px;
   max-width: 100%;
   margin: 0 auto;
