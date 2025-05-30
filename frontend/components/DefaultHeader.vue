@@ -1,28 +1,10 @@
 <script setup lang="ts">
-export interface HeaderEmits {
-  drawerToggle: [];
-}
-
-const emit = defineEmits<HeaderEmits>();
-
 const me = await useMe();
-
-function toggleDrawer() {
-  emit("drawerToggle");
-}
 </script>
 
 <template>
-  <header>
-    <nav class="panel">
-      <IconButton
-        class="drawer-button"
-        aria-label="Toggle Drawer"
-        @click="toggleDrawer"
-      >
-        ☰
-      </IconButton>
-
+  <header class="default-header">
+    <nav class="default-header-nav panel">
       <A href="/">
         <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
@@ -43,7 +25,7 @@ function toggleDrawer() {
 </template>
 
 <style scoped lang="scss">
-header {
+.default-header {
   position: sticky;
   top: 0;
   width: 100%;
@@ -56,7 +38,7 @@ header {
   pointer-events: none;
 }
 
-nav {
+.default-header-nav {
   width: 75%;
   margin: 2rem;
 
@@ -71,16 +53,8 @@ nav {
   backdrop-filter: blur(2rem);
 }
 
-.drawer-button {
-  // This must take priority over `.button` so a flash of incorrect font size
-  // can't happen depending on the order of `style` tags.
-  font-size: 1.5rem !important;
-  margin: 0.5rem;
-}
-
 .nav-logo {
   margin: 1rem;
-  margin-left: 0;
   height: 2em;
   vertical-align: bottom;
 }

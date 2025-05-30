@@ -1,9 +1,9 @@
 <template>
-  <NavLayout class="layout">
+  <DefaultLayout class="layout">
     <main class="panel">
       <slot></slot>
     </main>
-  </NavLayout>
+  </DefaultLayout>
 </template>
 
 <style scoped lang="scss">

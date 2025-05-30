@@ -12,7 +12,7 @@ useHead({
 </script>
 
 <template>
-  <NavLayout>
+  <DefaultLayout>
     <main>
       <section class="hero">
         <h1>
@@ -78,7 +78,7 @@ useHead({
         </div>
       </section>
     </main>
-  </NavLayout>
+  </DefaultLayout>
 </template>
 
 <!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This must use a style module because of nuxt/nuxt#22817. -->
