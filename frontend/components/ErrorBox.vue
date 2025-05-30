@@ -6,9 +6,13 @@ export interface ErrorBoxProps {
   value: ErrorBoxInfo;
 }
 
+export interface ErrorBoxEmits {
+  close: [errorBox: ErrorBoxInfo];
+}
+
 const props = defineProps<ErrorBoxProps>();
 
-const emit = defineEmits<(e: "close", errorBox: ErrorBoxInfo) => void>();
+const emit = defineEmits<ErrorBoxEmits>();
 
 function close() {
   emit("close", props.value);
