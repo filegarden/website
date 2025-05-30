@@ -1,4 +1,8 @@
 <script setup lang="ts">
+if (import.meta.dev) {
+  useHead({ title: "🚨🚨 MISSING `useTitle`! 🚨🚨" });
+}
+
 if (import.meta.server) {
   const appConfig = useAppConfig();
   const requestUrl = useRequestURL();
