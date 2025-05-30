@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useTitle("Verify Email");
+
 const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
@@ -47,7 +49,7 @@ function handleCodeInputClick(
 </script>
 
 <template>
-  <SmallPanelPage title="Verify Email" remove-heading>
+  <SmallPanelPage>
     <LoadingIndicator v-if="loading" />
 
     <template v-if="email">

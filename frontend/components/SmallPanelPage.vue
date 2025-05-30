@@ -1,17 +1,5 @@
-<script setup lang="ts">
-export interface SmallPanelPageProps {
-  /** The name of this page. */
-  title: string;
-
-  /** Whether to remove the `h1` element from the page. */
-  removeHeading?: boolean;
-}
-
-defineProps<SmallPanelPageProps>();
-</script>
-
 <template>
-  <Page class="page" :title="title">
+  <div class="page">
     <header class="space-around-panel">
       <A class="logo-wrapper" href="/">
         <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
@@ -19,10 +7,6 @@ defineProps<SmallPanelPageProps>();
     </header>
 
     <main class="panel">
-      <h1 v-if="!removeHeading">
-        {{ title }}
-      </h1>
-
       <slot></slot>
 
       <div v-if="$slots['bottom-text']" class="bottom-text">
@@ -31,7 +15,7 @@ defineProps<SmallPanelPageProps>();
     </main>
 
     <div class="space-around-panel"></div>
-  </Page>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -89,7 +73,7 @@ main {
   }
 }
 
-h1 {
+:deep(h1) {
   font-size: 1.5rem;
   margin: 0;
   text-align: center;

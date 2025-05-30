@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
+useTitle("Sign Up");
+
 const route = useRoute();
 const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
   "email",
@@ -171,12 +173,12 @@ async function completeSignUp() {
       `page-${page}`,
       { 'page-final-code-wrong': page === 'final' && isCodeWrong },
     ]"
-    title="Sign Up"
-    :remove-heading="page !== 'email'"
   >
     <LoadingIndicator
       v-if="loading || codeResponse.status.value === 'pending'"
     />
+
+    <h1 v-if="page === 'email'">Sign Up</h1>
 
     <form v-if="page === 'email'" @submit.prevent="openCaptchaPage">
       <fieldset :disabled="loading">

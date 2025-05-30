@@ -1,13 +1,5 @@
-<script setup lang="ts">
-import type { PageProps } from "~/components/Page.vue";
-
-export type LargePanelPageProps = PageProps;
-
-defineProps<LargePanelPageProps>();
-</script>
-
 <template>
-  <Page class="page" :title="title">
+  <div class="page">
     <Header />
 
     <main class="panel">
@@ -15,7 +7,7 @@ defineProps<LargePanelPageProps>();
     </main>
 
     <Footer />
-  </Page>
+  </div>
 </template>
 
 <style scoped lang="scss">

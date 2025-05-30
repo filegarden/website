@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useTitle("Sign In");
+
 const email = useSignInEmail();
 const password = ref("");
 
@@ -36,8 +38,10 @@ async function submitSignIn() {
 </script>
 
 <template>
-  <SmallPanelPage title="Sign In">
+  <SmallPanelPage>
     <LoadingIndicator v-if="loading" />
+
+    <h1>Sign In</h1>
 
     <form @submit.prevent="submitSignIn">
       <fieldset :disabled="loading">

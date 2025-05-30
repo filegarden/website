@@ -1,5 +1,9 @@
+<script setup lang="ts">
+useTitle("Privacy Notice");
+</script>
+
 <template>
-  <LargePanelPage title="Privacy Notice">
+  <LargePanelPage>
     <PrivacyNotice />
   </LargePanelPage>
 </template>

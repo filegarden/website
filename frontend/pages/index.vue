@@ -10,7 +10,7 @@ useHead({
 </script>
 
 <template>
-  <Page>
+  <div>
     <Header />
 
     <main>
@@ -80,7 +80,7 @@ useHead({
     </main>
 
     <Footer />
-  </Page>
+  </div>
 </template>
 
 <!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This must use a style module because of nuxt/nuxt#22817. -->

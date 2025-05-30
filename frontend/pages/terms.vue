@@ -1,5 +1,9 @@
+<script setup lang="ts">
+useTitle("Terms of Service");
+</script>
+
 <template>
-  <LargePanelPage title="Terms of Service">
+  <LargePanelPage>
     <TermsOfService />
   </LargePanelPage>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useTitle("Reset Password");
+
 const route = useRoute();
 const page = ref<"email" | "password-reset-sent" | "password" | "done">(
   "email",
@@ -91,14 +93,14 @@ async function submitNewPassword() {
       `page-${page}`,
       { 'page-password-token-wrong': page === 'password' && isTokenWrong },
     ]"
-    title="Reset Password"
-    :remove-heading="
-      !(page === 'email' || (page === 'password' && !isTokenWrong))
-    "
   >
     <LoadingIndicator
       v-if="loading || passwordResetResponse.status.value === 'pending'"
     />
+
+    <h1 v-if="page === 'email' || (page === 'password' && !isTokenWrong)">
+      Reset Password
+    </h1>
 
     <form v-if="page === 'email'" @submit.prevent="requestPasswordReset">
       <fieldset :disabled="loading">
