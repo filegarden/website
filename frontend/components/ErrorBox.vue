@@ -17,7 +17,9 @@ function close() {
 
 <template>
   <div class="error-box panel">
-    <Button class="close-button" aria-label="Close" @click="close" />
+    <IconButton class="close-button" aria-label="Close" @click="close">
+      ✕
+    </IconButton>
 
     <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
 
@@ -62,21 +64,6 @@ code {
 
 .close-button {
   float: right;
-
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
-  padding: 0;
   margin: -0.5em -0.5em 0.25em 0.25em;
-
-  &:not(:hover):not(:focus-visible):not(:active) {
-    background-color: transparent;
-    box-shadow: none;
-  }
-
-  &::before {
-    content: "✕";
-    font-weight: bold;
-  }
 }
 </style>
