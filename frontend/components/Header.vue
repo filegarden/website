@@ -72,7 +72,9 @@ nav {
 }
 
 .drawer-button {
-  font-size: 1.5rem;
+  // This must take priority over `.button` so a flash of incorrect font size
+  // can't happen depending on the order of `style` tags.
+  font-size: 1.5rem !important;
   margin: 0.5rem;
 }
 
