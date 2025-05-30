@@ -9,8 +9,6 @@ if (import.meta.server) {
   });
 
   useSeoMeta({
-    title: "File Garden",
-
     ogType: "website",
     ogSiteName: "File Garden",
     ogTitle: "File Garden",

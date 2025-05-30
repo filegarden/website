@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useHead({ title: "File Garden" });
+
 const style = useCssModule();
 
 const me = await useMe();
