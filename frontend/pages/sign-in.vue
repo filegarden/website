@@ -38,7 +38,7 @@ async function submitSignIn() {
 </script>
 
 <template>
-  <SmallPanelPage>
+  <SmallPanelLayout>
     <LoadingIndicator v-if="loading" />
 
     <h1>Sign In</h1>
@@ -79,7 +79,7 @@ async function submitSignIn() {
     <template #bottom-text>
       <p>Don't have an account? <A href="/sign-up" prefetch>Sign up</A></p>
     </template>
-  </SmallPanelPage>
+  </SmallPanelLayout>
 </template>
 
 <style scoped lang="scss">

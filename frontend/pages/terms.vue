@@ -3,7 +3,7 @@ useTitle("Terms of Service");
 </script>
 
 <template>
-  <LargePanelPage>
+  <LargePanelLayout>
     <TermsOfService />
-  </LargePanelPage>
+  </LargePanelLayout>
 </template>

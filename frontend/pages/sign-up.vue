@@ -168,7 +168,7 @@ async function completeSignUp() {
 </script>
 
 <template>
-  <SmallPanelPage
+  <SmallPanelLayout
     :class="[
       `page-${page}`,
       { 'page-final-code-wrong': page === 'final' && isCodeWrong },
@@ -326,7 +326,7 @@ async function completeSignUp() {
         <A href="/sign-up" @click="tryAgain">Back to Sign Up</A>
       </p>
     </template>
-  </SmallPanelPage>
+  </SmallPanelLayout>
 </template>
 
 <style scoped lang="scss">

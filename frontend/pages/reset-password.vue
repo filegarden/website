@@ -83,7 +83,7 @@ async function submitNewPassword() {
 </script>
 
 <template>
-  <SmallPanelPage :class="`page-${page}`">
+  <SmallPanelLayout :class="`page-${page}`">
     <LoadingIndicator
       v-if="loading || passwordResetResponse.status.value === 'pending'"
     />
@@ -171,7 +171,7 @@ async function submitNewPassword() {
         <A href="/sign-in" prefetch>Back to Sign In</A>
       </p>
     </template>
-  </SmallPanelPage>
+  </SmallPanelLayout>
 </template>
 
 <style scoped lang="scss">

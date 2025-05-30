@@ -1,19 +1,15 @@
 <template>
-  <div class="page">
-    <Header />
-
+  <NavLayout class="layout">
     <main class="panel">
       <slot></slot>
     </main>
-
-    <Footer />
-  </div>
+  </NavLayout>
 </template>
 
 <style scoped lang="scss">
 $panel-width: 1024px;
 
-.page {
+.layout {
   position: absolute;
   width: 100%;
   min-height: 100%;

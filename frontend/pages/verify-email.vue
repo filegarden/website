@@ -49,7 +49,7 @@ function handleCodeInputClick(
 </script>
 
 <template>
-  <SmallPanelPage>
+  <SmallPanelLayout>
     <LoadingIndicator v-if="loading" />
 
     <template v-if="email">
@@ -108,7 +108,7 @@ function handleCodeInputClick(
         <A href="/">Back to Home</A>
       </p>
     </template>
-  </SmallPanelPage>
+  </SmallPanelLayout>
 </template>
 
 <style scoped lang="scss">

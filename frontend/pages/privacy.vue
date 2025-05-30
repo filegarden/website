@@ -3,7 +3,7 @@ useTitle("Privacy Notice");
 </script>
 
 <template>
-  <LargePanelPage>
+  <LargePanelLayout>
     <PrivacyNotice />
-  </LargePanelPage>
+  </LargePanelLayout>
 </template>

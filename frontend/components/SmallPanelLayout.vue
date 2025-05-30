@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="layout">
     <header class="space-around-panel">
       <A class="logo-wrapper" href="/">
         <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
@@ -21,7 +21,7 @@
 <style scoped lang="scss">
 $panel-width: 30rem;
 
-.page {
+.layout {
   position: absolute;
   width: 100%;
   min-height: 100%;
