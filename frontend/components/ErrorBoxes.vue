@@ -106,7 +106,7 @@ $error-boxes-padding: 1.5rem;
 }
 
 .clear-button {
-  backdrop-filter: blur(1rem);
+  backdrop-filter: blur(2rem);
   animation: 0.1s fade-in;
 }
 

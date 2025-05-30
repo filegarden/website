@@ -68,7 +68,7 @@ nav {
   // Undo the `pointer-events` set on the header.
   pointer-events: auto;
 
-  backdrop-filter: blur(1rem);
+  backdrop-filter: blur(2rem);
 }
 
 .drawer-button {
