@@ -17,7 +17,8 @@ function clearErrorBoxes() {
   errorBoxes.value.length = 0;
 }
 
-onBeforeRouteLeave(clearErrorBoxes);
+const route = useRoute();
+watch(() => route.name, clearErrorBoxes);
 </script>
 
 <template>
