@@ -69,5 +69,6 @@ code {
 .close-button {
   float: right;
   margin: -0.5em -0.5em 0.25em 0.25em;
+  font-weight: bold;
 }
 </style>

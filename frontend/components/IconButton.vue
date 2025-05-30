@@ -20,7 +20,6 @@ defineProps<IconButtonProps>();
   padding: 0;
 
   line-height: 0;
-  font-weight: bold;
 
   &:not(:hover):not(:focus-visible):not(:active) {
     background-color: transparent;
