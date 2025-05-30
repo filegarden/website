@@ -1,10 +1,28 @@
 <script setup lang="ts">
+export interface HeaderEmits {
+  drawerToggle: [];
+}
+
+const emit = defineEmits<HeaderEmits>();
+
 const me = await useMe();
+
+function toggleDrawer() {
+  emit("drawerToggle");
+}
 </script>
 
 <template>
   <header>
     <nav class="panel">
+      <IconButton
+        class="drawer-button"
+        aria-label="Toggle Drawer"
+        @click="toggleDrawer"
+      >
+        ☰
+      </IconButton>
+
       <A href="/">
         <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
@@ -53,8 +71,14 @@ nav {
   backdrop-filter: blur(1rem);
 }
 
+.drawer-button {
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}
+
 .nav-logo {
   margin: 1rem;
+  margin-left: 0;
   height: 2em;
   vertical-align: bottom;
 }
@@ -64,6 +88,9 @@ nav {
   margin: 0.5rem;
   padding: 0;
   line-height: inherit;
+
+  flex-grow: 1;
+  text-align: right;
 }
 
 .nav-item {
