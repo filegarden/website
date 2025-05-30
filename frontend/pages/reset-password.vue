@@ -2,8 +2,8 @@
 useTitle("Reset Password");
 
 const route = useRoute();
-const page = ref<"email" | "password-reset-sent" | "password" | "done">(
-  "email",
+const page = ref<"email" | "requested" | "password" | "failed" | "done">(
+  route.query.token === undefined ? "email" : "password",
 );
 
 const loading = ref(false);
@@ -24,13 +24,11 @@ async function requestPasswordReset() {
     loading.value = false;
   });
 
-  page.value = "password-reset-sent";
+  page.value = "requested";
 }
 
-const isTokenWrong = ref(false);
-
 const passwordResetResponse = await useApi("/password-reset", {
-  params: { token: route.query.token },
+  params: route.query,
 
   shouldIgnoreResponseError: (error) => {
     const code = getApiErrorCode(error);
@@ -40,24 +38,21 @@ const passwordResetResponse = await useApi("/password-reset", {
   immediate: route.query.token !== undefined,
 });
 
-watchEffect(() => {
-  if (route.query.token) {
-    page.value = "password";
-  }
-});
-
-watch(page, (page) => {
-  if (page === "password") {
-    void passwordResetResponse.refresh();
-  }
-});
+watch(
+  () => route.query.token,
+  (token) => {
+    if (token) {
+      page.value = "password";
+      void passwordResetResponse.refresh();
+    }
+  },
+);
 
 watchEffect(() => {
   if (passwordResetResponse.status.value === "success") {
     email.value = passwordResetResponse.data.value.email;
-    isTokenWrong.value = false;
   } else if (passwordResetResponse.status.value === "error") {
-    isTokenWrong.value = true;
+    page.value = "failed";
   }
 });
 
@@ -79,7 +74,7 @@ async function submitNewPassword() {
     page.value = "done";
   } catch (error) {
     if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
-      isTokenWrong.value = true;
+      page.value = "failed";
     } else {
       throw error;
     }
@@ -88,19 +83,12 @@ async function submitNewPassword() {
 </script>
 
 <template>
-  <SmallPanelPage
-    :class="[
-      `page-${page}`,
-      { 'page-password-token-wrong': page === 'password' && isTokenWrong },
-    ]"
-  >
+  <SmallPanelPage :class="`page-${page}`">
     <LoadingIndicator
       v-if="loading || passwordResetResponse.status.value === 'pending'"
     />
 
-    <h1 v-if="page === 'email' || (page === 'password' && !isTokenWrong)">
-      Reset Password
-    </h1>
+    <h1 v-if="page === 'email' || page === 'password'">Reset Password</h1>
 
     <form v-if="page === 'email'" @submit.prevent="requestPasswordReset">
       <fieldset :disabled="loading">
@@ -121,21 +109,14 @@ async function submitNewPassword() {
       </fieldset>
     </form>
 
-    <p
-      v-else-if="page === 'password-reset-sent'"
-      class="password-reset-sent-info"
-    >
+    <p v-else-if="page === 'requested'" class="requested-info">
       To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
 
     <template v-else-if="page === 'password'">
-      <p v-if="isTokenWrong" class="distinguished">
-        Your password reset request is invalid or expired.
-      </p>
-
       <form
-        v-else-if="passwordResetResponse.status.value === 'success'"
+        v-if="passwordResetResponse.status.value === 'success'"
         @submit.prevent="submitNewPassword"
       >
         <fieldset :disabled="loading">
@@ -177,11 +158,15 @@ async function submitNewPassword() {
       </form>
     </template>
 
+    <p v-else-if="page === 'failed'" class="distinguished">
+      Your password reset request is invalid or expired.
+    </p>
+
     <p v-else-if="page === 'done'" class="distinguished">
       Password successfully changed!
     </p>
 
-    <template v-if="!(page === 'password' && !isTokenWrong)" #bottom-text>
+    <template v-if="page !== 'password'" #bottom-text>
       <p>
         <A href="/sign-in" prefetch>Back to Sign In</A>
       </p>
@@ -190,12 +175,17 @@ async function submitNewPassword() {
 </template>
 
 <style scoped lang="scss">
-.page-password-reset-sent,
-.page-password-token-wrong,
+.page-requested,
+.page-failed,
 .page-done {
   :deep(main) {
     text-align: center;
   }
+}
+
+.requested-info {
+  font-size: 1.25em;
+  padding: 0.5em 0 1em;
 }
 
 .distinguished {
@@ -204,10 +194,5 @@ async function submitNewPassword() {
   + * {
     margin-top: 3em;
   }
-}
-
-.password-reset-sent-info {
-  font-size: 1.25em;
-  padding: 0.5em 0 1em;
 }
 </style>
