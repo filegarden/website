@@ -1,5 +1,5 @@
 export default function useTitle(title: MaybeRefOrGetter<string>) {
-  useSeoMeta({
+  useHead({
     title: () => toValue(title) + " | File Garden",
   });
 
