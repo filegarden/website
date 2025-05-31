@@ -45,6 +45,7 @@ defineProps<ButtonProps>();
   white-space: nowrap;
   overflow: hidden;
   user-select: none;
+  text-align: center;
 
   transition:
     0.1s ease-out color,
