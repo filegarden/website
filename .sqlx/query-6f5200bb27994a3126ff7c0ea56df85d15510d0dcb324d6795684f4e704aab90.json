@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, password_hash FROM users\n                WHERE email = $1",
+  "query": "SELECT id, password_hash, name FROM users\n                WHERE email = $1",
   "describe": {
     "columns": [
       {
@@ -11,6 +11,11 @@
       {
         "ordinal": 1,
         "name": "password_hash",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "name",
         "type_info": "Text"
       }
     ],
@@ -26,8 +31,9 @@
     },
     "nullable": [
       false,
+      false,
       false
     ]
   },
-  "hash": "dc911a32154b65220169989307ad8c5da07635f2e170793cdf1a05d0d2be791c"
+  "hash": "6f5200bb27994a3126ff7c0ea56df85d15510d0dcb324d6795684f4e704aab90"
 }
