@@ -134,7 +134,8 @@ async function signOut() {
   top: 0;
   box-sizing: border-box;
   max-width: max(75%, 750px);
-  margin: 2rem auto;
+  margin: 0 auto;
+  padding: 2rem 0;
   z-index: 100;
 }
 
