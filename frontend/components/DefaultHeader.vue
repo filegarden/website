@@ -1,5 +1,28 @@
 <script setup lang="ts">
 const me = await useMe();
+
+const isAccountMenuOpen = ref(false);
+
+function toggleAccountMenu() {
+  isAccountMenuOpen.value = !isAccountMenuOpen.value;
+}
+
+const accountNavItem = useTemplateRef("account-nav-item");
+const accountMenu = useTemplateRef("account-menu");
+
+async function handleAccountMenuBlur() {
+  // Wait for the next element to focus.
+  await timeout();
+
+  if (
+    accountNavItem.value?.contains(document.activeElement) ||
+    accountMenu.value?.contains(document.activeElement)
+  ) {
+    return;
+  }
+
+  isAccountMenuOpen.value = false;
+}
 </script>
 
 <template>
@@ -19,8 +42,46 @@ const me = await useMe();
             Your Garden
           </Button>
         </li>
+
+        <li
+          ref="account-nav-item"
+          class="nav-item"
+          @blur.capture="handleAccountMenuBlur"
+        >
+          <IconButton
+            class="account-button"
+            label="Your Account"
+            @click="toggleAccountMenu"
+          >
+            <IconAccountCircle class="account-icon" />
+          </IconButton>
+        </li>
       </ul>
     </nav>
+
+    <div v-if="isAccountMenuOpen" class="account-menu-wrapper">
+      <!--
+        `tabindex="-1"` makes the menu focusable so it still counts as focused
+        (and thus stays open) when clicking an otherwise unfocusable area in the
+        menu.
+      -->
+      <ul
+        ref="account-menu"
+        class="account-menu panel frosted"
+        tabindex="-1"
+        @blur.capture="handleAccountMenuBlur"
+      >
+        <li class="account-menu-item">
+          <Button class="account-menu-button" href="/sign-up">
+            Create Account
+          </Button>
+        </li>
+
+        <li class="account-menu-item">
+          <Button class="account-menu-button" href="/sign-in">Sign In</Button>
+        </li>
+      </ul>
+    </div>
   </header>
 </template>
 
@@ -28,27 +89,25 @@ const me = await useMe();
 .default-header {
   position: sticky;
   top: 0;
-  width: 100%;
+  box-sizing: border-box;
+  max-width: max(75%, 750px);
+  margin: 0 auto;
+  padding: 2rem;
   z-index: 100;
 
-  display: flex;
-  justify-content: center;
-
-  // The nav's margin shouldn't block the cursor.
+  // The heading's padding shouldn't block the cursor...
   pointer-events: none;
+
+  > * {
+    // ...but everything in the heading should.
+    pointer-events: auto;
+  }
 }
 
 .default-header-nav {
-  width: 75%;
-  margin: 2rem;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-  overflow: hidden;
-
-  // Undo the `pointer-events` set on the header.
-  pointer-events: auto;
 }
 
 .nav-logo {
@@ -65,10 +124,47 @@ const me = await useMe();
 
   flex-grow: 1;
   text-align: right;
+
+  white-space: nowrap;
 }
 
 .nav-item {
   display: inline-block;
   margin: 0.25rem;
+}
+
+.account-button {
+  // This must take priority over `.button` so a flash of incorrect font size
+  // can't happen depending on the order of `style` tags.
+  font-size: 1.25em !important;
+}
+
+.account-icon {
+  width: inherit;
+  height: inherit;
+  opacity: 0.875;
+}
+
+.account-menu-wrapper {
+  position: relative;
+}
+
+.account-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0.25em;
+  line-height: inherit;
+
+  position: absolute;
+  right: 0;
+  margin-top: 0.5em;
+}
+
+.account-menu-item {
+  margin: 0.5em;
+}
+
+.account-menu-button {
+  display: block;
 }
 </style>
