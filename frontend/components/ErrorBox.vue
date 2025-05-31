@@ -21,7 +21,7 @@ function close() {
 
 <template>
   <div class="error-box panel">
-    <IconButton class="close-button" aria-label="Close" @click="close">
+    <IconButton class="close-button" label="Close" @click="close">
       <IconClose />
     </IconButton>
 
