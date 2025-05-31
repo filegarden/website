@@ -22,7 +22,7 @@ function close() {
 <template>
   <div class="error-box panel">
     <IconButton class="close-button" aria-label="Close" @click="close">
-      ✕
+      <IconClose />
     </IconButton>
 
     <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
