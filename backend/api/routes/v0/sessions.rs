@@ -23,6 +23,8 @@ use crate::{
     WEBSITE_ORIGIN,
 };
 
+pub(crate) mod session;
+
 /// The domain for the website.
 static WEBSITE_DOMAIN: LazyLock<&str> = LazyLock::new(|| domain_from_origin(&WEBSITE_ORIGIN));
 

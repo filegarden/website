@@ -23,11 +23,33 @@ async function handleAccountMenuBlur() {
 
   isAccountMenuOpen.value = false;
 }
+
+const signOutLoading = ref(false);
+
+async function signOut() {
+  // TODO: Confirm before signing out.
+
+  signOutLoading.value = true;
+
+  try {
+    await api("/sessions/$current", { method: "DELETE" }).finally(() => {
+      signOutLoading.value = false;
+    });
+  } catch (error) {
+    if (getApiErrorCode(error) !== "RESOURCE_NOT_FOUND") {
+      throw error;
+    }
+  }
+
+  me.value = undefined;
+}
 </script>
 
 <template>
   <header class="default-header">
     <nav class="default-header-nav panel frosted">
+      <LoadingIndicator v-if="signOutLoading" />
+
       <A href="/">
         <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
@@ -64,23 +86,41 @@ async function handleAccountMenuBlur() {
       (and thus stays open) when clicking an otherwise unfocusable area in the
       menu.
     -->
-    <ul
+    <div
       v-if="isAccountMenuOpen"
       ref="account-menu"
       class="account-menu panel frosted"
       tabindex="-1"
       @blur.capture="handleAccountMenuBlur"
     >
-      <li class="account-menu-item">
-        <Button class="account-menu-button" href="/sign-up">
-          Create Account
-        </Button>
-      </li>
+      <ul class="account-menu-list">
+        <template v-if="me">
+          <li class="account-menu-item">
+            <Button class="account-menu-button" :href="`/settings/${me.id}`">
+              Settings
+            </Button>
+          </li>
 
-      <li class="account-menu-item">
-        <Button class="account-menu-button" href="/sign-in">Sign In</Button>
-      </li>
-    </ul>
+          <li class="account-menu-item">
+            <Button class="account-menu-button" @click="signOut">
+              Sign Out
+            </Button>
+          </li>
+        </template>
+
+        <template v-else>
+          <li class="account-menu-item">
+            <Button class="account-menu-button" href="/sign-up">
+              Create Account
+            </Button>
+          </li>
+
+          <li class="account-menu-item">
+            <Button class="account-menu-button" href="/sign-in">Sign In</Button>
+          </li>
+        </template>
+      </ul>
+    </div>
   </header>
 </template>
 
@@ -136,14 +176,17 @@ async function handleAccountMenuBlur() {
 }
 
 .account-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0.25em;
-  line-height: inherit;
-
   position: absolute;
   right: 0;
   margin-top: 0.5em;
+  padding: 0.25em;
+}
+
+.account-menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
 }
 
 .account-menu-item {

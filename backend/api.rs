@@ -29,7 +29,6 @@ mod validation;
 pub(crate) enum Error {
     /// The user is authenticated but has insufficient permission to access the requested resource.
     #[error("You don't have permission to access the requested resource.")]
-    #[expect(dead_code, reason = "I'll use it in the future.")]
     AccessDenied,
 
     /// Authentication credentials are required but either unspecified, invalid, or don't match any

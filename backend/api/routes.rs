@@ -3,7 +3,7 @@
 use std::sync::LazyLock;
 
 use axum::{
-    routing::{get, post},
+    routing::{delete, get, post},
     Router,
 };
 use tower_cookies::CookieManagerLayer;
@@ -39,6 +39,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::password_reset::password::post),
         )
         .route("/sessions", post(v0::sessions::post))
+        .route(
+            "/sessions/{session_id}",
+            delete(v0::sessions::session::delete),
+        )
         .route("/users", post(v0::users::post))
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
