@@ -24,13 +24,16 @@ pub(crate) fn hash_without_salt<T: AsRef<[u8]>>(bytes: &T) -> Digest {
 /// can't index salted hashes, since salting and hashing the same input produces a different output
 /// each time. If the input can't be a short or guessable secret, use [`hash_without_salt`] instead.
 pub(crate) fn hash_with_salt<T: AsRef<[u8]>>(bytes: &T) -> String {
+    // `SaltString::generate` would be simpler, but `argon2`'s `rand_core` version is outdated
+    // compared to `rand`'s, so that wouldn't accept `rand::rng()`. It accepts its own version of
+    // `rand_core::OsRng`, but then `SaltString::generate` would panic if `OsRng` fails, which is
+    // much more likely than with `rand::rng()`.
     let mut salt = [0; Salt::RECOMMENDED_LENGTH];
     rand::rng().fill_bytes(&mut salt);
-
-    let salt_string = SaltString::encode_b64(&salt).expect("salt should be valid");
+    let salt = SaltString::encode_b64(&salt).expect("salt should be valid");
 
     Argon2::default()
-        .hash_password(bytes.as_ref(), &salt_string)
+        .hash_password(bytes.as_ref(), &salt)
         .expect("password hashing should be infallible")
         .to_string()
 }
