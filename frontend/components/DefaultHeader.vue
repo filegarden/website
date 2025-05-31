@@ -59,29 +59,28 @@ async function handleAccountMenuBlur() {
       </ul>
     </nav>
 
-    <div v-if="isAccountMenuOpen" class="account-menu-wrapper">
-      <!--
-        `tabindex="-1"` makes the menu focusable so it still counts as focused
-        (and thus stays open) when clicking an otherwise unfocusable area in the
-        menu.
-      -->
-      <ul
-        ref="account-menu"
-        class="account-menu panel frosted"
-        tabindex="-1"
-        @blur.capture="handleAccountMenuBlur"
-      >
-        <li class="account-menu-item">
-          <Button class="account-menu-button" href="/sign-up">
-            Create Account
-          </Button>
-        </li>
+    <!--
+      `tabindex="-1"` makes the menu focusable so it still counts as focused
+      (and thus stays open) when clicking an otherwise unfocusable area in the
+      menu.
+    -->
+    <ul
+      v-if="isAccountMenuOpen"
+      ref="account-menu"
+      class="account-menu panel frosted"
+      tabindex="-1"
+      @blur.capture="handleAccountMenuBlur"
+    >
+      <li class="account-menu-item">
+        <Button class="account-menu-button" href="/sign-up">
+          Create Account
+        </Button>
+      </li>
 
-        <li class="account-menu-item">
-          <Button class="account-menu-button" href="/sign-in">Sign In</Button>
-        </li>
-      </ul>
-    </div>
+      <li class="account-menu-item">
+        <Button class="account-menu-button" href="/sign-in">Sign In</Button>
+      </li>
+    </ul>
   </header>
 </template>
 
@@ -91,17 +90,8 @@ async function handleAccountMenuBlur() {
   top: 0;
   box-sizing: border-box;
   max-width: max(75%, 750px);
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 2rem auto;
   z-index: 100;
-
-  // The heading's padding shouldn't block the cursor...
-  pointer-events: none;
-
-  > * {
-    // ...but everything in the heading should.
-    pointer-events: auto;
-  }
 }
 
 .default-header-nav {
@@ -143,10 +133,6 @@ async function handleAccountMenuBlur() {
   width: inherit;
   height: inherit;
   opacity: 0.875;
-}
-
-.account-menu-wrapper {
-  position: relative;
 }
 
 .account-menu {
