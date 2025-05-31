@@ -27,7 +27,7 @@ watch(() => route.name, clearErrorBoxes);
       v-if="errorBoxes.value.length >= 2"
       class="error-boxes-section clear-button-wrapper"
     >
-      <Button class="clear-button" @click="clearErrorBoxes">
+      <Button class="clear-button frosted" @click="clearErrorBoxes">
         Clear All {{ errorBoxes.value.length }} Errors
       </Button>
     </div>
@@ -106,7 +106,6 @@ $error-boxes-padding: 1.5rem;
 }
 
 .clear-button {
-  backdrop-filter: blur(2rem);
   animation: 0.1s fade-in;
 }
 

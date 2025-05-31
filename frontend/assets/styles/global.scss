@@ -51,6 +51,10 @@ li {
   text-align: left;
 }
 
+.frosted {
+  backdrop-filter: blur(2rem);
+}
+
 :link:not(:active),
 :visited:not(:active) {
   color: currentColor;

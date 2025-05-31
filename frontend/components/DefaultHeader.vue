@@ -4,7 +4,7 @@ const me = await useMe();
 
 <template>
   <header class="default-header">
-    <nav class="default-header-nav panel">
+    <nav class="default-header-nav panel frosted">
       <A href="/">
         <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
       </A>
@@ -49,8 +49,6 @@ const me = await useMe();
 
   // Undo the `pointer-events` set on the header.
   pointer-events: auto;
-
-  backdrop-filter: blur(2rem);
 }
 
 .nav-logo {

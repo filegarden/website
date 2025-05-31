@@ -20,7 +20,7 @@ function close() {
 </script>
 
 <template>
-  <div class="error-box panel">
+  <div class="error-box panel frosted">
     <IconButton class="close-button" label="Close" @click="close">
       <IconClose />
     </IconButton>
@@ -42,7 +42,6 @@ function close() {
   background-color: var(--error-color);
   box-shadow: 0 0 2rem var(--error-glow-color);
   color: var(--error-text-color);
-  backdrop-filter: blur(2rem);
   animation: 0.125s fade-in;
 
   pointer-events: auto;
