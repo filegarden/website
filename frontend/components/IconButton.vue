@@ -10,7 +10,7 @@ defineProps<IconButtonProps>();
 </script>
 
 <template>
-  <Button class="icon-button" :aria-label="label">
+  <Button class="icon-button" :title="label" :aria-label="label">
     <slot></slot>
   </Button>
 </template>
