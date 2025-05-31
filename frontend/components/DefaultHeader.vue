@@ -96,7 +96,11 @@ async function signOut() {
       <ul class="account-menu-list">
         <template v-if="me">
           <li class="account-menu-item">
-            <Button class="account-menu-button" :href="`/settings/${me.id}`">
+            <Button
+              v-autofocus
+              class="account-menu-button"
+              :href="`/settings/${me.id}`"
+            >
               Settings
             </Button>
           </li>
@@ -110,7 +114,7 @@ async function signOut() {
 
         <template v-else>
           <li class="account-menu-item">
-            <Button class="account-menu-button" href="/sign-up">
+            <Button v-autofocus class="account-menu-button" href="/sign-up">
               Create Account
             </Button>
           </li>
