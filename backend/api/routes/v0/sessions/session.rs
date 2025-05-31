@@ -7,14 +7,20 @@ use axum_macros::debug_handler;
 use derive_more::Display;
 use serde::Serialize;
 use serde_with::{DeserializeFromStr, SerializeDisplay};
-use tower_cookies::{cookie::time::Duration, Cookie, Cookies};
+use tower_cookies::{
+    cookie::{time::Duration, SameSite},
+    Cookie, Cookies,
+};
 
 use crate::{
     api::{self, extract::Path, Json, Response},
     crypto::hash_without_salt,
     db::{self, TxResult},
     id::{Id, Token},
+    WEBSITE_ORIGIN,
 };
+
+use super::WEBSITE_DOMAIN;
 
 /// A value used to query a single session.
 #[derive(
@@ -94,7 +100,16 @@ pub(crate) async fn delete(
                 return Err(api::Error::ResourceNotFound);
             }
 
-            cookies.add(Cookie::build("token").max_age(Duration::seconds(0)).into());
+            cookies.add(
+                Cookie::build("token")
+                    .domain(*WEBSITE_DOMAIN)
+                    .http_only(true)
+                    .max_age(Duration::seconds(0))
+                    .path("/")
+                    .same_site(SameSite::Lax)
+                    .secure(WEBSITE_ORIGIN.starts_with("https:"))
+                    .into(),
+            );
         }
         SessionQuery::Id(_) => {
             return Err(api::Error::AccessDenied);
