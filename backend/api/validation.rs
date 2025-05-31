@@ -117,7 +117,7 @@ impl TryFrom<bool> for True {
 )]
 pub(crate) enum UserQuery {
     /// Queries the current authenticated user.
-    #[display("{}", UserQuery::ME_STR)]
+    #[display("{}", Self::ME_STR)]
     Me,
 
     /// Queries a user by ID.
