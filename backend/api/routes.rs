@@ -6,7 +6,6 @@ use axum::{
     routing::{delete, get, post},
     Router,
 };
-use tower_cookies::CookieManagerLayer;
 
 use crate::api;
 
@@ -46,8 +45,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route("/users", post(v0::users::post))
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
-        .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed })
-        .layer(CookieManagerLayer::new());
+        .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed });
 
     Router::new().nest("/api/v0", v0_router)
 });

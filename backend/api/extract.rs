@@ -1,13 +1,16 @@
 //! Types and traits for extracting data from requests using `axum` extractors.
 
+use std::str;
+
 use axum::{
     extract::{FromRequestParts, OptionalFromRequestParts},
-    http::request,
+    http::{header, request},
 };
 use axum_macros::FromRequestParts;
-use tower_cookies::Cookies;
 
 use crate::{api, id::Token};
+
+use super::cookie::{CookieWrapper, SessionCookie};
 
 /// Equivalent to [`axum::extract::Query`], but fails with an [`api::Error`] JSON response instead
 /// of a plain text response.
@@ -21,7 +24,10 @@ pub(crate) struct Query<T>(pub T);
 #[from_request(via(axum::extract::Path), rejection(api::Error))]
 pub(crate) struct Path<T>(pub T);
 
-impl<S> FromRequestParts<S> for Token
+/// Extractor for the user's authentication token.
+pub(crate) struct AuthToken(pub Token);
+
+impl<S> FromRequestParts<S> for AuthToken
 where
     S: Sync + Send,
 {
@@ -29,24 +35,25 @@ where
 
     async fn from_request_parts(
         parts: &mut request::Parts,
-        state: &S,
+        _state: &S,
     ) -> Result<Self, Self::Rejection> {
-        let cookies = Cookies::from_request_parts(parts, state)
-            .await
-            .expect("cookies should be extractable");
-
-        let Some(token) = cookies.get("token") else {
+        let Some(session_cookie) = parts
+            .headers
+            .get(header::COOKIE)
+            .and_then(|header_value| str::from_utf8(header_value.as_bytes()).ok())
+            .and_then(SessionCookie::from_header)
+        else {
             return Err(api::Error::AuthFailed("missing credentials".into()));
         };
 
-        match token.value().parse() {
-            Ok(token) => Ok(token),
+        match session_cookie.as_ref().value().parse() {
+            Ok(token) => Ok(Self(token)),
             Err(error) => Err(api::Error::AuthFailed(format!("invalid token: {error}"))),
         }
     }
 }
 
-impl<S> OptionalFromRequestParts<S> for Token
+impl<S> OptionalFromRequestParts<S> for AuthToken
 where
     S: Sync + Send,
 {

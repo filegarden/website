@@ -1,35 +1,23 @@
 //! The set of users' sign-in sessions.
 
-use std::sync::LazyLock;
-
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 use sqlx::Acquire;
-use tower_cookies::{
-    cookie::{time::Duration, SameSite},
-    Cookie, Cookies,
-};
 
 use crate::{
     api::{
         self,
+        cookie::{CookieWrapper, SessionCookie},
         validation::{UserEmail, UserPassword},
         Json, Response,
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
     id::Token,
-    WEBSITE_ORIGIN,
 };
 
 pub(crate) mod session;
-
-/// The domain for the website.
-static WEBSITE_DOMAIN: LazyLock<&str> = LazyLock::new(|| domain_from_origin(&WEBSITE_ORIGIN));
-
-/// How long a session takes to expire after its creation.
-const SESSION_MAX_AGE: Duration = Duration::days(60);
 
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
@@ -48,10 +36,7 @@ pub(crate) struct PostRequest {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(
-    cookies: Cookies,
-    Json(body): Json<PostRequest>,
-) -> impl Response<PostResponse> {
+pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     let token = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
             "SELECT id, password_hash FROM users
@@ -101,39 +86,16 @@ pub(crate) async fn post(
     })
     .await?;
 
-    cookies.add(
-        Cookie::build(("token", token.to_string()))
-            .domain(*WEBSITE_DOMAIN)
-            .http_only(true)
-            .max_age(SESSION_MAX_AGE)
-            .path("/")
-            .same_site(SameSite::Lax)
-            .secure(WEBSITE_ORIGIN.starts_with("https:"))
-            .into(),
-    );
-
-    Ok((StatusCode::OK, Json(PostResponse {})))
+    // To reduce the session token's attack surface, it isn't included in the response. It's set as
+    // an `HttpOnly` cookie instead so browser scripts can't access it.
+    Ok((
+        StatusCode::OK,
+        [SessionCookie::new(token.to_string()).to_header()],
+        Json(PostResponse {}),
+    ))
 }
 
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct PostResponse {
-    // To reduce the session token's attack surface, it isn't included in the response. It's set as
-    // an `HttpOnly` cookie instead so browser scripts can't access it.
-}
-
-/// Returns the domain from an origin URI string.
-///
-/// # Panics
-///
-/// Panics if the origin string doesn't contain "//".
-fn domain_from_origin(origin: &str) -> &str {
-    let start = origin.find("//").expect("origin should contain \"//\"") + 2;
-    let end = origin[start..]
-        .find(":")
-        .map(|index| index + start)
-        .unwrap_or(origin.len());
-
-    &origin[start..end]
-}
+pub(crate) struct PostResponse {}

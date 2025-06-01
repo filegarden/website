@@ -18,6 +18,7 @@ use thiserror::Error;
 use tower::ServiceExt;
 
 mod captcha;
+mod cookie;
 mod extract;
 mod routes;
 mod validation;

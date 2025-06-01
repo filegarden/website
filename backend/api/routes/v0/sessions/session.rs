@@ -2,25 +2,23 @@
 
 use std::str::FromStr;
 
-use axum::http::StatusCode;
+use axum::{http::StatusCode, response::AppendHeaders};
 use axum_macros::debug_handler;
 use derive_more::Display;
 use serde::Serialize;
 use serde_with::{DeserializeFromStr, SerializeDisplay};
-use tower_cookies::{
-    cookie::{time::Duration, SameSite},
-    Cookie, Cookies,
-};
 
 use crate::{
-    api::{self, extract::Path, Json, Response},
+    api::{
+        self,
+        cookie::{CookieWrapper, SessionCookie},
+        extract::{AuthToken, Path},
+        Json, Response,
+    },
     crypto::hash_without_salt,
     db::{self, TxResult},
     id::{Id, Token},
-    WEBSITE_ORIGIN,
 };
-
-use super::WEBSITE_DOMAIN;
 
 /// A value used to query a single session.
 #[derive(
@@ -73,12 +71,17 @@ type PathParams = Path<SessionQuery>;
 #[debug_handler]
 pub(crate) async fn delete(
     Path(session_query): PathParams,
-    token: Option<Token>,
-    cookies: Cookies,
+    token: Option<AuthToken>,
 ) -> impl Response<DeleteResponse> {
+    #[expect(
+        unused_assignments,
+        reason = "This will fix itself once the TODO is resolved."
+    )]
+    let mut response_header = None;
+
     match session_query {
         SessionQuery::Current => {
-            let Some(token) = token else {
+            let Some(AuthToken(token)) = token else {
                 return Err(api::Error::ResourceNotFound);
             };
 
@@ -100,23 +103,19 @@ pub(crate) async fn delete(
                 return Err(api::Error::ResourceNotFound);
             }
 
-            cookies.add(
-                Cookie::build("token")
-                    .domain(*WEBSITE_DOMAIN)
-                    .http_only(true)
-                    .max_age(Duration::seconds(0))
-                    .path("/")
-                    .same_site(SameSite::Lax)
-                    .secure(WEBSITE_ORIGIN.starts_with("https:"))
-                    .into(),
-            );
+            response_header = Some(SessionCookie::expired().to_header());
         }
         SessionQuery::Id(_) => {
+            // TODO: Implement signing out specific sessions in the account settings.
             return Err(api::Error::AccessDenied);
         }
     }
 
-    Ok((StatusCode::OK, Json(DeleteResponse {})))
+    Ok((
+        StatusCode::OK,
+        AppendHeaders(response_header),
+        Json(DeleteResponse {}),
+    ))
 }
 
 /// A `DELETE` response body for this API route.

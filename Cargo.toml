@@ -20,6 +20,7 @@ axum = "0.8"
 axum-macros = "0.5"
 base64 = "0.22"
 castaway = "0.2"
+cookie = "0.18"
 derive_more = { version = "2", features = ["full"] }
 dotenvy = "0.15"
 html2text = "0.12"
@@ -39,4 +40,3 @@ strum_macros = "0.27"
 thiserror = "2"
 tokio = { version = "1", features = ["full"] }
 tower = { version = "0.5", features = ["util"] }
-tower-cookies = { version = "0.11" }

@@ -5,10 +5,15 @@ use axum_macros::debug_handler;
 use serde::Serialize;
 
 use crate::{
-    api::{self, extract::Path, validation::UserQuery, Json, Response},
+    api::{
+        self,
+        extract::{AuthToken, Path},
+        validation::UserQuery,
+        Json, Response,
+    },
     crypto::hash_without_salt,
     db::{self, TxResult},
-    id::{Id, Token},
+    id::Id,
 };
 
 /// A request path for this API route.
@@ -22,11 +27,11 @@ type PathParams = Path<UserQuery>;
 #[debug_handler]
 pub(crate) async fn get(
     Path(user_query): PathParams,
-    token: Option<Token>,
+    token: Option<AuthToken>,
 ) -> impl Response<GetResponse> {
     let (user_id, user_name) = match user_query {
         UserQuery::Me => {
-            let Some(token) = token else {
+            let Some(AuthToken(token)) = token else {
                 return Err(api::Error::ResourceNotFound);
             };
 
