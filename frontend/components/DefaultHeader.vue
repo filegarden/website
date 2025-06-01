@@ -82,35 +82,36 @@ async function signOut() {
       </ul>
     </nav>
 
-    <!--
-      `tabindex="-1"` makes the menu focusable so it still counts as focused
-      (and thus stays open) when clicking an otherwise unfocusable area in the
-      menu.
-    -->
-    <div
-      v-if="isAccountMenuOpen && me"
-      ref="account-menu"
-      class="account-menu panel frosted"
-      tabindex="-1"
-      @blur.capture="handleAccountMenuBlur"
-    >
-      <ul class="account-menu-list">
-        <li class="account-menu-item">
-          <Button
-            v-autofocus
-            class="account-menu-button"
-            :href="`/settings/${me.id}`"
-          >
-            Settings
-          </Button>
-        </li>
+    <div v-if="isAccountMenuOpen && me" class="account-menu-wrapper">
+      <!--
+        `tabindex="-1"` makes the menu focusable so it still counts as focused
+        (and thus stays open) when clicking an otherwise unfocusable area in the
+        menu.
+      -->
+      <div
+        ref="account-menu"
+        class="account-menu panel frosted"
+        tabindex="-1"
+        @blur.capture="handleAccountMenuBlur"
+      >
+        <ul class="account-menu-list">
+          <li class="account-menu-item">
+            <Button
+              v-autofocus
+              class="account-menu-button"
+              :href="`/settings/${me.id}`"
+            >
+              Settings
+            </Button>
+          </li>
 
-        <li class="account-menu-item">
-          <Button class="account-menu-button" @click="signOut">
-            Sign Out
-          </Button>
-        </li>
-      </ul>
+          <li class="account-menu-item">
+            <Button class="account-menu-button" @click="signOut">
+              Sign Out
+            </Button>
+          </li>
+        </ul>
+      </div>
     </div>
   </header>
 </template>
@@ -122,7 +123,7 @@ async function signOut() {
   box-sizing: border-box;
   max-width: max(75%, 750px);
   margin: 0 auto;
-  padding: 2rem 0;
+  padding: 2rem;
   z-index: 100;
 }
 
@@ -165,6 +166,11 @@ async function signOut() {
   width: inherit;
   height: inherit;
   opacity: 0.875;
+}
+
+.account-menu-wrapper {
+  // Restrict the account menu from overflowing into the parent's padding.
+  position: relative;
 }
 
 .account-menu {
