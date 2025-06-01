@@ -20,6 +20,8 @@ impl CookieWrapper for SessionCookie<'_> {
 /// A trait for a type that wraps a [`Cookie`], adding convenience methods on top of it. Each type
 /// implementing this represents a type of cookie with a constant name, as well as other constant
 /// cookie attributes.
+///
+/// Note: The associated cookie attributes aren't guaranteed to be set. They're merely defaults.
 pub(crate) trait CookieWrapper {
     /// The name of any cookie of this type.
     const NAME: &str;
@@ -60,6 +62,8 @@ pub(crate) trait CookieWrapper {
     }
 
     /// Finds the cookie of this type (if any) from a full HTTP `Cookie` request header string.
+    ///
+    /// Cookie attributes are left unset since request cookies don't have attributes.
     fn from_header<'c, S>(header_value: S) -> Option<Self>
     where
         Self: From<Cookie<'c>> + Sized,
