@@ -66,6 +66,7 @@ async function signOut() {
         </li>
 
         <li
+          v-if="me"
           ref="account-nav-item"
           class="nav-item"
           @blur.capture="handleAccountMenuBlur"
@@ -87,42 +88,28 @@ async function signOut() {
       menu.
     -->
     <div
-      v-if="isAccountMenuOpen"
+      v-if="isAccountMenuOpen && me"
       ref="account-menu"
       class="account-menu panel frosted"
       tabindex="-1"
       @blur.capture="handleAccountMenuBlur"
     >
       <ul class="account-menu-list">
-        <template v-if="me">
-          <li class="account-menu-item">
-            <Button
-              v-autofocus
-              class="account-menu-button"
-              :href="`/settings/${me.id}`"
-            >
-              Settings
-            </Button>
-          </li>
+        <li class="account-menu-item">
+          <Button
+            v-autofocus
+            class="account-menu-button"
+            :href="`/settings/${me.id}`"
+          >
+            Settings
+          </Button>
+        </li>
 
-          <li class="account-menu-item">
-            <Button class="account-menu-button" @click="signOut">
-              Sign Out
-            </Button>
-          </li>
-        </template>
-
-        <template v-else>
-          <li class="account-menu-item">
-            <Button v-autofocus class="account-menu-button" href="/sign-up">
-              Create Account
-            </Button>
-          </li>
-
-          <li class="account-menu-item">
-            <Button class="account-menu-button" href="/sign-in">Sign In</Button>
-          </li>
-        </template>
+        <li class="account-menu-item">
+          <Button class="account-menu-button" @click="signOut">
+            Sign Out
+          </Button>
+        </li>
       </ul>
     </div>
   </header>
