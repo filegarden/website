@@ -8,8 +8,9 @@ use sqlx::Acquire;
 use crate::{
     api::{
         self,
+        response::Response,
         validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
-        Json, Response,
+        Json,
     },
     crypto::{hash_with_salt, verify_hash},
     db::{self, TxError, TxResult},

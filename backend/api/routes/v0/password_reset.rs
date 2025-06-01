@@ -10,8 +10,9 @@ use crate::{
     api::{
         self, captcha,
         extract::Query,
+        response::Response,
         validation::{CaptchaToken, UserEmail},
-        Json, Response,
+        Json,
     },
     crypto::hash_without_salt,
     db::{self, TxResult},

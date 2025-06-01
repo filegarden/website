@@ -9,8 +9,9 @@ use crate::{
     api::{
         self,
         cookie::{CookieWrapper, SessionCookie},
+        response::Response,
         validation::{UserEmail, UserPassword},
-        Json, Response,
+        Json,
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
