@@ -222,12 +222,12 @@ trait Response<T>: IntoResponse {}
 
 /// Implements [`Response`] for types with various tuple lengths.
 macro_rules! impl_response {
-    ( $($ty:ident),* $(,)? ) => {
+    ($($ty:ident),* $(,)?) => {
         // Always require an explicit status code in `Ok` responses so the most appropriate
         // successful status code is more likely to be considered each time.
-        impl<R, $($ty,)*> Response<R> for std::result::Result<(StatusCode, $($ty,)* Json<R>), Error>
+        impl<R, $($ty,)*> Response<R> for Result<(StatusCode, $($ty,)* Json<R>), Error>
         where
-            std::result::Result<(StatusCode, $($ty,)* Json<R>), Error>: IntoResponse,
+            Result<(StatusCode, $($ty,)* Json<R>), Error>: IntoResponse,
         {
         }
     }
