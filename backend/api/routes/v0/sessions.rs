@@ -48,7 +48,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .filter(|user| verify_hash(&body.password, &user.password_hash)) else {
             // To prevent user enumeration, send this same error response whether or not the email
             // is correct.
-            return Err(db::TxError::Abort(api::Error::UserCredentialsWrong));
+            return Err(TxError::Abort(api::Error::UserCredentialsWrong));
         };
 
         let mut token = Token::generate();
