@@ -11,7 +11,7 @@ use rand::RngCore;
 use serde_with::{DeserializeFromStr, SerializeDisplay};
 use thiserror::Error;
 
-/// The type to create new user IDs with.
+/// The type to create new user IDs with. Note that existing user IDs may not fit this type.
 pub(crate) type NewUserId = Id<[u8; 8]>;
 
 /// A 1024-bit token.
