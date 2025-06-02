@@ -41,7 +41,7 @@ async function signOut() {
     }
   }
 
-  me.value = undefined;
+  setMe(undefined);
 }
 </script>
 

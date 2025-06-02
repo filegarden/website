@@ -159,7 +159,7 @@ async function completeSignUp() {
       loading.value = false;
     });
 
-    me.value = user;
+    setMe(user);
   } catch (error) {
     if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
@@ -170,6 +170,7 @@ async function completeSignUp() {
 }
 
 // TODO: Redirect to some other page when already signed in.
+const _ = me;
 </script>
 
 <template>

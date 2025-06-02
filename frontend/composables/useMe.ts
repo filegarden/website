@@ -1,9 +1,19 @@
 /**
  * Returns the current authenticated user, or `undefined` if the user is not
  * authenticated.
+ *
+ * The returned ref is shallowly read-only because `setMe` should be used to set
+ * its value instead. `setMe` doesn't require an HTTP request like `useMe` does.
  */
-export default async function useMe(): Promise<Ref<User | undefined>> {
-  const me = useState<User | undefined>();
+export default async function useMe(): Promise<
+  Readonly<Ref<User | undefined>>
+> {
+  const me = useState<User | undefined>("me");
+
+  if (me.value) {
+    // `setMe` has already set the value elsewhere, so no need to fetch it.
+    return me;
+  }
 
   await callOnce(async () => {
     const { data } = await useApi<User>("/users/$me", {

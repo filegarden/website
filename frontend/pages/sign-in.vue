@@ -28,7 +28,7 @@ async function submitSignIn() {
       loading.value = false;
     });
 
-    me.value = session.user;
+    setMe(session.user);
   } catch (error) {
     if (getApiErrorCode(error) === "USER_CREDENTIALS_WRONG") {
       areCredentialsWrong.value = true;
@@ -39,6 +39,7 @@ async function submitSignIn() {
 }
 
 // TODO: Redirect to some other page when already signed in.
+const _ = me;
 </script>
 
 <template>
