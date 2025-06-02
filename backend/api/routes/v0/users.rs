@@ -42,11 +42,9 @@ pub(crate) struct PostRequest {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
-    let mut user_id = NewUserId::generate();
-
     let password_hash = hash_with_salt(&body.password);
 
-    db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let user_id = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(unverified_email) = sqlx::query!(
             "DELETE FROM unverified_emails
                 WHERE user_id IS NULL AND email = $1
@@ -67,6 +65,8 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             return Err(TxError::Abort(api::Error::EmailVerificationCodeWrong));
         }
 
+        let user_id = NewUserId::generate();
+
         match sqlx::query!(
             "INSERT INTO users (accepted_terms_at, id, email, name, password_hash)
                 VALUES ($1, $2, $3, $4, $5)",
@@ -80,13 +80,12 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .await
         {
             Err(sqlx::Error::Database(error)) if error.constraint() == Some("users_pkey") => {
-                user_id.reroll();
                 return Err(TxError::Retry);
             }
             result => result?,
         };
 
-        Ok(())
+        Ok(user_id)
     })
     .await?;
 
