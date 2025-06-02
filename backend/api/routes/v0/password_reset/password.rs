@@ -5,7 +5,15 @@ use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    api::{self, extract::Query, response::Response, validation::NewUserPassword, Json},
+    api::{
+        self,
+        cookie::{CookieWrapper, SessionCookie},
+        db_helpers::create_session,
+        extract::Query,
+        response::{body::User, Response},
+        validation::NewUserPassword,
+        Json,
+    },
     crypto::{hash_with_salt, hash_without_salt},
     db::{self, TxError, TxResult},
     id::Token,
@@ -27,7 +35,7 @@ pub(crate) struct PostRequest {
     pub password: NewUserPassword,
 }
 
-/// Sets a new password to fulfill a user's password reset request.
+/// Sets a new password to fulfill a user's password reset request. Signs in the user if successful.
 ///
 /// # Errors
 ///
@@ -41,37 +49,53 @@ pub(crate) async fn post(
 
     let password_hash = hash_with_salt(&body.password);
 
-    db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let Some(password_reset) = sqlx::query!(
-            "DELETE FROM password_resets
-                WHERE token_hash = $1
-                RETURNING user_id",
-            token_hash.as_ref(),
-        )
-        .fetch_optional(tx.as_mut())
-        .await?
-        else {
-            return Err(TxError::Abort(api::Error::ResourceNotFound));
-        };
+    let (user_id, user_name, session_token) =
+        db::transaction!(async |tx| -> TxResult<_, api::Error> {
+            let Some(password_reset) = sqlx::query!(
+                "DELETE FROM password_resets
+                    WHERE token_hash = $1
+                    RETURNING user_id",
+                token_hash.as_ref(),
+            )
+            .fetch_optional(tx.as_mut())
+            .await?
+            else {
+                return Err(TxError::Abort(api::Error::ResourceNotFound));
+            };
 
-        sqlx::query!(
-            "UPDATE users
-                SET password_hash = $1
-                WHERE id = $2",
-            password_hash,
-            password_reset.user_id,
-        )
-        .execute(tx.as_mut())
+            let user = sqlx::query!(
+                "UPDATE users
+                    SET password_hash = $1
+                    WHERE id = $2
+                    RETURNING name",
+                password_hash,
+                password_reset.user_id,
+            )
+            .fetch_one(tx.as_mut())
+            .await?;
+
+            let session_token = create_session(tx, &password_reset.user_id).await?;
+
+            Ok((password_reset.user_id, user.name, session_token))
+        })
         .await?;
 
-        Ok(())
-    })
-    .await?;
-
-    Ok((StatusCode::OK, Json(PostResponse {})))
+    Ok((
+        StatusCode::OK,
+        [SessionCookie::new(session_token.to_string()).to_header()],
+        Json(PostResponse {
+            user: User {
+                id: user_id.into(),
+                name: user_name,
+            },
+        }),
+    ))
 }
 
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct PostResponse {}
+pub(crate) struct PostResponse {
+    /// The user whose password was reset.
+    user: User,
+}

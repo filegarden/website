@@ -7,6 +7,8 @@ use serde::Deserialize;
 use crate::{
     api::{
         self,
+        cookie::{CookieWrapper, SessionCookie},
+        db_helpers::create_session,
         response::{body::User, Response},
         validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
         Json,
@@ -35,7 +37,7 @@ pub(crate) struct PostRequest {
     pub password: NewUserPassword,
 }
 
-/// Creates a new user.
+/// Creates a new user. Signs in the user if successful.
 ///
 /// # Errors
 ///
@@ -44,7 +46,7 @@ pub(crate) struct PostRequest {
 pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     let password_hash = hash_with_salt(&body.password);
 
-    let user_id = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let (user_id, session_token) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(unverified_email) = sqlx::query!(
             "DELETE FROM unverified_emails
                 WHERE user_id IS NULL AND email = $1
@@ -85,13 +87,18 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             result => result?,
         };
 
-        Ok(user_id)
+        let session_token = create_session(tx, &user_id).await?;
+
+        Ok((user_id, session_token))
     })
     .await?;
 
     Ok((
         StatusCode::CREATED,
-        [(header::LOCATION, format!("/api/v0/users/{user_id}"))],
+        [
+            (header::LOCATION, format!("/api/v0/users/{user_id}")),
+            SessionCookie::new(session_token.to_string()).to_header(),
+        ],
         Json(PostResponse {
             id: user_id,
             name: body.name.into_inner(),

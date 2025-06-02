@@ -9,6 +9,7 @@ use routes::ROUTER;
 
 mod captcha;
 mod cookie;
+mod db_helpers;
 mod extract;
 mod json;
 mod response;

@@ -8,11 +8,12 @@ use crate::{
     api::{
         self,
         cookie::{CookieWrapper, SessionCookie},
+        db_helpers::create_session,
         response::{body::User, Response},
         validation::{UserEmail, UserPassword},
         Json,
     },
-    crypto::{hash_without_salt, verify_hash},
+    crypto::verify_hash,
     db::{self, TxError, TxResult},
     id::Token,
 };
@@ -51,23 +52,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             return Err(TxError::Abort(api::Error::UserCredentialsWrong));
         };
 
-        let token = Token::generate();
-        let token_hash = hash_without_salt(&token);
-
-        match sqlx::query!(
-            "INSERT INTO sessions (token_hash, user_id)
-                VALUES ($1, $2)",
-            token_hash.as_ref(),
-            user.id,
-        )
-        .execute(tx.as_mut())
-        .await
-        {
-            Err(sqlx::Error::Database(error)) if error.constraint() == Some("sessions_pkey") => {
-                return Err(TxError::Retry);
-            }
-            result => result?,
-        };
+        let token: Token = create_session(tx, &user.id).await?;
 
         Ok((token, user.id, user.name))
     })

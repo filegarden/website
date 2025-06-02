@@ -63,7 +63,7 @@ async function submitNewPassword() {
   loading.value = true;
 
   try {
-    await api("/password-reset/password", {
+    const passwordResponse = await api("/password-reset/password", {
       method: "POST",
       params: { token: route.query.token },
       body: { password: password.value },
@@ -71,6 +71,7 @@ async function submitNewPassword() {
       loading.value = false;
     });
 
+    setMe(passwordResponse.user);
     page.value = "done";
   } catch (error) {
     if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
@@ -164,12 +165,27 @@ async function submitNewPassword() {
       Your password reset request is invalid or expired.
     </p>
 
-    <p v-else-if="page === 'done'" class="distinguished">
-      Password successfully changed!
-    </p>
+    <template v-else-if="page === 'done'">
+      <p class="distinguished">
+        Password successfully changed! You are now signed in.
+      </p>
+
+      <p>
+        <!-- TODO: Ensure this link works, or change it to use the user ID. -->
+        <Button href="/files/u/me">Visit Your Garden</Button>
+      </p>
+    </template>
 
     <template v-if="page !== 'password'" #bottom-text>
-      <p>
+      <p v-if="page === 'failed'">
+        <A href="/reset-password">Try again</A> or <A href="/">go home</A>
+      </p>
+
+      <p v-else-if="page === 'done'">
+        <A href="/">Go Home</A>
+      </p>
+
+      <p v-else>
         <A href="/sign-in">Back to Sign In</A>
       </p>
     </template>
