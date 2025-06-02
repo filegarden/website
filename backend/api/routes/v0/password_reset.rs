@@ -121,7 +121,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .execute(tx.as_mut())
         .await?;
 
-        let mut token = Token::generate();
+        let token = Token::generate();
         let token_hash = hash_without_salt(&token);
 
         match sqlx::query!(

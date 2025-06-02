@@ -51,7 +51,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             return Err(TxError::Abort(api::Error::UserCredentialsWrong));
         };
 
-        let mut token = Token::generate();
+        let token = Token::generate();
         let token_hash = hash_without_salt(&token);
 
         match sqlx::query!(
