@@ -168,7 +168,7 @@ async function submitNewPassword() {
 
     <template v-if="page !== 'password'" #bottom-text>
       <p>
-        <A href="/sign-in" prefetch>Back to Sign In</A>
+        <A href="/sign-in">Back to Sign In</A>
       </p>
     </template>
   </SmallPanelLayout>

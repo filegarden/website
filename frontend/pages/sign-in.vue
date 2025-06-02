@@ -68,7 +68,7 @@ const _ = me;
         >
           <template #after>
             <div class="reset-password-link-wrapper">
-              <A href="/reset-password" prefetch>Forgot password?</A>
+              <A href="/reset-password">Forgot password?</A>
             </div>
           </template>
         </TextInput>
