@@ -88,7 +88,9 @@ async function submitNewPassword() {
       v-if="loading || passwordResetResponse.status.value === 'pending'"
     />
 
-    <h1 v-if="page === 'email' || page === 'password'">Reset Password</h1>
+    <h1 v-if="page === 'email' || page === 'password' || page === 'requested'">
+      Reset Password
+    </h1>
 
     <form v-if="page === 'email'" @submit.prevent="requestPasswordReset">
       <fieldset :disabled="loading">
@@ -185,7 +187,7 @@ async function submitNewPassword() {
 
 .requested-info {
   font-size: 1.25em;
-  padding: 0.5em 0 1em;
+  padding: 1em 0;
 }
 
 .distinguished {

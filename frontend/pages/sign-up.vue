@@ -184,7 +184,7 @@ const _ = me;
       v-if="loading || codeResponse.status.value === 'pending'"
     />
 
-    <h1 v-if="page === 'email'">Sign Up</h1>
+    <h1 v-if="page === 'email' || page === 'verification-sent'">Sign Up</h1>
 
     <form v-if="page === 'email'" @submit.prevent="openCaptchaPage">
       <fieldset :disabled="loading">
@@ -359,7 +359,7 @@ const _ = me;
 
 .verification-sent-info {
   font-size: 1.25em;
-  padding: 0.5em 0 1em;
+  padding: 1em 0;
 }
 
 .intro {
