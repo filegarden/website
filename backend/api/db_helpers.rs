@@ -12,7 +12,7 @@ use crate::{
 ///
 /// # Errors
 ///
-/// Returns a transaction error if any database query fails.
+/// Returns an error if a database query fails.
 pub(crate) async fn create_session<UserId, E>(
     tx: &mut PgTransaction<'static>,
     user_id: &UserId,
@@ -47,7 +47,7 @@ where
 ///
 /// # Errors
 ///
-/// Returns a transaction error if any database query fails.
+/// Returns an error if a database query fails.
 pub(crate) async fn delete_all_sessions_for_user<UserId>(
     tx: &mut PgTransaction<'static>,
     user_id: &UserId,
