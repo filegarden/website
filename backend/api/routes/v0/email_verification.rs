@@ -129,7 +129,17 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         return Err(api::Error::CaptchaFailed);
     }
 
-    db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    enum SendMessage {
+        /// Sends an [`EmailTakenMessage`].
+        EmailTaken {
+            /// The name of the existing user who took the email.
+            user_name: String,
+        },
+        /// Sends a [`VerificationMessage`].
+        Verification(Token),
+    }
+
+    match db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let existing_user = sqlx::query!(
             "SELECT name FROM users
                 WHERE email = $1",
@@ -139,13 +149,9 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .await?;
 
         if let Some(user) = existing_user {
-            EmailTakenMessage {
-                email: body.email.as_str(),
-            }
-            .to(Mailbox::new(Some(user.name), (*body.email).clone()))
-            .send();
-
-            return Ok(());
+            return Ok(SendMessage::EmailTaken {
+                user_name: user.name,
+            });
         }
 
         // Expire any previous email verification request.
@@ -177,16 +183,26 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             result => result?,
         };
 
-        VerificationMessage {
-            email: body.email.as_str(),
-            verification_url: &format!("{}/verify-email?token={}", *WEBSITE_ORIGIN, token),
-        }
-        .to(Mailbox::new(None, (*body.email).clone()))
-        .send();
-
-        Ok(())
+        Ok(SendMessage::Verification(token))
     })
-    .await?;
+    .await?
+    {
+        SendMessage::EmailTaken { user_name } => {
+            EmailTakenMessage {
+                email: body.email.as_str(),
+            }
+            .to(Mailbox::new(Some(user_name), (*body.email).clone()))
+            .send();
+        }
+        SendMessage::Verification(token) => {
+            VerificationMessage {
+                email: body.email.as_str(),
+                verification_url: &format!("{}/verify-email?token={}", *WEBSITE_ORIGIN, token),
+            }
+            .to(Mailbox::new(None, (*body.email).clone()))
+            .send();
+        }
+    }
 
     // To prevent user enumeration, send this same successful response even if the email is taken.
     Ok((StatusCode::OK, Json(PostResponse { email: body.email })))
