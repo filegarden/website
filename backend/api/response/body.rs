@@ -7,10 +7,8 @@ use crate::id::Id;
 /// A reference to a user.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct User<IdType = Vec<u8>>
-where
-    IdType: AsRef<[u8]>,
-{
+#[serde(bound = "IdType: AsRef<[u8]>")]
+pub(crate) struct User<IdType = Vec<u8>> {
     /// The user's ID.
     pub id: Id<IdType>,
 
