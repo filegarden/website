@@ -64,7 +64,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .await
         {
             Err(sqlx::Error::Database(error)) if error.constraint() == Some("sessions_pkey") => {
-                return Err(TxError::Retry)
+                return Err(TxError::Retry);
             }
             result => result?,
         };
