@@ -46,8 +46,8 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .fetch_optional(tx.as_mut())
         .await?
         .filter(|user| verify_hash(&body.password, &user.password_hash)) else {
-            // To prevent user enumeration, send this same error response whether or not the email
-            // is correct.
+            // To prevent user enumeration, send this same error response whether it was the email
+            // or the password that was incorrect.
             return Err(TxError::Abort(api::Error::UserCredentialsWrong));
         };
 
