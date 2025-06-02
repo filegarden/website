@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "DELETE FROM password_resets\n                WHERE token_hash = $1\n                RETURNING user_id",
+  "query": "DELETE FROM password_resets\n                    WHERE token_hash = $1\n                    RETURNING user_id",
   "describe": {
     "columns": [
       {
@@ -18,5 +18,5 @@
       false
     ]
   },
-  "hash": "0419ea48e213f03e6b1a390256d38fd0fbf55e538ef1393d6df57b250d2e27de"
+  "hash": "9bfc82e743d9ac265e5fcaa5faaba471d076ed1800d676e2e30d9cbe44e1d5fa"
 }
