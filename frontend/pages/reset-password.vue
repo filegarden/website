@@ -28,6 +28,7 @@ async function requestPasswordReset() {
 }
 
 const passwordResetResponse = await useApi("/password-reset", {
+  // TODO: Fix this not reacting to query changes.
   params: route.query,
 
   shouldIgnoreResponseError: (error) => {
@@ -41,7 +42,9 @@ const passwordResetResponse = await useApi("/password-reset", {
 watch(
   () => route.query.token,
   (token) => {
-    if (token) {
+    if (token === undefined) {
+      page.value = "email";
+    } else {
       page.value = "password";
       void passwordResetResponse.refresh();
     }
