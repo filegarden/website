@@ -76,7 +76,7 @@ pub(crate) async fn delete(
 ) -> impl Response<DeleteResponse> {
     #[expect(
         unused_assignments,
-        reason = "This will fix itself once the TODO is resolved."
+        reason = "This will fix itself once the TODO is resolved"
     )]
     let mut response_header = None;
 

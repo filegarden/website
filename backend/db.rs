@@ -175,11 +175,11 @@ macro_rules! transaction {
             let db_pool: &::sqlx::PgPool = $crate::db::pool();
 
             #[expect(clippy::allow_attributes, reason = "`unused_mut` isn't always expected")]
-            #[allow(unused_mut, reason = "some callers need this to be `mut`")]
+            #[allow(unused_mut, reason = "Some callers need this to be `mut`")]
             let mut callback = $callback;
 
             #[expect(clippy::allow_attributes, reason = "`unused_mut` isn't always expected")]
-            #[allow(unused_mut, reason = "some callers need this to be `mut`")]
+            #[allow(unused_mut, reason = "Some callers need this to be `mut`")]
             let mut callback = async || -> $crate::db::TxResult<_, _> {
                 let mut tx = db_pool.begin().await?;
 

@@ -172,7 +172,7 @@ impl UserEmail {
     }
 
     /// Consumes the [`UserEmail`], returning the wrapped [`Address`].
-    #[expect(dead_code, reason = "This should be part of the interface regardless.")]
+    #[expect(dead_code, reason = "This should be part of the interface regardless")]
     pub(crate) fn into_inner(self) -> Address {
         self.0
     }
@@ -265,7 +265,7 @@ fn normalize_email_address_user(user: &str) -> Cow<str> {
 }
 
 #[cfg(test)]
-#[expect(clippy::missing_errors_doc, reason = "see rust-lang/rust-clippy#13391")]
+#[expect(clippy::missing_errors_doc, reason = "See rust-lang/rust-clippy#13391")]
 mod tests {
     use super::*;
 
