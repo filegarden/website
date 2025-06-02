@@ -33,7 +33,6 @@ rustflags = [
     "-Wclippy::cloned_instead_of_copied",
     "-Wclippy::empty_enum",
     "-Wclippy::enum_glob_use",
-    "-Wclippy::future_not_send",
     "-Wclippy::impl_trait_in_params",
     "-Wclippy::implicit_hasher",
     "-Wclippy::into_iter_without_iter",
