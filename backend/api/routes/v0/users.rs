@@ -2,13 +2,13 @@
 
 use axum::http::{header, StatusCode};
 use axum_macros::debug_handler;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use sqlx::Acquire;
 
 use crate::{
     api::{
         self,
-        response::Response,
+        response::{body::User, Response},
         validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
         Json,
     },
@@ -103,14 +103,12 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     Ok((
         StatusCode::CREATED,
         [(header::LOCATION, format!("/api/v0/users/{user_id}"))],
-        Json(PostResponse { id: user_id }),
+        Json(PostResponse {
+            id: user_id,
+            name: body.name.into_inner(),
+        }),
     ))
 }
 
 /// A `POST` response body for this API route.
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct PostResponse {
-    /// The user's ID.
-    pub id: NewUserId,
-}
+pub(crate) type PostResponse = User<[u8; 8]>;

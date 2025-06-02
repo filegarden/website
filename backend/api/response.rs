@@ -13,6 +13,8 @@ use thiserror::Error;
 
 use super::Json;
 
+pub(crate) mod body;
+
 /// An API error.
 #[derive(Error, IntoStaticStr, Debug)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]

@@ -48,7 +48,6 @@ pub(crate) struct BoundedString<const MIN: usize, const MAX: usize>(String);
 
 impl<const MIN: usize, const MAX: usize> BoundedString<MIN, MAX> {
     /// Consumes the [`BoundedString`], returning the wrapped [`String`].
-    #[expect(dead_code, reason = "This should be part of the interface regardless.")]
     pub(crate) fn into_inner(self) -> String {
         self.0
     }

@@ -66,17 +66,20 @@ function openCodePage() {
 const code = ref("");
 const isCodeWrong = ref(false);
 
-const codeResponse = await useApi("/email-verification/code", {
-  method: "POST",
-  params: { token: route.query.token },
+const [me, codeResponse] = await Promise.all([
+  useMe(),
+  useApi("/email-verification/code", {
+    method: "POST",
+    params: { token: route.query.token },
 
-  shouldIgnoreResponseError: (error) => {
-    const code = getApiErrorCode(error);
-    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
-  },
+    shouldIgnoreResponseError: (error) => {
+      const code = getApiErrorCode(error);
+      return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+    },
 
-  immediate: route.query.token !== undefined,
-});
+    immediate: route.query.token !== undefined,
+  }),
+]);
 
 watchEffect(() => {
   if (route.query.token) {
@@ -144,7 +147,7 @@ async function completeSignUp() {
   loading.value = true;
 
   try {
-    await api("/users", {
+    const user = await api("/users", {
       method: "POST",
       body: {
         email: email.value,
@@ -156,7 +159,7 @@ async function completeSignUp() {
       loading.value = false;
     });
 
-    alert("TODO");
+    me.value = user;
   } catch (error) {
     if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
@@ -165,6 +168,8 @@ async function completeSignUp() {
     }
   }
 }
+
+// TODO: Redirect to some other page when already signed in.
 </script>
 
 <template>

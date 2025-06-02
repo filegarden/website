@@ -2,19 +2,17 @@
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
-use serde::Serialize;
 
 use crate::{
     api::{
         self,
         extract::{AuthToken, Path},
-        response::Response,
+        response::{body::User, Response},
         validation::UserQuery,
         Json,
     },
     crypto::hash_without_salt,
     db::{self, TxResult},
-    id::Id,
 };
 
 /// A request path for this API route.
@@ -53,7 +51,7 @@ pub(crate) async fn get(
                 return Err(api::Error::ResourceNotFound);
             };
 
-            (Id::from(user.id), user.name)
+            (user.id.into(), user.name)
         }
         UserQuery::Id(id) => {
             let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
@@ -84,12 +82,4 @@ pub(crate) async fn get(
 }
 
 /// A `GET` response body for this API route.
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct GetResponse {
-    /// The user's ID.
-    pub id: Id,
-
-    /// The user's name.
-    pub name: String,
-}
+pub(crate) type GetResponse = User;

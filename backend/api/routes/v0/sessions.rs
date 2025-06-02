@@ -9,7 +9,7 @@ use crate::{
     api::{
         self,
         cookie::{CookieWrapper, SessionCookie},
-        response::Response,
+        response::{body::User, Response},
         validation::{UserEmail, UserPassword},
         Json,
     },
@@ -38,9 +38,9 @@ pub(crate) struct PostRequest {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
-    let token = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let (token, user_id, user_name) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT id, password_hash FROM users
+            "SELECT id, password_hash, name FROM users
                 WHERE email = $1",
             body.email.as_str(),
         )
@@ -83,7 +83,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             break;
         }
 
-        Ok(token)
+        Ok((token, user.id, user.name))
     })
     .await?;
 
@@ -92,11 +92,19 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     Ok((
         StatusCode::OK,
         [SessionCookie::new(token.to_string()).to_header()],
-        Json(PostResponse {}),
+        Json(PostResponse {
+            user: User {
+                id: user_id.into(),
+                name: user_name,
+            },
+        }),
     ))
 }
 
 /// A `POST` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct PostResponse {}
+pub(crate) struct PostResponse {
+    /// The newly authenticated user.
+    user: User,
+}
