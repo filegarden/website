@@ -4,7 +4,6 @@ use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use lettre::message::Mailbox;
 use serde::{Deserialize, Serialize};
-use sqlx::Acquire;
 
 use crate::{
     api::{
@@ -15,7 +14,7 @@ use crate::{
         Json,
     },
     crypto::hash_without_salt,
-    db::{self, TxResult},
+    db::{self, TxError, TxResult},
     email::{MessageTemplate, PasswordResetFailedMessage, PasswordResetMessage},
     id::Token,
     WEBSITE_ORIGIN,
@@ -123,35 +122,24 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .await?;
 
         let mut token = Token::generate();
+        let token_hash = hash_without_salt(&token);
 
-        loop {
-            // If this loop's query fails from a token conflict, this savepoint is rolled back to
-            // rather than aborting the entire transaction.
-            let mut savepoint = tx.begin().await?;
-
-            let token_hash = hash_without_salt(&token);
-
-            match sqlx::query!(
-                "INSERT INTO password_resets (token_hash, user_id)
-                    VALUES ($1, $2)",
-                token_hash.as_ref(),
-                user.id,
-            )
-            .execute(savepoint.as_mut())
-            .await
+        match sqlx::query!(
+            "INSERT INTO password_resets (token_hash, user_id)
+                VALUES ($1, $2)",
+            token_hash.as_ref(),
+            user.id,
+        )
+        .execute(tx.as_mut())
+        .await
+        {
+            Err(sqlx::Error::Database(error))
+                if error.constraint() == Some("password_resets_pkey") =>
             {
-                Err(sqlx::Error::Database(error))
-                    if error.constraint() == Some("password_resets_pkey") =>
-                {
-                    token.reroll();
-                    continue;
-                }
-                result => result?,
-            };
-
-            savepoint.commit().await?;
-            break;
-        }
+                return Err(TxError::Retry);
+            }
+            result => result?,
+        };
 
         PasswordResetMessage {
             email: body.email.as_str(),
