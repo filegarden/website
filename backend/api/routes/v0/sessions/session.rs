@@ -45,7 +45,7 @@ pub(crate) enum SessionQuery {
 
 impl SessionQuery {
     /// The string representation of [`SessionQuery::Current`].
-    const CURRENT_STR: &str = "$current";
+    pub(crate) const CURRENT_STR: &str = "$current";
 }
 
 impl FromStr for SessionQuery {
