@@ -4,7 +4,6 @@
  * This avoids the HTTP request required by `useMe`.
  */
 export default function setMe(user: User | undefined) {
-  const me = useState<User | undefined>("me");
-
+  const me = useRawMe();
   me.value = user;
 }

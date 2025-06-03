@@ -1,3 +1,5 @@
+import type { UnwrapRef } from "vue";
+
 /**
  * Returns the current authenticated user, or `undefined` if the user is not
  * authenticated.
@@ -8,21 +10,21 @@
 export default async function useMe(): Promise<
   Readonly<Ref<User | undefined>>
 > {
-  const me = useState<User | undefined>("me");
+  const me = useRawMe();
 
-  if (me.value) {
-    // `setMe` has already set the value elsewhere, so no need to fetch it.
-    return me;
+  // Only fetch the user if it wasn't already set by `setMe` elsewhere.
+  if (me.value === "unknown") {
+    await callOnce(async () => {
+      const { data } = await useApi<User>("/users/$me", {
+        shouldIgnoreResponseError: (error) =>
+          getApiErrorCode(error) === "RESOURCE_NOT_FOUND",
+      });
+
+      me.value = data.value ?? undefined;
+    });
   }
 
-  await callOnce(async () => {
-    const { data } = await useApi<User>("/users/$me", {
-      shouldIgnoreResponseError: (error) =>
-        getApiErrorCode(error) === "RESOURCE_NOT_FOUND",
-    });
-
-    me.value = data.value ?? undefined;
-  });
-
-  return me;
+  // We assert the user can't be unknown at this point, and it should never be
+  // unknown again.
+  return me as Ref<Exclude<UnwrapRef<typeof me>, "unknown">>;
 }
