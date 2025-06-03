@@ -36,7 +36,8 @@ async function signOut() {
       signOutLoading.value = false;
     });
   } catch (error) {
-    if (getApiErrorCode(error) !== "RESOURCE_NOT_FOUND") {
+    const errorCode = getApiErrorCode(error);
+    if (!(errorCode === "AUTH_FAILED" || errorCode === "RESOURCE_NOT_FOUND")) {
       throw error;
     }
   }
