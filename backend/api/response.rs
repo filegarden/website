@@ -26,8 +26,8 @@ pub(crate) enum Error {
 
     /// Authentication credentials are required but either unspecified, invalid, or don't match any
     /// user.
-    #[error("Authentication failed: {0}")]
-    AuthFailed(String),
+    #[error("You must be signed in to access the requested resource.")]
+    AuthFailed,
 
     /// The request body doesn't match the required target type.
     #[error("Invalid request body: {0}")]
@@ -91,7 +91,7 @@ impl Error {
     const fn status(&self) -> StatusCode {
         match self {
             Self::AccessDenied => StatusCode::FORBIDDEN,
-            Self::AuthFailed(_) => StatusCode::UNAUTHORIZED,
+            Self::AuthFailed => StatusCode::UNAUTHORIZED,
             Self::BodyDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,

@@ -43,12 +43,12 @@ where
             .and_then(|header_value| str::from_utf8(header_value.as_bytes()).ok())
             .and_then(SessionCookie::from_header)
         else {
-            return Err(api::Error::AuthFailed("missing credentials".into()));
+            return Err(api::Error::AuthFailed);
         };
 
         match session_cookie.as_ref().value().parse() {
             Ok(token) => Ok(Self(token)),
-            Err(error) => Err(api::Error::AuthFailed(format!("invalid token: {error}"))),
+            Err(_) => Err(api::Error::AuthFailed),
         }
     }
 }
@@ -65,7 +65,7 @@ where
     ) -> Result<Option<Self>, Self::Rejection> {
         match <Self as FromRequestParts<_>>::from_request_parts(parts, state).await {
             Ok(token) => Ok(Some(token)),
-            Err(api::Error::AuthFailed(_)) => Ok(None),
+            Err(api::Error::AuthFailed) => Ok(None),
             Err(error) => Err(error),
         }
     }
