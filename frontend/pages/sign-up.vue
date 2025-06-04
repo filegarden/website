@@ -358,7 +358,7 @@ const _ = me;
 }
 
 .verification-sent-info {
-  font-size: 1.25em;
+  font-size: 1.125em;
   padding: 1em 0;
 }
 

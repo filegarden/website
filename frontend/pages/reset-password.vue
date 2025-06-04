@@ -205,7 +205,7 @@ async function submitNewPassword() {
 }
 
 .requested-info {
-  font-size: 1.25em;
+  font-size: 1.125em;
   padding: 1em 0;
 }
 
