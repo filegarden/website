@@ -4,7 +4,7 @@ use std::str;
 
 use axum::{
     extract::{FromRequestParts, OptionalFromRequestParts},
-    http::{header, request},
+    http::{header::COOKIE, request},
 };
 use axum_macros::FromRequestParts;
 
@@ -39,7 +39,7 @@ where
     ) -> Result<Self, Self::Rejection> {
         let Some(session_cookie) = parts
             .headers
-            .get(header::COOKIE)
+            .get(COOKIE)
             .and_then(|header_value| str::from_utf8(header_value.as_bytes()).ok())
             .and_then(SessionCookie::from_header)
         else {

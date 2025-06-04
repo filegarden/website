@@ -1,6 +1,6 @@
 //! The set of all users.
 
-use axum::http::{header, StatusCode};
+use axum::http::{header::LOCATION, StatusCode};
 use axum_macros::debug_handler;
 use serde::Deserialize;
 
@@ -96,7 +96,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     Ok((
         StatusCode::CREATED,
         [
-            (header::LOCATION, format!("/api/v0/users/{user_id}")),
+            (LOCATION, format!("/api/v0/users/{user_id}")),
             SessionCookie::new(session_token.to_string()).to_header(),
         ],
         Json(PostResponse {
