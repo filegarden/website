@@ -74,7 +74,7 @@ async function signOut() {
         >
           <IconButton
             class="account-button"
-            label="Your Account"
+            label="Account Menu"
             @click="toggleAccountMenu"
           >
             <IconAccountCircle class="account-icon" />
