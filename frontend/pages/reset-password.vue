@@ -62,6 +62,8 @@ watchEffect(() => {
 const password = ref("");
 const confirmPassword = ref("");
 
+const userId = ref<string>();
+
 async function submitNewPassword() {
   loading.value = true;
 
@@ -75,6 +77,8 @@ async function submitNewPassword() {
     });
 
     setMe(passwordResponse.user);
+    userId.value = passwordResponse.user.id;
+
     page.value = "done";
   } catch (error) {
     if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
@@ -174,8 +178,7 @@ async function submitNewPassword() {
       </p>
 
       <p>
-        <!-- TODO: Ensure this link works, or change it to use the user ID. -->
-        <Button href="/files/u/me">Visit Your Garden</Button>
+        <Button :href="`/files/u/${userId}`">Visit Your Garden</Button>
       </p>
     </template>
 
