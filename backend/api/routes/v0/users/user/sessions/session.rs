@@ -1,4 +1,4 @@
-//! A session.
+//! One of a particular user's sessions.
 
 use std::str::FromStr;
 
@@ -14,10 +14,11 @@ use crate::{
         cookie::{CookieWrapper, SessionCookie},
         extract::{AuthToken, Path},
         response::Response,
+        validation::UserQuery,
         Json,
     },
     crypto::hash_without_salt,
-    db::{self, TxResult},
+    db::{self, TxError, TxResult},
     id::Id,
 };
 
@@ -62,7 +63,7 @@ impl FromStr for SessionQuery {
 }
 
 /// A request path for this API route.
-type PathParams = Path<SessionQuery>;
+type PathParams = Path<(UserQuery, SessionQuery)>;
 
 /// Deletes a session.
 ///
@@ -71,57 +72,53 @@ type PathParams = Path<SessionQuery>;
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn delete(
-    Path(session_query): PathParams,
+    Path((user_query, session_query)): PathParams,
     AuthToken(token): AuthToken,
 ) -> impl Response<DeleteResponse> {
     let token_hash = hash_without_salt(&token);
 
+    let is_session_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        let Some(user_id) = sqlx::query!(
+            "SELECT user_id FROM sessions
+                WHERE token_hash = $1",
+            token_hash.as_ref(),
+        )
+        .fetch_optional(tx.as_mut())
+        .await?
+        .map(|session| session.user_id) else {
+            return Err(TxError::Abort(api::Error::AuthFailed));
+        };
+
+        if let UserQuery::Id(queried_user_id) = &user_query {
+            if **queried_user_id != user_id {
+                return Err(TxError::Abort(api::Error::AccessDenied));
+            }
+        }
+
+        let sessions_deleted = sqlx::query!(
+            "DELETE FROM sessions
+                WHERE user_id = $1 AND token_hash = $2",
+            user_id,
+            token_hash.as_ref(),
+        )
+        .execute(tx.as_mut())
+        .await?
+        .rows_affected();
+
+        Ok(sessions_deleted != 0)
+    })
+    .await?;
+
+    if !is_session_deleted {
+        return Err(api::Error::ResourceNotFound);
+    }
+
     let response_header = match session_query {
-        // The user requested deletion of a session other than their current one.
-        SessionQuery::Id(id) if id.as_slice() != token_hash.as_ref() => {
-            let sessions_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-                Ok(sqlx::query!(
-                    "DELETE FROM sessions
-                        WHERE token_hash = $2 AND user_id = (
-                            SELECT user_id FROM sessions
-                                WHERE token_hash = $1
-                        )",
-                    token_hash.as_ref(),
-                    id.as_slice(),
-                )
-                .execute(tx.as_mut())
-                .await?
-                .rows_affected())
-            })
-            .await?;
+        // The user deleted a session other than their current one.
+        SessionQuery::Id(id) if id.as_slice() != token_hash.as_ref() => None,
 
-            if sessions_deleted == 0 {
-                return Err(api::Error::AccessDenied);
-            }
-
-            None
-        }
-
-        // The user requested deletion of their current session.
-        _ => {
-            let sessions_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-                Ok(sqlx::query!(
-                    "DELETE FROM sessions
-                        WHERE token_hash = $1",
-                    token_hash.as_ref(),
-                )
-                .execute(tx.as_mut())
-                .await?
-                .rows_affected())
-            })
-            .await?;
-
-            if sessions_deleted == 0 {
-                return Err(api::Error::ResourceNotFound);
-            }
-
-            Some(SessionCookie::expired().to_header())
-        }
+        // The user deleted their current session.
+        _ => Some(SessionCookie::expired().to_header()),
     };
 
     Ok((

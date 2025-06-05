@@ -38,12 +38,12 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::password_reset::password::post),
         )
         .route("/sessions", post(v0::sessions::post))
-        .route(
-            "/sessions/{session_id}",
-            delete(v0::sessions::session::delete),
-        )
         .route("/users", post(v0::users::post))
         .route("/users/{user_id}", get(v0::users::user::get))
+        .route(
+            "/users/{user_id}/sessions/{session_id}",
+            delete(v0::users::user::sessions::session::delete),
+        )
         .fallback(|| async { api::Error::RouteNotFound })
         .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed });
 

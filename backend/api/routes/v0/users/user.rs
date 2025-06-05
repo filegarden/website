@@ -15,6 +15,8 @@ use crate::{
     db::{self, TxResult},
 };
 
+pub(crate) mod sessions;
+
 /// A request path for this API route.
 type PathParams = Path<UserQuery>;
 

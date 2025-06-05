@@ -18,8 +18,6 @@ use crate::{
     id::Token,
 };
 
-pub(crate) mod session;
-
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
