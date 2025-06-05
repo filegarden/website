@@ -78,9 +78,28 @@ pub(crate) async fn delete(
 
     let response_header = match session_query {
         // The user requested deletion of a session other than their current one.
-        SessionQuery::Id(id) if id.as_ref() != token_hash.as_ref() => {
-            // TODO: Implement signing out specific sessions in the account settings.
-            return Err(api::Error::AccessDenied);
+        SessionQuery::Id(id) if id.as_slice() != token_hash.as_ref() => {
+            let sessions_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+                Ok(sqlx::query!(
+                    "DELETE FROM sessions
+                        WHERE token_hash = $2 AND user_id = (
+                            SELECT user_id FROM sessions
+                                WHERE token_hash = $1
+                        )",
+                    token_hash.as_ref(),
+                    id.as_slice(),
+                )
+                .execute(tx.as_mut())
+                .await?
+                .rows_affected())
+            })
+            .await?;
+
+            if sessions_deleted == 0 {
+                return Err(api::Error::AccessDenied);
+            }
+
+            None
         }
 
         // The user requested deletion of their current session.
