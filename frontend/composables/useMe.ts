@@ -1,15 +1,13 @@
 import type { UnwrapRef } from "vue";
 
 /**
- * Returns the current authenticated user, or `undefined` if the user is not
+ * Returns the current authenticated user, or `null` if the user is not
  * authenticated.
  *
  * The returned ref is shallowly read-only because `setMe` should be used to set
  * its value instead. `setMe` doesn't require an HTTP request like `useMe` does.
  */
-export default async function useMe(): Promise<
-  Readonly<Ref<User | undefined>>
-> {
+export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   const me = useRawMe();
 
   // Only fetch the user if it wasn't already set by `setMe` elsewhere.
@@ -20,7 +18,7 @@ export default async function useMe(): Promise<
           getApiErrorCode(error) === "RESOURCE_NOT_FOUND",
       });
 
-      me.value = data.value ?? undefined;
+      me.value = data.value;
     });
   }
 

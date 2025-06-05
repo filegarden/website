@@ -3,5 +3,5 @@
  * HTTP request.
  */
 export default function useRawMe() {
-  return useState<User | undefined | "unknown">(() => "unknown" as const);
+  return useState<User | null | "unknown">(() => "unknown" as const);
 }
