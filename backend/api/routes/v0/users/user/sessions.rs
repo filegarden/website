@@ -14,6 +14,7 @@ use crate::{
     },
     crypto::hash_without_salt,
     db::{self, TxError, TxResult},
+    id::Id,
 };
 
 pub(crate) mod session;
@@ -62,13 +63,22 @@ pub(crate) async fn get(
     })
     .await?;
 
-    Ok((StatusCode::OK, Json(GetResponse { values: sessions })))
+    Ok((
+        StatusCode::OK,
+        Json(GetResponse {
+            current_session_id: Vec::from(token_hash.as_ref()).into(),
+            values: sessions,
+        }),
+    ))
 }
 
 /// A `GET` response body for this API route.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct GetResponse {
+    /// The ID of the user's current session.
+    current_session_id: Id,
+
     /// All of the user's active sessions.
     values: Vec<Session>,
 }
