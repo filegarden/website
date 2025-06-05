@@ -20,8 +20,9 @@ pub(crate) mod body;
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 #[non_exhaustive]
 pub(crate) enum Error {
-    /// The user is authenticated but has insufficient permission to access the requested resource.
-    #[error("You don't have permission to access the requested resource.")]
+    /// The user is authenticated but has insufficient permission to access the requested resource
+    /// (and possibly to even know whether it exists).
+    #[error("You don't have permission to access the requested resource (if it exists).")]
     AccessDenied,
 
     /// Authentication credentials are required but either unspecified, invalid, or don't match any
