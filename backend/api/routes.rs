@@ -41,6 +41,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route("/users", post(v0::users::post))
         .route("/users/{user_id}", get(v0::users::user::get))
         .route(
+            "/users/{user_id}/sessions",
+            get(v0::users::user::sessions::get),
+        )
+        .route(
             "/users/{user_id}/sessions/{session_id}",
             delete(v0::users::user::sessions::session::delete),
         )

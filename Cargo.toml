@@ -20,6 +20,7 @@ axum = "0.8"
 axum-macros = "0.5"
 base64 = "0.22"
 castaway = "0.2"
+chrono = { version = "0.4", features = ["serde"] }
 cookie = "0.18"
 derive_more = { version = "2", features = ["full"] }
 dotenvy = "0.15"
