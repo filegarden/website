@@ -18,7 +18,7 @@ use crate::{
     },
     crypto::hash_without_salt,
     db::{self, TxResult},
-    id::{Id, Token},
+    id::Id,
 };
 
 /// A value used to query a single session.
@@ -40,7 +40,7 @@ pub(crate) enum SessionQuery {
     Current,
 
     /// Queries a session by ID.
-    Id(Token),
+    Id(Id),
 }
 
 impl SessionQuery {
