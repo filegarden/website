@@ -44,7 +44,7 @@ async function signOut() {
     }
   }
 
-  setMe(undefined);
+  setMe(null);
 }
 </script>
 
