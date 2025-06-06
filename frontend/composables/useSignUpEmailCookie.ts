@@ -8,6 +8,6 @@ export default function useSignUpEmailCookie() {
   return useCookie<string | undefined>("sign-up-email", {
     maxAge: 60 * 60 * 24,
     sameSite: "lax",
-    secure: import.meta.server || location.protocol === "https:",
+    secure: import.meta.server || window.location.protocol === "https:",
   });
 }
