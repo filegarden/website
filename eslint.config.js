@@ -13,7 +13,9 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt([
   comments.recommended,
-  esX.configs["flat/restrict-to-es2020"],
+  // Baseline widely available supports browsers up to 2.5 years old. Let's not
+  // use browser APIs newer than that.
+  esX.configs["flat/restrict-to-es" + (new Date().getFullYear() - 3)],
   // This is needed because of eslint-community/eslint-plugin-es-x#246.
   esX.configs["flat/no-new-in-esnext"],
   ...ts.configs.strictTypeChecked,
