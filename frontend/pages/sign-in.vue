@@ -1,14 +1,9 @@
 <script setup lang="ts">
 useTitle("Sign In");
 
+const redirecting = await useRedirectIfSignedIn();
+
 const loading = ref(false);
-
-await useRedirectIfSignedIn({
-  onBeforeRedirect() {
-    loading.value = true;
-  },
-});
-
 const email = useSignInEmail();
 const password = ref("");
 
@@ -50,7 +45,13 @@ async function submitSignIn() {
 </script>
 
 <template>
-  <SmallPanelLayout>
+  <SmallPanelLayout v-if="redirecting" class="page-redirecting">
+    <LoadingIndicator />
+
+    <p>Redirecting...</p>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else>
     <LoadingIndicator v-if="loading" />
 
     <h1>Sign In</h1>
@@ -95,6 +96,10 @@ async function submitSignIn() {
 </template>
 
 <style scoped lang="scss">
+.page-redirecting :deep(main) {
+  text-align: center;
+}
+
 .reset-password-link-wrapper {
   text-align: right;
   margin: 0.667em 1px;

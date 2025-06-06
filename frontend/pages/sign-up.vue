@@ -3,13 +3,7 @@ import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
 useTitle("Sign Up");
 
-const loading = ref(false);
-
-await useRedirectIfSignedIn({
-  onBeforeRedirect() {
-    loading.value = true;
-  },
-});
+const redirecting = await useRedirectIfSignedIn();
 
 const route = useRoute();
 const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
@@ -20,6 +14,7 @@ const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
 // sign-up process.
 useLeaveConfirmation(() => page.value === "code");
 
+const loading = ref(false);
 const email = useSignInEmail();
 const acceptTerms = ref(false);
 const captchaToken = ref("");
@@ -181,7 +176,14 @@ async function completeSignUp() {
 </script>
 
 <template>
+  <SmallPanelLayout v-if="redirecting" class="page-redirecting">
+    <LoadingIndicator />
+
+    <p>Redirecting...</p>
+  </SmallPanelLayout>
+
   <SmallPanelLayout
+    v-else
     :class="[
       `page-${page}`,
       { 'page-final-code-wrong': page === 'final' && isCodeWrong },
@@ -343,6 +345,7 @@ async function completeSignUp() {
 </template>
 
 <style scoped lang="scss">
+.page-redirecting,
 .page-verification-sent,
 .page-code,
 .page-final-code-wrong {
