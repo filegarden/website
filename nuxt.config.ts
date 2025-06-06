@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2024-10-29",
+  compatibilityDate: "2025-06-06",
   devtools: { enabled: true },
   srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
@@ -17,16 +17,7 @@ export default defineNuxtConfig({
     },
   },
 
-  // Fixes Sass deprecation warnings. I expect this to eventually be default.
   vite: {
-    css: {
-      preprocessorOptions: {
-        scss: {
-          api: "modern-compiler",
-        },
-      },
-    },
-
     server: {
       // The backend manages allowed hosts, so the frontend doesn't need to.
       allowedHosts: true,
