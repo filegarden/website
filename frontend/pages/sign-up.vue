@@ -3,6 +3,14 @@ import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
 
 useTitle("Sign Up");
 
+const loading = ref(false);
+
+await useRedirectIfSignedIn({
+  onBeforeRedirect() {
+    loading.value = true;
+  },
+});
+
 const route = useRoute();
 const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
   "email",
@@ -12,7 +20,6 @@ const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
 // sign-up process.
 useLeaveConfirmation(() => page.value === "code");
 
-const loading = ref(false);
 const email = useSignInEmail();
 const acceptTerms = ref(false);
 const captchaToken = ref("");
@@ -66,20 +73,17 @@ function openCodePage() {
 const code = ref("");
 const isCodeWrong = ref(false);
 
-const [me, codeResponse] = await Promise.all([
-  useMe(),
-  useApi("/email-verification/code", {
-    method: "POST",
-    params: { token: route.query.token },
+const codeResponse = await useApi("/email-verification/code", {
+  method: "POST",
+  params: { token: route.query.token },
 
-    shouldIgnoreResponseError: (error) => {
-      const code = getApiErrorCode(error);
-      return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
-    },
+  shouldIgnoreResponseError: (error) => {
+    const code = getApiErrorCode(error);
+    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+  },
 
-    immediate: route.query.token !== undefined,
-  }),
-]);
+  immediate: route.query.token !== undefined,
+});
 
 watchEffect(() => {
   if (route.query.token) {
@@ -160,6 +164,12 @@ async function completeSignUp() {
     });
 
     setMe(user);
+
+    await useRedirectIfSignedIn({
+      onBeforeRedirect() {
+        loading.value = true;
+      },
+    });
   } catch (error) {
     if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
       isCodeWrong.value = true;
@@ -168,9 +178,6 @@ async function completeSignUp() {
     }
   }
 }
-
-// TODO: Redirect to some other page when already signed in.
-const _ = me;
 </script>
 
 <template>

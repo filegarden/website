@@ -1,12 +1,16 @@
 <script setup lang="ts">
 useTitle("Sign In");
 
-const me = await useMe();
+const loading = ref(false);
+
+await useRedirectIfSignedIn({
+  onBeforeRedirect() {
+    loading.value = true;
+  },
+});
 
 const email = useSignInEmail();
 const password = ref("");
-
-const loading = ref(false);
 
 const areCredentialsWrong = ref(false);
 
@@ -29,6 +33,12 @@ async function submitSignIn() {
     });
 
     setMe(session.user);
+
+    await useRedirectIfSignedIn({
+      onBeforeRedirect() {
+        loading.value = true;
+      },
+    });
   } catch (error) {
     if (getApiErrorCode(error) === "USER_CREDENTIALS_WRONG") {
       areCredentialsWrong.value = true;
@@ -37,9 +47,6 @@ async function submitSignIn() {
     }
   }
 }
-
-// TODO: Redirect to some other page when already signed in.
-const _ = me;
 </script>
 
 <template>
