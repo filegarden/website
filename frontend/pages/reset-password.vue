@@ -28,8 +28,14 @@ async function requestPasswordReset() {
 }
 
 const passwordResetResponse = await useApi("/password-reset", {
-  // TODO: Fix this not reacting to query changes.
-  params: route.query,
+  params: {
+    // Using a getter makes refreshing the request use the current token value.
+    // I'd use a simple arrow function instead, but that isn't supported
+    // (despite the types saying it is, which is a Nuxt bug).
+    get token() {
+      return route.query.token;
+    },
+  },
 
   shouldIgnoreResponseError: (error) => {
     const code = getApiErrorCode(error);
@@ -37,6 +43,10 @@ const passwordResetResponse = await useApi("/password-reset", {
   },
 
   immediate: route.query.token !== undefined,
+
+  // Don't rerun the request when `route.query.token` changes. It can change to
+  // `undefined`, which is invalid.
+  watch: false,
 });
 
 watch(
