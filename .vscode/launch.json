@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Node.js",
+      "type": "node",
+      "request": "attach",
+      "port": 9229
+    },
+    {
+      // Launch Chrome with the `--remote-debugging-port=9222` option to allow
+      // Chrome debugging.
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "attach",
+      "port": 9222,
+      "urlFilter": "local*",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "All",
+      "configurations": ["Node.js", "Chrome"]
+    }
+  ]
+}
