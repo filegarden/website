@@ -2,10 +2,11 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-06-06",
   devtools: { enabled: true },
-  // IDE debuggers need source maps to work.
-  sourcemap: true,
   srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
+
+  // IDE debuggers need source maps to work.
+  sourcemap: true,
 
   routeRules: {
     "/discord": { redirect: "https://discord.gg/fWexzeh" },
