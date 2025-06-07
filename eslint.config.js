@@ -7,7 +7,6 @@ import prettier from "eslint-config-prettier";
 // @ts-expect-error: This module has no type declarations.
 import esX from "eslint-plugin-es-x";
 import ts from "typescript-eslint";
-// @ts-expect-error: This module has no type declarations.
 import vueScopedCss from "eslint-plugin-vue-scoped-css";
 import withNuxt from "./.nuxt/eslint.config.mjs";
 
