@@ -28,6 +28,10 @@ export default function useApi<ResT = DefaultResT>(
     // reuses it, which is quicker since it already started.
     dedupe: "defer",
 
+    onRequestError(ctx) {
+      errorBoxes.handleError(ctx.error);
+    },
+
     onResponseError(ctx) {
       const error = createFetchError(ctx);
 
