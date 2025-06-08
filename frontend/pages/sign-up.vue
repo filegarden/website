@@ -70,7 +70,7 @@ const isCodeWrong = ref(false);
 
 const codeResponse = await useApi("/email-verification/code", {
   method: "POST",
-  params: { token: route.query.token },
+  query: { token: route.query.token },
 
   shouldIgnoreResponseError: (error) => {
     const code = getApiErrorCode(error);
@@ -112,7 +112,7 @@ async function submitCode(event: Event) {
 
   try {
     await api("/email-verification", {
-      params: {
+      query: {
         email: email.value,
         code: code.value.toUpperCase(),
       },

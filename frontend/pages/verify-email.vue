@@ -5,7 +5,7 @@ const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
 const { data: email } = await useApi("/email-verification", {
-  params: { token: route.query.token },
+  query: { token: route.query.token },
 
   transform: (emailVerification) => emailVerification.email ?? "",
 
@@ -26,7 +26,7 @@ async function generateCode() {
   try {
     const codeResponse = await api("/email-verification/code", {
       method: "POST",
-      params: { token: route.query.token },
+      query: { token: route.query.token },
     }).finally(() => {
       loading.value = false;
     });
