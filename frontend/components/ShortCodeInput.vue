@@ -61,7 +61,7 @@ async function handleCodeInput(
 $SHORT-CODE-LENGTH: 6;
 
 :deep(input) {
-  font-family: "Roboto Mono", monospace;
+  font-family: var(--font-family-monospace);
   font-size: min(3em, 10vw);
 
   $letter-spacing: 0.75ch;
