@@ -42,8 +42,12 @@ function handleRejection(event: PromiseRejectionEvent) {
  * should only be used once, in the app component.
  */
 export function useSilencedErrorHandlers() {
-  // Prevent silenced errors originating from Vue contexts from propagating
-  // further, and prevent other Vue error handlers and dev warnings.
+  // Prevent silenced errors from running other Vue error handlers and logging
+  // dev warnings.
+  //
+  // (This also stops silenced errors thrown in Vue contexts from propagating
+  // further to the below event listeners, but we don't care about that since
+  // errors can come from other contexts.)
   onErrorCaptured((error) => {
     if (isSilenced(error)) {
       return false;
