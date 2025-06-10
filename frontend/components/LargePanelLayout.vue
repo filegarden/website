@@ -29,8 +29,6 @@ main {
 
   @media (max-width: $panel-width) {
     flex-grow: 1;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
   }
 }
 </style>
