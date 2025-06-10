@@ -1,4 +1,6 @@
 <script setup lang="ts">
+useSilencedErrorHandlers();
+
 if (import.meta.dev) {
   useHead({ title: "🚨🚨 MISSING `useTitle`! 🚨🚨" });
 }
