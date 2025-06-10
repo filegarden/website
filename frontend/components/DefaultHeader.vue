@@ -121,9 +121,10 @@ async function signOut() {
 .default-header {
   position: sticky;
   top: 0;
-  box-sizing: border-box;
-  max-width: max(66.7%, 750px);
   margin: 0 auto;
+  width: 100%;
+  max-width: max(66.7%, 750px);
+  box-sizing: border-box;
   padding: 2rem;
   z-index: 100;
 
