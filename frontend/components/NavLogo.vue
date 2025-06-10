@@ -48,7 +48,7 @@
   .nav-logo-link:active & {
     opacity: 0.875;
     filter: blur(0.5625em);
-    transition-duration: 0.05s, 0.05s;
+    transition-duration: 0.067s, 0.067s;
   }
 }
 </style>
