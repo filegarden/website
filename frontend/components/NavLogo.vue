@@ -46,7 +46,7 @@
 
   .nav-logo-link:focus-visible &,
   .nav-logo-link:active & {
-    opacity: 1;
+    opacity: 0.875;
     filter: blur(0.5625em);
     transition-duration: 0.05s, 0.05s;
   }
