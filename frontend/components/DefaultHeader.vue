@@ -31,18 +31,16 @@ async function signOut() {
 
   signOutLoading.value = true;
 
-  try {
-    await api("/users/$me/sessions/$current", {
-      method: "DELETE",
-    }).finally(() => {
-      signOutLoading.value = false;
-    });
-  } catch (error) {
-    const errorCode = getApiErrorCode(error);
-    if (!(errorCode === "AUTH_FAILED" || errorCode === "RESOURCE_NOT_FOUND")) {
-      throw error;
-    }
-  }
+  await api("/users/$me/sessions/$current", {
+    method: "DELETE",
+
+    catchApiErrors: {
+      AUTH_FAILED: () => Promise.resolve(),
+      RESOURCE_NOT_FOUND: () => Promise.resolve(),
+    },
+  }).finally(() => {
+    signOutLoading.value = false;
+  });
 
   setMe(null);
 }

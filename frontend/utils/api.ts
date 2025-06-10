@@ -1,57 +1,119 @@
-// It would be nice if this could be imported directly instead.
-type FetchContext =
-  NonNullable<NonNullable<Parameters<typeof api>[1]>["onRequest"]> extends
-    | ((ctx: infer C) => unknown)
-    | unknown[]
-    ? C
-    : never;
+import type { NuxtApp } from "#app";
+import type { FetchContext, FetchError, FetchOptions } from "ofetch";
 
-type RequestEvent = ReturnType<typeof useRequestEvent>;
-
-const requestEventsByContext = new WeakMap<FetchContext, RequestEvent>();
+const nuxtAppsByFetchContext = new WeakMap<FetchContext, NuxtApp>();
 
 const baseOrigin = import.meta.server
   ? `http://${process.env.NUXT_INTERNAL_BACKEND_ADDRESS}`
   : "";
 
-/**
- * A custom [`$fetch`](https://nuxt.com/docs/api/utils/dollarfetch) instance for
- * our API.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- We don't have an accurate type for this, and using `unknown` would require many pointless type assertions or runtime checks.
-const api = $fetch.create<any>({
-  baseURL: `${baseOrigin}/api/v0`,
-  headers: {
-    Accept: "application/json",
-  },
-  onRequest: import.meta.server
-    ? (ctx) => {
+const serverFetchOptions: FetchOptions | undefined = import.meta.server
+  ? {
+      onRequest(ctx) {
         const { cookie } = useRequestHeaders(["Cookie"]);
         if (cookie) {
-          // Forward the request cookies to the backend.
+          // Forward request cookies to the backend.
           ctx.options.headers.set("Cookie", cookie);
         }
 
-        // Save the event for later use in the response hook.
-        requestEventsByContext.set(ctx, useRequestEvent());
-      }
-    : undefined,
-  onResponse: import.meta.server
-    ? (ctx) => {
+        // Save the Nuxt app so other fetch hooks can reuse its context later.
+        nuxtAppsByFetchContext.set(ctx, useNuxtApp());
+      },
+
+      onResponse(ctx) {
         const setCookie = ctx.response.headers.get("Set-Cookie");
         if (!setCookie) {
           return;
         }
 
-        const requestEvent = requestEventsByContext.get(ctx);
-        if (!requestEvent) {
-          return;
-        }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- It's non-nullable because it was set in `onRequest`.
+        const nuxtApp = nuxtAppsByFetchContext.get(ctx)!;
 
-        // Forward the response cookies to the client.
-        appendResponseHeader(requestEvent, "Set-Cookie", setCookie);
-      }
-    : undefined,
+        void nuxtApp.runWithContext(() => {
+          // Forward response cookies to the client.
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The request event isn't nullable under the Nuxt app context during SSR.
+          const event = useRequestEvent()!;
+          appendResponseHeader(event, "Set-Cookie", setCookie);
+        });
+      },
+    }
+  : undefined;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- We don't have an accurate type for this, and using `unknown` would require many pointless type assertions or runtime checks.
+const $api = $fetch.create<any>({
+  baseURL: `${baseOrigin}/api/v0`,
+  headers: {
+    Accept: "application/json",
+  },
+
+  ...serverFetchOptions,
 });
 
-export default api;
+type $ApiOptions = NonNullable<Parameters<typeof $api>[1]>;
+
+export interface ApiOnlyOptions<CaughtResT> {
+  /**
+   * An object that maps each API error code to a handler function that catches
+   * API errors with that error code. `"silence"` can also be used as a value.
+   * If the handler is `"silence"` or a function that returns `undefined`, the
+   * error is re-thrown but {@link silence}d. If it returns a promise, the API
+   * call resolves or rejects with that promise.
+   */
+  catchApiErrors?: Record<
+    string,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type -- `void` is technically wrong here since anything is assignable to `void`, but some functions of this type shouldn't return an explicit value, and `undefined` in a union currently doesn't allow that.
+    "silence" | ((error: FetchError) => Promise<CaughtResT> | void)
+  >;
+}
+
+export interface ApiOptions<CaughtResT>
+  extends $ApiOptions,
+    ApiOnlyOptions<CaughtResT> {}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Same as for `$api`.
+export default function api<ResT = any, CaughtResT = never>(
+  request: Parameters<typeof $api>[0],
+  { catchApiErrors, ...options }: ApiOptions<CaughtResT> = {},
+) {
+  let promise: Promise<ResT | CaughtResT> = $api<ResT>(request, options);
+
+  if (catchApiErrors) {
+    promise = promise.catch((error: unknown) => {
+      const code = getApiErrorCode(error);
+
+      if (code === undefined) {
+        throw error;
+      }
+
+      const fetchError = error as FetchError;
+      const handler = catchApiErrors[code];
+
+      if (handler === undefined) {
+        throw fetchError;
+      }
+
+      if (handler === "silence") {
+        throw silence(fetchError);
+      }
+
+      const value = handler(fetchError) as Promise<CaughtResT> | undefined;
+
+      if (value === undefined) {
+        throw silence(fetchError);
+      }
+
+      return value;
+    });
+  }
+
+  if (import.meta.server) {
+    const errorBoxes = useErrorBoxes();
+
+    promise = promise.catch((error: unknown) => {
+      errorBoxes.handleError(error);
+      throw error;
+    });
+  }
+
+  return promise;
+}

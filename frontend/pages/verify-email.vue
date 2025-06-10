@@ -9,9 +9,9 @@ const { data: email } = await useApi("/email-verification", {
 
   transform: (emailVerification) => emailVerification.email ?? "",
 
-  shouldIgnoreResponseError: (error) => {
-    const code = getApiErrorCode(error);
-    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
+  catchApiErrors: {
+    INVALID_QUERY_DATA: "silence",
+    RESOURCE_NOT_FOUND: "silence",
   },
 });
 
@@ -23,22 +23,20 @@ const code = ref<string>();
 async function generateCode() {
   loading.value = true;
 
-  try {
-    const codeResponse = await api("/email-verification/code", {
-      method: "POST",
-      query: { token: route.query.token },
-    }).finally(() => {
-      loading.value = false;
-    });
+  const codeResponse = await api("/email-verification/code", {
+    method: "POST",
+    query: { token: route.query.token },
 
-    code.value = codeResponse.code;
-  } catch (error) {
-    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
-      email.value = "";
-    } else {
-      throw error;
-    }
-  }
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        email.value = "";
+      },
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
+
+  code.value = codeResponse.code;
 }
 
 function handleCodeInputClick(

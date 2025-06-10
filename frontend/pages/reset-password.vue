@@ -37,16 +37,16 @@ const passwordResetResponse = await useApi("/password-reset", {
     },
   },
 
-  shouldIgnoreResponseError: (error) => {
-    const code = getApiErrorCode(error);
-    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
-  },
-
   immediate: route.query.token !== undefined,
 
   // Don't rerun the request when `route.query.token` changes. It can change to
   // `undefined`, which is invalid.
   watch: false,
+
+  catchApiErrors: {
+    INVALID_QUERY_DATA: "silence",
+    RESOURCE_NOT_FOUND: "silence",
+  },
 });
 
 watch(
@@ -77,26 +77,24 @@ const userId = ref<string>();
 async function submitNewPassword() {
   loading.value = true;
 
-  try {
-    const passwordResponse = await api("/password-reset/password", {
-      method: "POST",
-      query: { token: route.query.token },
-      body: { password: password.value },
-    }).finally(() => {
-      loading.value = false;
-    });
+  const passwordResponse = await api("/password-reset/password", {
+    method: "POST",
+    query: { token: route.query.token },
+    body: { password: password.value },
 
-    setMe(passwordResponse.user);
-    userId.value = passwordResponse.user.id;
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        page.value = "failed";
+      },
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
 
-    page.value = "done";
-  } catch (error) {
-    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
-      page.value = "failed";
-    } else {
-      throw error;
-    }
-  }
+  setMe(passwordResponse.user);
+  userId.value = passwordResponse.user.id;
+
+  page.value = "done";
 }
 </script>
 

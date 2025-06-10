@@ -72,12 +72,12 @@ const codeResponse = await useApi("/email-verification/code", {
   method: "POST",
   query: { token: route.query.token },
 
-  shouldIgnoreResponseError: (error) => {
-    const code = getApiErrorCode(error);
-    return code === "INVALID_QUERY_DATA" || code === "RESOURCE_NOT_FOUND";
-  },
-
   immediate: route.query.token !== undefined,
+
+  catchApiErrors: {
+    INVALID_QUERY_DATA: "silence",
+    RESOURCE_NOT_FOUND: "silence",
+  },
 });
 
 watchEffect(() => {
@@ -110,27 +110,25 @@ watch(code, (code) => {
 async function submitCode(event: Event) {
   loading.value = true;
 
-  try {
-    await api("/email-verification", {
-      query: {
-        email: email.value,
-        code: code.value.toUpperCase(),
+  await api("/email-verification", {
+    query: {
+      email: email.value,
+      code: code.value.toUpperCase(),
+    },
+
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        isCodeWrong.value = true;
+
+        const form = event.target as HTMLFormElement;
+        form.getElementsByTagName("input")[0]?.select();
       },
-    }).finally(() => {
-      loading.value = false;
-    });
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
 
-    page.value = "final";
-  } catch (error) {
-    if (getApiErrorCode(error) === "RESOURCE_NOT_FOUND") {
-      isCodeWrong.value = true;
-
-      const form = event.target as HTMLFormElement;
-      form.getElementsByTagName("input")[0]?.select();
-    } else {
-      throw error;
-    }
-  }
+  page.value = "final";
 }
 
 function tryAgain() {
@@ -145,33 +143,31 @@ const confirmPassword = ref("");
 async function completeSignUp() {
   loading.value = true;
 
-  try {
-    const user = await api("/users", {
-      method: "POST",
-      body: {
-        email: email.value,
-        emailVerificationCode: code.value.toUpperCase(),
-        name: name.value,
-        password: password.value,
-      },
-    }).finally(() => {
-      loading.value = false;
-    });
+  const user = await api("/users", {
+    method: "POST",
+    body: {
+      email: email.value,
+      emailVerificationCode: code.value.toUpperCase(),
+      name: name.value,
+      password: password.value,
+    },
 
-    setMe(user);
-
-    await useRedirectIfSignedIn({
-      onBeforeRedirect() {
-        loading.value = true;
+    catchApiErrors: {
+      EMAIL_VERIFICATION_CODE_WRONG: () => {
+        isCodeWrong.value = true;
       },
-    });
-  } catch (error) {
-    if (getApiErrorCode(error) === "EMAIL_VERIFICATION_CODE_WRONG") {
-      isCodeWrong.value = true;
-    } else {
-      throw error;
-    }
-  }
+    },
+  }).finally(() => {
+    loading.value = false;
+  });
+
+  setMe(user);
+
+  await useRedirectIfSignedIn({
+    onBeforeRedirect() {
+      loading.value = true;
+    },
+  });
 }
 </script>
 
