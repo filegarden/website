@@ -21,6 +21,12 @@ export default function useErrorBoxes() {
     },
 
     handleError(error: unknown) {
+      // Client-side listeners stop silenced errors from getting this far, but
+      // unfortunately there's currently nothing to stop them server-side.
+      if (import.meta.server && isSilenced(error)) {
+        return;
+      }
+
       if (error instanceof FetchError && error.response) {
         errorBoxes.open({
           message: error.response.status + " " + error.response.statusText,

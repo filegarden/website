@@ -9,7 +9,7 @@ export default function silence<T extends WeakKey>(error: T): T {
 }
 
 /** Checks if {@link silence} was ever called on an error. */
-function isSilenced(error: unknown): boolean {
+export function isSilenced(error: unknown): boolean {
   // @ts-expect-error `WeakSet.prototype.has` already returns `false` for
   // incorrect types, which is the desired behavior.
   return silencedErrors.has(error);
