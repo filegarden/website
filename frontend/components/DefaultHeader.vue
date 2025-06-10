@@ -165,12 +165,12 @@ async function signOut() {
       0.1s ease-out filter;
   }
 
-  &:hover::before,
-  &:focus-visible::before {
+  &:hover::before {
     filter: blur(1em);
     opacity: 0.5;
   }
 
+  &:focus-visible::before,
   &:active::before {
     filter: blur(1.125em);
     opacity: 1;
