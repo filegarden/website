@@ -1,15 +1,21 @@
 <script setup lang="ts">
 const errorBoxes = useErrorBoxes();
 
+function handleError(event: ErrorEvent) {
+  errorBoxes.handleError(event.error);
+}
+
 function handleRejection(event: PromiseRejectionEvent) {
   errorBoxes.handleError(event.reason);
 }
 
 onMounted(() => {
+  window.addEventListener("error", handleError);
   window.addEventListener("unhandledrejection", handleRejection);
 });
 
 onUnmounted(() => {
+  window.removeEventListener("error", handleError);
   window.removeEventListener("unhandledrejection", handleRejection);
 });
 
