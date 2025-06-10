@@ -1,9 +1,7 @@
 <template>
   <div class="layout">
     <header class="space-around-panel">
-      <A class="logo-wrapper" href="/">
-        <img class="logo" src="/assets/brand/logo.svg" alt="File Garden" />
-      </A>
+      <NavLogo class="logo" />
     </header>
 
     <main class="panel">
@@ -48,16 +46,12 @@ header {
   justify-content: center;
 
   text-align: center;
-  font-size: 0;
-}
-
-.logo-wrapper {
-  margin: 2rem 0;
 }
 
 .logo {
   max-width: 80vw;
-  height: 3rem;
+  margin: 2rem 0;
+  font-size: 3rem;
 }
 
 main {

@@ -51,9 +51,7 @@ async function signOut() {
     <nav class="default-header-nav panel frosted">
       <LoadingIndicator v-if="signOutLoading" />
 
-      <A class="nav-logo-wrapper" href="/">
-        <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
-      </A>
+      <NavLogo class="logo" />
 
       <ul class="nav-items">
         <li class="nav-item">
@@ -143,52 +141,9 @@ async function signOut() {
   justify-content: space-between;
 }
 
-.nav-logo-wrapper {
-  display: inline-block;
-  position: relative;
-
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-
-    background-image: url(/assets/brand/logo.svg);
-    background-size: auto 2em;
-    background-repeat: no-repeat;
-    background-position: center;
-
-    opacity: 0;
-    transition:
-      0.1s ease-out opacity,
-      0.1s ease-out filter;
-  }
-
-  &:hover::before {
-    filter: blur(1em);
-    opacity: 0.5;
-  }
-
-  &:focus-visible::before,
-  &:active::before {
-    filter: blur(1.125em);
-    opacity: 1;
-  }
-}
-
-.nav-logo {
+.logo {
   margin: 1rem;
-  height: 2em;
-  vertical-align: bottom;
-
-  transition: 0.1s ease-out filter;
-
-  .nav-logo-wrapper:hover &,
-  .nav-logo-wrapper:focus-visible &,
-  .nav-logo-wrapper:active & {
-    filter: brightness(1.125);
-  }
+  font-size: 2em;
 }
 
 .nav-items {
