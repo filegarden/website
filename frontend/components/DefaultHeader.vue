@@ -126,6 +126,14 @@ async function signOut() {
   margin: 0 auto;
   padding: 2rem;
   z-index: 100;
+
+  // The header's area shouldn't block the cursor...
+  pointer-events: none;
+
+  > * {
+    // ...but everything in the heading should.
+    pointer-events: auto;
+  }
 }
 
 .default-header-nav {
