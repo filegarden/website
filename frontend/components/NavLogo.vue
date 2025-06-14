@@ -1,7 +1,15 @@
 <template>
   <A class="nav-logo-link" href="/">
-    <img class="nav-logo-glow" src="/assets/brand/logo.svg" aria-hidden />
-    <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
+    <img
+      class="nav-logo-image nav-logo-glow"
+      src="/assets/brand/logo.svg"
+      aria-hidden
+    />
+    <img
+      class="nav-logo-image nav-logo"
+      src="/assets/brand/logo.svg"
+      alt="File Garden"
+    />
   </A>
 </template>
 
@@ -13,11 +21,13 @@
   line-height: 1;
 }
 
-.nav-logo {
+.nav-logo-image {
   max-width: 100%;
   height: 1em;
   vertical-align: bottom;
+}
 
+.nav-logo {
   transition: 0.1s ease-out filter;
 
   .nav-logo-link:hover &,
@@ -29,9 +39,6 @@
 
 .nav-logo-glow {
   position: absolute;
-  max-width: 100%;
-  height: 1em;
-
   pointer-events: none;
 
   opacity: 0;
