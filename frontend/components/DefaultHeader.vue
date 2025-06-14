@@ -139,11 +139,20 @@ async function signOut() {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  // Prevent nav links from being clickable outside the panel's border radius.
+  overflow: hidden;
 }
 
 .logo {
-  margin: 1rem;
   font-size: 2em;
+
+  // Apply padding to the image instead of its link so the link's area matches
+  // the image's area. This also lets screen readers read the image's alt text
+  // when hovering anywhere in the link rather than just the image's content.
+  :deep(img) {
+    padding: 1rem;
+  }
 }
 
 .nav-items {
