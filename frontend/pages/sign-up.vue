@@ -1,7 +1,10 @@
 <script setup lang="ts">
 useTitle("Sign Up");
 
-const redirecting = await useRedirectIfSignedIn();
+// Note: This page doesn't redirect when already signed in, because otherwise
+// `/verify-email`'s "Verify" button would link to this page, confusing users
+// when this page redirects to their existing account's files. They may assume
+// it brought them to a newly verified account's files instead.
 
 const route = useRoute();
 const page = ref<
@@ -181,13 +184,7 @@ async function completeSignUp() {
 </script>
 
 <template>
-  <SmallPanelLayout v-if="redirecting" class="page-redirecting">
-    <LoadingIndicator />
-
-    <p>Redirecting...</p>
-  </SmallPanelLayout>
-
-  <SmallPanelLayout v-else :class="`page-${page}`">
+  <SmallPanelLayout :class="`page-${page}`">
     <LoadingIndicator
       v-if="loading || codeResponse.status.value === 'pending'"
     />
