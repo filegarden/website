@@ -44,7 +44,7 @@ const passwordResetResponse = await useApi("/password-reset", {
   watch: false,
 
   catchApiErrors: {
-    INVALID_QUERY_DATA: "silence",
+    QUERY_DATA_INVALID: "silence",
     RESOURCE_NOT_FOUND: "silence",
   },
 });

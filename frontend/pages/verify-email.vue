@@ -10,7 +10,7 @@ const { data: email } = await useApi("/email-verification", {
   transform: (emailVerification) => emailVerification.email ?? "",
 
   catchApiErrors: {
-    INVALID_QUERY_DATA: "silence",
+    QUERY_DATA_INVALID: "silence",
     RESOURCE_NOT_FOUND: "silence",
   },
 });

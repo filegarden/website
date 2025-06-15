@@ -81,7 +81,7 @@ const codeResponse = await useApi("/email-verification/code", {
   watch: false,
 
   catchApiErrors: {
-    INVALID_QUERY_DATA: "silence",
+    QUERY_DATA_INVALID: "silence",
     RESOURCE_NOT_FOUND: "silence",
   },
 });
