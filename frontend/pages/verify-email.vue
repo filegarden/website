@@ -91,11 +91,9 @@ function handleCodeInputClick(
       </template>
     </template>
 
-    <template v-else>
-      <p class="distinguished">
-        This email verification link is invalid or expired.
-      </p>
-    </template>
+    <p v-else class="distinguished">
+      This email verification link is invalid or expired.
+    </p>
 
     <template v-if="!code" #bottom-text>
       <p v-if="email">
