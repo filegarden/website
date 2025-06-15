@@ -1,5 +1,9 @@
 import type { UnwrapRef } from "vue";
 
+function useRawMe() {
+  return useState<User | null | "unknown">(() => "unknown" as const);
+}
+
 /**
  * Returns the current authenticated user, or `null` if the user is not
  * authenticated.
@@ -26,4 +30,14 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   // We assert the user can't be unknown at this point, and it should never be
   // unknown again.
   return me as Ref<Exclude<UnwrapRef<typeof me>, "unknown">>;
+}
+
+/**
+ * Sets the value of the current authenticated user.
+ *
+ * This avoids the HTTP request sometimes required by `useMe`.
+ */
+export function setMe(user: User | null) {
+  const me = useRawMe();
+  me.value = user;
 }
