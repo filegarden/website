@@ -8,7 +8,7 @@ const redirecting = await useRedirectIfSignedIn();
 const route = useRoute();
 const page = ref<
   "email" | "captcha" | "verification-sent" | "code" | "final" | "failed"
->("email");
+>(route.query.token === undefined ? "email" : "final");
 
 // If you leave the code page, you can't return to it without restarting the
 // sign-up process.
@@ -67,9 +67,20 @@ function openCodePage() {
 
 const codeResponse = await useApi("/email-verification/code", {
   method: "POST",
-  query: { token: route.query.token },
+  query: {
+    // Using a getter makes refreshing the request use the current token value.
+    // I'd use a simple arrow function instead, but that isn't supported
+    // (despite the types saying it is, which is a Nuxt bug).
+    get token() {
+      return route.query.token;
+    },
+  },
 
   immediate: route.query.token !== undefined,
+
+  // Don't rerun the request when `route.query.token` changes. It can change to
+  // `undefined`, which is invalid.
+  watch: false,
 
   catchApiErrors: {
     INVALID_QUERY_DATA: "silence",
@@ -77,17 +88,17 @@ const codeResponse = await useApi("/email-verification/code", {
   },
 });
 
-watchEffect(() => {
-  if (route.query.token && page.value !== "failed") {
-    page.value = "final";
-  }
-});
-
-watch(page, (page) => {
-  if (page === "final" && route.query.token) {
-    void codeResponse.refresh();
-  }
-});
+watch(
+  () => route.query.token,
+  (token) => {
+    if (token === undefined) {
+      page.value = "email";
+    } else {
+      page.value = "final";
+      void codeResponse.refresh();
+    }
+  },
+);
 
 const code = ref("");
 const isCodeWrong = ref(false);
