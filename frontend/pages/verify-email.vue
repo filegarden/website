@@ -5,7 +5,14 @@ const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
 const { data: email } = await useApi("/email-verification", {
-  query: { token: route.query.token },
+  query: {
+    // Using a getter makes the request react to the current token value. I'd
+    // use a simple arrow function instead, but that isn't supported (despite
+    // the types saying it is, which is a Nuxt bug).
+    get token() {
+      return route.query.token;
+    },
+  },
 
   transform: (emailVerification) => emailVerification.email ?? "",
 
