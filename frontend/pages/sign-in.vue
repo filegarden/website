@@ -16,29 +16,27 @@ watch([email, password], () => {
 async function submitSignIn() {
   loading.value = true;
 
-  const session = await api("/sessions", {
-    method: "POST",
-    body: {
-      email: email.value,
-      password: password.value,
-    },
-
-    catchApiErrors: {
-      USER_CREDENTIALS_WRONG: () => {
-        areCredentialsWrong.value = true;
+  try {
+    const session = await api("/sessions", {
+      method: "POST",
+      body: {
+        email: email.value,
+        password: password.value,
       },
-    },
-  }).finally(() => {
+
+      catchApiErrors: {
+        USER_CREDENTIALS_WRONG: () => {
+          areCredentialsWrong.value = true;
+        },
+      },
+    });
+
+    setMe(session.user);
+
+    await useRedirectIfSignedIn();
+  } finally {
     loading.value = false;
-  });
-
-  setMe(session.user);
-
-  await useRedirectIfSignedIn({
-    onBeforeRedirect() {
-      loading.value = true;
-    },
-  });
+  }
 }
 </script>
 

@@ -14,17 +14,19 @@ const captchaToken = ref("");
 async function requestPasswordReset() {
   loading.value = true;
 
-  await api("/password-reset", {
-    method: "POST",
-    body: {
-      email: email.value,
-      captchaToken: captchaToken.value,
-    },
-  }).finally(() => {
-    loading.value = false;
-  });
+  try {
+    await api("/password-reset", {
+      method: "POST",
+      body: {
+        email: email.value,
+        captchaToken: captchaToken.value,
+      },
+    });
 
-  page.value = "requested";
+    page.value = "requested";
+  } finally {
+    loading.value = false;
+  }
 }
 
 const passwordResetResponse = await useApi("/password-reset", {
@@ -77,24 +79,26 @@ const userId = ref<string>();
 async function submitNewPassword() {
   loading.value = true;
 
-  const passwordResponse = await api("/password-reset/password", {
-    method: "POST",
-    query: { token: route.query.token },
-    body: { password: password.value },
+  try {
+    const passwordResponse = await api("/password-reset/password", {
+      method: "POST",
+      query: { token: route.query.token },
+      body: { password: password.value },
 
-    catchApiErrors: {
-      RESOURCE_NOT_FOUND: () => {
-        page.value = "failed";
+      catchApiErrors: {
+        RESOURCE_NOT_FOUND: () => {
+          page.value = "failed";
+        },
       },
-    },
-  }).finally(() => {
+    });
+
+    setMe(passwordResponse.user);
+    userId.value = passwordResponse.user.id;
+
+    page.value = "done";
+  } finally {
     loading.value = false;
-  });
-
-  setMe(passwordResponse.user);
-  userId.value = passwordResponse.user.id;
-
-  page.value = "done";
+  }
 }
 </script>
 

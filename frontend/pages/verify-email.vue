@@ -30,20 +30,22 @@ const code = ref<string>();
 async function generateCode() {
   loading.value = true;
 
-  const codeResponse = await api("/email-verification/code", {
-    method: "POST",
-    query: { token: route.query.token },
+  try {
+    const codeResponse = await api("/email-verification/code", {
+      method: "POST",
+      query: { token: route.query.token },
 
-    catchApiErrors: {
-      RESOURCE_NOT_FOUND: () => {
-        email.value = "";
+      catchApiErrors: {
+        RESOURCE_NOT_FOUND: () => {
+          email.value = "";
+        },
       },
-    },
-  }).finally(() => {
-    loading.value = false;
-  });
+    });
 
-  code.value = codeResponse.code;
+    code.value = codeResponse.code;
+  } finally {
+    loading.value = false;
+  }
 }
 
 function handleCodeInputClick(
