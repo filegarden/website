@@ -6,9 +6,9 @@ useTitle("Sign Up");
 const redirecting = await useRedirectIfSignedIn();
 
 const route = useRoute();
-const page = ref<"email" | "captcha" | "verification-sent" | "code" | "final">(
-  "email",
-);
+const page = ref<
+  "email" | "captcha" | "verification-sent" | "code" | "final" | "failed"
+>("email");
 
 // If you leave the code page, you can't return to it without restarting the
 // sign-up process.
@@ -65,9 +65,6 @@ function openCodePage() {
   page.value = "code";
 }
 
-const code = ref("");
-const isCodeWrong = ref(false);
-
 const codeResponse = await useApi("/email-verification/code", {
   method: "POST",
   query: { token: route.query.token },
@@ -81,7 +78,7 @@ const codeResponse = await useApi("/email-verification/code", {
 });
 
 watchEffect(() => {
-  if (route.query.token) {
+  if (route.query.token && page.value !== "failed") {
     page.value = "final";
   }
 });
@@ -92,18 +89,15 @@ watch(page, (page) => {
   }
 });
 
+const code = ref("");
+const isCodeWrong = ref(false);
+
 watchEffect(() => {
   if (codeResponse.status.value === "success") {
     email.value = codeResponse.data.value.email;
     code.value = codeResponse.data.value.code;
   } else if (codeResponse.status.value === "error") {
-    isCodeWrong.value = true;
-  }
-});
-
-watch(code, (code) => {
-  if (code !== "") {
-    isCodeWrong.value = false;
+    page.value = "failed";
   }
 });
 
@@ -136,6 +130,12 @@ function tryAgain() {
   code.value = "";
 }
 
+watch(code, (code) => {
+  if (code !== "") {
+    isCodeWrong.value = false;
+  }
+});
+
 const name = ref("");
 const password = ref("");
 const confirmPassword = ref("");
@@ -154,7 +154,7 @@ async function completeSignUp() {
 
     catchApiErrors: {
       EMAIL_VERIFICATION_CODE_WRONG: () => {
-        isCodeWrong.value = true;
+        page.value = "failed";
       },
     },
   }).finally(() => {
@@ -178,13 +178,7 @@ async function completeSignUp() {
     <p>Redirecting...</p>
   </SmallPanelLayout>
 
-  <SmallPanelLayout
-    v-else
-    :class="[
-      `page-${page}`,
-      { 'page-final-code-wrong': page === 'final' && isCodeWrong },
-    ]"
-  >
+  <SmallPanelLayout v-else :class="`page-${page}`">
     <LoadingIndicator
       v-if="loading || codeResponse.status.value === 'pending'"
     />
@@ -252,66 +246,59 @@ async function completeSignUp() {
     </template>
 
     <template v-else-if="page === 'final'">
-      <p v-if="isCodeWrong" class="distinguished">
-        Your email verification request is invalid or expired.
-      </p>
+      <p class="intro">One last step...</p>
 
-      <template v-else>
-        <p class="intro">One last step...</p>
+      <form v-if="code" @submit.prevent="completeSignUp">
+        <fieldset :disabled="loading">
+          <TextInput label="Email" type="email" disabled :model-value="email" />
+          <TextInput
+            v-model="name"
+            label="Display Name"
+            minlength="1"
+            maxlength="64"
+            required
+            autofocus
+            autocomplete="username"
+          />
+          <TextInput
+            v-model="password"
+            label="Password"
+            type="password"
+            minlength="8"
+            maxlength="256"
+            required
+            autocomplete="new-password"
+          />
+          <TextInput
+            v-model="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            minlength="8"
+            maxlength="256"
+            required
+            autocomplete="new-password"
+          />
 
-        <form v-if="code" @submit.prevent="completeSignUp">
-          <fieldset :disabled="loading">
-            <TextInput
-              label="Email"
-              type="email"
-              disabled
-              :model-value="email"
-            />
-            <TextInput
-              v-model="name"
-              label="Display Name"
-              minlength="1"
-              maxlength="64"
-              required
-              autofocus
-              autocomplete="username"
-            />
-            <TextInput
-              v-model="password"
-              label="Password"
-              type="password"
-              minlength="8"
-              maxlength="256"
-              required
-              autocomplete="new-password"
-            />
-            <TextInput
-              v-model="confirmPassword"
-              label="Confirm Password"
-              type="password"
-              minlength="8"
-              maxlength="256"
-              required
-              autocomplete="new-password"
-            />
+          <p
+            v-if="confirmPassword && password !== confirmPassword"
+            class="warning"
+          >
+            Passwords do not match.
+          </p>
 
-            <p
-              v-if="confirmPassword && password !== confirmPassword"
-              class="warning"
-            >
-              Passwords do not match.
-            </p>
-
-            <Button
-              type="submit"
-              :disabled="!(confirmPassword && password === confirmPassword)"
-            >
-              Create Account
-            </Button>
-          </fieldset>
-        </form>
-      </template>
+          <Button
+            type="submit"
+            :disabled="!(confirmPassword && password === confirmPassword)"
+          >
+            Create Account
+          </Button>
+        </fieldset>
+      </form>
     </template>
+
+    <p v-else-if="page === 'failed'" class="distinguished">
+      Your email verification request is invalid or expired.
+    </p>
 
     <template v-if="page === 'email'" #bottom-text>
       <p>Already have an account? <A href="/sign-in" prefetch>Sign in</A></p>
@@ -332,7 +319,7 @@ async function completeSignUp() {
       </p>
     </template>
 
-    <template v-else-if="page === 'final' && isCodeWrong" #bottom-text>
+    <template v-else-if="page === 'failed'" #bottom-text>
       <p>
         <A href="/sign-up" @click="tryAgain">Back to Sign Up</A>
       </p>
@@ -344,7 +331,7 @@ async function completeSignUp() {
 .page-redirecting,
 .page-verification-sent,
 .page-code,
-.page-final-code-wrong {
+.page-failed {
   :deep(main) {
     text-align: center;
   }
