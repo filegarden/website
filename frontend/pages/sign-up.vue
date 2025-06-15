@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { SHORT_CODE_LENGTH } from "~/components/ShortCodeInput.vue";
-
 useTitle("Sign Up");
 
 const redirecting = await useRedirectIfSignedIn();
@@ -249,9 +247,7 @@ async function completeSignUp() {
             That verification code is incorrect.
           </p>
 
-          <Button type="submit" :disabled="code.length !== SHORT_CODE_LENGTH">
-            Verify
-          </Button>
+          <Button type="submit">Verify</Button>
         </fieldset>
       </form>
     </template>
