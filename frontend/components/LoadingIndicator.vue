@@ -1,3 +1,8 @@
+<script setup lang="ts">
+// I hate it when I accidentally leave the page while something is loading.
+useLeaveConfirmation(true);
+</script>
+
 <template>
   <div class="loading-indicator-wrapper">
     <div class="loading-indicator">

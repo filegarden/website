@@ -1,6 +1,35 @@
 const LEAVE_CONFIRMATION_MESSAGE =
   "Are you sure you want to leave? Changes you made may not be saved.";
 
+/** The number of active {@link preventLeaveConfirmations} calls. */
+function usePreventionCount() {
+  return useState(() => 0);
+}
+
+/**
+ * Prevents all leave confirmations from {@link useLeaveConfirmation} for the
+ * duration of the callback.
+ *
+ * The callback is executed synchronously to avoid preventing leave
+ * confirmations from concurrent operations outside the callback. Forwards the
+ * callback's return value (if any).
+ */
+export function preventLeaveConfirmations<T>(callback: () => T): T {
+  const preventionCount = usePreventionCount();
+  preventionCount.value++;
+
+  try {
+    return callback();
+  } finally {
+    // Unfortunately, the next tick must be awaited before deactivating this
+    // prevention because `onBeforeRouteChange` handlers aren't called until
+    // later in the tick.
+    void nextTick().then(() => {
+      preventionCount.value--;
+    });
+  }
+}
+
 /**
  * Asks the user for confirmation to leave the page (e.g. if there are unsaved
  * changes).
@@ -16,7 +45,8 @@ export default function useLeaveConfirmation(
   );
 
   function handleBeforeUnload(event: BeforeUnloadEvent) {
-    if (!toValue(enabled)) {
+    const preventionCount = usePreventionCount();
+    if (!(preventionCount.value === 0 && toValue(enabled))) {
       return;
     }
 
@@ -39,7 +69,8 @@ export default function useLeaveConfirmation(
   });
 
   onBeforeRouteLeave(() => {
-    if (!toValue(enabled)) {
+    const preventionCount = usePreventionCount();
+    if (!(preventionCount.value === 0 && toValue(enabled))) {
       return;
     }
 

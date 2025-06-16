@@ -33,6 +33,8 @@ export default async function useRedirectIfSignedIn(): Promise<boolean> {
     }
   }
 
-  await navigateTo(toRelativeUrl, { replace: true });
+  await preventLeaveConfirmations(() =>
+    navigateTo(toRelativeUrl, { replace: true }),
+  );
   return never();
 }
