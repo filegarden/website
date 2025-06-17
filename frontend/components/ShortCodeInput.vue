@@ -12,7 +12,7 @@ defineProps<ShortCodeInputProps>();
 
 const model = defineModel<string>({ default: "" });
 
-function handleCodeBeforeInput(event: InputEvent) {
+function handleBeforeInput(event: InputEvent) {
   // Even though the input handler removes invalid characters, preventing them
   // here avoids the UX problems of overwriting an input's value (such as wiping
   // its undo history).
@@ -24,9 +24,7 @@ function handleCodeBeforeInput(event: InputEvent) {
   }
 }
 
-async function handleCodeInput(
-  event: InputEvent & { target: HTMLInputElement },
-) {
+async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This can't be null for text inputs.
   const selectionStart = event.target.selectionStart!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Same here.
@@ -58,8 +56,8 @@ async function handleCodeInput(
     :minlength="SHORT_CODE_LENGTH"
     :maxlength="SHORT_CODE_LENGTH"
     autocomplete="one-time-code"
-    @beforeinput="handleCodeBeforeInput"
-    @input="handleCodeInput"
+    @beforeinput="handleBeforeInput"
+    @input="handleInput"
   />
 </template>
 
