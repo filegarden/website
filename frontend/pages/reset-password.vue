@@ -161,21 +161,14 @@ async function submitNewPassword() {
             maxlength="256"
             required
             autocomplete="new-password"
+            :custom-validity="
+              confirmPassword && password !== confirmPassword
+                ? 'Please make sure both passwords match.'
+                : ''
+            "
           />
 
-          <p
-            v-if="confirmPassword && password !== confirmPassword"
-            class="warning"
-          >
-            Passwords do not match.
-          </p>
-
-          <Button
-            type="submit"
-            :disabled="!(confirmPassword && password === confirmPassword)"
-          >
-            Change Password
-          </Button>
+          <Button type="submit">Change Password</Button>
         </fieldset>
       </form>
     </template>

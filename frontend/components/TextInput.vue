@@ -5,13 +5,22 @@ export interface TextInputProps {
 
   /** Whether the input should be focused on mount. */
   autofocus?: boolean;
+
+  /** A custom validity message using `setCustomValidity`. */
+  customValidity?: string;
 }
 
 defineOptions({
   inheritAttrs: false,
 });
 
-defineProps<TextInputProps>();
+const props = defineProps<TextInputProps>();
+
+const input = useTemplateRef("input");
+
+watchEffect(() => {
+  input.value?.setCustomValidity(props.customValidity ?? "");
+});
 
 const id = useId();
 
@@ -24,7 +33,13 @@ const model = defineModel<string>({ default: "" });
       <label :for="id">{{ label }}</label>
     </LabelBlock>
 
-    <input :id="id" v-model="model" v-autofocus="autofocus" v-bind="$attrs" />
+    <input
+      :id="id"
+      ref="input"
+      v-model="model"
+      v-autofocus="autofocus"
+      v-bind="$attrs"
+    />
 
     <slot name="after"></slot>
   </div>

@@ -283,21 +283,14 @@ async function completeSignUp() {
             maxlength="256"
             required
             autocomplete="new-password"
+            :custom-validity="
+              confirmPassword && password !== confirmPassword
+                ? 'Please make sure both passwords match.'
+                : ''
+            "
           />
 
-          <p
-            v-if="confirmPassword && password !== confirmPassword"
-            class="warning"
-          >
-            Passwords do not match.
-          </p>
-
-          <Button
-            type="submit"
-            :disabled="!(confirmPassword && password === confirmPassword)"
-          >
-            Create Account
-          </Button>
+          <Button type="submit">Create Account</Button>
         </fieldset>
       </form>
     </template>
