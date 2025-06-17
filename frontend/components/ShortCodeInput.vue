@@ -1,9 +1,15 @@
 <script lang="ts">
+import type { TextInputProps } from "~/components/TextInput.vue";
+
 /** The required length for a `ShortCodeInput`'s value. */
 export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
+export type ShortCodeInputProps = TextInputProps;
+
+defineProps<ShortCodeInputProps>();
+
 const model = defineModel<string>({ default: "" });
 
 function handleCodeBeforeInput(event: InputEvent) {
