@@ -21,10 +21,9 @@ export function preventLeaveConfirmations<T>(callback: () => T): T {
   try {
     return callback();
   } finally {
-    // Unfortunately, the next tick must be awaited before deactivating this
-    // prevention because `onBeforeRouteChange` handlers aren't called until
-    // later in the tick.
-    void nextTick().then(() => {
+    // Unfortunately, this has to be deactivated on the next tick because
+    // `onBeforeRouteChange` handlers aren't called until later this tick.
+    void nextTick(() => {
       preventionCount.value--;
     });
   }
