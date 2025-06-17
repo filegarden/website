@@ -2,7 +2,7 @@
 
 Your use of any online services provided by us ("Services") is subject to these Terms of Service ("Terms").
 
-"We", "us", or "our" refers to the File Garden organization and its successors and assigns. "You" or "your" refers to any person who has consented to these Terms or has become contractually bound to them, whether such person is identified or not at the time.
+"We", "us", and "our" refer to the File Garden organization and its successors and assigns. "You" and "your" refer to any person who has consented to these Terms or has become contractually bound to them, whether such person is identified or not at the time.
 
 ## Acceptable Use
 
