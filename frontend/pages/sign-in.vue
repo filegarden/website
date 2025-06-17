@@ -13,7 +13,7 @@ watch([email, password], () => {
   areCredentialsWrong.value = false;
 });
 
-async function submitSignIn() {
+async function submitSignIn(event: Event) {
   loading.value = true;
 
   try {
@@ -27,6 +27,12 @@ async function submitSignIn() {
       catchApiErrors: {
         USER_CREDENTIALS_WRONG: () => {
           areCredentialsWrong.value = true;
+
+          // Wait for the custom validity to update before reporting it.
+          // (`nextTick` doesn't wait long enough.)
+          setTimeout(() => {
+            (event.target as HTMLFormElement).reportValidity();
+          });
         },
       },
     });
@@ -61,6 +67,9 @@ async function submitSignIn() {
           maxlength="254"
           required
           autofocus
+          :custom-validity="
+            areCredentialsWrong ? 'Incorrect email or password.' : ''
+          "
         />
 
         <TextInput
@@ -69,6 +78,9 @@ async function submitSignIn() {
           type="password"
           maxlength="256"
           required
+          :custom-validity="
+            areCredentialsWrong ? 'Incorrect email or password.' : ''
+          "
         >
           <template #after>
             <div class="reset-password-link-wrapper">
@@ -76,10 +88,6 @@ async function submitSignIn() {
             </div>
           </template>
         </TextInput>
-
-        <p v-if="areCredentialsWrong" class="warning">
-          Incorrect email or password.
-        </p>
 
         <Button type="submit">Sign In</Button>
       </fieldset>

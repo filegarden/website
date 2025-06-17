@@ -129,8 +129,11 @@ async function submitCode(event: Event) {
         RESOURCE_NOT_FOUND: () => {
           isCodeWrong.value = true;
 
-          const form = event.target as HTMLFormElement;
-          form.getElementsByTagName("input")[0]?.select();
+          // Wait for the custom validity to update before reporting it.
+          // (`nextTick` doesn't wait long enough.)
+          setTimeout(() => {
+            (event.target as HTMLFormElement).reportValidity();
+          });
         },
       },
     });
@@ -240,11 +243,8 @@ async function completeSignUp() {
             aria-label="Verification Code"
             required
             autofocus
+            :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"
           />
-
-          <p v-if="isCodeWrong" class="warning">
-            That verification code is incorrect.
-          </p>
 
           <Button type="submit">Verify</Button>
         </fieldset>
