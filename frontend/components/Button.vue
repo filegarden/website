@@ -59,7 +59,7 @@ defineProps<ButtonProps>();
     box-shadow:
       $box-shadow,
       0 2px 0.375rem var(--shadow-medium-color),
-      inset 0 0 0.5em -0.2em var(--glow-color);
+      inset 0 0 0.5em -0.25em var(--glow-color);
   }
 
   &:active:not(:disabled),
