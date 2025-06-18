@@ -28,8 +28,8 @@ async function submitSignIn(event: Event) {
         USER_CREDENTIALS_WRONG: () => {
           areCredentialsWrong.value = true;
 
-          // Wait for the custom validity to update before reporting it.
-          // (`nextTick` doesn't wait long enough.)
+          // Wait for the form to be enabled. (`nextTick` waits long enough for
+          // the custom validity to update, but not for the form to be enabled.)
           setTimeout(() => {
             (event.target as HTMLFormElement).reportValidity();
           });
