@@ -10,23 +10,78 @@ defineProps<IconButtonProps>();
 </script>
 
 <template>
-  <Button class="icon-button" :title="label" :aria-label="label">
-    <slot></slot>
-  </Button>
+  <button type="button" class="icon-button" :title="label" :aria-label="label">
+    <div class="icon-glow" aria-hidden>
+      <slot></slot>
+    </div>
+    <div class="icon">
+      <slot></slot>
+    </div>
+  </button>
 </template>
 
 <style lang="scss" scoped>
 .icon-button {
+  vertical-align: middle;
+  font-size: 1em;
+  font-family: var(--font-family);
+  color: var(--text-color);
+
+  position: relative;
   width: 2em;
   height: 2em;
-  border-radius: 50%;
   padding: 0;
 
-  line-height: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
 
-  &:not(:hover):not(:focus-visible):not(:active) {
-    background-color: transparent;
-    box-shadow: none;
+  cursor: pointer;
+
+  opacity: 0.875;
+  transition: 0.1s ease-out opacity;
+
+  &:hover:not(:disabled),
+  &:active:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    opacity: 1;
   }
+}
+
+.icon {
+  transition: 0.1s ease-out filter;
+
+  .icon-button:hover &,
+  .icon-button:focus-visible &,
+  .icon-button:active & {
+    filter: brightness(1.125);
+  }
+}
+
+.icon-glow {
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+
+  opacity: 0;
+  transition:
+    0.1s ease-out opacity,
+    0.1s ease-out filter;
+
+  .icon-button:hover & {
+    opacity: 0.25;
+    filter: blur(0.25em);
+  }
+
+  .icon-button:focus-visible &,
+  .icon-button:active & {
+    opacity: 0.4375;
+    filter: blur(0.2813em);
+    transition-duration: 0.067s, 0.067s;
+  }
+}
+
+.icon-button :deep(svg) {
+  vertical-align: bottom;
 }
 </style>

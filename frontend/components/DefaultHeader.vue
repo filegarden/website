@@ -181,9 +181,8 @@ async function signOut() {
 }
 
 .account-icon {
-  width: inherit;
-  height: inherit;
-  opacity: 0.875;
+  width: 100%;
+  height: 100%;
 }
 
 .account-menu-wrapper {
