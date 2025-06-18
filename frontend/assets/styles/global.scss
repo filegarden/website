@@ -108,7 +108,7 @@ input {
     outline-color: var(--outline-color-hover);
     box-shadow:
       $box-shadow,
-      0 0 0.4rem -0.2rem var(--glow-color);
+      0 0 0.5rem -0.2rem var(--glow-color);
   }
 
   &:active:not(:disabled),
@@ -117,7 +117,7 @@ input {
     outline-color: var(--outline-color-active);
     box-shadow:
       $box-shadow,
-      0 0 0.4rem var(--glow-color);
+      0 0 0.5rem var(--glow-color);
   }
 
   &:disabled {
