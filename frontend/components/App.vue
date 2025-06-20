@@ -7,9 +7,10 @@
 <script setup lang="ts">
 useSilencedErrorHandlers();
 
-if (import.meta.dev) {
-  useHead({ title: "🚨🚨 MISSING `useTitle`! 🚨🚨" });
-}
+useHead({
+  titleTemplate: (title) =>
+    title ? `${title} | File Garden` : "🚨🚨 MISSING `useTitle`! 🚨🚨",
+});
 
 if (import.meta.server) {
   const appConfig = useAppConfig();
@@ -23,7 +24,6 @@ if (import.meta.server) {
   useSeoMeta({
     ogType: "website",
     ogSiteName: "File Garden",
-    ogTitle: "File Garden",
     ogUrl: appConfig.SITE_URL_BASE + requestUrl.pathname + requestUrl.search,
     // TODO: Set an `ogImage`.
     ogImage: "",

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-useHead({ title: "File Garden" });
+useHead({ titleTemplate: null });
+useTitle("File Garden");
 
 const style = useCssModule();
 
