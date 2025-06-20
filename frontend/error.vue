@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
 
-defineProps<{
+const props = defineProps<{
   /** The error passed into the page by Nuxt. */
   error: NuxtError;
 }>();
+
+const title = () => `Error ${props.error.statusCode}`;
+useTitle(title);
 </script>
 
 <template>
   <App>
     <SmallPanelLayout>
-      <h1>Error {{ error.statusCode }}</h1>
+      <h1>{{ title() }}</h1>
 
       <p>{{ error.message }}</p>
 
