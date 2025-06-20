@@ -8,17 +8,19 @@ defineProps<{
 </script>
 
 <template>
-  <SmallPanelLayout>
-    <h1>Error {{ error.statusCode }}</h1>
+  <App>
+    <SmallPanelLayout>
+      <h1>Error {{ error.statusCode }}</h1>
 
-    <p>{{ error.message }}</p>
+      <p>{{ error.message }}</p>
 
-    <template #bottom-text>
-      <p>
-        <A href="/">Go Home</A>
-      </p>
-    </template>
-  </SmallPanelLayout>
+      <template #bottom-text>
+        <p>
+          <A href="/">Go Home</A>
+        </p>
+      </template>
+    </SmallPanelLayout>
+  </App>
 </template>
 
 <style scoped lang="scss">
