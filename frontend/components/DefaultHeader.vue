@@ -58,12 +58,6 @@ async function signOut() {
           <Button>Support Us</Button>
         </li>
 
-        <li class="nav-item">
-          <Button :href="me ? `/files/u/${me.id}` : '/sign-in'">
-            Your Garden
-          </Button>
-        </li>
-
         <li
           v-if="me"
           ref="account-nav-item"
@@ -77,6 +71,10 @@ async function signOut() {
           >
             <IconAccountCircle class="account-icon" />
           </IconButton>
+        </li>
+
+        <li v-else class="nav-item">
+          <Button href="/sign-in">Sign In</Button>
         </li>
       </ul>
     </nav>
@@ -98,8 +96,14 @@ async function signOut() {
             <Button
               v-autofocus
               class="account-menu-button"
-              :href="`/settings/${me.id}`"
+              :href="`/files/u/${me.id}`"
             >
+              Your Garden
+            </Button>
+          </li>
+
+          <li class="account-menu-item">
+            <Button class="account-menu-button" :href="`/settings/${me.id}`">
               Settings
             </Button>
           </li>
@@ -207,6 +211,6 @@ async function signOut() {
 }
 
 .account-menu-button {
-  display: block;
+  width: 100%;
 }
 </style>
