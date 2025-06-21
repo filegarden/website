@@ -120,6 +120,8 @@ async function signOut() {
 </template>
 
 <style scoped lang="scss">
+@use "sass:math";
+
 .default-header {
   position: sticky;
   top: 0;
@@ -139,23 +141,32 @@ async function signOut() {
   }
 }
 
+$nav-height: 4rem;
+
 .default-header-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  height: $nav-height;
 
   // Prevent nav links from being clickable outside the panel's border radius.
   overflow: hidden;
 }
 
 .logo {
-  font-size: 2em;
+  $logo-height: 1.75rem;
+  font-size: $logo-height;
 
   // Apply padding to the image instead of its link so the link's area matches
   // the image's area. This also lets screen readers read the image's alt text
   // when hovering anywhere in the link rather than just the image's content.
   :deep(img) {
-    padding: 1rem;
+    // Don't let adjacent elements invade padding added to the image.
+    box-sizing: border-box;
+
+    height: $nav-height;
+    padding: math.div($nav-height - $logo-height, 2);
   }
 }
 
