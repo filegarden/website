@@ -129,7 +129,7 @@ async function signOut() {
   width: 100%;
   max-width: max(66.7%, 750px);
   box-sizing: border-box;
-  padding: 2rem;
+  padding: clamp(1rem, 6vw, 2rem);
   z-index: 100;
 
   // The header's area shouldn't block the cursor...
