@@ -27,8 +27,6 @@ async function handleAccountMenuBlur() {
 const signOutLoading = ref(false);
 
 async function signOut() {
-  // TODO: Confirm before signing out.
-
   signOutLoading.value = true;
 
   try {
