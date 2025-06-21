@@ -2,6 +2,8 @@
   color-scheme: dark;
   --background-color: #0f1a17;
   --text-color: #f0f0f0;
+  --text-color-weak: #ced0cf;
+  --text-color-weaker: #b9bbba;
   --input-background-color: #00000047;
   // An input's text should never be translucent, because that would make the
   // input appear disabled.
@@ -20,6 +22,7 @@
   --error-color: #d939398f;
   --error-glow-color: #ff000082;
   --error-text-color: #ffffff;
+  --error-text-color-weak: #ffffffaa;
 }
 
 .theme-light {

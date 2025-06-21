@@ -178,6 +178,10 @@ input[type="radio"] {
   }
 }
 
+code {
+  font-family: var(--font-family-monospace);
+}
+
 @keyframes fade-in {
   from {
     animation-timing-function: ease;

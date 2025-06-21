@@ -57,12 +57,8 @@ p {
 }
 
 .error-code {
-  line-height: 1.2;
-}
-
-code {
-  font-size: 0.875em;
-  opacity: 0.667;
+  font-size: 0.75em;
+  color: var(--error-text-color-weak);
 }
 
 .close-button {

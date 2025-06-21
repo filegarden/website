@@ -39,7 +39,7 @@ footer {
   padding: 3rem 1.5rem;
 
   font-size: 0.75em;
-  opacity: 0.75;
+  color: var(--text-color-weaker);
 
   display: flex;
   justify-content: center;

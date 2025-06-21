@@ -7,6 +7,6 @@
 <style scoped lang="scss">
 .label-block {
   margin: 0.25em 1px;
-  opacity: 0.875;
+  color: var(--text-color-weak);
 }
 </style>

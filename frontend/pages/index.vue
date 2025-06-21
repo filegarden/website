@@ -144,8 +144,7 @@ h2 {
   text-align: center;
   font-size: 2rem;
 
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin: 1rem 2rem;
 }
 
 .advantages-content {
@@ -166,8 +165,12 @@ h2 {
 }
 
 .advantage-heading {
-  font-size: 1.5em;
+  font-size: 1.25em;
   margin: 1rem 0;
+}
+
+.advantage-content {
+  color: var(--text-color-weaker);
 }
 
 .footnote {
