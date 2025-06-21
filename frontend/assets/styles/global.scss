@@ -11,15 +11,15 @@
 
   --font-family: system-ui, sans-serif;
   --font-family-monospace: ui-monospace, monospace;
-  --brand-color: #309f76;
-  --brand-color-2: #f6be6e;
+  --color-brand: #309f76;
+  --color-brand-2: #f6be6e;
 }
 
 body {
   margin: 0;
 
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 h1,
@@ -46,8 +46,8 @@ li {
   position: relative;
 
   border-radius: 1rem;
-  background-color: var(--surface-color);
-  box-shadow: 0 4px 8px var(--shadow-large-color);
+  background-color: var(--color-foreground);
+  box-shadow: 0 4px 8px var(--color-shadow-large);
 
   text-align: left;
 }
@@ -70,7 +70,7 @@ fieldset {
 input {
   font-size: 1em;
   font-family: var(--font-family);
-  color: var(--input-text-color);
+  color: var(--color-input-text);
   // Use line height instead of vertical padding so certain glyphs aren't cut
   // off.
   line-height: 2.4;
@@ -79,11 +79,11 @@ input {
 
   border-radius: 0.25rem;
   padding: 0 0.6rem;
-  background-color: var(--input-background-color);
+  background-color: var(--color-input-background);
 
   $box-shadow:
-    0 1px var(--inner-edge-color),
-    inset 0 1px 0.6rem -1px var(--shadow-medium-color);
+    0 1px var(--color-edge-inner),
+    inset 0 1px 0.6rem -1px var(--color-shadow-medium);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
@@ -104,20 +104,20 @@ input {
     0.1s ease-out opacity;
 
   &:hover:not(:disabled) {
-    color: var(--input-text-color-hover);
-    outline-color: var(--outline-color-hover);
+    color: var(--color-input-text-hover);
+    outline-color: var(--color-outline-hover);
     box-shadow:
       $box-shadow,
-      0 0 0.5rem -0.25rem var(--glow-color);
+      0 0 0.5rem -0.25rem var(--color-glow);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
-    color: var(--input-text-color-active);
-    outline-color: var(--outline-color-active);
+    color: var(--color-input-text-active);
+    outline-color: var(--color-outline-active);
     box-shadow:
       $box-shadow,
-      0 0 0.5rem var(--glow-color);
+      0 0 0.5rem var(--color-glow);
   }
 
   &:disabled {

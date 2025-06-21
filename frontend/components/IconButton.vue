@@ -25,7 +25,7 @@ defineProps<IconButtonProps>();
   vertical-align: middle;
   font-size: 1em;
   font-family: var(--font-family);
-  color: var(--text-color);
+  color: var(--color-text);
 
   position: relative;
   width: 2em;

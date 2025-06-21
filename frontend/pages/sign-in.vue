@@ -109,7 +109,7 @@ async function submitSignIn(event: Event) {
   margin: 0.667em 1px;
 
   font-size: 0.75em;
-  color: var(--text-color-weaker);
+  color: var(--color-text-weaker);
 
   // Don't let this add too much awkward empty space below the password input.
   height: 0;

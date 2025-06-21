@@ -1,47 +1,47 @@
 :root {
   color-scheme: dark;
-  --background-color: #0f1a17;
-  --text-color: #f0f0f0;
-  --text-color-weak: #ced0cf;
-  --text-color-weaker: #b9bbba;
-  --input-background-color: #00000047;
-  // An input's text should never be translucent, because that would make the
-  // input appear disabled.
-  --input-text-color: #e8e8e8;
-  --input-text-color-hover: #f8f8f8;
-  --input-text-color-active: #ffffff;
-  --surface-color: #f0f0f018;
-  --outer-edge-color: #ffffff2e;
-  --inner-edge-color: #ffffff18;
-  --outline-color-hover: #f0f0f030;
-  --outline-color-active: #f0f0f0cf;
-  --glow-color: #f0f0f060;
-  --shadow-small-color: #00000060;
-  --shadow-medium-color: #00000056;
-  --shadow-large-color: #00000029;
-  --error-color: #d939398f;
-  --error-glow-color: #ff000082;
-  --error-text-color: #ffffff;
-  --error-text-color-weak: #ffffffaa;
+  --color-background: #0f1a17;
+  --color-foreground: #f0f0f018;
+  --color-text: #f0f0f0;
+  --color-text-weak: #ced0cf;
+  --color-text-weaker: #b9bbba;
+  --color-shadow-small: #00000060;
+  --color-shadow-medium: #00000056;
+  --color-shadow-large: #00000029;
+  --color-glow: #f0f0f060;
+  --color-outline-hover: #f0f0f030;
+  --color-outline-active: #f0f0f0cf;
+  --color-edge-outer: #ffffff2e;
+  --color-edge-inner: #ffffff18;
+  --color-input-background: #00000047;
+  --color-input-text: #e8e8e8;
+  --color-input-text-hover: #f8f8f8;
+  --color-input-text-active: #ffffff;
+  --color-error-background: #d939398f;
+  --color-error-glow: #ff000082;
+  --color-error-text: #ffffff;
+  --color-error-text-weak: #ffffffaa;
 }
 
 .theme-light {
   color-scheme: light;
   // TODO: Make light theme look good.
-  --background-color: #e1d5bf;
-  // Use pure black for the best contrast.
-  --text-color: #000000;
-  --input-background-color: #0000002c;
-  --input-text-color: #000000;
-  --input-text-color-hover: #101010;
-  --input-text-color-active: #181818;
-  --surface-color: #ffffff40;
-  --outer-edge-color: #ffffff48;
-  --inner-edge-color: #ffffff48;
-  --outline-color-hover: #f0f0f030;
-  --outline-color-active: #f0f0f090;
-  --glow-color: #f0f0f060;
-  --shadow-small-color: #00000060;
-  --shadow-medium-color: #00000050;
-  --shadow-large-color: #00000029;
+  --color-background: #e1d5bf;
+  --color-foreground: #ffffff40;
+  // Use pure black for the best contrast, just like physical printed text.
+  --color-text: #000000;
+  --color-text-weak: #222222;
+  --color-text-weaker: #444444;
+  --color-shadow-small: #00000060;
+  --color-shadow-medium: #00000050;
+  --color-shadow-large: #00000029;
+  --color-glow: #f0f0f060;
+  --color-outline-hover: #f0f0f030;
+  --color-outline-active: #f0f0f090;
+  --color-edge-outer: #ffffff48;
+  --color-edge-inner: #ffffff48;
+  --color-input-background: #0000002c;
+  --color-input-text: #000000;
+  --color-input-text-hover: #101010;
+  --color-input-text-active: #181818;
 }

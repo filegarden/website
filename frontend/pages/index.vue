@@ -85,19 +85,19 @@ useHead({
 <!-- eslint-disable-next-line vue-scoped-css/enforce-style-type -- This must use a style module because of nuxt/nuxt#22817. -->
 <style module lang="scss">
 .body {
-  --background-gradient-color: #1e3426;
+  --color-background-gradient: #1e3426;
 
   background-position: 0 -1rem;
   background-image: radial-gradient(
     160vh 80vh at top,
-    var(--background-gradient-color),
+    var(--color-background-gradient),
     transparent
   );
   background-repeat: no-repeat;
 
   :global(.theme-light) & {
     // TODO: Find a better gradient color for light theme.
-    --background-gradient-color: transparent;
+    --color-background-gradient: transparent;
   }
 }
 </style>
@@ -124,7 +124,7 @@ h1 {
 
 .slogan {
   font-size: 1.5rem;
-  color: var(--brand-color);
+  color: var(--color-brand);
 
   margin-left: 1rem;
   margin-right: 1rem;
@@ -170,7 +170,7 @@ h2 {
 }
 
 .advantage-content {
-  color: var(--text-color-weaker);
+  color: var(--color-text-weaker);
 }
 
 .footnote {

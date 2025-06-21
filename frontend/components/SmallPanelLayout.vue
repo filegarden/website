@@ -77,7 +77,7 @@ main {
   margin-top: 2em;
 
   font-size: 0.875em;
-  color: var(--text-color-weak);
+  color: var(--color-text-weak);
 
   :deep(p:last-child) {
     margin-bottom: 0;

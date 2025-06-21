@@ -39,9 +39,9 @@ function close() {
   width: 100%;
   padding: 1.25rem;
 
-  background-color: var(--error-color);
-  box-shadow: 0 0 2rem var(--error-glow-color);
-  color: var(--error-text-color);
+  background-color: var(--color-error-background);
+  box-shadow: 0 0 2rem var(--color-error-glow);
+  color: var(--color-error-text);
   animation: 0.125s fade-in;
 
   pointer-events: auto;
@@ -58,7 +58,7 @@ p {
 
 .error-code {
   font-size: 0.75em;
-  color: var(--error-text-color-weak);
+  color: var(--color-error-text-weak);
 }
 
 .close-button {

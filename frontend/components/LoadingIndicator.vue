@@ -65,11 +65,11 @@ $animation-delay: 1s;
   0%,
   10%,
   100% {
-    color: var(--brand-color);
+    color: var(--color-brand);
   }
   50%,
   60% {
-    color: var(--brand-color-2);
+    color: var(--color-brand-2);
   }
 }
 
