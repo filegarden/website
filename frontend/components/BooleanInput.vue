@@ -37,7 +37,7 @@ const model = defineModel<boolean>({ default: false });
 
 <style scoped lang="scss">
 .boolean-input {
-  margin: 1em 0;
+  margin: 1.5em 0;
 }
 
 .boolean-input-label {
