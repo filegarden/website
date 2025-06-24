@@ -2,7 +2,7 @@ import { FetchError } from "ofetch";
 
 export interface ErrorBoxInfo {
   /** A short description of the error. */
-  readonly message?: string;
+  readonly message: string;
   /** Any code relating to the error. */
   readonly code?: string;
 }
@@ -29,18 +29,24 @@ export default function useErrorBoxes() {
 
       if (error instanceof FetchError && error.response) {
         errorBoxes.open({
-          message: error.response.status + " " + error.response.statusText,
+          message:
+            "Error " + error.response.status + ": " + error.response.statusText,
           code:
-            typeof error.data === "object"
-              ? JSON.stringify(error.data)
-              : undefined,
+            (error.options?.method ?? "GET") +
+            " " +
+            (typeof error.request === "string"
+              ? error.request
+              : error.request?.url) +
+            (error.data ? "\n" + JSON.stringify(error.data) : ""),
         });
-        return;
+      } else {
+        errorBoxes.open({
+          message: import.meta.server
+            ? "Error in server-side rendering"
+            : "Error in client",
+          code: String(error),
+        });
       }
-
-      errorBoxes.open({
-        message: String(error),
-      });
     },
   };
 

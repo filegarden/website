@@ -25,7 +25,7 @@ function close() {
       <IconClose />
     </IconButton>
 
-    <p class="error-message">Error: {{ value.message || "Unknown" }}</p>
+    <p class="error-message">{{ value.message }}</p>
 
     <p v-if="value.code" class="error-code">
       <code>{{ value.code }}</code>
