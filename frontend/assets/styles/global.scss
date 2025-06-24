@@ -191,6 +191,7 @@ input[type="radio"] {
 
 code {
   font-family: var(--font-family-monospace);
+  white-space: pre-wrap;
 }
 
 @keyframes fade-in {
