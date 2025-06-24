@@ -17,6 +17,19 @@ const emit = defineEmits<ErrorBoxEmits>();
 function close() {
   emit("close", props.value);
 }
+
+const reportUrl = computed(
+  () =>
+    "mailto:support@filegarden.com?" +
+    new URLSearchParams({
+      subject: "Error Report",
+      body:
+        props.value.message +
+        "\n\n" +
+        props.value.code +
+        "\n\nThe above error appeared when I did the following:\n\n",
+    }).toString(),
+);
 </script>
 
 <template>
@@ -29,6 +42,11 @@ function close() {
 
     <p v-if="value.code" class="error-code">
       <code>{{ value.code }}</code>
+    </p>
+
+    <p class="error-tip">
+      This is probably a bug. Please
+      <A :href="reportUrl" target="_blank">report it</A>.
     </p>
   </div>
 </template>
@@ -58,6 +76,11 @@ p {
 
 .error-code {
   font-size: 0.75em;
+  color: var(--color-error-text-weak);
+}
+
+.error-tip {
+  font-size: 0.875em;
   color: var(--color-error-text-weak);
 }
 
