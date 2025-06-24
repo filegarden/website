@@ -67,19 +67,13 @@ fieldset {
   padding: 0;
 }
 
-input {
+input,
+textarea {
   font-size: 1em;
   font-family: var(--font-family);
   color: var(--color-input-text);
-  // Use line height instead of vertical padding so certain glyphs aren't cut
-  // off.
-  line-height: 2.4;
 
   vertical-align: middle;
-
-  border-radius: 0.25rem;
-  padding: 0 0.6rem;
-  background-color: var(--color-input-background);
 
   $box-shadow:
     0 1px var(--color-edge-inner),
@@ -90,12 +84,12 @@ input {
   outline: 1px solid transparent;
   // Override any user agent defaults.
   outline-offset: 0;
+  background-color: var(--color-input-background);
+  border-radius: 0.25rem;
   margin: 1px;
   box-shadow: $box-shadow;
 
-  white-space: nowrap;
   overflow: hidden;
-  user-select: none;
 
   transition:
     0.1s ease-out color,
@@ -125,12 +119,29 @@ input {
   }
 }
 
+input {
+  padding: 0 0.6rem;
+  // Use line height instead of vertical padding so certain glyphs aren't cut
+  // off.
+  line-height: 2.4;
+  white-space: nowrap;
+}
+
+textarea {
+  padding: 0.5em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+
+  resize: vertical;
+}
+
 input:not([type]),
 input[type="email"],
 input[type="password"],
 input[type="search"],
 input[type="text"],
-input[type="url"] {
+input[type="url"],
+textarea {
   width: stretch;
 }
 
