@@ -41,7 +41,7 @@ useHead({
 
         <div class="advantages-content">
           <section class="panel advantage">
-            <h3 class="advantage-heading">No sharing restrictions.</h3>
+            <h3 class="advantage-heading">No sharing restrictions</h3>
             <p class="advantage-content">
               Get direct permalinks to your files, and use them anywhere on the
               web.
@@ -49,7 +49,7 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3 class="advantage-heading">Free and open.</h3>
+            <h3 class="advantage-heading">Free and open</h3>
             <p class="advantage-content">
               We're
               <A href="https://github.com/filegarden/website" target="_blank">
@@ -60,7 +60,7 @@ useHead({
 
           <section class="panel advantage">
             <h3 class="advantage-heading">
-              All file types supported.<span class="footnote">*</span>
+              All file types supported<span class="footnote">*</span>
             </h3>
             <p class="advantage-content">
               Images, videos, entire web pages, browser games, you name it.
@@ -71,7 +71,7 @@ useHead({
           </section>
 
           <section class="panel advantage">
-            <h3 class="advantage-heading">Full quality.</h3>
+            <h3 class="advantage-heading">Full quality</h3>
             <p class="advantage-content">
               No lossy compression or watermarks. Files are served unmodified.
             </p>
