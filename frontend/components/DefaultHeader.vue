@@ -53,12 +53,12 @@ async function signOut() {
 
       <NavLogo class="logo" />
 
-      <ul class="nav-items">
-        <li class="nav-item">
+      <div class="nav-items">
+        <div class="nav-item">
           <Button>Support Us</Button>
-        </li>
+        </div>
 
-        <li
+        <div
           v-if="me"
           ref="account-nav-item"
           class="nav-item"
@@ -71,12 +71,12 @@ async function signOut() {
           >
             <IconAccountCircle class="account-icon" />
           </IconButton>
-        </li>
+        </div>
 
-        <li v-else class="nav-item">
+        <div v-else class="nav-item">
           <Button href="/sign-in">Sign In</Button>
-        </li>
-      </ul>
+        </div>
+      </div>
     </nav>
 
     <div v-if="isAccountMenuOpen && me" class="account-menu-wrapper">
@@ -171,10 +171,7 @@ $nav-height: 4rem;
 }
 
 .nav-items {
-  list-style: none;
   margin: 0.5rem;
-  padding: 0;
-  line-height: inherit;
 
   flex-grow: 1;
   text-align: right;
@@ -185,6 +182,12 @@ $nav-height: 4rem;
 .nav-item {
   display: inline-block;
   margin: 0.25rem;
+
+  @media (max-width: 35rem) {
+    &:not(:last-child) {
+      display: none;
+    }
+  }
 }
 
 .account-button {
