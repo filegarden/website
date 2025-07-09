@@ -1,14 +1,14 @@
 <script lang="ts">
-import type { TextInputProps } from "~/components/TextInput.vue";
+import type { InputTextProps } from "~/components/Input/Text.vue";
 
-/** The required length for a `ShortCodeInput`'s value. */
+/** The required length for a `InputShortCode`'s value. */
 export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
-export type ShortCodeInputProps = TextInputProps;
+export type InputShortCodeProps = InputTextProps;
 
-defineProps<ShortCodeInputProps>();
+defineProps<InputShortCodeProps>();
 
 const model = defineModel<string>({ default: "" });
 
@@ -50,7 +50,7 @@ async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
 </script>
 
 <template>
-  <TextInput
+  <InputText
     v-model="model"
     :placeholder="'-'.repeat(SHORT_CODE_LENGTH)"
     :minlength="SHORT_CODE_LENGTH"

@@ -114,7 +114,7 @@ async function submitNewPassword() {
 
     <form v-if="page === 'email'" @submit.prevent="requestPasswordReset">
       <fieldset :disabled="loading">
-        <TextInput
+        <InputText
           v-model="email"
           label="Email"
           type="email"
@@ -142,8 +142,8 @@ async function submitNewPassword() {
         @submit.prevent="submitNewPassword"
       >
         <fieldset :disabled="loading">
-          <TextInput label="Email" type="email" disabled :model-value="email" />
-          <TextInput
+          <InputText label="Email" type="email" disabled :model-value="email" />
+          <InputText
             v-model="password"
             label="New Password"
             type="password"
@@ -153,7 +153,7 @@ async function submitNewPassword() {
             autofocus
             autocomplete="new-password"
           />
-          <TextInput
+          <InputText
             v-model="confirmPassword"
             label="Confirm Password"
             type="password"

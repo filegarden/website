@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface BooleanInputProps {
+export interface InputCheckboxProps {
   /** Whether the input should be focused on mount. */
   autofocus?: boolean;
 }
@@ -8,7 +8,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-defineProps<BooleanInputProps>();
+defineProps<InputCheckboxProps>();
 
 const id = useId();
 
@@ -16,9 +16,9 @@ const model = defineModel<boolean>({ default: false });
 </script>
 
 <template>
-  <div class="boolean-input">
-    <label class="boolean-input-label">
-      <div class="boolean-input-content">
+  <div class="input-checkbox">
+    <label class="input-checkbox-label">
+      <div class="input-checkbox-content">
         <input
           :id="id"
           v-model="model"
@@ -28,7 +28,7 @@ const model = defineModel<boolean>({ default: false });
         />
       </div>
 
-      <div class="boolean-input-label-content">
+      <div class="input-checkbox-label-content">
         <slot name="label"></slot>
       </div>
     </label>
@@ -36,20 +36,20 @@ const model = defineModel<boolean>({ default: false });
 </template>
 
 <style scoped lang="scss">
-.boolean-input {
+.input-checkbox {
   margin: 1.5em 0;
 }
 
-.boolean-input-label {
+.input-checkbox-label {
   display: inline-flex;
   align-items: center;
 }
 
-.boolean-input-content {
+.input-checkbox-content {
   flex-shrink: 0;
 }
 
-.boolean-input-label-content {
+.input-checkbox-label-content {
   padding-left: 1ch;
 }
 </style>

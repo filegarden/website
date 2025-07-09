@@ -60,7 +60,7 @@ async function submitSignIn(event: Event) {
 
     <form @submit.prevent="submitSignIn">
       <fieldset :disabled="loading">
-        <TextInput
+        <InputText
           v-model="email"
           label="Email"
           type="email"
@@ -72,7 +72,7 @@ async function submitSignIn(event: Event) {
           "
         />
 
-        <TextInput
+        <InputText
           v-model="password"
           label="Password"
           type="password"
@@ -87,7 +87,7 @@ async function submitSignIn(event: Event) {
               <A href="/reset-password">Forgot password?</A>
             </div>
           </template>
-        </TextInput>
+        </InputText>
 
         <Button type="submit">Sign In</Button>
       </fieldset>

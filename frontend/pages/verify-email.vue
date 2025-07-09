@@ -67,7 +67,7 @@ function handleCodeInputClick(
         </p>
 
         <div class="distinguished">
-          <ShortCodeInput
+          <InputShortCode
             aria-label="Verification Code"
             readonly
             autofocus

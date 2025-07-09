@@ -198,7 +198,7 @@ async function completeSignUp() {
 
     <form v-if="page === 'email'" @submit.prevent="openCaptchaPage">
       <fieldset :disabled="loading">
-        <TextInput
+        <InputText
           v-model="email"
           label="Email"
           type="email"
@@ -207,13 +207,13 @@ async function completeSignUp() {
           autofocus
         />
 
-        <BooleanInput v-model="acceptTerms" required>
+        <InputCheckbox v-model="acceptTerms" required>
           <template #label>
             I agree to the
             <A href="/terms" target="_blank">terms of service</A> and
             <A href="/privacy" target="_blank">privacy notice</A>.
           </template>
-        </BooleanInput>
+        </InputCheckbox>
 
         <Button type="submit">Create Account</Button>
       </fieldset>
@@ -238,7 +238,7 @@ async function completeSignUp() {
 
       <form class="code-form" @submit.prevent="submitCode">
         <fieldset :disabled="loading">
-          <ShortCodeInput
+          <InputShortCode
             v-model="code"
             aria-label="Verification Code"
             required
@@ -256,8 +256,8 @@ async function completeSignUp() {
 
       <form v-if="code" @submit.prevent="completeSignUp">
         <fieldset :disabled="loading">
-          <TextInput label="Email" type="email" disabled :model-value="email" />
-          <TextInput
+          <InputText label="Email" type="email" disabled :model-value="email" />
+          <InputText
             v-model="name"
             label="Display Name"
             minlength="1"
@@ -266,7 +266,7 @@ async function completeSignUp() {
             autofocus
             autocomplete="username"
           />
-          <TextInput
+          <InputText
             v-model="password"
             label="Password"
             type="password"
@@ -275,7 +275,7 @@ async function completeSignUp() {
             required
             autocomplete="new-password"
           />
-          <TextInput
+          <InputText
             v-model="confirmPassword"
             label="Confirm Password"
             type="password"
