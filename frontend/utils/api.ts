@@ -85,6 +85,7 @@ export default function api<ResT = any, CaughtResT = never>(
         throw error;
       }
 
+      // `getApiErrorCode` checked that `error` is a `FetchError`.
       const fetchError = error as FetchError;
       const handler = catchApiErrors[code];
 
