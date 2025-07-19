@@ -1,9 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-06-06",
+  compatibilityDate: "2025-07-18",
   devtools: { enabled: true },
   srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
+
+  typescript: {
+    nodeTsConfig: {
+      // Nuxt's TS config doesn't include the ESLint config by default.
+      include: ["../eslint.config.*"],
+    },
+  },
 
   // IDE debuggers need source maps to work.
   sourcemap: true,

@@ -23,7 +23,9 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
         },
       });
 
-      me.value = data.value;
+      // `null` is used instead of `undefined` because `null` is
+      // JSON-serializable from SSR.
+      me.value = data.value ?? null;
     });
   }
 
