@@ -16,7 +16,6 @@ use crate::{
         response::Response,
         Json,
     },
-    crypto::hash_without_salt,
     db::{self, TxError, TxResult},
     id::Id,
 };
@@ -72,10 +71,8 @@ type PathParams = Path<SessionQuery>;
 #[debug_handler]
 pub(crate) async fn delete(
     Path(session_query): PathParams,
-    AuthToken(token): AuthToken,
+    AuthToken(token_hash): AuthToken,
 ) -> impl Response<DeleteResponse> {
-    let token_hash = hash_without_salt(&token);
-
     let is_session_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user_id) = sqlx::query!(
             "SELECT user_id FROM sessions

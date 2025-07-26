@@ -6,7 +6,6 @@ use serde::Serialize;
 
 use crate::{
     api::{self, extract::AuthToken, response::Response, Json},
-    crypto::hash_without_salt,
     db::{self, TxResult},
 };
 
@@ -16,9 +15,7 @@ use crate::{
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetResponse> {
-    let token_hash = hash_without_salt(&token);
-
+pub(crate) async fn get(AuthToken(token_hash): AuthToken) -> impl Response<GetResponse> {
     let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
             r#"SELECT users.email, users.totp_secret IS NOT NULL AS "totp_enabled!" FROM sessions

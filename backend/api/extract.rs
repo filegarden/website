@@ -7,8 +7,9 @@ use axum::{
     http::{header::COOKIE, request},
 };
 use axum_macros::FromRequestParts;
+use ring::digest::Digest;
 
-use crate::{api, id::Token};
+use crate::{api, crypto::hash_without_salt, id::Token};
 
 use super::cookie::{CookieWrapper, SessionCookie};
 
@@ -24,8 +25,8 @@ pub(crate) struct Query<T>(pub T);
 #[from_request(via(axum::extract::Path), rejection(api::Error))]
 pub(crate) struct Path<T>(pub T);
 
-/// Extractor for the user's authentication token.
-pub(crate) struct AuthToken(pub Token);
+/// Extractor for the user's hashed authentication token.
+pub(crate) struct AuthToken(pub Digest);
 
 impl<S> FromRequestParts<S> for AuthToken
 where
@@ -37,19 +38,19 @@ where
         parts: &mut request::Parts,
         _state: &S,
     ) -> Result<Self, Self::Rejection> {
-        let Some(session_cookie) = parts
+        let Some(token) = parts
             .headers
             .get(COOKIE)
             .and_then(|header_value| str::from_utf8(header_value.as_bytes()).ok())
             .and_then(SessionCookie::from_header)
+            .and_then(|session_cookie| session_cookie.as_ref().value().parse::<Token>().ok())
         else {
             return Err(api::Error::AuthFailed);
         };
 
-        match session_cookie.as_ref().value().parse() {
-            Ok(token) => Ok(Self(token)),
-            Err(_) => Err(api::Error::AuthFailed),
-        }
+        let token_hash = hash_without_salt(&token);
+
+        Ok(Self(token_hash))
     }
 }
 

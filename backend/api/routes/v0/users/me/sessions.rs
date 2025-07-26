@@ -11,7 +11,6 @@ use crate::{
         response::{body::Session, Response},
         Json,
     },
-    crypto::hash_without_salt,
     db::{self, TxError, TxResult},
     id::Id,
 };
@@ -24,9 +23,7 @@ pub(crate) mod session;
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetResponse> {
-    let token_hash = hash_without_salt(&token);
-
+pub(crate) async fn get(AuthToken(token_hash): AuthToken) -> impl Response<GetResponse> {
     let sessions = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user_id) = sqlx::query!(
             "SELECT user_id FROM sessions
