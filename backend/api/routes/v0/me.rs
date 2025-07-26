@@ -6,16 +6,15 @@ use axum_macros::debug_handler;
 use crate::{
     api::{
         self,
-        extract::Path,
+        extract::AuthToken,
         response::{body::User, Response},
         Json,
     },
+    crypto::hash_without_salt,
     db::{self, TxResult},
-    id::Id,
 };
 
-/// A request path for this API route.
-type PathParams = Path<Id>;
+pub(crate) mod sessions;
 
 /// Gets a user's public profile info.
 ///
@@ -23,25 +22,28 @@ type PathParams = Path<Id>;
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(Path(user_id): PathParams) -> impl Response<GetResponse> {
+pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetResponse> {
+    let token_hash = hash_without_salt(&token);
+
     let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "SELECT name FROM users
-                WHERE id = $1",
-            user_id.as_slice(),
+            "SELECT users.id, users.name FROM sessions
+                INNER JOIN users ON users.id = sessions.user_id
+                WHERE sessions.token_hash = $1",
+            token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
         .await?)
     })
     .await?
     else {
-        return Err(api::Error::ResourceNotFound);
+        return Err(api::Error::AuthFailed);
     };
 
     Ok((
         StatusCode::OK,
         Json(GetResponse {
-            id: user_id,
+            id: user.id.into(),
             name: user.name,
         }),
     ))

@@ -14,7 +14,6 @@ use crate::{
         cookie::{CookieWrapper, SessionCookie},
         extract::{AuthToken, Path},
         response::Response,
-        validation::UserQuery,
         Json,
     },
     crypto::hash_without_salt,
@@ -46,7 +45,7 @@ pub(crate) enum SessionQuery {
 
 impl SessionQuery {
     /// The string representation of [`SessionQuery::Current`].
-    pub(crate) const CURRENT_STR: &str = "$current";
+    pub(crate) const CURRENT_STR: &str = "current";
 }
 
 impl FromStr for SessionQuery {
@@ -63,7 +62,7 @@ impl FromStr for SessionQuery {
 }
 
 /// A request path for this API route.
-type PathParams = Path<(UserQuery, SessionQuery)>;
+type PathParams = Path<SessionQuery>;
 
 /// Deletes a session.
 ///
@@ -72,7 +71,7 @@ type PathParams = Path<(UserQuery, SessionQuery)>;
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn delete(
-    Path((user_query, session_query)): PathParams,
+    Path(session_query): PathParams,
     AuthToken(token): AuthToken,
 ) -> impl Response<DeleteResponse> {
     let token_hash = hash_without_salt(&token);
@@ -89,17 +88,16 @@ pub(crate) async fn delete(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        if let UserQuery::Id(queried_user_id) = &user_query {
-            if **queried_user_id != user_id {
-                return Err(TxError::Abort(api::Error::AccessDenied));
-            }
-        }
+        let session_id = match &session_query {
+            SessionQuery::Current => token_hash.as_ref(),
+            SessionQuery::Id(id) => id.as_slice(),
+        };
 
         let sessions_deleted = sqlx::query!(
             "DELETE FROM sessions
                 WHERE user_id = $1 AND token_hash = $2",
             user_id,
-            token_hash.as_ref(),
+            session_id,
         )
         .execute(tx.as_mut())
         .await?

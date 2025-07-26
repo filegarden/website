@@ -17,9 +17,9 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   // Only fetch the user if it wasn't already set by `setMe` elsewhere.
   if (me.value === "unknown") {
     await callOnce(async () => {
-      const { data } = await useApi<User, null>("/users/$me", {
+      const { data } = await useApi<User, null>("/me", {
         catchApiErrors: {
-          RESOURCE_NOT_FOUND: () => Promise.resolve(null),
+          AUTH_FAILED: () => Promise.resolve(null),
         },
       });
 

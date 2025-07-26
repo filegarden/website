@@ -7,9 +7,8 @@ use serde::Serialize;
 use crate::{
     api::{
         self,
-        extract::{AuthToken, Path},
+        extract::AuthToken,
         response::{body::Session, Response},
-        validation::UserQuery,
         Json,
     },
     crypto::hash_without_salt,
@@ -19,19 +18,13 @@ use crate::{
 
 pub(crate) mod session;
 
-/// A request path for this API route.
-type PathParams = Path<UserQuery>;
-
 /// Lists all of a user's active sessions.
 ///
 /// # Errors
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn get(
-    Path(user_query): PathParams,
-    AuthToken(token): AuthToken,
-) -> impl Response<GetResponse> {
+pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetResponse> {
     let token_hash = hash_without_salt(&token);
 
     let sessions = db::transaction!(async |tx| -> TxResult<_, api::Error> {
@@ -45,12 +38,6 @@ pub(crate) async fn get(
         .map(|session| session.user_id) else {
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
-
-        if let UserQuery::Id(queried_user_id) = &user_query {
-            if **queried_user_id != user_id {
-                return Err(TxError::Abort(api::Error::AccessDenied));
-            }
-        }
 
         Ok(sqlx::query_as!(
             Session,

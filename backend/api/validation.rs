@@ -10,8 +10,6 @@ use serde::{Deserialize, Serialize};
 use serde_with::{DeserializeFromStr, SerializeDisplay};
 use thiserror::Error;
 
-use crate::id::Id;
-
 /// A user's name.
 pub(crate) type UserName = BoundedString<1, 64>;
 
@@ -97,46 +95,6 @@ impl TryFrom<bool> for True {
             Ok(Self)
         } else {
             Err(TrueError)
-        }
-    }
-}
-
-/// A value used to query a single user.
-#[derive(
-    Display,
-    DeserializeFromStr,
-    SerializeDisplay,
-    Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Debug,
-)]
-pub(crate) enum UserQuery {
-    /// Queries the current authenticated user.
-    #[display("{}", Self::ME_STR)]
-    Me,
-
-    /// Queries a user by ID.
-    Id(Id),
-}
-
-impl UserQuery {
-    /// The string representation of [`UserQuery::Me`].
-    const ME_STR: &str = "$me";
-}
-
-impl FromStr for UserQuery {
-    type Err = <Id as FromStr>::Err;
-
-    fn from_str(str: &str) -> Result<Self, Self::Err> {
-        if str == Self::ME_STR {
-            Ok(Self::Me)
-        } else {
-            let id = str.parse()?;
-            Ok(Self::Id(id))
         }
     }
 }
