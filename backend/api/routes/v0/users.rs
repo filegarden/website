@@ -18,6 +18,7 @@ use crate::{
     id::NewUserId,
 };
 
+pub(crate) mod me;
 pub(crate) mod user;
 
 /// A `POST` request body for this API route.

@@ -30,7 +30,7 @@ async function signOut() {
   signOutLoading.value = true;
 
   try {
-    await api("/me/sessions/current", {
+    await api("/users/me/sessions/current", {
       method: "DELETE",
 
       catchApiErrors: {

@@ -13,7 +13,6 @@ mod v0 {
     //! The routes for version 1 of the HTTP API.
 
     pub(crate) mod email_verification;
-    pub(crate) mod me;
     pub(crate) mod password_reset;
     pub(crate) mod sessions;
     pub(crate) mod users;
@@ -30,12 +29,6 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             "/email-verification/code",
             post(v0::email_verification::code::post),
         )
-        .route("/me", get(v0::me::get))
-        .route("/me/sessions", get(v0::me::sessions::get))
-        .route(
-            "/me/sessions/{session_id}",
-            delete(v0::me::sessions::session::delete),
-        )
         .route(
             "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
@@ -46,6 +39,12 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         )
         .route("/sessions", post(v0::sessions::post))
         .route("/users", post(v0::users::post))
+        .route("/users/me", get(v0::users::me::get))
+        .route("/users/me/sessions", get(v0::users::me::sessions::get))
+        .route(
+            "/users/me/sessions/{session_id}",
+            delete(v0::users::me::sessions::session::delete),
+        )
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
         .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed });
