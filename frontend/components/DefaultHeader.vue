@@ -102,7 +102,7 @@ async function signOut() {
           </li>
 
           <li class="account-menu-item">
-            <Button class="account-menu-button" :href="`/settings/${me.id}`">
+            <Button class="account-menu-button" href="/settings">
               Settings
             </Button>
           </li>
