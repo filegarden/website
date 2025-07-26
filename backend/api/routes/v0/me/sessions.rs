@@ -53,7 +53,7 @@ pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetRespons
     Ok((
         StatusCode::OK,
         Json(GetResponse {
-            current_session_id: Vec::from(token_hash.as_ref()).into(),
+            current_session_id: token_hash.as_ref().to_owned().into(),
             values: sessions,
         }),
     ))
