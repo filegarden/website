@@ -1,23 +1,16 @@
-//! A user.
+//! A user's private settings.
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
+use serde::Serialize;
 
 use crate::{
-    api::{
-        self,
-        extract::AuthToken,
-        response::{body::User, Response},
-        Json,
-    },
+    api::{self, extract::AuthToken, response::Response, Json},
     crypto::hash_without_salt,
     db::{self, TxResult},
 };
 
-pub(crate) mod sessions;
-pub(crate) mod settings;
-
-/// Gets a user's public profile info.
+/// Gets information about a user's private settings.
 ///
 /// # Errors
 ///
@@ -28,9 +21,9 @@ pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetRespons
 
     let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "SELECT users.id, users.name FROM sessions
+            r#"SELECT users.email, users.totp_secret IS NOT NULL AS "totp_enabled!" FROM sessions
                 INNER JOIN users ON users.id = sessions.user_id
-                WHERE sessions.token_hash = $1",
+                WHERE sessions.token_hash = $1"#,
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
@@ -44,11 +37,19 @@ pub(crate) async fn get(AuthToken(token): AuthToken) -> impl Response<GetRespons
     Ok((
         StatusCode::OK,
         Json(GetResponse {
-            id: user.id.into(),
-            name: user.name,
+            email: user.email,
+            totp_enabled: user.totp_enabled,
         }),
     ))
 }
 
 /// A `GET` response body for this API route.
-pub(crate) type GetResponse = User;
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct GetResponse {
+    /// The user's email.
+    email: String,
+
+    /// Whether the user has TOTP authentication enabled.
+    totp_enabled: bool,
+}

@@ -1,0 +1,33 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT users.email, users.totp_secret IS NOT NULL AS \"totp_enabled!\" FROM sessions\n                INNER JOIN users ON users.id = sessions.user_id\n                WHERE sessions.token_hash = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "email",
+        "type_info": {
+          "Custom": {
+            "name": "citext",
+            "kind": "Simple"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "totp_enabled!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      null
+    ]
+  },
+  "hash": "c9e2dc3174d710125bba750ab1c66f0d2fdcf9770b08b3a08ac03ef375bc6315"
+}
