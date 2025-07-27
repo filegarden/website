@@ -43,8 +43,8 @@ const context = computed<DialogContext<Data> | undefined>(
 </script>
 
 <template>
-  <dialog v-if="context" ref="dialog">
-    <h2>
+  <dialog v-if="context" ref="dialog" class="dialog panel frosted">
+    <h2 class="dialog-heading">
       <slot name="heading" v-bind="context"></slot>
     </h2>
 
@@ -59,3 +59,51 @@ const context = computed<DialogContext<Data> | undefined>(
     </form>
   </dialog>
 </template>
+
+<style scoped lang="scss">
+.dialog {
+  border: none;
+  color: var(--color-text);
+
+  position: fixed;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 2rem;
+
+  $max-size: calc(100% - 2rem);
+  min-width: min(24rem, $max-size);
+  max-width: min(56rem, $max-size);
+  max-height: $max-size;
+
+  overflow: hidden auto;
+
+  animation: 0.125s fade-in;
+
+  &::backdrop {
+    background-color: var(--color-backdrop);
+    backdrop-filter: blur(0.125rem);
+
+    animation: 0.125s backdrop;
+  }
+}
+
+@keyframes backdrop {
+  from {
+    background-color: transparent;
+    backdrop-filter: none;
+  }
+}
+
+.dialog-heading {
+  margin-top: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5em;
+
+  margin-top: 1.5rem;
+}
+</style>
