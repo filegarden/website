@@ -1,3 +1,5 @@
+import type { WatchHandle } from "vue";
+
 export default function useDialog<Data>(): DialogController<Data> {
   // @ts-expect-error `DialogControllers` can only be instantiated here.
   return new DialogController();
@@ -38,11 +40,13 @@ export class DialogController<Data> {
 
   /** Opens the dialog. Returns its `returnValue` once the dialog is closed. */
   open(data: Data): Promise<string> {
-    return new Promise((resolve) => {
+    let unwatch: WatchHandle;
+
+    return new Promise<string>((resolve) => {
       this.state = { data };
 
       // TODO: Does creating and stopping many of these watchers leak memory?
-      const stopWatcher = watchEffect(() => {
+      unwatch = watchEffect(() => {
         const dialog = this.state?.element;
         if (!dialog) {
           // The dialog element hasn't mounted yet.
@@ -51,10 +55,6 @@ export class DialogController<Data> {
 
         function handleDialogClose(this: HTMLDialogElement) {
           resolve(this.returnValue);
-
-          void nextTick().then(() => {
-            stopWatcher();
-          });
         }
 
         dialog.addEventListener("close", handleDialogClose);
@@ -63,6 +63,8 @@ export class DialogController<Data> {
           dialog.removeEventListener("close", handleDialogClose);
         });
       });
+    }).finally(() => {
+      unwatch();
     });
   }
 
@@ -71,28 +73,28 @@ export class DialogController<Data> {
    * specified, it defaults to `""`.
    */
   close(returnValue = ""): void {
-    const stopWatcher = watchEffect(() => {
-      if (this.state === undefined) {
-        // It's already closed.
+    let unwatch: WatchHandle;
 
-        void nextTick().then(() => {
-          stopWatcher();
-        });
-        return;
-      }
+    void new Promise<void>((resolve) => {
+      unwatch = watchEffect(() => {
+        if (this.state === undefined) {
+          // It's already closed.
+          resolve();
+          return;
+        }
 
-      const dialog = this.state.element;
+        const dialog = this.state.element;
 
-      if (!dialog) {
-        // The dialog element hasn't mounted yet.
-        return;
-      }
+        if (!dialog) {
+          // The dialog element hasn't mounted yet.
+          return;
+        }
 
-      dialog.close(returnValue);
-
-      void nextTick().then(() => {
-        stopWatcher();
+        dialog.close(returnValue);
+        resolve();
       });
+    }).finally(() => {
+      unwatch();
     });
   }
 }
