@@ -65,6 +65,7 @@ export class DialogController<Data> {
       });
     }).finally(() => {
       unwatch();
+      this.state = undefined;
     });
   }
 
