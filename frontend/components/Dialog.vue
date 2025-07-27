@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="Data">
 export interface DialogContext<Data>
   extends Pick<NonNullable<DialogController<Data>["state"]>, "data"> {
-  /** Closes the dialog with its `returnValue` set to `""`. */
+  /** Closes the dialog with its return value set to `""`. */
   cancel(): Promise<void>;
 }
 
@@ -22,7 +22,7 @@ watchEffect(() => {
   // eslint-disable-next-line vue/no-mutating-props -- `DialogController` values are tightly coupled with this component, and this is less error-prone than alternatives.
   controller.state.element = markRaw(dialog.value);
 
-  // Set an initial `returnValue` so that successfully submitting a dialog is
+  // Set an initial return value so that successfully submitting a dialog is
   // easily distinguishable from canceling it by default.
   dialog.value.returnValue = "DEFAULT";
 

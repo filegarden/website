@@ -38,7 +38,10 @@ export class DialogController<Data> {
     this.stateRef.value = value;
   }
 
-  /** Opens the dialog. Returns its `returnValue` once the dialog is closed. */
+  /**
+   * Opens the dialog. Returns the dialog's return value once the dialog is
+   * closed.
+   */
   open(data: Data): Promise<string> {
     let unwatch: WatchHandle;
 
@@ -70,8 +73,10 @@ export class DialogController<Data> {
   }
 
   /**
-   * Closes the dialog with the specified `returnValue`. If no `returnValue` is
-   * specified, it defaults to `""`.
+   * Closes the dialog with the specified return value. If no return value is
+   * specified, it will be set to `""`.
+   *
+   * The returned promise resolves once the dialog is closed.
    */
   close(returnValue = ""): Promise<void> {
     let unwatch: WatchHandle;
