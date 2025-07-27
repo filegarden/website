@@ -15,16 +15,18 @@ const { value: controller } = defineProps<DialogProps<Data>>();
 const dialog = useTemplateRef("dialog");
 
 watchEffect(() => {
-  if (controller.state && dialog.value) {
-    // eslint-disable-next-line vue/no-mutating-props -- `DialogController` values are tightly coupled with this component, and this is less error-prone than alternatives.
-    controller.state.element = markRaw(dialog.value);
-
-    dialog.value.showModal();
-
-    // Set an initial `returnValue` so that successfully submitting a dialog is
-    // easily distinguishable from canceling it by default.
-    dialog.value.returnValue = "DEFAULT";
+  if (!(controller.state && dialog.value)) {
+    return;
   }
+
+  // eslint-disable-next-line vue/no-mutating-props -- `DialogController` values are tightly coupled with this component, and this is less error-prone than alternatives.
+  controller.state.element = markRaw(dialog.value);
+
+  // Set an initial `returnValue` so that successfully submitting a dialog is
+  // easily distinguishable from canceling it by default.
+  dialog.value.returnValue = "DEFAULT";
+
+  dialog.value.showModal();
 });
 
 function cancel() {
