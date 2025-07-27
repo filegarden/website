@@ -48,16 +48,16 @@ export class DialogController<Data> {
     return new Promise<string>((resolve) => {
       this.state = { data };
 
+      function handleDialogClose(this: HTMLDialogElement) {
+        resolve(this.returnValue);
+      }
+
       // TODO: Does creating and stopping many of these watchers leak memory?
       unwatch = watchEffect(() => {
         const dialog = this.state?.element;
         if (!dialog) {
           // The dialog element hasn't mounted yet.
           return;
-        }
-
-        function handleDialogClose(this: HTMLDialogElement) {
-          resolve(this.returnValue);
         }
 
         dialog.addEventListener("close", handleDialogClose);
@@ -90,7 +90,6 @@ export class DialogController<Data> {
         }
 
         const dialog = this.state.element;
-
         if (!dialog) {
           // The dialog element hasn't mounted yet.
           return;
