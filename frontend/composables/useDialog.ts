@@ -83,8 +83,8 @@ export class DialogController<Data> {
 
     return new Promise<void>((resolve) => {
       unwatch = watchEffect(() => {
+        // Ensure it's fully closed before resolving the promise.
         if (this.state === undefined) {
-          // It's already closed.
           resolve();
           return;
         }
@@ -96,7 +96,6 @@ export class DialogController<Data> {
         }
 
         dialog.close(returnValue);
-        resolve();
       });
     }).finally(() => {
       unwatch();
