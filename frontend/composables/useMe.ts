@@ -1,7 +1,7 @@
 import type { UnwrapRef } from "vue";
 
 function useRawMe() {
-  return useState<User | null | "unknown">(() => "unknown" as const);
+  return useState<User | null | "UNKNOWN">(() => "UNKNOWN" as const);
 }
 
 /**
@@ -15,7 +15,7 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   const me = useRawMe();
 
   // Only fetch the user if it wasn't already set by `setMe` elsewhere.
-  if (me.value === "unknown") {
+  if (me.value === "UNKNOWN") {
     await callOnce(async () => {
       const { data } = await useApi<User, null>("/users/me", {
         catchApiErrors: {
@@ -31,7 +31,7 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
 
   // We assert the user can't be unknown at this point, and it should never be
   // unknown again.
-  return me as Ref<Exclude<UnwrapRef<typeof me>, "unknown">>;
+  return me as Ref<Exclude<UnwrapRef<typeof me>, "UNKNOWN">>;
 }
 
 /**
