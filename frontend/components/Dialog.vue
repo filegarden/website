@@ -43,12 +43,12 @@ const context = computed<DialogContext<Data> | undefined>(
 </script>
 
 <template>
-  <dialog v-if="context" ref="dialog" class="dialog panel frosted">
-    <h2 class="dialog-heading">
-      <slot name="heading" v-bind="context"></slot>
-    </h2>
+  <dialog v-if="context" ref="dialog" class="dialog" @click.self="cancel">
+    <form class="dialog-form panel frosted" method="dialog">
+      <h2 class="dialog-heading">
+        <slot name="heading" v-bind="context"></slot>
+      </h2>
 
-    <form method="dialog">
       <div class="dialog-content">
         <slot v-bind="context"></slot>
       </div>
@@ -64,23 +64,24 @@ const context = computed<DialogContext<Data> | undefined>(
 .dialog {
   border: none;
   color: var(--color-text);
+  background-color: transparent;
 
   position: fixed;
   margin: auto;
   box-sizing: border-box;
-  padding: 2rem;
+  padding: 1rem;
 
-  $max-size: calc(100% - 2rem);
-  min-width: min(24rem, $max-size);
-  max-width: min(56rem, $max-size);
-  max-height: $max-size;
+  min-width: min(26rem, 100%);
+  width: fit-content;
+  height: fit-content;
+  max-width: min(58rem, 100%);
+  max-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   outline: none;
-  box-shadow:
-    0 4px 8px var(--color-shadow-large),
-    0 0 16px var(--color-shadow-large);
-
-  overflow: hidden auto;
 
   animation: 0.125s fade-in;
 
@@ -97,6 +98,15 @@ const context = computed<DialogContext<Data> | undefined>(
     background-color: transparent;
     backdrop-filter: none;
   }
+}
+
+.dialog-form {
+  padding: 2rem;
+
+  box-shadow:
+    0 4px 8px var(--color-shadow-large),
+    0 0 16px var(--color-shadow-large);
+  overflow: hidden auto;
 }
 
 .dialog-heading {
