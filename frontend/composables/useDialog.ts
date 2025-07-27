@@ -83,7 +83,8 @@ export class DialogController<Data> {
 
     return new Promise<void>((resolve) => {
       unwatch = watchEffect(() => {
-        // Ensure it's fully closed before resolving the promise.
+        // Ensure any previously open dialog is fully cleaned up before
+        // resolving.
         if (this.state === undefined) {
           resolve();
           return;
