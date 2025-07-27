@@ -42,9 +42,9 @@ const context = computed<DialogContext<Data> | undefined>(
 
 <template>
   <dialog v-if="context" ref="dialog">
-    <h1>
+    <h2>
       <slot name="heading" v-bind="context"></slot>
-    </h1>
+    </h2>
 
     <form method="dialog">
       <div class="dialog-content">
