@@ -75,6 +75,7 @@ const context = computed<DialogContext<Data> | undefined>(
   max-width: min(56rem, $max-size);
   max-height: $max-size;
 
+  outline: none;
   box-shadow:
     0 4px 8px var(--color-shadow-large),
     0 0 16px var(--color-shadow-large);
