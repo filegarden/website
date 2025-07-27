@@ -21,11 +21,11 @@ export interface DialogControllerState<Data> {
  * component, with methods to manage the dialog imperatively.
  */
 export class DialogController<Data> {
-  private readonly stateRef = ref<DialogControllerState<Data>>();
-
   protected constructor() {
     markRaw(this);
   }
+
+  private readonly stateRef = ref<DialogControllerState<Data>>();
 
   /**
    * The dialog's current open state, or `undefined` if the dialog isn't open.
