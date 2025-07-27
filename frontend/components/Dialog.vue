@@ -2,7 +2,7 @@
 export interface DialogContext<Data>
   extends Pick<NonNullable<DialogController<Data>["state"]>, "data"> {
   /** Closes the dialog with its `returnValue` set to `""`. */
-  cancel(): void;
+  cancel(): Promise<void>;
 }
 
 export interface DialogProps<Data> {
@@ -28,7 +28,7 @@ watchEffect(() => {
 });
 
 function cancel() {
-  controller.close("");
+  return controller.close("");
 }
 
 const context = computed<DialogContext<Data> | undefined>(

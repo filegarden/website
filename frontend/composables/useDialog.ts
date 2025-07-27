@@ -72,10 +72,10 @@ export class DialogController<Data> {
    * Closes the dialog with the specified `returnValue`. If no `returnValue` is
    * specified, it defaults to `""`.
    */
-  close(returnValue = ""): void {
+  close(returnValue = ""): Promise<void> {
     let unwatch: WatchHandle;
 
-    void new Promise<void>((resolve) => {
+    return new Promise<void>((resolve) => {
       unwatch = watchEffect(() => {
         if (this.state === undefined) {
           // It's already closed.
