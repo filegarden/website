@@ -120,8 +120,10 @@ async function handleDialogMouseDown(event: MouseEvent) {
   overflow: hidden auto;
 
   &::backdrop {
-    // The background is dimmed by `body:has(:modal)` in the global stylesheet.
-    background-color: transparent;
+    // Using the page's background color makes panels over the backdrop tend to
+    // the same color as panels over the page background.
+    background-color: var(--color-background);
+    opacity: 0.667;
   }
 }
 
