@@ -81,8 +81,6 @@ const context = computed<DialogContext<Data> | undefined>(
   display: flex;
   overflow: hidden auto;
 
-  animation: 0.125s fade-in;
-
   &::backdrop {
     background-color: var(--color-backdrop);
 
@@ -107,6 +105,19 @@ const context = computed<DialogContext<Data> | undefined>(
   box-shadow:
     0 4px 8px var(--color-shadow-large),
     0 0 16px var(--color-shadow-large);
+
+  animation: 0.1s dialog-opening ease;
+}
+
+@keyframes dialog-opening {
+  from {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .dialog-heading {
