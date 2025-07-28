@@ -62,26 +62,24 @@ const context = computed<DialogContext<Data> | undefined>(
 
 <style scoped lang="scss">
 .dialog {
+  margin: 0;
   border: none;
+  max-width: 100%;
+  max-height: 100%;
+  outline: none;
   color: var(--color-text);
   background-color: transparent;
 
   position: fixed;
-  margin: auto;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
   padding: 1rem;
 
-  min-width: min(26rem, 100%);
-  width: fit-content;
-  height: fit-content;
-  max-width: min(58rem, 100%);
-  max-height: 100%;
-
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  outline: none;
+  overflow: hidden auto;
 
   animation: 0.125s fade-in;
 
@@ -101,12 +99,16 @@ const context = computed<DialogContext<Data> | undefined>(
 }
 
 .dialog-form {
+  margin: auto;
+
+  box-sizing: border-box;
   padding: 2rem;
+  min-width: min(24rem, 100%);
+  max-width: min(56rem, 100%);
 
   box-shadow:
     0 4px 8px var(--color-shadow-large),
     0 0 16px var(--color-shadow-large);
-  overflow: hidden auto;
 }
 
 .dialog-heading {
