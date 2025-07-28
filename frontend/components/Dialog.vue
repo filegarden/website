@@ -85,16 +85,14 @@ const context = computed<DialogContext<Data> | undefined>(
 
   &::backdrop {
     background-color: var(--color-backdrop);
-    backdrop-filter: blur(0.125rem);
 
-    animation: 0.125s backdrop;
+    animation: 0.125s backdrop ease;
   }
 }
 
 @keyframes backdrop {
   from {
     background-color: transparent;
-    backdrop-filter: none;
   }
 }
 
