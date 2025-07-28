@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="Data">
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+
 export interface DialogContext<Data>
   extends Pick<NonNullable<DialogController<Data>["state"]>, "data"> {
   /** Closes the dialog with its return value set to `""`. */
@@ -27,6 +29,15 @@ watchEffect(() => {
   dialog.value.returnValue = "DEFAULT";
 
   dialog.value.showModal();
+
+  const dialogValue = dialog.value;
+  disableBodyScroll(dialogValue, {
+    reserveScrollBarGap: true,
+  });
+
+  onWatcherCleanup(() => {
+    enableBodyScroll(dialogValue);
+  });
 });
 
 function cancel() {
