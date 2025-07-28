@@ -31,7 +31,7 @@ watchEffect(() => {
         <div class="setting-value">{{ email }}</div>
       </div>
       <div class="setting-action">
-        <Button aria-label="Edit Email">Edit</Button>
+        <Button aria-label="Change Email">Change</Button>
       </div>
     </div>
 
@@ -41,7 +41,7 @@ watchEffect(() => {
         <div class="setting-value">{{ name }}</div>
       </div>
       <div class="setting-action">
-        <Button aria-label="Edit Display Name">Edit</Button>
+        <Button aria-label="Change Display Name">Change</Button>
       </div>
     </div>
 
