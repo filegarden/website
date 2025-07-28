@@ -1,9 +1,6 @@
 :root {
   color-scheme: dark;
   --color-background: #0f1a17;
-  // This matches `--color-background` but with a different opacity so panels
-  // over the backdrop tend to the same color as panels over the background.
-  --color-backdrop: #0f1a17ba;
   --color-foreground: #d3f3ff17;
   --color-text: #f0f0f0;
   --color-text-weak: #ced0cf;

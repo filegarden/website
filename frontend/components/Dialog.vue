@@ -109,14 +109,7 @@ async function handleDialogMouseDown(event: MouseEvent) {
   overflow: hidden auto;
 
   &::backdrop {
-    background-color: var(--color-backdrop);
-
-    animation: 0.125s backdrop ease;
-  }
-}
-
-@keyframes backdrop {
-  from {
+    // The background is dimmed by `body:has(:modal)` in the global stylesheet.
     background-color: transparent;
   }
 }

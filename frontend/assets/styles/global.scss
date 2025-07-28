@@ -20,6 +20,13 @@ body {
 
   background-color: var(--color-background);
   color: var(--color-text);
+
+  opacity: 1;
+  transition: 0.125s opacity ease;
+
+  &:has(:modal) {
+    opacity: 0.333;
+  }
 }
 
 h1,
