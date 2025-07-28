@@ -41,6 +41,11 @@ export class DialogController<Data> {
   /**
    * Opens the dialog. Returns the dialog's return value once the dialog is
    * closed.
+   *
+   * If the dialog is canceled (for example, by pressing `Esc`), its return
+   * value will be `""`. If the dialog is submitted, its return value will be
+   * the `value` attribute of the submit button. If no `value` is set on the
+   * submit button, the dialog's return value defaults to `"DEFAULT"`.
    */
   open(data: Data): Promise<string> {
     let unwatch: WatchHandle;
