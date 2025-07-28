@@ -17,6 +17,7 @@
 
 body {
   margin: 0;
+  height: 100%;
 
   background-color: var(--color-background);
   color: var(--color-text);
@@ -27,6 +28,12 @@ body {
   &:has(:modal) {
     opacity: 0.333;
   }
+}
+
+#__nuxt {
+  // All ancestors of layout elements need 100% height so layouts are able to
+  // have 100% height too.
+  height: 100%;
 }
 
 h1,
