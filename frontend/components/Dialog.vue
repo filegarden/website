@@ -14,29 +14,27 @@ export interface DialogProps<Data> {
 
 const { value: controller } = defineProps<DialogProps<Data>>();
 
-const dialog = useTemplateRef("dialog");
+const dialogRef = useTemplateRef("dialog");
 
 watchEffect(() => {
-  if (!(controller.state && dialog.value)) {
+  const dialog = dialogRef.value;
+  if (!(controller.state && dialog)) {
     return;
   }
 
-  // eslint-disable-next-line vue/no-mutating-props -- `DialogController` values are tightly coupled with this component, and this is less error-prone than alternatives.
-  controller.state.element = markRaw(dialog.value);
+  // eslint-disable-next-line vue/no-mutating-props -- `DialogController` is tightly coupled with this component, and this is less error-prone than alternatives.
+  controller.state.element = markRaw(dialog);
 
   // Set an initial return value so that successfully submitting a dialog is
   // easily distinguishable from canceling it by default.
-  dialog.value.returnValue = "DEFAULT";
+  dialog.returnValue = "DEFAULT";
 
-  dialog.value.showModal();
+  dialog.showModal();
 
-  const dialogValue = dialog.value;
-  disableBodyScroll(dialogValue, {
-    reserveScrollBarGap: true,
-  });
+  disableBodyScroll(dialog, { reserveScrollBarGap: true });
 
   onWatcherCleanup(() => {
-    enableBodyScroll(dialogValue);
+    enableBodyScroll(dialog);
   });
 });
 
