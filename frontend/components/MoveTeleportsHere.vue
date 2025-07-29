@@ -10,15 +10,19 @@ if (import.meta.client) {
   const teleportsPlaceholder = document.createComment("teleports");
   teleports.before(teleportsPlaceholder);
 
-  watchEffect(() => {
-    for (const container of containers) {
-      if (container.value) {
-        container.value.append(teleports);
-        return;
+  // This must be sync to preserve the state of the teleports from before the
+  // teleports are removed from the DOM due to this component unmounting.
+  watchSyncEffect(() => {
+    preserveDomStateFor(teleports, () => {
+      for (const container of containers) {
+        if (container.value) {
+          container.value.append(teleports);
+          return;
+        }
       }
-    }
 
-    teleportsPlaceholder.after(teleports);
+      teleportsPlaceholder.after(teleports);
+    });
   });
 }
 </script>
