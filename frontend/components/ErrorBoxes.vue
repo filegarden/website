@@ -28,38 +28,40 @@ watch(() => route.name, clearErrorBoxes);
 </script>
 
 <template>
-  <div v-if="errorBoxes.value.length" class="error-boxes">
-    <div
-      v-if="errorBoxes.value.length >= 2"
-      class="error-boxes-section clear-button-wrapper"
-    >
-      <Button class="clear-button frosted" @click="clearErrorBoxes">
-        Clear All {{ errorBoxes.value.length }} Errors
-      </Button>
-    </div>
+  <Teleport to="#teleports">
+    <div v-if="errorBoxes.value.length" class="error-boxes">
+      <div
+        v-if="errorBoxes.value.length >= 2"
+        class="error-boxes-section clear-button-wrapper"
+      >
+        <Button class="clear-button frosted" @click="clearErrorBoxes">
+          Clear All {{ errorBoxes.value.length }} Errors
+        </Button>
+      </div>
 
-    <div class="error-boxes-section error-boxes-above-the-fold">
-      <!--
-        We don't want to cover the screen with errors unless the user scrolls
-        down, so show only the first one above the fold.
-      -->
-      <ErrorBox :value="errorBoxes.value[0]!" @close="errorBoxes.close" />
-    </div>
+      <div class="error-boxes-section error-boxes-above-the-fold">
+        <!--
+          We don't want to cover the screen with errors unless the user scrolls
+          down, so show only the first one above the fold.
+        -->
+        <ErrorBox :value="errorBoxes.value[0]!" @close="errorBoxes.close" />
+      </div>
 
-    <div
-      v-if="errorBoxes.value.length >= 2"
-      class="error-boxes-section error-boxes-below-the-fold-wrapper"
-    >
-      <div class="error-boxes-below-the-fold">
-        <ErrorBox
-          v-for="errorBox in errorBoxes.value.slice(1)"
-          :key="keyFromObject(errorBox)"
-          :value="errorBox"
-          @close="errorBoxes.close"
-        />
+      <div
+        v-if="errorBoxes.value.length >= 2"
+        class="error-boxes-section error-boxes-below-the-fold-wrapper"
+      >
+        <div class="error-boxes-below-the-fold">
+          <ErrorBox
+            v-for="errorBox in errorBoxes.value.slice(1)"
+            :key="keyFromObject(errorBox)"
+            :value="errorBox"
+            @close="errorBoxes.close"
+          />
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">

@@ -93,6 +93,8 @@ async function handleDialogMouseDown(event: MouseEvent) {
         <slot name="actions" v-bind="context"></slot>
       </div>
     </form>
+
+    <MoveTeleportsHere />
   </dialog>
 </template>
 
