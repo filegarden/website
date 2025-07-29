@@ -124,6 +124,14 @@ async function handleDialogMouseDown(event: MouseEvent) {
     // the same color as panels over the page background.
     background-color: var(--color-background);
     opacity: 0.667;
+
+    animation: 0.1s dialog-backdrop-opening ease;
+  }
+}
+
+@keyframes dialog-backdrop-opening {
+  from {
+    opacity: 0;
   }
 }
 
