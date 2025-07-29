@@ -1,4 +1,4 @@
-import type { FetchError } from "ofetch";
+import { FetchError } from "ofetch";
 
 export interface ErrorBoxInfo {
   /** A short description of the error. */
@@ -27,26 +27,17 @@ export default function useErrorBoxes() {
         return;
       }
 
-      // TODO: Add `error instanceof FetchError && `, remove type assertions,
-      // and remove the `fetchError` variable when nuxt/nuxt#32686 is fixed.
-      if ((error as FetchError).response) {
-        const fetchError = error as FetchError & {
-          response: NonNullable<unknown>;
-        };
-
+      if (error instanceof FetchError && error.response) {
         errorBoxes.open({
           message:
-            "Error " +
-            fetchError.response.status +
-            ": " +
-            fetchError.response.statusText,
+            "Error " + error.response.status + ": " + error.response.statusText,
           code:
-            (fetchError.options?.method ?? "GET") +
+            (error.options?.method ?? "GET") +
             " " +
-            (typeof fetchError.request === "string"
-              ? fetchError.request
-              : fetchError.request?.url) +
-            (fetchError.data ? "\n" + JSON.stringify(fetchError.data) : ""),
+            (typeof error.request === "string"
+              ? error.request
+              : error.request?.url) +
+            (error.data ? "\n" + JSON.stringify(error.data) : ""),
         });
       } else {
         errorBoxes.open({

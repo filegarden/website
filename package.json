@@ -9,7 +9,7 @@
     "preview": "nuxi preview --dotenv .env.frontend"
   },
   "dependencies": {
-    "body-scroll-lock": "^4.0.0-beta.0",
+    "body-scroll-lock": "^3",
     "vue-turnstile": "^1"
   },
   "devDependencies": {
