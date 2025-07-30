@@ -29,7 +29,7 @@ defineProps<ButtonProps>();
   color: var(--color-input-text);
 
   border-radius: 0.6em;
-  padding: 0 1.5em;
+  padding: 0 1.375em;
   background-color: var(--color-foreground);
   cursor: pointer;
 
