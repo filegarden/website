@@ -137,7 +137,7 @@ h1 {
 .call-to-action-button {
   // This must take priority over `.button` so a flash of incorrect font size
   // can't happen depending on the order of `style` tags.
-  font-size: 1.333rem !important;
+  font-size: 1.25rem !important;
 }
 
 h2 {
