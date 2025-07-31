@@ -13,6 +13,7 @@ use crate::{
     db::{self, TxResult},
 };
 
+pub(crate) mod name;
 pub(crate) mod sessions;
 pub(crate) mod settings;
 

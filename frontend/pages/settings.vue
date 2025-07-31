@@ -3,7 +3,6 @@ useTitle("Settings");
 
 const me = await useMeOrSignIn();
 
-const name = ref(me.name);
 const email = ref<string>();
 const totpEnabled = ref(false);
 
@@ -19,6 +18,27 @@ watchEffect(() => {
   email.value = settingsResponse.value.email;
   totpEnabled.value = settingsResponse.value.totpEnabled;
 });
+
+const changeNameDialog = useDialog<{ name: string }>();
+
+async function changeName() {
+  const data = { name: me.name };
+
+  if (!(await changeNameDialog.open(data))) {
+    return;
+  }
+
+  if (data.name === me.name) {
+    return;
+  }
+
+  const { name } = await api("/users/me/name", {
+    method: "PUT",
+    body: { name: data.name },
+  });
+
+  me.name = name;
+}
 </script>
 
 <template>
@@ -38,10 +58,12 @@ watchEffect(() => {
     <div class="setting">
       <div class="setting-content">
         <div class="setting-name">Display Name</div>
-        <div class="setting-value">{{ name }}</div>
+        <div class="setting-value">{{ me.name }}</div>
       </div>
       <div class="setting-action">
-        <Button aria-label="Change Display Name">Change</Button>
+        <Button aria-label="Change Display Name" @click="changeName">
+          Change
+        </Button>
       </div>
     </div>
 
@@ -56,6 +78,27 @@ watchEffect(() => {
       <Button>Delete Account</Button>
       <Button>Download Account Data</Button>
     </div>
+
+    <Dialog :value="changeNameDialog">
+      <template #heading>Change display name</template>
+
+      <template #default="{ data }">
+        <InputText
+          v-model="data.name"
+          label="Display Name"
+          minlength="1"
+          maxlength="64"
+          required
+          autofocus
+          autocomplete="username"
+        />
+      </template>
+
+      <template #actions="{ cancel }">
+        <Button type="submit">Confirm</Button>
+        <Button @click="cancel">Cancel</Button>
+      </template>
+    </Dialog>
   </LargePanelLayout>
 </template>
 

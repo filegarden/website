@@ -3,7 +3,7 @@
 use std::sync::LazyLock;
 
 use axum::{
-    routing::{delete, get, post},
+    routing::{delete, get, post, put},
     Router,
 };
 
@@ -40,6 +40,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route("/sessions", post(v0::sessions::post))
         .route("/users", post(v0::users::post))
         .route("/users/me", get(v0::users::me::get))
+        .route("/users/me/name", put(v0::users::me::name::put))
         .route("/users/me/sessions", get(v0::users::me::sessions::get))
         .route(
             "/users/me/sessions/{session_id}",
