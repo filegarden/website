@@ -1,4 +1,4 @@
-//! A user's private settings.
+//! The current authenticated user's private settings.
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
@@ -9,7 +9,7 @@ use crate::{
     db::{self, TxResult},
 };
 
-/// Gets information about a user's private settings.
+/// Gets information about the current authenticated user's private settings.
 ///
 /// # Errors
 ///

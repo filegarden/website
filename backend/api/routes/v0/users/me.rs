@@ -1,4 +1,4 @@
-//! A user.
+//! The current authenticated user.
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
@@ -16,7 +16,7 @@ use crate::{
 pub(crate) mod sessions;
 pub(crate) mod settings;
 
-/// Gets a user's public profile info.
+/// Gets the current authenticated user's public profile info.
 ///
 /// # Errors
 ///

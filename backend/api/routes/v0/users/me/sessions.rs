@@ -1,4 +1,4 @@
-//! The set of a particular user's sign-in sessions.
+//! The set of the current authenticated user's sign-in sessions.
 
 use axum_macros::debug_handler;
 use reqwest::StatusCode;
@@ -17,7 +17,7 @@ use crate::{
 
 pub(crate) mod session;
 
-/// Lists all of a user's active sessions.
+/// Lists all of the current authenticated user's active sessions.
 ///
 /// # Errors
 ///

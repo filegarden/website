@@ -1,4 +1,4 @@
-//! One of a particular user's sessions.
+//! One of the current authenticated user's sessions.
 
 use std::str::FromStr;
 
@@ -63,7 +63,7 @@ impl FromStr for SessionQuery {
 /// A request path for this API route.
 type PathParams = Path<SessionQuery>;
 
-/// Deletes a session.
+/// Deletes a session from the current authenticated user.
 ///
 /// # Errors
 ///
