@@ -67,12 +67,16 @@ async function changeName() {
       </div>
     </div>
 
+    <h2>Security</h2>
+
     <div class="button-group">
       <Button>Change Password</Button>
 
       <Button v-if="totpEnabled">Disable 2FA</Button>
       <Button v-else>Enable 2FA</Button>
     </div>
+
+    <h2>Data Management</h2>
 
     <div class="button-group">
       <Button>Delete Account</Button>
@@ -122,6 +126,12 @@ $panel-width: 512px;
 h1 {
   font-size: 1.5rem;
   text-align: center;
+}
+
+h2 {
+  font-size: 1em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .setting {
