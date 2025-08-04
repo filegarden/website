@@ -162,7 +162,12 @@ async function handleDialogMouseDown(event: MouseEvent) {
 }
 
 .dialog-heading {
-  margin-top: 0;
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.dialog-content {
+  margin: 1.5rem 0;
 }
 
 .dialog-actions {
@@ -170,7 +175,5 @@ async function handleDialogMouseDown(event: MouseEvent) {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.5em;
-
-  margin-top: 1.5rem;
 }
 </style>

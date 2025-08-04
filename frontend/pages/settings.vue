@@ -131,7 +131,6 @@ h1 {
 h2 {
   font-size: 1em;
   margin-top: 2.5rem;
-  margin-bottom: 0.5rem;
 }
 
 .setting {

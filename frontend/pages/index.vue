@@ -114,7 +114,9 @@ main > section {
 }
 
 h1 {
+  font-size: 2.5em;
   margin-top: 0;
+  margin-bottom: 1em;
 }
 
 .hero-logo {
@@ -166,7 +168,6 @@ h2 {
 
 .advantage-heading {
   font-size: 1.25em;
-  margin: 1rem 0;
 }
 
 .advantage-content {
