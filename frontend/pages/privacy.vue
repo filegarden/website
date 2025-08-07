@@ -4,6 +4,6 @@ useTitle("Privacy Notice");
 
 <template>
   <LargePanelLayout>
-    <PrivacyNotice />
+    <PrivacyNotice class="headings-formatted" />
   </LargePanelLayout>
 </template>

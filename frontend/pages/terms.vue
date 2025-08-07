@@ -4,6 +4,6 @@ useTitle("Terms of Service");
 
 <template>
   <LargePanelLayout>
-    <TermsOfService />
+    <TermsOfService class="headings-formatted" />
   </LargePanelLayout>
 </template>
