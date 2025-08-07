@@ -34,7 +34,7 @@ export default async function useMeOrSignIn(): Promise<User> {
     return never();
   }
 
-  const meNonNull = reactive(Object.assign({}, me.value));
+  const meNonNull = reactive({ ...me.value });
 
   // This effect is sync so there's no time where the value of `useMe` is
   // updated while the value of `useMeOrSignIn` hasn't updated yet.
