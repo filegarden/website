@@ -1,6 +1,6 @@
 /**
  * Returns the current authenticated user, or redirects to the sign-in page and
- * never resolves if the user is unauthenticated.
+ * throws silently if the user is unauthenticated.
  *
  * Also redirects to the sign-in page (and leaves the old return value) if the
  * user ever becomes unauthenticated later.
