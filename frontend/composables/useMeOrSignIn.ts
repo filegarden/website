@@ -6,6 +6,12 @@
  * user ever becomes unauthenticated later.
  */
 export default async function useMeOrSignIn(): Promise<User> {
+  const scope = getCurrentScope();
+
+  if (!scope) {
+    throw new Error("`useMeOrSignIn` must be called within a Vue effect scope");
+  }
+
   const nuxtApp = useNuxtApp();
   const route = useRoute();
   const me = await useMe();
@@ -40,14 +46,18 @@ export default async function useMeOrSignIn(): Promise<User> {
 
   const meNonNull = reactive({ ...me.value });
 
-  // This effect is sync so there's no time where the value of `useMe` is
-  // updated while the value of `useMeOrSignIn` hasn't updated yet.
-  watchSyncEffect(() => {
-    if (me.value === null) {
-      void redirectToSignIn();
-    } else {
-      Object.assign(meNonNull, me.value);
-    }
+  // Use the original scope so the watcher doesn't keep running after leaving
+  // the route.
+  scope.run(() => {
+    // This effect is sync so there's no time where the value of `useMe` is
+    // updated while the value of `useMeOrSignIn` hasn't updated yet.
+    watchSyncEffect(() => {
+      if (me.value === null) {
+        void redirectToSignIn();
+      } else {
+        Object.assign(meNonNull, me.value);
+      }
+    });
   });
 
   return meNonNull;
