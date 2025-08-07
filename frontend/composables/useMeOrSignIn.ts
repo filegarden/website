@@ -44,7 +44,7 @@ export default async function useMeOrSignIn(): Promise<User> {
   // updated while the value of `useMeOrSignIn` hasn't updated yet.
   watchSyncEffect(() => {
     if (me.value === null) {
-      redirectToSignIn();
+      void redirectToSignIn();
     } else {
       Object.assign(meNonNull, me.value);
     }
