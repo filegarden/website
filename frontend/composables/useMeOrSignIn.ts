@@ -6,6 +6,7 @@
  * user ever becomes unauthenticated later.
  */
 export default async function useMeOrSignIn(): Promise<User> {
+  const nuxtApp = useNuxtApp();
   const route = useRoute();
   const me = await useMe();
 
@@ -24,14 +25,17 @@ export default async function useMeOrSignIn(): Promise<User> {
         to: route.fullPath,
       });
 
-    void preventLeaveConfirmations(() =>
-      navigateTo(signInUrl, { replace: true }),
+    return nuxtApp.runWithContext(() =>
+      preventLeaveConfirmations(() => navigateTo(signInUrl, { replace: true })),
     );
   }
 
   if (me.value === null) {
-    redirectToSignIn();
-    return never();
+    await redirectToSignIn();
+
+    // Throw an exception so the caller doesn't continue running with the false
+    // assumption that `me` is defined.
+    throw silence(new Error("Redirected by `useMeOrSignIn`"));
   }
 
   const meNonNull = reactive({ ...me.value });

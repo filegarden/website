@@ -42,7 +42,7 @@ async function changeName() {
 </script>
 
 <template>
-  <LargePanelLayout>
+  <LargePanelLayout v-if="me">
     <h1>Settings</h1>
 
     <div class="setting">
