@@ -88,7 +88,7 @@ function handleClose(event: Event) {
 </script>
 
 <template>
-  <Teleport v-if="context" to="#teleports">
+  <Teleport v-if="context" to="#dialog-teleports">
     <dialog
       ref="dialog"
       class="dialog"

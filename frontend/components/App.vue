@@ -35,6 +35,14 @@ if (import.meta.server) {
   <div id="app">
     <slot></slot>
 
+    <Teleport to="#teleports">
+      <div id="dialog-teleports"></div>
+    </Teleport>
+
+    <!--
+      Having everything above this (including other teleports) ensures error
+      boxes are consistently tabbed to last (regardless of teleport order).
+    -->
     <ErrorBoxes />
   </div>
 </template>
