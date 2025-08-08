@@ -1,6 +1,6 @@
 import type { WatchHandle } from "vue";
 
-export default function useDialog<Data>(): DialogController<Data> {
+export default function useDialog<Data = undefined>(): DialogController<Data> {
   // @ts-expect-error `DialogControllers` can only be instantiated here.
   return new DialogController();
 }
@@ -47,11 +47,13 @@ export class DialogController<Data> {
    * the `value` attribute of the submit button. If no `value` is set on the
    * submit button, the dialog's return value defaults to `"DEFAULT"`.
    */
-  open(data: Data): Promise<string> {
+  open(
+    ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
+  ): Promise<string> {
     let unwatch: WatchHandle;
 
     return new Promise<string>((resolve) => {
-      this.state = { data };
+      this.state = { data: data as Data };
 
       function handleDialogClose(this: HTMLDialogElement) {
         resolve(this.returnValue);
