@@ -23,10 +23,7 @@ $animation-delay: 1s;
 
 .loading-indicator-wrapper {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
 
   border-radius: inherit;
   // `hidden` would make the indicator stick to this element instead of the

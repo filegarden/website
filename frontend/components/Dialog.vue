@@ -102,6 +102,8 @@ function handleClose(event: Event) {
   margin: 0;
   border: none;
   padding: 0;
+  width: 100%;
+  height: 100%;
   max-width: 100%;
   max-height: 100%;
   outline: none;
@@ -109,10 +111,7 @@ function handleClose(event: Event) {
   background-color: transparent;
 
   position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
 
   overflow: hidden auto;
 
@@ -148,10 +147,7 @@ function handleClose(event: Event) {
   // This can't be `fixed` because hovering a fixed element prevents scrolling
   // its parent.
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
 }
 
 .dialog-form {
