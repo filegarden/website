@@ -48,12 +48,25 @@ watchEffect(() => {
   // easily distinguishable from canceling it by default.
   dialog.returnValue = "DEFAULT";
 
-  dialog.showModal();
+  // It'd be great to use `showModal` instead of recreating its behavior with
+  // `show`, but it's currently impossible to make outside elements (like error
+  // boxes and toasts) appear over the top layer. And moving such elements into
+  // the top layer isn't seamless since it resets DOM state and CSS animations.
+  dialog.show();
 
   disableBodyScroll(dialog, { reserveScrollBarGap: true });
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The `App` component is always present.
+  const appElement = document.getElementById("app")!;
+  appElement.inert = true;
+
   onWatcherCleanup(() => {
     enableBodyScroll(dialog);
+
+    const otherOpenDialog = document.querySelector("dialog[open]");
+    if (!otherOpenDialog) {
+      appElement.inert = false;
+    }
   });
 });
 
@@ -75,27 +88,33 @@ function handleClose(event: Event) {
 </script>
 
 <template>
-  <dialog v-if="context" ref="dialog" class="dialog" @close="handleClose">
-    <div class="dialog-scrollable-content">
-      <div class="dialog-backdrop-click-target" @click.self="cancel"></div>
+  <Teleport v-if="context" to="#teleports">
+    <dialog
+      ref="dialog"
+      class="dialog"
+      closedby="any"
+      aria-modal="true"
+      @close="handleClose"
+    >
+      <div class="dialog-scrollable-content">
+        <div class="dialog-backdrop" @click.self="cancel"></div>
 
-      <form class="dialog-form panel frosted" method="dialog">
-        <h2 class="dialog-heading">
-          <slot name="heading" v-bind="context"></slot>
-        </h2>
+        <form class="dialog-form panel frosted" method="dialog">
+          <h2 class="dialog-heading">
+            <slot name="heading" v-bind="context"></slot>
+          </h2>
 
-        <div class="dialog-content">
-          <slot v-bind="context"></slot>
-        </div>
+          <div class="dialog-content">
+            <slot v-bind="context"></slot>
+          </div>
 
-        <div class="dialog-actions">
-          <slot name="actions" v-bind="context"></slot>
-        </div>
-      </form>
-
-      <MoveTeleportsHere />
-    </div>
-  </dialog>
+          <div class="dialog-actions">
+            <slot name="actions" v-bind="context"></slot>
+          </div>
+        </form>
+      </div>
+    </dialog>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">
@@ -113,23 +132,9 @@ function handleClose(event: Event) {
 
   position: fixed;
   inset: 0;
+  z-index: 1000;
 
   overflow: hidden auto;
-
-  &::backdrop {
-    // Using the page's background color makes panels over the backdrop tend to
-    // the same color as panels over the page background.
-    background-color: var(--color-background);
-    opacity: 0.667;
-
-    animation: 0.1s dialog-backdrop-opening ease;
-  }
-}
-
-@keyframes dialog-backdrop-opening {
-  from {
-    opacity: 0;
-  }
 }
 
 .dialog-scrollable-content {
@@ -144,11 +149,24 @@ function handleClose(event: Event) {
   min-height: 100%;
 }
 
-.dialog-backdrop-click-target {
+.dialog-backdrop {
   // This can't be `fixed` because hovering a fixed element prevents scrolling
   // its parent.
   position: absolute;
   inset: 0;
+
+  // Using the page's background color makes panels over the backdrop tend to
+  // the same color as panels over the page background.
+  background-color: var(--color-background);
+  opacity: 0.667;
+
+  animation: 0.1s dialog-backdrop-opening ease;
+}
+
+@keyframes dialog-backdrop-opening {
+  from {
+    opacity: 0;
+  }
 }
 
 .dialog-form {
