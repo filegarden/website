@@ -68,23 +68,19 @@ const context = computed<DialogContext<Data> | undefined>(
     },
 );
 
-async function handleDialogMouseDown(event: MouseEvent) {
-  const mouseDownTarget = event.target;
-  const mouseUpTarget = await new Promise((resolve) => {
-    window.addEventListener(
-      "mouseup",
-      (event) => {
-        resolve(event.target);
-      },
-      { once: true },
-    );
+async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
+  const mouseUpEvent = await new Promise<MouseEvent>((resolve) => {
+    window.addEventListener("mouseup", resolve, { once: true });
   });
 
   // `@click.self="cancel"` doesn't work since it also fires when mousing down
   // on the backdrop and then up inside the dialog, which shouldn't close it.
   // `@click="cancel"` on a fixed element covering the backdrop also doesn't
   // work because mousing over it would prevent scrolling the dialog.
-  const wasDialogBackdropClicked = mouseDownTarget === mouseUpTarget;
+  const wasDialogBackdropClicked =
+    mouseDownEvent.button === mouseUpEvent.button &&
+    mouseDownEvent.target === mouseUpEvent.target;
+
   if (wasDialogBackdropClicked) {
     void cancel();
   }
@@ -96,7 +92,7 @@ async function handleDialogMouseDown(event: MouseEvent) {
     v-if="context"
     ref="dialog"
     class="dialog"
-    @mousedown.self="handleDialogMouseDown"
+    @mousedown.self.left="handleDialogMouseDown"
   >
     <form class="dialog-form panel frosted" method="dialog">
       <h2 class="dialog-heading">
