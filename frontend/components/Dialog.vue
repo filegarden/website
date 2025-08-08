@@ -71,49 +71,29 @@ const context = computed<DialogContext<Data> | undefined>(
 function handleClose(event: Event) {
   controller.state?.handleClose(event);
 }
-
-async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
-  const mouseUpEvent = await new Promise<MouseEvent>((resolve) => {
-    window.addEventListener("mouseup", resolve, { once: true });
-  });
-
-  // `@click.self="cancel"` doesn't work since it also fires when mousing down
-  // on the backdrop and then up inside the dialog, which shouldn't close it.
-  // `@click="cancel"` on a fixed element covering the backdrop also doesn't
-  // work because mousing over it would prevent scrolling the dialog.
-  const wasDialogBackdropClicked =
-    mouseDownEvent.button === mouseUpEvent.button &&
-    mouseDownEvent.target === mouseUpEvent.target;
-
-  if (wasDialogBackdropClicked) {
-    void cancel();
-  }
-}
 </script>
 
 <template>
-  <dialog
-    v-if="context"
-    ref="dialog"
-    class="dialog"
-    @close="handleClose"
-    @mousedown.self.left="handleDialogMouseDown"
-  >
-    <form class="dialog-form panel frosted" method="dialog">
-      <h2 class="dialog-heading">
-        <slot name="heading" v-bind="context"></slot>
-      </h2>
+  <dialog v-if="context" ref="dialog" class="dialog" @close="handleClose">
+    <div class="dialog-scrollable-content">
+      <div class="dialog-backdrop-click-target" @click.self="cancel"></div>
 
-      <div class="dialog-content">
-        <slot v-bind="context"></slot>
-      </div>
+      <form class="dialog-form panel frosted" method="dialog">
+        <h2 class="dialog-heading">
+          <slot name="heading" v-bind="context"></slot>
+        </h2>
 
-      <div class="dialog-actions">
-        <slot name="actions" v-bind="context"></slot>
-      </div>
-    </form>
+        <div class="dialog-content">
+          <slot v-bind="context"></slot>
+        </div>
 
-    <MoveTeleportsHere />
+        <div class="dialog-actions">
+          <slot name="actions" v-bind="context"></slot>
+        </div>
+      </form>
+
+      <MoveTeleportsHere />
+    </div>
   </dialog>
 </template>
 
@@ -121,6 +101,7 @@ async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
 .dialog {
   margin: 0;
   border: none;
+  padding: 0;
   max-width: 100%;
   max-height: 100%;
   outline: none;
@@ -132,10 +113,7 @@ async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
   top: 0;
   width: 100%;
   height: 100%;
-  box-sizing: border-box;
-  padding: 1rem;
 
-  display: flex;
   overflow: hidden auto;
 
   &::backdrop {
@@ -152,6 +130,28 @@ async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
   from {
     opacity: 0;
   }
+}
+
+.dialog-scrollable-content {
+  // Without this, the backdrop click target only covers the dialog's client
+  // height, not the scroll height inside the dialog.
+  position: relative;
+
+  display: flex;
+
+  box-sizing: border-box;
+  padding: 1rem;
+  min-height: 100%;
+}
+
+.dialog-backdrop-click-target {
+  // This can't be `fixed` because hovering a fixed element prevents scrolling
+  // its parent.
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .dialog-form {
