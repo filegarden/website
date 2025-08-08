@@ -32,7 +32,7 @@ if (import.meta.server) {
 </script>
 
 <template>
-  <div class="app">
+  <div id="app">
     <slot></slot>
 
     <ErrorBoxes />
@@ -43,7 +43,7 @@ if (import.meta.server) {
 <style lang="scss" src="~/assets/styles/global.scss"></style>
 
 <style scoped lang="scss">
-.app {
+#app {
   height: 100%;
 }
 </style>
