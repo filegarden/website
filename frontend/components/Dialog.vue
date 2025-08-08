@@ -92,7 +92,7 @@ function handleClose(event: Event) {
     <dialog
       ref="dialog"
       class="dialog"
-      closedby="any"
+      closedby="closerequest"
       aria-modal="true"
       @close="handleClose"
     >
