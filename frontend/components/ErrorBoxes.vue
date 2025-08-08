@@ -71,7 +71,7 @@ $error-boxes-padding: 1.5rem;
   position: fixed;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: 9999;
 
   display: flex;
   flex-direction: column;
