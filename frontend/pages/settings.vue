@@ -93,7 +93,6 @@ async function changeName() {
           minlength="1"
           maxlength="64"
           required
-          autofocus
           autocomplete="username"
         />
       </template>
