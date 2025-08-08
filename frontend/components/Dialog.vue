@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/no-mutating-props -- The `DialogController` prop is
   tightly coupled with this component. Mutating it here is less error-prone than
   alternatives. -->
+
 <script setup lang="ts" generic="Data">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
