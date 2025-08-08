@@ -12,6 +12,9 @@ export interface DialogControllerState<Data> {
    */
   readonly data: Data;
 
+  /** Handles the dialog element's `close` event. */
+  handleClose(event: Event): void;
+
   /** The currently open dialog element if it's mounted yet. */
   element?: HTMLDialogElement;
 }
@@ -56,8 +59,6 @@ export class DialogController<Data> {
   open(
     ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
   ): Promise<string> {
-    let unwatch: WatchHandle | undefined;
-
     return new Promise<string>((resolve) => {
       if (this.scope === undefined) {
         throw new Error(
@@ -65,29 +66,14 @@ export class DialogController<Data> {
         );
       }
 
-      this.scope.run(() => {
-        this.state = { data: data as Data };
+      this.state = {
+        data: data as Data,
 
-        function handleDialogClose(this: HTMLDialogElement) {
-          resolve(this.returnValue);
-        }
-
-        unwatch = watchEffect(() => {
-          const dialog = this.state?.element;
-          if (!dialog) {
-            // The dialog element hasn't mounted yet.
-            return;
-          }
-
-          dialog.addEventListener("close", handleDialogClose);
-
-          onWatcherCleanup(() => {
-            dialog.removeEventListener("close", handleDialogClose);
-          });
-        });
-      });
+        handleClose(event) {
+          resolve((event.target as HTMLDialogElement).returnValue);
+        },
+      };
     }).finally(() => {
-      unwatch?.();
       this.state = undefined;
     });
   }

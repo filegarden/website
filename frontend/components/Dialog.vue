@@ -68,6 +68,10 @@ const context = computed<DialogContext<Data> | undefined>(
     },
 );
 
+function handleClose(event: Event) {
+  controller.state?.handleClose(event);
+}
+
 async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
   const mouseUpEvent = await new Promise<MouseEvent>((resolve) => {
     window.addEventListener("mouseup", resolve, { once: true });
@@ -92,6 +96,7 @@ async function handleDialogMouseDown(mouseDownEvent: MouseEvent) {
     v-if="context"
     ref="dialog"
     class="dialog"
+    @close="handleClose"
     @mousedown.self.left="handleDialogMouseDown"
   >
     <form class="dialog-form panel frosted" method="dialog">
