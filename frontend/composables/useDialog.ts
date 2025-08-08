@@ -1,4 +1,4 @@
-import type { WatchHandle } from "vue";
+import type { EffectScope, WatchHandle } from "vue";
 
 export default function useDialog<Data = undefined>(): DialogController<Data> {
   // @ts-expect-error `DialogControllers` can only be instantiated here.
@@ -39,6 +39,12 @@ export class DialogController<Data> {
   }
 
   /**
+   * The Vue scope of the `Dialog` component currently using the controller, or
+   * `undefined` if the controller is not in use.
+   */
+  scope?: EffectScope;
+
+  /**
    * Opens the dialog. Returns the dialog's return value once the dialog is
    * closed.
    *
@@ -50,31 +56,38 @@ export class DialogController<Data> {
   open(
     ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
   ): Promise<string> {
-    let unwatch: WatchHandle;
+    let unwatch: WatchHandle | undefined;
 
     return new Promise<string>((resolve) => {
-      this.state = { data: data as Data };
-
-      function handleDialogClose(this: HTMLDialogElement) {
-        resolve(this.returnValue);
+      if (this.scope === undefined) {
+        throw new Error(
+          "Cannot open dialog since no `Dialog` component is using it",
+        );
       }
 
-      // TODO: Does creating and stopping many of these watchers leak memory?
-      unwatch = watchEffect(() => {
-        const dialog = this.state?.element;
-        if (!dialog) {
-          // The dialog element hasn't mounted yet.
-          return;
+      this.scope.run(() => {
+        this.state = { data: data as Data };
+
+        function handleDialogClose(this: HTMLDialogElement) {
+          resolve(this.returnValue);
         }
 
-        dialog.addEventListener("close", handleDialogClose);
+        unwatch = watchEffect(() => {
+          const dialog = this.state?.element;
+          if (!dialog) {
+            // The dialog element hasn't mounted yet.
+            return;
+          }
 
-        onWatcherCleanup(() => {
-          dialog.removeEventListener("close", handleDialogClose);
+          dialog.addEventListener("close", handleDialogClose);
+
+          onWatcherCleanup(() => {
+            dialog.removeEventListener("close", handleDialogClose);
+          });
         });
       });
     }).finally(() => {
-      unwatch();
+      unwatch?.();
       this.state = undefined;
     });
   }
@@ -86,27 +99,34 @@ export class DialogController<Data> {
    * The returned promise resolves once the dialog is closed.
    */
   close(returnValue = ""): Promise<void> {
-    let unwatch: WatchHandle;
+    let unwatch: WatchHandle | undefined;
 
     return new Promise<void>((resolve) => {
-      unwatch = watchEffect(() => {
-        // Ensure any previously open dialog is fully cleaned up before
-        // resolving.
-        if (this.state === undefined) {
-          resolve();
-          return;
-        }
+      if (this.scope === undefined) {
+        throw new Error(
+          "Cannot close dialog since no `Dialog` component is using it",
+        );
+      }
 
-        const dialog = this.state.element;
-        if (!dialog) {
-          // The dialog element hasn't mounted yet.
-          return;
-        }
+      this.scope.run(() => {
+        unwatch = watchEffect(() => {
+          // Ensure the dialog is fully cleaned up before resolving.
+          if (this.state === undefined) {
+            resolve();
+            return;
+          }
 
-        dialog.close(returnValue);
+          const dialog = this.state.element;
+          if (!dialog) {
+            // The dialog element hasn't mounted yet.
+            return;
+          }
+
+          dialog.close(returnValue);
+        });
       });
     }).finally(() => {
-      unwatch();
+      unwatch?.();
     });
   }
 }

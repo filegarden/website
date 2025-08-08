@@ -1,3 +1,6 @@
+<!-- eslint-disable vue/no-mutating-props -- The `DialogController` prop is
+  tightly coupled with this component. Mutating it here is less error-prone than
+  alternatives. -->
 <script setup lang="ts" generic="Data">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
@@ -14,6 +17,22 @@ export interface DialogProps<Data> {
 
 const { value: controller } = defineProps<DialogProps<Data>>();
 
+const scope = getCurrentScope();
+
+watchEffect(() => {
+  if (controller.scope !== undefined) {
+    throw new Error(
+      "The dialog controller is already in use by another `Dialog` component",
+    );
+  }
+
+  controller.scope = scope;
+
+  onWatcherCleanup(() => {
+    controller.scope = undefined;
+  });
+});
+
 const dialogRef = useTemplateRef("dialog");
 
 watchEffect(() => {
@@ -22,7 +41,6 @@ watchEffect(() => {
     return;
   }
 
-  // eslint-disable-next-line vue/no-mutating-props -- `DialogController` is tightly coupled with this component, and this is less error-prone than alternatives.
   controller.state.element = markRaw(dialog);
 
   // Set an initial return value so that successfully submitting a dialog is
