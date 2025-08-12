@@ -97,7 +97,7 @@ function handleClose(event: Event) {
       @close="handleClose"
     >
       <div class="dialog-scrollable-content">
-        <div class="dialog-backdrop" @click.self="cancel"></div>
+        <div class="dialog-backdrop" @click="cancel"></div>
 
         <form class="dialog-form panel frosted" method="dialog">
           <h2 class="dialog-heading">
