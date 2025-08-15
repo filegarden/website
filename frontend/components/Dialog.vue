@@ -88,16 +88,25 @@ function handleClose(event: Event) {
 
 const loading = ref(false);
 
-async function handleSubmit(event: Event) {
+async function handleSubmit(event: SubmitEvent) {
   if (!controller.state?.keepOpenOnFail) {
     return;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
+  const dialog = dialogRef.value!;
+
   // Don't let the dialog close until the controller's callback succeeds.
   event.preventDefault();
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
-  const dialog = dialogRef.value!;
+  // Use the submit button's value as the dialog's return value since that
+  // default behavior was prevented above.
+  if (
+    event.submitter instanceof HTMLButtonElement &&
+    event.submitter.value !== ""
+  ) {
+    dialog.returnValue = event.submitter.value;
+  }
 
   loading.value = true;
 
@@ -134,6 +143,7 @@ function handleBackdropClick() {
       <div class="dialog-scrollable-content">
         <div class="dialog-backdrop" @click="handleBackdropClick"></div>
 
+        <!-- @vue-expect-error vuejs/core#4098 prevents using `SubmitEvent`. -->
         <form
           class="dialog-form panel frosted"
           method="dialog"
