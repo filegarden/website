@@ -126,6 +126,7 @@ function handleBackdropClick() {
     <dialog
       ref="dialog"
       class="dialog"
+      :class="{ loading }"
       :closedby="loading ? 'none' : 'closerequest'"
       aria-modal="true"
       @close="handleClose"
@@ -224,6 +225,11 @@ function handleBackdropClick() {
     0 0 16px var(--color-shadow-large);
 
   animation: 0.1s dialog-opening ease;
+  transition: 0.1s ease transform;
+
+  .dialog.loading:has(.dialog-backdrop:active) & {
+    transform: scale(0.98);
+  }
 }
 
 @keyframes dialog-opening {
