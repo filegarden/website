@@ -21,23 +21,21 @@ watchEffect(() => {
 
 const changeNameDialog = useDialog<{ name: string }>();
 
-async function changeName() {
+function changeName() {
   const data = { name: me.name };
 
-  if (!(await changeNameDialog.open(data))) {
-    return;
-  }
+  changeNameDialog.open(data).keepOpenOnFail(async () => {
+    if (data.name === me.name) {
+      return;
+    }
 
-  if (data.name === me.name) {
-    return;
-  }
+    const { name } = await api("/users/me/name", {
+      method: "PUT",
+      body: { name: data.name },
+    });
 
-  const { name } = await api("/users/me/name", {
-    method: "PUT",
-    body: { name: data.name },
+    me.name = name;
   });
-
-  me.name = name;
 }
 </script>
 

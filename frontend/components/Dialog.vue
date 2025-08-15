@@ -85,6 +85,40 @@ const context = computed<DialogContext<Data> | undefined>(
 function handleClose(event: Event) {
   controller.state?.handleClose(event);
 }
+
+const loading = ref(false);
+
+async function handleSubmit(event: Event) {
+  if (!controller.state?.keepOpenOnFail) {
+    return;
+  }
+
+  // Don't let the dialog close until the controller's callback succeeds.
+  event.preventDefault();
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
+  const dialog = dialogRef.value!;
+
+  loading.value = true;
+
+  try {
+    await controller.state.keepOpenOnFail(dialog.returnValue);
+  } finally {
+    loading.value = false;
+  }
+
+  dialog.close();
+}
+
+function handleBackdropClick() {
+  // Don't close the dialog while it loads because it would be unclear to the
+  // user whether the loading was canceled.
+  if (loading.value) {
+    return;
+  }
+
+  void cancel();
+}
 </script>
 
 <template>
@@ -92,25 +126,33 @@ function handleClose(event: Event) {
     <dialog
       ref="dialog"
       class="dialog"
-      closedby="closerequest"
+      :closedby="loading ? 'none' : 'closerequest'"
       aria-modal="true"
       @close="handleClose"
     >
       <div class="dialog-scrollable-content">
-        <div class="dialog-backdrop" @click="cancel"></div>
+        <div class="dialog-backdrop" @click="handleBackdropClick"></div>
 
-        <form class="dialog-form panel frosted" method="dialog">
-          <h2 class="dialog-heading">
-            <slot name="heading" v-bind="context"></slot>
-          </h2>
+        <form
+          class="dialog-form panel frosted"
+          method="dialog"
+          @submit="handleSubmit"
+        >
+          <LoadingIndicator v-if="loading" />
 
-          <div class="dialog-content">
-            <slot v-bind="context"></slot>
-          </div>
+          <fieldset :disabled="loading">
+            <h2 class="dialog-heading">
+              <slot name="heading" v-bind="context"></slot>
+            </h2>
 
-          <div class="dialog-actions">
-            <slot name="actions" v-bind="context"></slot>
-          </div>
+            <div class="dialog-content">
+              <slot v-bind="context"></slot>
+            </div>
+
+            <div class="dialog-actions">
+              <slot name="actions" v-bind="context"></slot>
+            </div>
+          </fieldset>
         </form>
       </div>
     </dialog>

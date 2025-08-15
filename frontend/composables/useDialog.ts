@@ -12,11 +12,32 @@ export interface DialogControllerState<Data> {
    */
   readonly data: Data;
 
+  /** The last value passed to {@link DialogOpenResult.keepOpenOnFail}. */
+  keepOpenOnFail?: false | ((returnValue: string) => void | Promise<void>);
+
   /** Handles the dialog element's `close` event. */
   handleClose(event: Event): void;
 
   /** The currently open dialog element if it's mounted yet. */
   element?: HTMLDialogElement;
+}
+
+export interface DialogOpenResult {
+  /**
+   * If a function is given, submitting the dialog calls the function with the
+   * dialog's return value. The dialog shows a loading indicator until the
+   * function completes. If it succeeds, the dialog closes. If it fails, the
+   * dialog stays open, letting the user resubmit.
+   *
+   * If `false` is given, this returns the dialog's return value once the dialog
+   * is closed.
+   *
+   * Calling this is the only way to obtain a dialog's return value because that
+   * forces an explicit decision of whether to keep the dialog open on failure.
+   * Otherwise, forgetting to make that decision could result in subtle UX bugs.
+   */
+  keepOpenOnFail(value: false): Promise<string>;
+  keepOpenOnFail(value: (returnValue: string) => void | Promise<void>): void;
 }
 
 /**
@@ -58,11 +79,18 @@ export class DialogController<Data> {
    */
   open(
     ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
-  ): Promise<string> {
-    return new Promise<string>((resolve) => {
+  ): DialogOpenResult {
+    if (this.state !== undefined) {
+      throw new Error("Can't open a dialog that's already open");
+    }
+
+    // Unlike `this.state`, this remains undefined after reopening the dialog.
+    let currentState: DialogControllerState<Data> | undefined;
+
+    const returnValue = new Promise<string>((resolve) => {
       if (this.scope === undefined) {
         throw new Error(
-          "Cannot open dialog since no `Dialog` component is using it",
+          "Can't open dialog since no `Dialog` component is using it",
         );
       }
 
@@ -73,9 +101,37 @@ export class DialogController<Data> {
           resolve((event.target as HTMLDialogElement).returnValue);
         },
       };
+
+      // Store the current state after it has become reactive from being set
+      // into `this.state`'s ref.
+      currentState = this.state;
     }).finally(() => {
-      this.state = undefined;
+      this.state = currentState = undefined;
     });
+
+    return {
+      // @ts-expect-error TS can't prove this returns the correct overload type,
+      // but it does.
+      async keepOpenOnFail(keepOpenOnFail) {
+        if (currentState === undefined) {
+          throw new Error("Can't use `keepOpenOnFail` after dialog has closed");
+        }
+
+        if (currentState.keepOpenOnFail !== undefined) {
+          throw new Error(
+            "`keepOpenOnFail` can only be called once after opening a dialog",
+          );
+        }
+
+        currentState.keepOpenOnFail = keepOpenOnFail;
+
+        // Only return the dialog's return value if there isn't a callback to
+        // receive it.
+        if (keepOpenOnFail === false) {
+          return returnValue;
+        }
+      },
+    };
   }
 
   /**
