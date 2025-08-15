@@ -36,8 +36,22 @@ export interface DialogOpenResult {
    * forces an explicit decision of whether to keep the dialog open on failure.
    * Otherwise, forgetting to make that decision could result in subtle UX bugs.
    */
-  keepOpenOnFail(value: false): Promise<string>;
-  keepOpenOnFail(value: (returnValue: string) => void | Promise<void>): void;
+  keepOpenOnFail(onSubmit: (returnValue: string) => void | Promise<void>): void;
+
+  /**
+   * If a function is given, submitting the dialog calls the function with the
+   * dialog's return value. The dialog shows a loading indicator until the
+   * function completes. If it succeeds, the dialog closes. If it fails, the
+   * dialog stays open, letting the user resubmit.
+   *
+   * If `false` is given, this returns the dialog's return value once the dialog
+   * is closed.
+   *
+   * Calling this is the only way to obtain a dialog's return value because that
+   * forces an explicit decision of whether to keep the dialog open on failure.
+   * Otherwise, forgetting to make that decision could result in subtle UX bugs.
+   */
+  keepOpenOnFail(onSubmit: false): Promise<string>;
 }
 
 /**
