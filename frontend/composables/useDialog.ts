@@ -1,7 +1,7 @@
 import type { EffectScope, WatchHandle } from "vue";
 
 export default function useDialog<Data = undefined>(): DialogController<Data> {
-  // @ts-expect-error `DialogControllers` can only be instantiated here.
+  // @ts-expect-error `DialogController`s can only be instantiated here.
   return new DialogController();
 }
 
