@@ -190,7 +190,7 @@ impl FromStr for UserEmail {
 }
 
 /// Normalizes an email address's user portion by removing unnecessary quotes and escapes.
-fn normalize_email_address_user(user: &str) -> Cow<str> {
+fn normalize_email_address_user(user: &str) -> Cow<'_, str> {
     let Some(unquoted_user) = user
         .strip_prefix('"')
         .and_then(|user| user.strip_suffix('"'))

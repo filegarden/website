@@ -5,7 +5,7 @@ rustflags = [
     "-Ctarget-cpu=native",
 
     # ==== Lints ====
-    # Last updated for Clippy version: 1.85
+    # Last updated for Clippy version: 1.89
 
     # Enforces soundness.
     "-Dunsafe_code",
@@ -87,6 +87,7 @@ rustflags = [
     "-Wclippy::nonstandard_macro_braces",
     "-Wclippy::option_as_ref_cloned",
     "-Wclippy::option_option",
+    "-Wclippy::precedence_bits",
     "-Wclippy::pub_without_shorthand",
     "-Wclippy::range_minus_one",
     "-Wclippy::range_plus_one",
@@ -105,6 +106,7 @@ rustflags = [
     "-Wclippy::type_repetition_in_bounds",
     "-Wclippy::uninlined_format_args",
     "-Wclippy::unnecessary_join",
+    "-Wclippy::unnecessary_semicolon",
     "-Wclippy::unnested_or_patterns",
     "-Wclippy::unseparated_literal_suffix",
     "-Wclippy::unused_result_ok",
