@@ -28,7 +28,36 @@ async function handleSubmit(event: SubmitEvent) {
     return;
   }
 
-  await loading.value.during(() => actionPromise);
+  let initialActiveElement =
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The form must be mounted because it was submitted.
+    form.value!.contains(document.activeElement) &&
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : undefined;
+
+  function discardInitialActiveElement() {
+    initialActiveElement = undefined;
+  }
+
+  if (initialActiveElement) {
+    // Let the user change focus intentionally.
+    document.addEventListener("focus", discardInitialActiveElement, {
+      capture: true,
+      once: true,
+    });
+  }
+
+  try {
+    await loading.value.during(() => actionPromise);
+  } finally {
+    if (initialActiveElement) {
+      document.removeEventListener("focus", discardInitialActiveElement);
+
+      // Refocus the initial active element since loading blurs it by disabling
+      // the form.
+      initialActiveElement.focus();
+    }
+  }
 }
 </script>
 
