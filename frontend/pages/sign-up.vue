@@ -15,7 +15,6 @@ const page = ref<
 // sign-up process.
 useLeaveConfirmation(() => page.value === "code");
 
-const loading = ref(false);
 const email = useSignInEmail();
 const acceptTerms = ref(false);
 const captchaToken = ref("");
@@ -45,23 +44,17 @@ watch(captchaToken, async () => {
 const emailCookie = useSignUpEmailCookie();
 
 async function submitSignUp() {
-  loading.value = true;
+  await api("/email-verification", {
+    method: "POST",
+    body: {
+      acceptTerms: acceptTerms.value,
+      email: email.value,
+      captchaToken: captchaToken.value,
+    },
+  });
 
-  try {
-    await api("/email-verification", {
-      method: "POST",
-      body: {
-        acceptTerms: acceptTerms.value,
-        email: email.value,
-        captchaToken: captchaToken.value,
-      },
-    });
-
-    page.value = "verification-sent";
-    emailCookie.value = email.value;
-  } finally {
-    loading.value = false;
-  }
+  page.value = "verification-sent";
+  emailCookie.value = email.value;
 }
 
 function openCodePage() {
@@ -115,33 +108,27 @@ watchEffect(() => {
   }
 });
 
-async function submitCode(event: Event) {
-  loading.value = true;
+async function submitCode(event: SubmitEvent) {
+  await api("/email-verification", {
+    query: {
+      email: email.value,
+      code: code.value.toUpperCase(),
+    },
 
-  try {
-    await api("/email-verification", {
-      query: {
-        email: email.value,
-        code: code.value.toUpperCase(),
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        isCodeWrong.value = true;
+
+        // Wait for the form to be enabled. (`nextTick` waits long enough for
+        // the custom validity to update, but not for the form to be enabled.)
+        setTimeout(() => {
+          (event.target as HTMLFormElement).reportValidity();
+        });
       },
+    },
+  });
 
-      catchApiErrors: {
-        RESOURCE_NOT_FOUND: () => {
-          isCodeWrong.value = true;
-
-          // Wait for the form to be enabled. (`nextTick` waits long enough for
-          // the custom validity to update, but not for the form to be enabled.)
-          setTimeout(() => {
-            (event.target as HTMLFormElement).reportValidity();
-          });
-        },
-      },
-    });
-
-    page.value = "final";
-  } finally {
-    loading.value = false;
-  }
+  page.value = "final";
 }
 
 function tryAgain() {
@@ -160,64 +147,52 @@ const password = ref("");
 const confirmPassword = ref("");
 
 async function completeSignUp() {
-  loading.value = true;
+  const user = await api("/users", {
+    method: "POST",
+    body: {
+      email: email.value,
+      emailVerificationCode: code.value.toUpperCase(),
+      name: name.value,
+      password: password.value,
+    },
 
-  try {
-    const user = await api("/users", {
-      method: "POST",
-      body: {
-        email: email.value,
-        emailVerificationCode: code.value.toUpperCase(),
-        name: name.value,
-        password: password.value,
+    catchApiErrors: {
+      EMAIL_VERIFICATION_CODE_WRONG: () => {
+        page.value = "failed";
       },
+    },
+  });
 
-      catchApiErrors: {
-        EMAIL_VERIFICATION_CODE_WRONG: () => {
-          page.value = "failed";
-        },
-      },
-    });
+  setMe(user);
 
-    setMe(user);
-
-    await useRedirectIfSignedIn();
-  } finally {
-    loading.value = false;
-  }
+  await useRedirectIfSignedIn();
 }
 </script>
 
 <template>
   <SmallPanelLayout :class="`page-${page}`">
-    <LoadingIndicator
-      v-if="loading || codeResponse.status.value === 'pending'"
-    />
-
     <h1 v-if="page === 'email' || page === 'verification-sent'">Sign Up</h1>
 
-    <form v-if="page === 'email'" @submit.prevent="openCaptchaPage">
-      <fieldset :disabled="loading">
-        <InputText
-          v-model="email"
-          label="Email"
-          type="email"
-          maxlength="254"
-          required
-          autofocus
-        />
+    <Form v-if="page === 'email'" :action="openCaptchaPage">
+      <InputText
+        v-model="email"
+        label="Email"
+        type="email"
+        maxlength="254"
+        required
+        autofocus
+      />
 
-        <InputCheckbox v-model="acceptTerms" required>
-          <template #label>
-            I agree to the
-            <A href="/terms" target="_blank">terms of service</A> and
-            <A href="/privacy" target="_blank">privacy notice</A>.
-          </template>
-        </InputCheckbox>
+      <InputCheckbox v-model="acceptTerms" required>
+        <template #label>
+          I agree to the
+          <A href="/terms" target="_blank">terms of service</A> and
+          <A href="/privacy" target="_blank">privacy notice</A>.
+        </template>
+      </InputCheckbox>
 
-        <Button type="submit">Create Account</Button>
-      </fieldset>
-    </form>
+      <Button type="submit">Create Account</Button>
+    </Form>
 
     <div v-else-if="page === 'captcha'" class="captcha-wrapper">
       <Captcha v-model="captchaToken" />
@@ -236,63 +211,61 @@ async function completeSignUp() {
         <strong>{{ email }}</strong>
       </p>
 
-      <form class="code-form" @submit.prevent="submitCode">
-        <fieldset :disabled="loading">
-          <InputShortCode
-            v-model="code"
-            aria-label="Verification Code"
-            required
-            autofocus
-            :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"
-          />
+      <Form class="code-form" :action="submitCode">
+        <InputShortCode
+          v-model="code"
+          aria-label="Verification Code"
+          required
+          autofocus
+          :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"
+        />
 
-          <Button type="submit">Verify</Button>
-        </fieldset>
-      </form>
+        <Button type="submit">Verify</Button>
+      </Form>
     </template>
 
     <template v-else-if="page === 'final'">
-      <p class="intro">One last step...</p>
+      <LoadingIndicator v-if="codeResponse.status.value === 'pending'" />
 
-      <form v-if="code" @submit.prevent="completeSignUp">
-        <fieldset :disabled="loading">
-          <InputText label="Email" type="email" disabled :model-value="email" />
-          <InputText
-            v-model="name"
-            label="Display Name"
-            minlength="1"
-            maxlength="64"
-            required
-            autofocus
-            autocomplete="username"
-          />
-          <InputText
-            v-model="password"
-            label="Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autocomplete="new-password"
-          />
-          <InputText
-            v-model="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autocomplete="new-password"
-            :custom-validity="
-              confirmPassword && password !== confirmPassword
-                ? 'Please make sure both passwords match.'
-                : ''
-            "
-          />
+      <Form v-else :action="completeSignUp">
+        <p class="intro">One last step...</p>
 
-          <Button type="submit">Create Account</Button>
-        </fieldset>
-      </form>
+        <InputText label="Email" type="email" disabled :model-value="email" />
+        <InputText
+          v-model="name"
+          label="Display Name"
+          minlength="1"
+          maxlength="64"
+          required
+          autofocus
+          autocomplete="username"
+        />
+        <InputText
+          v-model="password"
+          label="Password"
+          type="password"
+          minlength="8"
+          maxlength="256"
+          required
+          autocomplete="new-password"
+        />
+        <InputText
+          v-model="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          minlength="8"
+          maxlength="256"
+          required
+          autocomplete="new-password"
+          :custom-validity="
+            confirmPassword && password !== confirmPassword
+              ? 'Please make sure both passwords match.'
+              : ''
+          "
+        />
+
+        <Button type="submit">Create Account</Button>
+      </Form>
     </template>
 
     <p v-else-if="page === 'failed'" class="distinguished">

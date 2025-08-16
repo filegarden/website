@@ -86,21 +86,14 @@ function handleClose(event: Event) {
   controller.state?.handleClose(event);
 }
 
-const loading = ref(false);
+const loading = useLoading();
 
-async function handleSubmit(event: SubmitEvent) {
-  if (!controller.state?.keepOpenOnFail) {
-    return;
-  }
-
+async function submitDialog(event: SubmitEvent) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
   const dialog = dialogRef.value!;
 
-  // Don't let the dialog close until the controller's callback succeeds.
-  event.preventDefault();
-
-  // Use the submit button's value as the dialog's return value since that
-  // default behavior was prevented above.
+  // Use the submit button's value as the dialog's return value since the submit
+  // event's default behavior was prevented.
   if (
     event.submitter instanceof HTMLButtonElement &&
     event.submitter.value !== ""
@@ -108,13 +101,13 @@ async function handleSubmit(event: SubmitEvent) {
     dialog.returnValue = event.submitter.value;
   }
 
-  loading.value = true;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This was already checked in the template before passing `submitDialog`.
+  const handleSubmit = controller.state!.keepOpenOnFail as Exclude<
+    NonNullable<typeof controller.state>["keepOpenOnFail"],
+    false | undefined
+  >;
 
-  try {
-    await controller.state.keepOpenOnFail(dialog.returnValue);
-  } finally {
-    loading.value = false;
-  }
+  await handleSubmit(dialog.returnValue);
 
   dialog.close();
 }
@@ -135,36 +128,32 @@ function handleBackdropClick() {
     <dialog
       ref="dialog"
       class="dialog"
-      :class="{ loading }"
-      :closedby="loading ? 'none' : 'closerequest'"
+      :class="{ loading: loading.value }"
+      :closedby="loading.value ? 'none' : 'closerequest'"
       aria-modal="true"
       @close="handleClose"
     >
       <div class="dialog-scrollable-content">
         <div class="dialog-backdrop" @click="handleBackdropClick"></div>
 
-        <!-- @vue-expect-error vuejs/core#4098 prevents using `SubmitEvent`. -->
-        <form
+        <Form
+          v-model:loading="loading"
           class="dialog-form panel frosted"
           method="dialog"
-          @submit="handleSubmit"
+          :action="controller.state?.keepOpenOnFail ? submitDialog : undefined"
         >
-          <LoadingIndicator v-if="loading" />
+          <h2 class="dialog-heading">
+            <slot name="heading" v-bind="context"></slot>
+          </h2>
 
-          <fieldset :disabled="loading">
-            <h2 class="dialog-heading">
-              <slot name="heading" v-bind="context"></slot>
-            </h2>
+          <div class="dialog-content">
+            <slot v-bind="context"></slot>
+          </div>
 
-            <div class="dialog-content">
-              <slot v-bind="context"></slot>
-            </div>
-
-            <div class="dialog-actions">
-              <slot name="actions" v-bind="context"></slot>
-            </div>
-          </fieldset>
-        </form>
+          <div class="dialog-actions">
+            <slot name="actions" v-bind="context"></slot>
+          </div>
+        </Form>
       </div>
     </dialog>
   </Teleport>

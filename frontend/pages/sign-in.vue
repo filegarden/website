@@ -3,7 +3,6 @@ useTitle("Sign In");
 
 const redirecting = await useRedirectIfSignedIn();
 
-const loading = ref(false);
 const email = useSignInEmail();
 const password = ref("");
 
@@ -13,36 +12,30 @@ watch([email, password], () => {
   areCredentialsWrong.value = false;
 });
 
-async function submitSignIn(event: Event) {
-  loading.value = true;
+async function submitSignIn(event: SubmitEvent) {
+  const session = await api("/sessions", {
+    method: "POST",
+    body: {
+      email: email.value,
+      password: password.value,
+    },
 
-  try {
-    const session = await api("/sessions", {
-      method: "POST",
-      body: {
-        email: email.value,
-        password: password.value,
+    catchApiErrors: {
+      USER_CREDENTIALS_WRONG: () => {
+        areCredentialsWrong.value = true;
+
+        // Wait for the form to be enabled. (`nextTick` waits long enough for
+        // the custom validity to update, but not for the form to be enabled.)
+        setTimeout(() => {
+          (event.target as HTMLFormElement).reportValidity();
+        });
       },
+    },
+  });
 
-      catchApiErrors: {
-        USER_CREDENTIALS_WRONG: () => {
-          areCredentialsWrong.value = true;
+  setMe(session.user);
 
-          // Wait for the form to be enabled. (`nextTick` waits long enough for
-          // the custom validity to update, but not for the form to be enabled.)
-          setTimeout(() => {
-            (event.target as HTMLFormElement).reportValidity();
-          });
-        },
-      },
-    });
-
-    setMe(session.user);
-
-    await useRedirectIfSignedIn();
-  } finally {
-    loading.value = false;
-  }
+  await useRedirectIfSignedIn();
 }
 </script>
 
@@ -54,44 +47,40 @@ async function submitSignIn(event: Event) {
   </SmallPanelLayout>
 
   <SmallPanelLayout v-else>
-    <LoadingIndicator v-if="loading" />
-
     <h1>Sign In</h1>
 
-    <form @submit.prevent="submitSignIn">
-      <fieldset :disabled="loading">
-        <InputText
-          v-model="email"
-          label="Email"
-          type="email"
-          maxlength="254"
-          required
-          autofocus
-          :custom-validity="
-            areCredentialsWrong ? 'Incorrect email or password.' : ''
-          "
-        />
+    <Form :action="submitSignIn">
+      <InputText
+        v-model="email"
+        label="Email"
+        type="email"
+        maxlength="254"
+        required
+        autofocus
+        :custom-validity="
+          areCredentialsWrong ? 'Incorrect email or password.' : ''
+        "
+      />
 
-        <InputText
-          v-model="password"
-          label="Password"
-          type="password"
-          maxlength="256"
-          required
-          :custom-validity="
-            areCredentialsWrong ? 'Incorrect email or password.' : ''
-          "
-        >
-          <template #after>
-            <div class="reset-password-link-wrapper">
-              <A href="/reset-password">Forgot password?</A>
-            </div>
-          </template>
-        </InputText>
+      <InputText
+        v-model="password"
+        label="Password"
+        type="password"
+        maxlength="256"
+        required
+        :custom-validity="
+          areCredentialsWrong ? 'Incorrect email or password.' : ''
+        "
+      >
+        <template #after>
+          <div class="reset-password-link-wrapper">
+            <A href="/reset-password">Forgot password?</A>
+          </div>
+        </template>
+      </InputText>
 
-        <Button type="submit">Sign In</Button>
-      </fieldset>
-    </form>
+      <Button type="submit">Sign In</Button>
+    </Form>
 
     <template #bottom-text>
       <p>Don't have an account? <A href="/sign-up" prefetch>Sign up</A></p>

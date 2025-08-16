@@ -130,6 +130,10 @@ export default withNuxt([
           element,
           message: "Use our `A` component instead.",
         })),
+        {
+          element: "form",
+          message: "Use our `Form` component instead.",
+        },
       ],
       "vue/no-setup-props-reactivity-loss": "error",
       "vue/no-static-inline-styles": "error",

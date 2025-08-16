@@ -24,12 +24,10 @@ async function handleAccountMenuBlur() {
   isAccountMenuOpen.value = false;
 }
 
-const signOutLoading = ref(false);
+const loading = useLoading();
 
 async function signOut() {
-  signOutLoading.value = true;
-
-  try {
+  await loading.during(async () => {
     await api("/users/me/sessions/current", {
       method: "DELETE",
 
@@ -39,16 +37,14 @@ async function signOut() {
     });
 
     setMe(null);
-  } finally {
-    signOutLoading.value = false;
-  }
+  });
 }
 </script>
 
 <template>
   <header class="default-header">
     <nav class="default-header-nav panel frosted">
-      <LoadingIndicator v-if="signOutLoading" />
+      <LoadingIndicator v-if="loading.value" />
 
       <NavLogo class="logo" />
 

@@ -6,27 +6,20 @@ const page = ref<"email" | "requested" | "password" | "failed" | "done">(
   route.query.token === undefined ? "email" : "password",
 );
 
-const loading = ref(false);
 const email = useSignInEmail();
 
 const captchaToken = ref("");
 
 async function requestPasswordReset() {
-  loading.value = true;
+  await api("/password-reset", {
+    method: "POST",
+    body: {
+      email: email.value,
+      captchaToken: captchaToken.value,
+    },
+  });
 
-  try {
-    await api("/password-reset", {
-      method: "POST",
-      body: {
-        email: email.value,
-        captchaToken: captchaToken.value,
-      },
-    });
-
-    page.value = "requested";
-  } finally {
-    loading.value = false;
-  }
+  page.value = "requested";
 }
 
 const passwordResetResponse = await useApi("/password-reset", {
@@ -77,59 +70,47 @@ const confirmPassword = ref("");
 const userId = ref<string>();
 
 async function submitNewPassword() {
-  loading.value = true;
+  const passwordResponse = await api("/password-reset/password", {
+    method: "POST",
+    query: { token: route.query.token },
+    body: { password: password.value },
 
-  try {
-    const passwordResponse = await api("/password-reset/password", {
-      method: "POST",
-      query: { token: route.query.token },
-      body: { password: password.value },
-
-      catchApiErrors: {
-        RESOURCE_NOT_FOUND: () => {
-          page.value = "failed";
-        },
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        page.value = "failed";
       },
-    });
+    },
+  });
 
-    setMe(passwordResponse.user);
-    userId.value = passwordResponse.user.id;
+  setMe(passwordResponse.user);
+  userId.value = passwordResponse.user.id;
 
-    page.value = "done";
-  } finally {
-    loading.value = false;
-  }
+  page.value = "done";
 }
 </script>
 
 <template>
   <SmallPanelLayout :class="`page-${page}`">
-    <LoadingIndicator
-      v-if="loading || passwordResetResponse.status.value === 'pending'"
-    />
-
     <h1 v-if="page === 'email' || page === 'password' || page === 'requested'">
       Reset Password
     </h1>
 
-    <form v-if="page === 'email'" @submit.prevent="requestPasswordReset">
-      <fieldset :disabled="loading">
-        <InputText
-          v-model="email"
-          label="Email"
-          type="email"
-          maxlength="254"
-          required
-          autofocus
-        />
+    <Form v-if="page === 'email'" :action="requestPasswordReset">
+      <InputText
+        v-model="email"
+        label="Email"
+        type="email"
+        maxlength="254"
+        required
+        autofocus
+      />
 
-        <Captcha v-model="captchaToken" />
+      <Captcha v-model="captchaToken" />
 
-        <Button type="submit" :disabled="!captchaToken">
-          Request Password Reset
-        </Button>
-      </fieldset>
-    </form>
+      <Button type="submit" :disabled="!captchaToken">
+        Request Password Reset
+      </Button>
+    </Form>
 
     <p v-else-if="page === 'requested'" class="requested-info">
       To continue, check the email sent to<br />
@@ -137,40 +118,39 @@ async function submitNewPassword() {
     </p>
 
     <template v-else-if="page === 'password'">
-      <form
-        v-if="passwordResetResponse.status.value === 'success'"
-        @submit.prevent="submitNewPassword"
-      >
-        <fieldset :disabled="loading">
-          <InputText label="Email" type="email" disabled :model-value="email" />
-          <InputText
-            v-model="password"
-            label="New Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autofocus
-            autocomplete="new-password"
-          />
-          <InputText
-            v-model="confirmPassword"
-            label="Confirm Password"
-            type="password"
-            minlength="8"
-            maxlength="256"
-            required
-            autocomplete="new-password"
-            :custom-validity="
-              confirmPassword && password !== confirmPassword
-                ? 'Please make sure both passwords match.'
-                : ''
-            "
-          />
+      <LoadingIndicator
+        v-if="passwordResetResponse.status.value === 'pending'"
+      />
 
-          <Button type="submit">Change Password</Button>
-        </fieldset>
-      </form>
+      <Form v-else :action="submitNewPassword">
+        <InputText label="Email" type="email" disabled :model-value="email" />
+        <InputText
+          v-model="password"
+          label="New Password"
+          type="password"
+          minlength="8"
+          maxlength="256"
+          required
+          autofocus
+          autocomplete="new-password"
+        />
+        <InputText
+          v-model="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          minlength="8"
+          maxlength="256"
+          required
+          autocomplete="new-password"
+          :custom-validity="
+            confirmPassword && password !== confirmPassword
+              ? 'Please make sure both passwords match.'
+              : ''
+          "
+        />
+
+        <Button type="submit">Change Password</Button>
+      </Form>
     </template>
 
     <p v-else-if="page === 'failed'" class="distinguished">

@@ -24,28 +24,21 @@ const { data: email } = await useApi("/email-verification", {
 
 const isSameBrowser = computed(() => email.value === emailCookie.value);
 
-const loading = ref(false);
 const code = ref<string>();
 
 async function generateCode() {
-  loading.value = true;
+  const codeResponse = await api("/email-verification/code", {
+    method: "POST",
+    query: { token: route.query.token },
 
-  try {
-    const codeResponse = await api("/email-verification/code", {
-      method: "POST",
-      query: { token: route.query.token },
-
-      catchApiErrors: {
-        RESOURCE_NOT_FOUND: () => {
-          email.value = "";
-        },
+    catchApiErrors: {
+      RESOURCE_NOT_FOUND: () => {
+        email.value = "";
       },
-    });
+    },
+  });
 
-    code.value = codeResponse.code;
-  } finally {
-    loading.value = false;
-  }
+  code.value = codeResponse.code;
 }
 
 function handleCodeInputClick(
@@ -57,52 +50,44 @@ function handleCodeInputClick(
 
 <template>
   <SmallPanelLayout>
-    <LoadingIndicator v-if="loading" />
-
-    <template v-if="email">
-      <template v-if="code">
-        <p>
-          Use this code to verify your email<br />
-          <strong>{{ email }}</strong>
-        </p>
-
-        <div class="distinguished">
-          <InputShortCode
-            aria-label="Verification Code"
-            readonly
-            autofocus
-            :model-value="code"
-            @click="handleCodeInputClick"
-          />
-        </div>
-      </template>
-
-      <template v-else>
-        <p>
-          {{
-            isSameBrowser
-              ? "Click the button below to verify your email"
-              : "Generate a code to verify your email"
-          }}<br />
-          <strong>{{ email }}</strong>
-        </p>
-
-        <fieldset class="distinguished" :disabled="loading">
-          <Button
-            v-if="isSameBrowser"
-            :href="`/sign-up?token=${route.query.token}`"
-          >
-            Verify
-          </Button>
-
-          <Button v-else @click="generateCode">Get Verification Code</Button>
-        </fieldset>
-      </template>
-    </template>
-
-    <p v-else class="distinguished">
+    <p v-if="!email" class="distinguished">
       This email verification link is invalid or expired.
     </p>
+
+    <template v-else-if="code">
+      <p>
+        Use this code to verify your email<br />
+        <strong>{{ email }}</strong>
+      </p>
+
+      <div class="distinguished">
+        <InputShortCode
+          aria-label="Verification Code"
+          readonly
+          autofocus
+          :model-value="code"
+          @click="handleCodeInputClick"
+        />
+      </div>
+    </template>
+
+    <template v-else-if="isSameBrowser">
+      <p>
+        Click the button below to verify your email<br />
+        <strong>{{ email }}</strong>
+      </p>
+
+      <Button :href="`/sign-up?token=${route.query.token}`">Verify</Button>
+    </template>
+
+    <Form v-else :action="generateCode">
+      <p>
+        Generate a code to verify your email<br />
+        <strong>{{ email }}</strong>
+      </p>
+
+      <Button type="submit">Get Verification Code</Button>
+    </Form>
 
     <template v-if="!code" #bottom-text>
       <p v-if="email">
