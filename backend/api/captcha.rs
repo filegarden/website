@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 /// The mailbox automated emails are sent from.
 static SECRET_KEY: LazyLock<String> = LazyLock::new(|| {

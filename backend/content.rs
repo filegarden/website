@@ -5,13 +5,13 @@ use std::borrow::Cow;
 use axum::{
     extract::Request,
     http::{
-        header::{ACCESS_CONTROL_ALLOW_ORIGIN, ALLOW, CONTENT_SECURITY_POLICY},
         Method, StatusCode,
+        header::{ACCESS_CONTROL_ALLOW_ORIGIN, ALLOW, CONTENT_SECURITY_POLICY},
     },
 };
 use percent_encoding::{percent_decode_str, utf8_percent_encode};
 
-use crate::{percent_encoding::COMPONENT_IGNORING_SLASH, response::Response, WEBSITE_ORIGIN};
+use crate::{WEBSITE_ORIGIN, percent_encoding::COMPONENT_IGNORING_SLASH, response::Response};
 
 /// The start of a file ID query parameter.
 const FILE_ID_QUERY_PREFIX: &str = "_id=";

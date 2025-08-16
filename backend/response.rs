@@ -3,9 +3,8 @@
 use axum::{
     body::Body,
     http::{
-        self,
+        self, HeaderName, HeaderValue, StatusCode,
         header::{CONTENT_TYPE, LOCATION},
-        HeaderName, HeaderValue, StatusCode,
     },
 };
 

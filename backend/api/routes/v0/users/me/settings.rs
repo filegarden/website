@@ -5,7 +5,7 @@ use axum_macros::debug_handler;
 use serde::Serialize;
 
 use crate::{
-    api::{self, extract::AuthToken, response::Response, Json},
+    api::{self, Json, extract::AuthToken, response::Response},
     db::{self, TxResult},
 };
 

@@ -10,11 +10,10 @@ use serde_with::{DeserializeFromStr, SerializeDisplay};
 
 use crate::{
     api::{
-        self,
+        self, Json,
         cookie::{CookieWrapper, SessionCookie},
         extract::{AuthToken, Path},
         response::Response,
-        Json,
     },
     db::{self, TxError, TxResult},
     id::Id,

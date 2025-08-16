@@ -2,8 +2,8 @@
 
 use std::borrow::Cow;
 
-use axum::http::{header::SET_COOKIE, HeaderName};
-use cookie::{time::Duration, Cookie, SameSite};
+use axum::http::{HeaderName, header::SET_COOKIE};
+use cookie::{Cookie, SameSite, time::Duration};
 use derive_more::{AsMut, AsRef, From};
 
 use crate::WEBSITE_ORIGIN;

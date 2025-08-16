@@ -5,9 +5,9 @@ use std::{env::VarError, sync::LazyLock};
 use askama::Template;
 use html2text::render::text_renderer::TrivialDecorator;
 use lettre::{
+    AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor,
     message::{Mailbox, MultiPart},
     transport::smtp::{authentication::Credentials, extension::ClientId},
-    AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor,
 };
 
 use crate::WEBSITE_ORIGIN;

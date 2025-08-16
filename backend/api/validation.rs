@@ -91,11 +91,11 @@ impl TryFrom<bool> for True {
     type Error = TrueError;
 
     fn try_from(value: bool) -> Result<Self, Self::Error> {
-        if value {
-            Ok(Self)
-        } else {
-            Err(TrueError)
+        if !value {
+            return Err(TrueError);
         }
+
+        Ok(Self)
     }
 }
 
@@ -243,7 +243,6 @@ mod tests {
             "\"user-with-unbalanced\"quotes\"@example.com",
             "user-with\\backslash@example.com",
             "user-with-unquoted-escaped\\ special-character@example.com",
-
             // While technically allowed by RFC 5322, the below forms aren't allowed by RFC 5321 and
             // aren't required by any standards-compliant mail server, so there's no reason to allow
             // them. Users submitting these are most likely trying to break things.

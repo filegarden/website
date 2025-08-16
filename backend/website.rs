@@ -6,8 +6,8 @@ use axum::{
     body::Body,
     extract::Request,
     http::{
-        uri::{Authority, Scheme},
         StatusCode,
+        uri::{Authority, Scheme},
     },
     response::{IntoResponse, Response},
 };

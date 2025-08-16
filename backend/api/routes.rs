@@ -3,8 +3,8 @@
 use std::sync::LazyLock;
 
 use axum::{
-    routing::{delete, get, post, put},
     Router,
+    routing::{delete, get, post, put},
 };
 
 use crate::api;

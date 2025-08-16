@@ -5,7 +5,7 @@ use std::{
     str::FromStr,
 };
 
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
+use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use derive_more::derive::{AsMut, AsRef, Deref, DerefMut};
 use rand::RngCore;
 use serde_with::{DeserializeFromStr, SerializeDisplay};

@@ -4,12 +4,12 @@ use std::sync::LazyLock;
 
 use axum::{
     extract::Request,
-    http::{header::HOST, StatusCode},
+    http::{StatusCode, header::HOST},
     response::{IntoResponse, Response},
 };
 use axum_macros::debug_handler;
 
-use crate::{api, content, website, CONTENT_ORIGIN, WEBSITE_ORIGIN};
+use crate::{CONTENT_ORIGIN, WEBSITE_ORIGIN, api, content, website};
 
 /// The URI host for user-uploaded content.
 static CONTENT_HOST: LazyLock<&str> = LazyLock::new(|| host_from_origin(&CONTENT_ORIGIN));

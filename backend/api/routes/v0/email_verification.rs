@@ -6,18 +6,17 @@ use lettre::message::Mailbox;
 use serde::{Deserialize, Serialize};
 
 use crate::{
+    WEBSITE_ORIGIN,
     api::{
-        self, captcha,
+        self, Json, captcha,
         extract::Query,
         response::Response,
         validation::{CaptchaToken, EmailVerificationCode, True, UserEmail},
-        Json,
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxError, TxResult},
     email::{EmailTakenMessage, MessageTemplate, VerificationMessage},
     id::Token,
-    WEBSITE_ORIGIN,
 };
 
 pub(crate) mod code;

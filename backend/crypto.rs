@@ -1,14 +1,14 @@
 //! Utilities for cryptographic operations.
 
 use argon2::{
-    password_hash::{Salt, SaltString},
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
+    password_hash::{Salt, SaltString},
 };
 use rand::{
-    distr::{Distribution, Uniform},
     RngCore,
+    distr::{Distribution, Uniform},
 };
-use ring::digest::{digest, Digest, SHA256};
+use ring::digest::{Digest, SHA256, digest};
 
 /// Hashes the input using SHA-256.
 ///

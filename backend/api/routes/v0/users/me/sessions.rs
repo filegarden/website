@@ -6,10 +6,9 @@ use serde::Serialize;
 
 use crate::{
     api::{
-        self,
+        self, Json,
         extract::AuthToken,
-        response::{body::Session, Response},
-        Json,
+        response::{Response, body::Session},
     },
     db::{self, TxError, TxResult},
     id::Id,

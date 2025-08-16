@@ -6,12 +6,11 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     api::{
-        self,
+        self, Json,
         cookie::{CookieWrapper, SessionCookie},
         db_helpers::create_session,
-        response::{body::User, Response},
+        response::{Response, body::User},
         validation::{UserEmail, UserPassword},
-        Json,
     },
     crypto::verify_hash,
     db::{self, TxError, TxResult},

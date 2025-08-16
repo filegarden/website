@@ -1,17 +1,16 @@
 //! The set of all users.
 
-use axum::http::{header::LOCATION, StatusCode};
+use axum::http::{StatusCode, header::LOCATION};
 use axum_macros::debug_handler;
 use serde::Deserialize;
 
 use crate::{
     api::{
-        self,
+        self, Json,
         cookie::{CookieWrapper, SessionCookie},
         db_helpers::create_session,
-        response::{body::User, Response},
+        response::{Response, body::User},
         validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
-        Json,
     },
     crypto::{hash_with_salt, verify_hash},
     db::{self, TxError, TxResult},

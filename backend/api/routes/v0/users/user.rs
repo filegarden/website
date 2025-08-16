@@ -5,10 +5,9 @@ use axum_macros::debug_handler;
 
 use crate::{
     api::{
-        self,
+        self, Json,
         extract::Path,
-        response::{body::User, Response},
-        Json,
+        response::{Response, body::User},
     },
     db::{self, TxResult},
     id::Id,

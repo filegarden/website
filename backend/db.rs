@@ -4,7 +4,7 @@ use std::{error::Error, sync::OnceLock};
 
 use castaway::cast;
 use sha2::{Digest, Sha256};
-use sqlx::{postgres::PgPoolOptions, Executor, PgPool};
+use sqlx::{Executor, PgPool, postgres::PgPoolOptions};
 
 /// The SQLx database pool.
 static DB_POOL: OnceLock<PgPool> = OnceLock::new();

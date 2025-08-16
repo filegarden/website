@@ -1,6 +1,6 @@
 //! Helper functions that perform common database operations.
 
-use sqlx::{postgres::PgQueryResult, PgTransaction};
+use sqlx::{PgTransaction, postgres::PgQueryResult};
 
 use crate::{
     crypto::hash_without_salt,
