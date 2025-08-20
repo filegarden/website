@@ -40,8 +40,8 @@ pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetRespo
 
     let Some(password_reset) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "SELECT users.email
-                FROM password_resets JOIN users ON users.id = password_resets.user_id
+            "SELECT users.email FROM users
+                INNER JOIN password_resets ON users.id = password_resets.user_id
                 WHERE password_resets.token_hash = $1",
             token_hash.as_ref(),
         )

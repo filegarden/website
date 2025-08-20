@@ -25,8 +25,8 @@ pub(crate) mod settings;
 pub(crate) async fn get(AuthToken(token_hash): AuthToken) -> impl Response<GetResponse> {
     let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "SELECT users.id, users.name FROM sessions
-                INNER JOIN users ON users.id = sessions.user_id
+            "SELECT users.id, users.name FROM users
+                INNER JOIN sessions ON users.id = sessions.user_id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
         )
