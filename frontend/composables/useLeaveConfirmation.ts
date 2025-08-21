@@ -21,9 +21,11 @@ export function preventLeaveConfirmations<T>(callback: () => T): T {
   try {
     return callback();
   } finally {
-    // Unfortunately, this has to be deactivated on the next tick because
-    // `onBeforeRouteChange` handlers aren't called until later this tick.
-    void nextTick(() => {
+    // Unfortunately, this has to be deactivated after a timeout because
+    // `onBeforeRouteChange` handlers aren't called synchronously. `nextTick`
+    // also doesn't work because it can finish after one handler but before
+    // another, and all handlers should finish running before this runs.
+    setTimeout(() => {
       preventionCount.value--;
     });
   }
