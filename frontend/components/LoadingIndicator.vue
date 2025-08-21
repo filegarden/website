@@ -25,10 +25,10 @@ $animation-delay: 1s;
   position: absolute;
   inset: 0;
 
-  border-radius: inherit;
-  // `hidden` would make the indicator stick to this element instead of the
-  // viewport.
+  // `hidden` would make the indicator stick to the top of this element instead
+  // of the top of the viewport.
   overflow: clip;
+  border-radius: var(--border-radius-containing-block);
 
   z-index: 10;
   pointer-events: none;

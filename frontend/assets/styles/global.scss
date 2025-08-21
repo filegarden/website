@@ -81,7 +81,9 @@ li {
   // Let descendants be positioned relative to panels.
   position: relative;
 
-  border-radius: 1rem;
+  --border-radius-containing-block: 1rem;
+  border-radius: var(--border-radius-containing-block);
+
   background-color: var(--color-foreground);
   box-shadow: 0 4px 8px var(--color-shadow-large);
 
