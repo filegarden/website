@@ -52,7 +52,7 @@ pub(crate) fn verify_hash<T: AsRef<[u8]>>(bytes: &T, hash_phc_format: &str) -> b
         .is_ok()
 }
 
-/// All the characters can be in a string outputted by [`generate_short_code`].
+/// All the characters that can be in a string outputted by [`generate_short_code`].
 ///
 /// `O` is excluded because it's often mistaken for `0`.
 const SHORT_CODE_CHARS: [char; 35] = [
