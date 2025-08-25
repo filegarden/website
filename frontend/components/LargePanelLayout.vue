@@ -7,7 +7,7 @@
 </template>
 
 <style scoped lang="scss">
-$panel-width: 1024px;
+$panel-width: 900px;
 
 .layout {
   min-height: 100%;
@@ -22,7 +22,7 @@ main {
   width: $panel-width;
   max-width: 100%;
 
-  $base-padding: clamp(1rem, 4vw, 2rem);
+  $base-padding: clamp(1rem, 6vw, 2.5rem);
   padding: $base-padding calc($base-padding + 1rem);
 
   @media (max-width: $panel-width) {

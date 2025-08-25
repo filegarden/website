@@ -104,7 +104,7 @@ function changeName() {
 </template>
 
 <style scoped lang="scss">
-$panel-width: 512px;
+$panel-width: 540px;
 
 :deep(main) {
   // This must take priority over `LargePanelLayout` so a flash of incorrect
@@ -126,7 +126,6 @@ h1 {
 }
 
 h2 {
-  font-size: 1em;
   margin-top: 2.5rem;
 }
 
