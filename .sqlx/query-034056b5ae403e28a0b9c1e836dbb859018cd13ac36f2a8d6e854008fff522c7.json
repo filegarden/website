@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT users.email FROM users\n                INNER JOIN password_resets ON users.id = password_resets.user_id\n                WHERE password_resets.token_hash = $1",
+  "query": "SELECT users.email FROM users\n                INNER JOIN password_resets ON password_resets.user_id = users.id\n                WHERE password_resets.token_hash = $1",
   "describe": {
     "columns": [
       {
@@ -23,5 +23,5 @@
       false
     ]
   },
-  "hash": "0dd38d18ab0d09e0ad5325a167fd6f3566c5edb5e72800c5be71adb47b2a6f33"
+  "hash": "034056b5ae403e28a0b9c1e836dbb859018cd13ac36f2a8d6e854008fff522c7"
 }
