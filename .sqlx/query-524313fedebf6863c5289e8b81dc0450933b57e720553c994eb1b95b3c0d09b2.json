@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT users.email, users.totp_secret IS NOT NULL AS \"totp_enabled!\" FROM users\n                INNER JOIN sessions ON users.id = sessions.user_id\n                WHERE sessions.token_hash = $1",
+  "query": "SELECT users.email, totp.secret IS NOT NULL AS \"totp_enabled!\" FROM users\n                INNER JOIN sessions ON sessions.user_id = users.id\n                LEFT JOIN totp ON totp.user_id = users.id\n                WHERE sessions.token_hash = $1",
   "describe": {
     "columns": [
       {
@@ -29,5 +29,5 @@
       null
     ]
   },
-  "hash": "ad9f71aa75b3e76d42346c8af856746a3863e929ea8fdea69359929f7d09176c"
+  "hash": "524313fedebf6863c5289e8b81dc0450933b57e720553c994eb1b95b3c0d09b2"
 }

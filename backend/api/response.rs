@@ -26,6 +26,11 @@ pub(crate) enum Error {
     #[expect(dead_code, reason = "I'll use it in the future.")]
     AccessDenied,
 
+    /// The request tried to create a resource, but a conflicting resource already exists at the
+    /// specified location or with the specified parameters.
+    #[error("The resource to be created already exists.")]
+    AlreadyExists,
+
     /// Authentication credentials are required but either unspecified, invalid, or don't match any
     /// user.
     #[error("You must be signed in to access the requested resource.")]
@@ -82,9 +87,12 @@ pub(crate) enum Error {
     #[error("The requested API route doesn't exist.")]
     RouteNotFound,
 
-    /// User credentials (such as email and password, not session credentials) specified in the
-    /// request don't match any user.
-    #[error("The specified user credentials are incorrect.")]
+    /// The TOTP or backup authentication code specified in the request is incorrect.
+    #[error("Incorrect TOTP or backup authentication code.")]
+    OtpWrong,
+
+    /// The requested user doesn't exist, or the password specified in the request is incorrect.
+    #[error("Nonexistent user or incorrect password.")]
     UserCredentialsWrong,
 }
 
@@ -93,6 +101,7 @@ impl Error {
     const fn status(&self) -> StatusCode {
         match self {
             Self::AccessDenied => StatusCode::FORBIDDEN,
+            Self::AlreadyExists => StatusCode::CONFLICT,
             Self::AuthFailed => StatusCode::UNAUTHORIZED,
             Self::BodyDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
@@ -106,6 +115,7 @@ impl Error {
             Self::QueryDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::ResourceNotFound => StatusCode::NOT_FOUND,
             Self::RouteNotFound => StatusCode::NOT_FOUND,
+            Self::OtpWrong => StatusCode::FORBIDDEN,
             Self::UserCredentialsWrong => StatusCode::FORBIDDEN,
         }
     }

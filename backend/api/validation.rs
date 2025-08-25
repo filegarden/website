@@ -19,7 +19,10 @@ pub(crate) type NewUserPassword = BoundedString<8, 256>;
 /// A user's password in plain text.
 pub(crate) type UserPassword = BoundedString<0, 256>;
 
-/// An unverified email's verification code in plain text.
+/// A user's TOTP or backup authentication code.
+pub(crate) type Otp = BoundedString<6, 8>;
+
+/// An unverified email's verification code.
 pub(crate) type EmailVerificationCode = BoundedString<6, 6>;
 
 /// A CAPTCHA token.

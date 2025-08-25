@@ -15,6 +15,7 @@ use crate::{
 pub(crate) mod name;
 pub(crate) mod sessions;
 pub(crate) mod settings;
+pub(crate) mod totp;
 
 /// Gets the current authenticated user's public profile info.
 ///

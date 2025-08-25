@@ -26,8 +26,19 @@ CREATE TABLE users (
     id bytea PRIMARY KEY,
     email citext NOT NULL UNIQUE,
     name text NOT NULL,
-    password_hash text NOT NULL,
-    totp_secret bytea
+    password_hash text NOT NULL
+);
+
+CREATE TABLE totp (
+    user_id bytea PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
+    secret bytea,
+    code_used_last text
+        CHECK ((secret IS NULL) = (code_used_last IS NULL)),
+    code_used_2nd_to_last text,
+    unused_backup_codes text[]
+        CHECK ((secret IS NULL) = (unused_backup_codes IS NULL)),
+    unverified_secret bytea
+        CHECK ((secret IS NULL) != (unverified_secret IS NULL))
 );
 
 CREATE TABLE unverified_emails (

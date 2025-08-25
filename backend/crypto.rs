@@ -1,5 +1,7 @@
 //! Utilities for cryptographic operations.
 
+use std::time::{SystemTime, UNIX_EPOCH};
+
 use argon2::{
     Argon2, PasswordHash, PasswordHasher, PasswordVerifier,
     password_hash::{Salt, SaltString},
@@ -9,6 +11,7 @@ use rand::{
     distr::{Distribution, Uniform},
 };
 use ring::digest::{Digest, SHA256, digest};
+use totp_lite::{Sha1, totp_custom};
 
 /// Hashes the input using SHA-256.
 ///
@@ -52,23 +55,36 @@ pub(crate) fn verify_hash<T: AsRef<[u8]>>(bytes: &T, hash_phc_format: &str) -> b
         .is_ok()
 }
 
-/// All the characters that can be in a string outputted by [`generate_short_code`].
+/// Checks if a TOTP code matches a TOTP secret.
 ///
-/// `O` is excluded because it's often mistaken for `0`.
-const SHORT_CODE_CHARS: [char; 35] = [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
-    'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-];
+/// # Panics
+///
+/// Panics if the system time is earlier than the Unix epoch.
+pub(crate) fn verify_totp<T: AsRef<[u8]>>(totp: &str, secret: &T) -> bool {
+    const STEP: u64 = 30;
+    const DIGITS: u32 = 6;
 
-/// The length of a string outputted by [`generate_short_code`].
-const SHORT_CODE_LENGTH: usize = 6;
+    let time = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("system time shouldn't be earlier than Unix epoch")
+        .as_secs();
 
-/// Generates a cryptographically secure pseudorandom string that's short and easy to type.
-pub(crate) fn generate_short_code() -> String {
-    Uniform::try_from(0..SHORT_CODE_CHARS.len())
-        .expect("`SHORT_CODE_CHARS` should be nonempty and finite")
+    totp == totp_custom::<Sha1>(STEP, DIGITS, secret.as_ref(), time)
+        || totp == totp_custom::<Sha1>(STEP, DIGITS, secret.as_ref(), time - STEP)
+}
+
+/// Generates a cryptographically secure pseudorandom string that should be short and easy to type.
+pub(crate) fn generate_short_code(length: usize) -> String {
+    // `O` is excluded because it's often mistaken for `0`.
+    const CHARS: [char; 35] = [
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+        'I', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    ];
+
+    Uniform::try_from(0..CHARS.len())
+        .expect("`CHARS` should be nonempty and finite")
         .sample_iter(rand::rng())
-        .take(SHORT_CODE_LENGTH)
-        .map(|i| SHORT_CODE_CHARS[i])
+        .take(length)
+        .map(|i| CHARS[i])
         .collect()
 }
