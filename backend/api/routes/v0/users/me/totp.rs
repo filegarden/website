@@ -17,8 +17,6 @@ use crate::{
     db::{self, TxError, TxResult},
 };
 
-pub(crate) mod request;
-
 /// The length of a new backup authentication code.
 const BACKUP_CODE_LENGTH: usize = 8;
 

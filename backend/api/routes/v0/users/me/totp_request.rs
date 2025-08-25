@@ -87,7 +87,7 @@ pub(crate) async fn post(
     let otpauth_uri =
         format!("otpauth://totp/{issuer}:{account_name}?secret={secret}&issuer={issuer}");
 
-    Ok((StatusCode::OK, Json(PostResponse { otpauth_uri })))
+    Ok((StatusCode::CREATED, Json(PostResponse { otpauth_uri })))
 }
 
 /// A `POST` response body for this API route.

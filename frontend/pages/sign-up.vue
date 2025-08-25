@@ -44,7 +44,7 @@ watch(captchaToken, async () => {
 const emailCookie = useSignUpEmailCookie();
 
 async function submitSignUp() {
-  await api("/email-verification", {
+  await api("/user-requests", {
     method: "POST",
     body: {
       acceptTerms: acceptTerms.value,
@@ -61,28 +61,23 @@ function openCodePage() {
   page.value = "code";
 }
 
-const codeResponse = await useApi("/email-verification/code", {
-  method: "POST",
-  query: {
-    // Using a getter makes refreshing the request use the current token value.
-    // I'd use a simple arrow function instead, but that isn't supported
-    // (despite the types saying it is, which is a Nuxt bug).
-    get token() {
-      return route.query.token;
+const codeResponse = await useApi(
+  () => `/user-requests/${encodeURIComponent(String(route.query.token))}/code`,
+  {
+    method: "POST",
+
+    immediate: route.query.token !== undefined,
+
+    // Don't rerun the request when `route.query.token` changes. It can change
+    // to `undefined`, which is invalid.
+    watch: false,
+
+    catchApiErrors: {
+      QUERY_DATA_INVALID: "silence",
+      RESOURCE_NOT_FOUND: "silence",
     },
   },
-
-  immediate: route.query.token !== undefined,
-
-  // Don't rerun the request when `route.query.token` changes. It can change to
-  // `undefined`, which is invalid.
-  watch: false,
-
-  catchApiErrors: {
-    QUERY_DATA_INVALID: "silence",
-    RESOURCE_NOT_FOUND: "silence",
-  },
-});
+);
 
 watch(
   () => route.query.token,
@@ -109,7 +104,7 @@ watchEffect(() => {
 });
 
 async function submitCode(event: SubmitEvent) {
-  await api("/email-verification", {
+  await api("/user-requests", {
     query: {
       email: email.value,
       code: code.value.toUpperCase(),

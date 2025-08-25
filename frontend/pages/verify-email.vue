@@ -4,39 +4,35 @@ useTitle("Verify Email");
 const route = useRoute();
 const emailCookie = useSignUpEmailCookie();
 
-const { data: email } = await useApi("/email-verification", {
-  query: {
-    // Using a getter makes the request react to the current token value. I'd
-    // use a simple arrow function instead, but that isn't supported (despite
-    // the types saying it is, which is a Nuxt bug).
-    get token() {
-      return route.query.token;
+const { data: email } = await useApi(
+  () => `/user-requests/${encodeURIComponent(String(route.query.token))}`,
+  {
+    transform: (emailVerification) => emailVerification.email ?? "",
+
+    catchApiErrors: {
+      QUERY_DATA_INVALID: "silence",
+      RESOURCE_NOT_FOUND: "silence",
     },
   },
-
-  transform: (emailVerification) => emailVerification.email ?? "",
-
-  catchApiErrors: {
-    QUERY_DATA_INVALID: "silence",
-    RESOURCE_NOT_FOUND: "silence",
-  },
-});
+);
 
 const isSameBrowser = computed(() => email.value === emailCookie.value);
 
 const code = ref<string>();
 
 async function generateCode() {
-  const codeResponse = await api("/email-verification/code", {
-    method: "POST",
-    query: { token: route.query.token },
+  const codeResponse = await api(
+    `/user-requests/${encodeURIComponent(String(route.query.token))}/code`,
+    {
+      method: "POST",
 
-    catchApiErrors: {
-      RESOURCE_NOT_FOUND: () => {
-        email.value = "";
+      catchApiErrors: {
+        RESOURCE_NOT_FOUND: () => {
+          email.value = "";
+        },
       },
     },
-  });
+  );
 
   code.value = codeResponse.code;
 }

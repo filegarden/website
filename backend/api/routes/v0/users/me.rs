@@ -16,6 +16,7 @@ pub(crate) mod name;
 pub(crate) mod sessions;
 pub(crate) mod settings;
 pub(crate) mod totp;
+pub(crate) mod totp_request;
 
 /// Gets the current authenticated user's public profile info.
 ///

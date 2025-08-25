@@ -19,26 +19,17 @@ use crate::{
     id::Token,
 };
 
-pub(crate) mod code;
+pub(crate) mod user_request;
 
 /// A `GET` request query for this API route.
 #[derive(Deserialize, Debug)]
-#[serde(untagged, rename_all = "camelCase")]
-pub(crate) enum GetQuery {
-    /// Identifies an email verification request by its verification token.
-    Token {
-        /// The email verification token.
-        token: Token,
-    },
+#[serde(rename_all = "camelCase")]
+pub(crate) struct GetQuery {
+    /// The email address to verify.
+    email: UserEmail,
 
-    /// Identifies an email verification request by its email and verification code.
-    EmailAndCode {
-        /// The email address to verify.
-        email: UserEmail,
-
-        /// The email verification code.
-        code: EmailVerificationCode,
-    },
+    /// The email verification code.
+    code: EmailVerificationCode,
 }
 
 /// Checks an existing email verification request.
@@ -48,56 +39,30 @@ pub(crate) enum GetQuery {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetResponse> {
-    let email = match query {
-        GetQuery::Token { token } => {
-            let token_hash = hash_without_salt(&token);
-
-            let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-                Ok(sqlx::query!(
-                    "SELECT email FROM unverified_emails
-                        WHERE token_hash = $1 AND user_id IS NULL",
-                    token_hash.as_ref(),
-                )
-                .fetch_optional(tx.as_mut())
-                .await?)
-            })
-            .await?
-            else {
-                return Err(api::Error::ResourceNotFound);
-            };
-
-            unverified_email.email
-        }
-
-        GetQuery::EmailAndCode { email, code } => {
-            let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-                Ok(sqlx::query!(
-                    r#"SELECT email, code_hash as "code_hash!" FROM unverified_emails
-                        WHERE user_id IS NULL AND email = $1 AND code_hash IS NOT NULL"#,
-                    email.as_str(),
-                )
-                .fetch_optional(tx.as_mut())
-                .await?)
-            })
-            .await?
-            .filter(|unverified_email| verify_hash(&code, &unverified_email.code_hash)) else {
-                return Err(api::Error::ResourceNotFound);
-            };
-
-            unverified_email.email
-        }
+    let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        Ok(sqlx::query!(
+            r#"SELECT email, code_hash as "code_hash!" FROM unverified_emails
+                WHERE user_id IS NULL AND email = $1 AND code_hash IS NOT NULL"#,
+            query.email.as_str(),
+        )
+        .fetch_optional(tx.as_mut())
+        .await?)
+    })
+    .await?
+    .filter(|unverified_email| verify_hash(&query.code, &unverified_email.code_hash)) else {
+        return Err(api::Error::ResourceNotFound);
     };
 
-    Ok((StatusCode::OK, Json(GetResponse { email })))
+    Ok((
+        StatusCode::OK,
+        Json(GetResponse {
+            email: unverified_email.email,
+        }),
+    ))
 }
 
 /// A `GET` response body for this API route.
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct GetResponse {
-    /// The email address to verify.
-    pub email: String,
-}
+pub(crate) type GetResponse = user_request::GetResponse;
 
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]

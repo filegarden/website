@@ -12,23 +12,15 @@ use crate::api;
 mod v0 {
     //! The routes for version 1 of the HTTP API.
 
-    pub(crate) mod email_verification;
     pub(crate) mod password_reset;
     pub(crate) mod sessions;
+    pub(crate) mod user_requests;
     pub(crate) mod users;
 }
 
 /// The API router.
 pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
     let v0_router = Router::new()
-        .route(
-            "/email-verification",
-            get(v0::email_verification::get).post(v0::email_verification::post),
-        )
-        .route(
-            "/email-verification/code",
-            post(v0::email_verification::code::post),
-        )
         .route(
             "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
@@ -38,6 +30,18 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::password_reset::password::post),
         )
         .route("/sessions", post(v0::sessions::post))
+        .route(
+            "/user-requests",
+            get(v0::user_requests::get).post(v0::user_requests::post),
+        )
+        .route(
+            "/user-requests/{token}",
+            get(v0::user_requests::user_request::get),
+        )
+        .route(
+            "/user-requests/{token}/code",
+            post(v0::user_requests::user_request::code::post),
+        )
         .route("/users", post(v0::users::post))
         .route("/users/me", get(v0::users::me::get))
         .route("/users/me/name", put(v0::users::me::name::put))
@@ -49,8 +53,8 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route("/users/me/settings", get(v0::users::me::settings::get))
         .route("/users/me/totp", post(v0::users::me::totp::post))
         .route(
-            "/users/me/totp/request",
-            post(v0::users::me::totp::request::post),
+            "/users/me/totp-request",
+            post(v0::users::me::totp_request::post),
         )
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })

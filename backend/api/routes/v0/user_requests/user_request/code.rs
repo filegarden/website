@@ -2,10 +2,10 @@
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use crate::{
-    api::{self, Json, extract::Query, response::Response},
+    api::{self, Json, extract::Path, response::Response},
     crypto::{generate_short_code, hash_with_salt, hash_without_salt},
     db::{self, TxResult},
     id::Token,
@@ -14,13 +14,8 @@ use crate::{
 /// The length of a new email verification code.
 const EMAIL_VERIFICATION_CODE_LENGTH: usize = 6;
 
-/// A `POST` request query for this API route.
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct PostQuery {
-    /// The email verification token.
-    pub token: Token,
-}
+/// A request path for this API route.
+type PathParams = Path<Token>;
 
 /// Generates a new verification code for an email verification request.
 ///
@@ -28,8 +23,8 @@ pub(crate) struct PostQuery {
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
-pub(crate) async fn post(Query(query): Query<PostQuery>) -> impl Response<PostResponse> {
-    let token_hash = hash_without_salt(&query.token);
+pub(crate) async fn post(Path(token): PathParams) -> impl Response<PostResponse> {
+    let token_hash = hash_without_salt(&token);
 
     let code = generate_short_code(EMAIL_VERIFICATION_CODE_LENGTH);
     let code_hash = hash_with_salt(&code);
@@ -52,7 +47,7 @@ pub(crate) async fn post(Query(query): Query<PostQuery>) -> impl Response<PostRe
     };
 
     Ok((
-        StatusCode::OK,
+        StatusCode::CREATED,
         Json(PostResponse {
             email: unverified_email.email,
             code,
