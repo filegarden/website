@@ -22,7 +22,7 @@ pub(crate) struct PostQuery {
     pub token: Token,
 }
 
-/// Generates a new email verification code for a new user.
+/// Generates a new verification code for an email verification request.
 ///
 /// # Errors
 ///
