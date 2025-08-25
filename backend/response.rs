@@ -10,7 +10,7 @@ use axum::{
 
 /// A wrapper for [`axum::response::Response`] with a simpler API.
 pub(crate) struct Response {
-    /// The [`axum::response::Response`] value being wrapped.
+    /// The inner [`axum::response::Response`] value.
     inner: axum::response::Response,
 }
 

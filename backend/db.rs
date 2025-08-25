@@ -123,7 +123,7 @@ pub(crate) fn pool() -> &'static PgPool {
 /// Doesn't implement [`Error`] to prevent an impl conflict.
 #[derive(Copy, Clone, Eq, PartialEq, PartialOrd, Ord, Hash, Debug)]
 pub(crate) enum TxError<E> {
-    /// Aborts the transaction and returns the wrapped error.
+    /// Aborts the transaction and returns the inner error.
     Abort(E),
 
     /// Aborts the transaction and runs the `transaction!` callback again.
