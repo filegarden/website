@@ -44,7 +44,7 @@ watch(captchaToken, async () => {
 const emailCookie = useSignUpEmailCookie();
 
 async function submitSignUp() {
-  await api("/user-requests", {
+  const { email: normalizedEmail } = await api("/user-requests", {
     method: "POST",
     body: {
       acceptTerms: acceptTerms.value,
@@ -54,7 +54,7 @@ async function submitSignUp() {
   });
 
   page.value = "verification-sent";
-  emailCookie.value = email.value;
+  emailCookie.value = normalizedEmail;
 }
 
 function openCodePage() {

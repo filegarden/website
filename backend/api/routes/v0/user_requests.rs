@@ -176,6 +176,6 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PostResponse {
-    /// The email address to verify.
+    /// The (normalized) email address to verify.
     pub email: UserEmail,
 }
