@@ -42,7 +42,26 @@ h6 {
   margin: 1rem 0;
 }
 
-.headings-formatted {
+p,
+li {
+  line-height: 1.5;
+
+  .long-text & {
+    line-height: inherit;
+  }
+}
+
+li {
+  margin: 0.5em 0;
+
+  .long-text & {
+    margin: 0.75em 0;
+  }
+}
+
+.long-text {
+  line-height: 1.75;
+
   h1 {
     font-size: 2em;
   }
@@ -65,16 +84,12 @@ h6 {
       margin-top: 1.5em;
     }
   }
-}
 
-ol,
-p,
-ul {
-  line-height: 1.5;
-}
-
-li {
-  margin: 0.25em 0;
+  ol,
+  ul {
+    margin: 1.25em 0;
+    margin: 1.25em 0;
+  }
 }
 
 .panel {
