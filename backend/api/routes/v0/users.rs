@@ -12,9 +12,9 @@ use crate::{
         response::{Response, body::User},
         validation::{EmailVerificationCode, NewUserPassword, UserEmail, UserName},
     },
-    crypto::{hash_with_salt, verify_hash},
+    crypto::{hash_with_salt, hash_without_salt, verify_hash},
     db::{self, TxError, TxResult},
-    id::NewUserId,
+    id::{NewUserId, Token},
 };
 
 pub(crate) mod me;
@@ -27,14 +27,27 @@ pub(crate) struct PostRequest {
     /// The user's email address.
     pub email: UserEmail,
 
-    /// The verification code for the user's email address.
-    pub email_verification_code: EmailVerificationCode,
+    /// Information that verifies the user's email address.
+    #[serde(flatten)]
+    pub email_verification: EmailVerification,
 
     /// The user's name.
     pub name: UserName,
 
     /// The user's new password in plain text.
     pub password: NewUserPassword,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(crate) enum EmailVerification {
+    /// The verification code for the user's email address.
+    #[serde(rename = "emailVerificationCode")]
+    Code(EmailVerificationCode),
+
+    /// The verification token for the user's email address.
+    #[serde(rename = "emailVerificationToken")]
+    Token(Token),
 }
 
 /// Creates a new user. Signs in the user if successful.
@@ -47,32 +60,56 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     let password_hash = hash_with_salt(&body.password);
 
     let (user_id, session_token) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let Some(unverified_email) = sqlx::query!(
-            "DELETE FROM unverified_emails
-                WHERE user_id IS NULL AND email = $1
-                RETURNING user_accepted_terms_at, code_hash",
-            body.email.as_str(),
-        )
-        .fetch_optional(tx.as_mut())
-        .await?
-        else {
-            return Err(TxError::Abort(api::Error::EmailVerificationCodeWrong));
+        let accepted_terms_at = match &body.email_verification {
+            EmailVerification::Code(code) => {
+                let Some(unverified_email) = sqlx::query!(
+                    "DELETE FROM unverified_emails
+                        WHERE user_id IS NULL AND email = $1
+                        RETURNING user_accepted_terms_at, code_hash",
+                    body.email.as_str(),
+                )
+                .fetch_optional(tx.as_mut())
+                .await?
+                else {
+                    return Err(TxError::Abort(api::Error::EmailVerificationWrong));
+                };
+
+                let does_code_match = unverified_email
+                    .code_hash
+                    .is_some_and(|code_hash| verify_hash(&code, &code_hash));
+
+                if !does_code_match {
+                    return Err(TxError::Abort(api::Error::EmailVerificationWrong));
+                }
+
+                unverified_email.user_accepted_terms_at
+            }
+            EmailVerification::Token(token) => {
+                let token_hash = hash_without_salt(&token);
+
+                let Some(unverified_email) = sqlx::query!(
+                    "DELETE FROM unverified_emails
+                        WHERE user_id IS NULL AND email = $1 AND token_hash = $2
+                        RETURNING user_accepted_terms_at",
+                    body.email.as_str(),
+                    token_hash.as_ref(),
+                )
+                .fetch_optional(tx.as_mut())
+                .await?
+                else {
+                    return Err(TxError::Abort(api::Error::EmailVerificationWrong));
+                };
+
+                unverified_email.user_accepted_terms_at
+            }
         };
-
-        let does_code_match = unverified_email
-            .code_hash
-            .is_some_and(|code_hash| verify_hash(&body.email_verification_code, &code_hash));
-
-        if !does_code_match {
-            return Err(TxError::Abort(api::Error::EmailVerificationCodeWrong));
-        }
 
         let user_id = NewUserId::generate();
 
         match sqlx::query!(
             "INSERT INTO users (accepted_terms_at, id, email, name, password_hash)
                 VALUES ($1, $2, $3, $4, $5)",
-            unverified_email.user_accepted_terms_at,
+            accepted_terms_at,
             user_id.as_slice(),
             body.email.as_str(),
             *body.name,

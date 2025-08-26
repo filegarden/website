@@ -61,16 +61,16 @@ function openCodePage() {
   page.value = "code";
 }
 
-const codeResponse = await useApi(
-  () => `/user-requests/${encodeURIComponent(String(route.query.token))}/code`,
+const emailFromToken = await useApi(
+  () => `/user-requests/${encodeURIComponent(String(route.query.token))}`,
   {
-    method: "POST",
-
     immediate: route.query.token !== undefined,
 
     // Don't rerun the request when `route.query.token` changes. It can change
     // to `undefined`, which is invalid.
     watch: false,
+
+    transform: (userRequest) => userRequest.email ?? "",
 
     catchApiErrors: {
       PATH_DATA_INVALID: "silence",
@@ -86,7 +86,8 @@ watch(
       page.value = "email";
     } else {
       page.value = "final";
-      void codeResponse.refresh();
+      code.value = "";
+      void emailFromToken.refresh();
     }
   },
 );
@@ -95,10 +96,9 @@ const code = ref("");
 const isCodeWrong = ref(false);
 
 watchEffect(() => {
-  if (codeResponse.status.value === "success") {
-    email.value = codeResponse.data.value.email;
-    code.value = codeResponse.data.value.code;
-  } else if (codeResponse.status.value === "error") {
+  if (emailFromToken.status.value === "success") {
+    email.value = emailFromToken.data.value;
+  } else if (emailFromToken.status.value === "error") {
     page.value = "failed";
   }
 });
@@ -146,13 +146,15 @@ async function completeSignUp() {
     method: "POST",
     body: {
       email: email.value,
-      emailVerificationCode: code.value.toUpperCase(),
+      ...(route.query.token === undefined
+        ? { emailVerificationCode: code.value.toUpperCase() }
+        : { emailVerificationToken: String(route.query.token) }),
       name: name.value,
       password: password.value,
     },
 
     catchApiErrors: {
-      EMAIL_VERIFICATION_CODE_WRONG: () => {
+      EMAIL_VERIFICATION_WRONG: () => {
         page.value = "failed";
       },
     },
@@ -220,7 +222,7 @@ async function completeSignUp() {
     </template>
 
     <template v-else-if="page === 'final'">
-      <LoadingIndicator v-if="codeResponse.status.value === 'pending'" />
+      <LoadingIndicator v-if="emailFromToken.status.value === 'pending'" />
 
       <Form v-else :action="completeSignUp">
         <p class="intro">One last step...</p>

@@ -48,9 +48,9 @@ pub(crate) enum Error {
     #[error("CAPTCHA verification failed.")]
     CaptchaFailed,
 
-    /// An email verification code specified in the request is incorrect.
-    #[error("Incorrect email verification code.")]
-    EmailVerificationCodeWrong,
+    /// An email verification token or code specified in the request is incorrect.
+    #[error("Incorrect email verification token or code.")]
+    EmailVerificationWrong,
 
     /// An internal error occurred on the server which is unknown or expected never to happen.
     ///
@@ -106,7 +106,7 @@ impl Error {
             Self::BodyDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,
-            Self::EmailVerificationCodeWrong => StatusCode::FORBIDDEN,
+            Self::EmailVerificationWrong => StatusCode::FORBIDDEN,
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::JsonContentType => StatusCode::UNSUPPORTED_MEDIA_TYPE,
             Self::JsonSyntax(_) => StatusCode::BAD_REQUEST,
