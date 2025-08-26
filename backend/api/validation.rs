@@ -231,9 +231,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn user_email_validation() {
+    fn invalid_user_emails() {
         let invalid_emails = [
             "invalid",
+            "invalid@@example.com",
             "invalid@invalid@example.com",
             "user@example-.com",
             "user@[127.0.0.1]",
@@ -241,6 +242,9 @@ mod tests {
             "more-than-64-characters-in-the-local-part-is-toooooooooooooo-long@example.com",
             "more-than-254-characters-total-is-tooo-long@example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.com",
             "user with spaces@example.com",
+            ".leading-dot@example.com",
+            "trailing-dot.@example.com",
+            "adjacent..dots@example.com",
             "\"\"@example.com",
             "\"user-with\nline-break\"@example.com",
             "\"user-with-unbalanced\"quotes\"@example.com",
@@ -267,27 +271,33 @@ mod tests {
         ];
 
         for email in invalid_emails {
-            email
-                .parse::<UserEmail>()
-                .expect_err("user email should be invalid");
+            assert!(
+                email.parse::<UserEmail>().is_err(),
+                "user email {email:?} should be invalid",
+            );
         }
     }
 
     #[test]
-    fn weird_user_emails_allowed() {
+    fn valid_user_emails() {
         let valid_emails = [
             "user-of-a-mail-server-on-a-tld@com",
             "64-characters-in-the-local-part-is-fiiiiiiiiiiiiiiiiiiiiiiiiiine@example.com",
             "\"unnecessarily.quoted.user\"@example.com",
+            "\"quoted @ sign\"@example.com",
             "\"quoted user with unnecessary \\escapes\"@example.com",
             "\"quoted user with unnecessary\\ escapes on special characters\"@example.com",
             "\"quoted user with spaces and \\\" escapes\"@example.com",
+            // While not allowed by RFC 5321 or RFC 5322, the below forms are allowed with the
+            // SMTPUTF8 extension specified by RFC 6531.
+            "non-ASCII-in-user-📂🌱@example.com",
+            "non-ASCII-in-domain@📂🌱.example.com",
         ];
 
         for email in valid_emails {
             email
                 .parse::<UserEmail>()
-                .expect("user email should be valid");
+                .unwrap_or_else(|error| panic!("user email {email:?} should be valid: {error}"));
         }
     }
 
