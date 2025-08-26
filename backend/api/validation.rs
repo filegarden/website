@@ -246,11 +246,14 @@ mod tests {
             "\"\"@example.com",
             "\"user-with\nline-break\"@example.com",
             "\"user-with-unbalanced\"quotes\"@example.com",
+            "user-with-\"balanced-quotes\"-in-middle@example.com",
             "user-with\\backslash@example.com",
             "user-with-unquoted-escaped\\ special-character@example.com",
             // While technically allowed by RFC 5322, the following forms aren't allowed by RFC 5321
             // and aren't required by any standards-compliant mail server, so there's no reason to
             // allow them. Users submitting these are most likely trying to break things.
+            "\"user\".name@example.com",
+            "user.\"name\"@example.com",
             "\"user\".\"name\"@example.com",
             " user.name@example.com",
             "user .name@example.com",
