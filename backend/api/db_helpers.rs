@@ -2,11 +2,7 @@
 
 use sqlx::{PgTransaction, postgres::PgQueryResult};
 
-use crate::{
-    crypto::hash_without_salt,
-    db::{TxError, TxResult},
-    id::Token,
-};
+use crate::{crypto::hash_without_salt, db::TxResult, id::Token};
 
 /// Creates a new user session and returns its token.
 ///
@@ -24,20 +20,14 @@ where
     let token = Token::generate();
     let token_hash = hash_without_salt(&token);
 
-    match sqlx::query!(
+    sqlx::query!(
         "INSERT INTO sessions (token_hash, user_id)
             VALUES ($1, $2)",
         token_hash.as_ref(),
         user_id.as_ref(),
     )
     .execute(tx.as_mut())
-    .await
-    {
-        Err(sqlx::Error::Database(error)) if error.constraint() == Some("sessions_pkey") => {
-            return Err(TxError::Retry);
-        }
-        result => result?,
-    };
+    .await?;
 
     Ok(token)
 }

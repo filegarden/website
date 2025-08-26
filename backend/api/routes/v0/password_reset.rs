@@ -14,7 +14,7 @@ use crate::{
         validation::{CaptchaToken, UserEmail},
     },
     crypto::hash_without_salt,
-    db::{self, TxError, TxResult},
+    db::{self, TxResult},
     email::{MessageTemplate, PasswordResetFailedMessage, PasswordResetMessage},
     id::Token,
 };
@@ -129,22 +129,14 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         let token = Token::generate();
         let token_hash = hash_without_salt(&token);
 
-        match sqlx::query!(
+        sqlx::query!(
             "INSERT INTO password_resets (token_hash, user_id)
                 VALUES ($1, $2)",
             token_hash.as_ref(),
             user.id,
         )
         .execute(tx.as_mut())
-        .await
-        {
-            Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("password_resets_pkey") =>
-            {
-                return Err(TxError::Retry);
-            }
-            result => result?,
-        };
+        .await?;
 
         Ok(SendMessage::PasswordReset {
             token,

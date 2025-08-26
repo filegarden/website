@@ -14,7 +14,7 @@ use crate::{
         validation::{CaptchaToken, EmailVerificationCode, True, UserEmail},
     },
     crypto::{hash_without_salt, verify_hash},
-    db::{self, TxError, TxResult},
+    db::{self, TxResult},
     email::{EmailTakenMessage, MessageTemplate, VerificationMessage},
     id::Token,
 };
@@ -130,22 +130,14 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         let token = Token::generate();
         let token_hash = hash_without_salt(&token);
 
-        match sqlx::query!(
+        sqlx::query!(
             "INSERT INTO unverified_emails (token_hash, email)
                 VALUES ($1, $2)",
             token_hash.as_ref(),
             body.email.as_str(),
         )
         .execute(tx.as_mut())
-        .await
-        {
-            Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("unverified_emails_pkey") =>
-            {
-                return Err(TxError::Retry);
-            }
-            result => result?,
-        };
+        .await?;
 
         Ok(SendMessage::Verification(token))
     })
