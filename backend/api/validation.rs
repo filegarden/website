@@ -237,8 +237,6 @@ mod tests {
             "invalid@@example.com",
             "invalid@invalid@example.com",
             "user@example-.com",
-            "user@[127.0.0.1]",
-            "user@[::1]",
             "more-than-64-characters-in-the-local-part-is-toooooooooooooo-long@example.com",
             "more-than-254-characters-total-is-tooo-long@example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.example.com",
             "user with spaces@example.com",
@@ -250,9 +248,9 @@ mod tests {
             "\"user-with-unbalanced\"quotes\"@example.com",
             "user-with\\backslash@example.com",
             "user-with-unquoted-escaped\\ special-character@example.com",
-            // While technically allowed by RFC 5322, the below forms aren't allowed by RFC 5321 and
-            // aren't required by any standards-compliant mail server, so there's no reason to allow
-            // them. Users submitting these are most likely trying to break things.
+            // While technically allowed by RFC 5322, the following forms aren't allowed by RFC 5321
+            // and aren't required by any standards-compliant mail server, so there's no reason to
+            // allow them. Users submitting these are most likely trying to break things.
             "\"user\".\"name\"@example.com",
             " user.name@example.com",
             "user .name@example.com",
@@ -268,6 +266,10 @@ mod tests {
             "user@example(comment).com",
             "user@example.(comment)com",
             "user@example.com(comment)",
+            // The following forms using IP addresses in brackets are valid, but we disallow users
+            // from using IP addresses to reduce our attack surface.
+            "user@[127.0.0.1]",
+            "user@[::1]",
         ];
 
         for email in invalid_emails {
@@ -288,7 +290,7 @@ mod tests {
             "\"quoted user with unnecessary \\escapes\"@example.com",
             "\"quoted user with unnecessary\\ escapes on special characters\"@example.com",
             "\"quoted user with spaces and \\\" escapes\"@example.com",
-            // While not allowed by RFC 5321 or RFC 5322, the below forms are allowed with the
+            // While not allowed by RFC 5321 or RFC 5322, the following forms are allowed with the
             // SMTPUTF8 extension specified by RFC 6531.
             "non-ASCII-in-user-📂🌱@example.com",
             "non-ASCII-in-domain@📂🌱.example.com",
