@@ -56,6 +56,7 @@ async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
     :minlength="SHORT_CODE_LENGTH"
     :maxlength="SHORT_CODE_LENGTH"
     autocomplete="one-time-code"
+    v-bind="$props"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
   />
