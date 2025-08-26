@@ -7,10 +7,10 @@ const emailCookie = useSignUpEmailCookie();
 const { data: email } = await useApi(
   () => `/user-requests/${encodeURIComponent(String(route.query.token))}`,
   {
-    transform: (emailVerification) => emailVerification.email ?? "",
+    transform: (userRequest) => userRequest.email ?? "",
 
     catchApiErrors: {
-      QUERY_DATA_INVALID: "silence",
+      PATH_DATA_INVALID: "silence",
       RESOURCE_NOT_FOUND: "silence",
     },
   },

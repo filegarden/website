@@ -73,7 +73,7 @@ const codeResponse = await useApi(
     watch: false,
 
     catchApiErrors: {
-      QUERY_DATA_INVALID: "silence",
+      PATH_DATA_INVALID: "silence",
       RESOURCE_NOT_FOUND: "silence",
     },
   },
