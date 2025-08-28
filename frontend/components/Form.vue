@@ -23,40 +23,41 @@ async function handleSubmit(event: SubmitEvent) {
 
   event.preventDefault();
 
-  const actionPromise = action(event);
-  if (!(actionPromise instanceof Promise)) {
-    return;
-  }
-
-  let initialActiveElement =
+  let preservedFocus =
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The form must be mounted because it was submitted.
     form.value!.contains(document.activeElement) &&
     document.activeElement instanceof HTMLElement
       ? document.activeElement
       : undefined;
 
-  function discardInitialActiveElement() {
-    initialActiveElement = undefined;
+  function stopPreservingFocus() {
+    preservedFocus = undefined;
   }
 
-  if (initialActiveElement) {
-    // Let the user change focus intentionally.
-    document.addEventListener("focus", discardInitialActiveElement, {
+  if (preservedFocus) {
+    // Allow focus to be changed intentionally.
+    document.addEventListener("focus", stopPreservingFocus, {
       capture: true,
       once: true,
     });
   }
 
   try {
-    await loading.value.during(() => actionPromise);
+    await loading.value.during(async () => action(event));
   } finally {
-    if (initialActiveElement) {
-      document.removeEventListener("focus", discardInitialActiveElement);
+    // Report the form's validity in case the action set any custom validities.
+    //
+    // This should be before the `focus` listener is removed since this can
+    // change focus too, stopping the initial focus from being preserved.
+    form.value?.reportValidity();
 
-      // Refocus the initial active element since loading blurs it by disabling
-      // the form. But don't scroll to it if the user already scrolled away
-      // because that would be annoying.
-      initialActiveElement.focus({ preventScroll: true });
+    if (preservedFocus) {
+      document.removeEventListener("focus", stopPreservingFocus);
+
+      // Restore the initial focus since loading blurs it by disabling the form.
+      // But don't scroll to it if the user already scrolled away because that
+      // would be annoying.
+      preservedFocus.focus({ preventScroll: true });
     }
   }
 }

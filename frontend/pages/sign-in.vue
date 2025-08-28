@@ -12,7 +12,7 @@ watch([email, password], () => {
   areCredentialsWrong.value = false;
 });
 
-async function submitSignIn(event: SubmitEvent) {
+async function submitSignIn() {
   const session = await api("/sessions", {
     method: "POST",
     body: {
@@ -23,12 +23,6 @@ async function submitSignIn(event: SubmitEvent) {
     catchApiErrors: {
       USER_CREDENTIALS_WRONG: () => {
         areCredentialsWrong.value = true;
-
-        // Wait for the form to be enabled. (`nextTick` waits long enough for
-        // the custom validity to update, but not for the form to be enabled.)
-        setTimeout(() => {
-          (event.target as HTMLFormElement).reportValidity();
-        });
       },
     },
   });

@@ -103,7 +103,7 @@ watchEffect(() => {
   }
 });
 
-async function submitCode(event: SubmitEvent) {
+async function submitCode() {
   await api("/user-requests", {
     query: {
       email: email.value,
@@ -113,12 +113,6 @@ async function submitCode(event: SubmitEvent) {
     catchApiErrors: {
       RESOURCE_NOT_FOUND: () => {
         isCodeWrong.value = true;
-
-        // Wait for the form to be enabled. (`nextTick` waits long enough for
-        // the custom validity to update, but not for the form to be enabled.)
-        setTimeout(() => {
-          (event.target as HTMLFormElement).reportValidity();
-        });
       },
     },
   });
