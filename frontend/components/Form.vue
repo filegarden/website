@@ -54,8 +54,9 @@ async function handleSubmit(event: SubmitEvent) {
       document.removeEventListener("focus", discardInitialActiveElement);
 
       // Refocus the initial active element since loading blurs it by disabling
-      // the form.
-      initialActiveElement.focus();
+      // the form. But don't scroll to it if the user already scrolled away
+      // because that would be annoying.
+      initialActiveElement.focus({ preventScroll: true });
     }
   }
 }
