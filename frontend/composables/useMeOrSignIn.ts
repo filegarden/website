@@ -49,7 +49,7 @@ export default async function useMeOrSignIn(): Promise<User> {
   // Use the original scope so the watcher doesn't keep running after leaving
   // the route.
   scope.run(() => {
-    // This effect is sync so there's no time where the value of `useMe` is
+    // This effect is sync so that there's no time where the value of `useMe` is
     // updated while the value of `useMeOrSignIn` hasn't updated yet.
     watchSyncEffect(() => {
       if (me.value === null) {
