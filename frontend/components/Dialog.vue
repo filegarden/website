@@ -12,6 +12,9 @@ export interface DialogContext<Data>
 }
 
 export interface DialogProps<Data> {
+  /** How wide the dialog should be by default. */
+  size: "small" | "medium" | "large";
+
   /** The value returned from {@link useDialog} to control this dialog. */
   value: DialogController<Data>;
 }
@@ -139,6 +142,7 @@ function handleBackdropClick() {
         <Form
           v-model:loading="loading"
           class="dialog-form panel frosted"
+          :class="`size-${size}`"
           method="dialog"
           :action="controller.state?.keepOpenOnFail ? submitDialog : undefined"
         >
@@ -216,7 +220,6 @@ function handleBackdropClick() {
 
   box-sizing: border-box;
   padding: 2rem;
-  min-width: min(24rem, 100%);
   max-width: min(56rem, 100%);
 
   box-shadow:
@@ -228,6 +231,18 @@ function handleBackdropClick() {
 
   .dialog.loading:has(.dialog-backdrop:active) & {
     transform: scale(0.98);
+  }
+
+  &.size-small {
+    width: 24rem;
+  }
+
+  &.size-medium {
+    width: 36rem;
+  }
+
+  &.size-large {
+    width: 48rem;
   }
 }
 

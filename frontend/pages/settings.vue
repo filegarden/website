@@ -81,7 +81,7 @@ function changeName() {
       <Button>Download Account Data</Button>
     </div>
 
-    <Dialog :value="changeNameDialog">
+    <Dialog size="small" :value="changeNameDialog">
       <template #heading>Change display name</template>
 
       <template #default="{ data }">
