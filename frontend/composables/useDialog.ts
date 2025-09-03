@@ -94,6 +94,12 @@ export class DialogController<Data> {
   open(
     ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
   ): DialogOpenResult {
+    if (this.scope === undefined) {
+      throw new Error(
+        "Can't open dialog since no `Dialog` component is using it",
+      );
+    }
+
     if (this.state !== undefined) {
       throw new Error("Can't open a dialog that's already open");
     }
@@ -102,12 +108,6 @@ export class DialogController<Data> {
     let currentState: DialogControllerState<Data> | undefined;
 
     const returnValue = new Promise<string>((resolve) => {
-      if (this.scope === undefined) {
-        throw new Error(
-          "Can't open dialog since no `Dialog` component is using it",
-        );
-      }
-
       this.state = {
         data: data as Data,
 
