@@ -104,6 +104,14 @@ export class DialogController<Data> {
       throw new Error("Can't open a dialog that's already open");
     }
 
+    if (!(data === undefined || isReactive(data))) {
+      throw new TypeError(
+        "To avoid unexpected inconsistencies when updating a dialog's data " +
+          "outside the dialog, data must be reactive when passed into a " +
+          "dialog's `open` method",
+      );
+    }
+
     // Unlike `this.state`, this remains undefined after reopening the dialog.
     let currentState: DialogControllerState<Data> | undefined;
 
