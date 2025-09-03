@@ -9,7 +9,7 @@ const { data: email } = await useApi(
   {
     transform: (userRequest) => userRequest.email ?? "",
 
-    catchApiErrors: {
+    onApiError: {
       PATH_DATA_INVALID: "silence",
       RESOURCE_NOT_FOUND: "silence",
     },
@@ -26,7 +26,7 @@ async function generateCode() {
     {
       method: "POST",
 
-      catchApiErrors: {
+      onApiError: {
         RESOURCE_NOT_FOUND: () => {
           email.value = "";
         },

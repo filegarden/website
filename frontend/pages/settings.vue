@@ -9,7 +9,7 @@ const totpEnabled = ref(false);
 const { data: settingsResponse } = await useApi("/users/me/settings", {
   watch: [() => me.id],
 
-  catchApiErrors: {
+  onApiError: {
     AUTH_FAILED: () => Promise.resolve(null),
   },
 });

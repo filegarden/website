@@ -20,7 +20,7 @@ async function submitSignIn() {
       password: password.value,
     },
 
-    catchApiErrors: {
+    onApiError: {
       USER_CREDENTIALS_WRONG: () => {
         areCredentialsWrong.value = true;
       },

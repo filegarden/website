@@ -18,7 +18,7 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   if (me.value === "UNKNOWN") {
     await callOnce(async () => {
       const { data } = await useApi<User, null>("/users/me", {
-        catchApiErrors: {
+        onApiError: {
           AUTH_FAILED: () => Promise.resolve(null),
         },
       });

@@ -72,7 +72,7 @@ const emailFromToken = await useApi(
 
     transform: (userRequest) => userRequest.email ?? "",
 
-    catchApiErrors: {
+    onApiError: {
       PATH_DATA_INVALID: "silence",
       RESOURCE_NOT_FOUND: "silence",
     },
@@ -110,7 +110,7 @@ async function submitCode() {
       code: code.value.toUpperCase(),
     },
 
-    catchApiErrors: {
+    onApiError: {
       RESOURCE_NOT_FOUND: () => {
         isCodeWrong.value = true;
       },
@@ -147,7 +147,7 @@ async function completeSignUp() {
       password: password.value,
     },
 
-    catchApiErrors: {
+    onApiError: {
       EMAIL_VERIFICATION_WRONG: () => {
         page.value = "failed";
       },

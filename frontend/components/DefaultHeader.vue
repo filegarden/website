@@ -31,7 +31,7 @@ async function signOut() {
     await api("/users/me/sessions/current", {
       method: "DELETE",
 
-      catchApiErrors: {
+      onApiError: {
         AUTH_FAILED: () => Promise.resolve(),
       },
     });

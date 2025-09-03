@@ -38,7 +38,7 @@ const passwordResetResponse = await useApi("/password-reset", {
   // `undefined`, which is invalid.
   watch: false,
 
-  catchApiErrors: {
+  onApiError: {
     QUERY_DATA_INVALID: "silence",
     RESOURCE_NOT_FOUND: "silence",
   },
@@ -75,7 +75,7 @@ async function submitNewPassword() {
     query: { token: route.query.token },
     body: { password: password.value },
 
-    catchApiErrors: {
+    onApiError: {
       RESOURCE_NOT_FOUND: () => {
         page.value = "failed";
       },
