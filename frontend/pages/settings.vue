@@ -21,10 +21,10 @@ watchEffect(() => {
 
 const changeNameDialog = useDialog<{ name: string }>();
 
-function changeName() {
+async function changeName() {
   const data = reactive({ name: me.name });
 
-  changeNameDialog.open(data).keepOpenOnFail(async () => {
+  await changeNameDialog.open(data).keepOpenOnFail(async () => {
     if (data.name === me.name) {
       return;
     }
