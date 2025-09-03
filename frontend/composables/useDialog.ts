@@ -25,8 +25,8 @@ export interface DialogControllerState<Data> {
 export interface DialogOpenResult {
   /**
    * If a callback is given, submitting the dialog calls it, passing in the
-   * dialog's return value. The dialog shows a loading indicator until
-   * the callback completes. If it succeeds, the dialog closes, and the returned
+   * dialog's return value. The dialog shows a loading indicator until the
+   * callback completes. If it succeeds, the dialog closes, and the returned
    * promise resolves. If it fails, the dialog stays open, letting the user
    * resubmit.
    *
