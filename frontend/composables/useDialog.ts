@@ -104,11 +104,13 @@ export class DialogController<
    */
   async open(
     ...args: [
-      ...(Data extends undefined ? [] : [data: Data]),
-      ...(OnFail extends OnFail.Close ? [] : [formAction: DialogFormAction]),
+      // Type parameters here are intentionally on the right side of `extends`
+      // to prevent unions from distributing both choices of the conditional.
+      ...(undefined extends Data ? [] : [data: Data]),
+      ...(OnFail.Close extends OnFail ? [] : [formAction: DialogFormAction]),
     ]
     // @ts-expect-error TS can't prove the generic return type is correct.
-  ): OnFail extends OnFail.Close ? Promise<string> : Promise<void> {
+  ): OnFail.Close extends OnFail ? Promise<string> : Promise<void> {
     if (this.scope === undefined) {
       throw new Error(
         "Can't open dialog since no `Dialog` component is using it",
