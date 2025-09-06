@@ -52,10 +52,6 @@ watchEffect(() => {
 
   controller.state.element = markRaw(dialog);
 
-  // Set an initial return value so that successfully submitting a dialog is
-  // easily distinguishable from canceling it by default.
-  dialog.returnValue = "DEFAULT";
-
   // It'd be great to use `showModal` instead of recreating its behavior with
   // `show`, but it's currently impossible to make outside elements (like error
   // boxes and toasts) appear over the top layer. And moving such elements into
@@ -102,15 +98,14 @@ async function formAction(event: SubmitEvent) {
 
   // Use the submit button's value as the dialog's return value since the submit
   // event's default behavior was prevented.
-  if (
-    event.submitter instanceof HTMLButtonElement &&
-    event.submitter.value !== ""
-  ) {
-    dialog.returnValue = event.submitter.value;
-  }
+  const submitterValue =
+    event.submitter instanceof HTMLButtonElement ? event.submitter.value : "";
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This was already checked in the template before passing this function there.
-  await controller.state!.formAction!(dialog.returnValue);
+  // Default to a truthy return value so that a falsy return value easily
+  // distinguishes that a dialog was canceled instead of submitted.
+  dialog.returnValue = submitterValue || "DEFAULT";
+
+  await controller.state?.formAction?.(dialog.returnValue);
 
   dialog.close();
 }
@@ -144,7 +139,7 @@ function handleBackdropClick() {
           class="dialog-form panel frosted"
           :class="`size-${size}`"
           method="dialog"
-          :action="controller.state?.formAction ? formAction : undefined"
+          :action="formAction"
         >
           <h2 class="dialog-heading">
             <slot name="heading" v-bind="context"></slot>
