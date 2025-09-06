@@ -41,10 +41,10 @@ export interface DialogControllerState<
   readonly data: Data;
 
   /** @see {@link DialogController.open}'s `formAction` parameter. */
-  formAction?: DialogFormAction;
+  readonly formAction?: DialogFormAction;
 
   /** Handles the dialog element's `close` event. */
-  handleClose: (event: Event) => void;
+  readonly handleClose: (event: Event) => void;
 
   /** The currently open dialog element if it's mounted yet. */
   element?: HTMLDialogElement;
