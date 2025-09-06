@@ -2,21 +2,26 @@
   tightly coupled with this component. Mutating it here is less error-prone than
   alternatives. -->
 
-<script setup lang="ts" generic="Data">
+<script
+  setup
+  lang="ts"
+  generic="Data extends Record<string, unknown> | undefined"
+>
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import type { OnFail } from "~/composables/useDialog";
 
-export interface DialogContext<Data>
-  extends Pick<NonNullable<DialogController<Data>["state"]>, "data"> {
+export interface DialogContext<Data extends Record<string, unknown> | undefined>
+  extends Pick<NonNullable<DialogControllerState<Data>>, "data"> {
   /** Closes the dialog with its return value set to `""`. */
   cancel(): Promise<void>;
 }
 
-export interface DialogProps<Data> {
+export interface DialogProps<Data extends Record<string, unknown> | undefined> {
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
-  /** The value returned from {@link useDialog} to control this dialog. */
-  value: DialogController<Data>;
+  /** The dialog controller returned from {@link useDialog}. */
+  value: DialogController<OnFail, Data>;
 }
 
 const { value: controller } = defineProps<DialogProps<Data>>();
@@ -91,7 +96,7 @@ function handleClose(event: Event) {
 
 const loading = useLoading();
 
-async function submitDialog(event: SubmitEvent) {
+async function formAction(event: SubmitEvent) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
   const dialog = dialogRef.value!;
 
@@ -104,13 +109,8 @@ async function submitDialog(event: SubmitEvent) {
     dialog.returnValue = event.submitter.value;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This was already checked in the template before passing `submitDialog`.
-  const handleSubmit = controller.state!.keepOpenOnFail as Exclude<
-    NonNullable<typeof controller.state>["keepOpenOnFail"],
-    false | undefined
-  >;
-
-  await handleSubmit(dialog.returnValue);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This was already checked in the template before passing this function there.
+  await controller.state!.formAction!(dialog.returnValue);
 
   dialog.close();
 }
@@ -144,7 +144,7 @@ function handleBackdropClick() {
           class="dialog-form panel frosted"
           :class="`size-${size}`"
           method="dialog"
-          :action="controller.state?.keepOpenOnFail ? submitDialog : undefined"
+          :action="controller.state?.formAction ? formAction : undefined"
         >
           <h2 class="dialog-heading">
             <slot name="heading" v-bind="context"></slot>

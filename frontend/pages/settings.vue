@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { OnFail } from "~/composables/useDialog";
+
 useTitle("Settings");
 
 const me = await useMeOrSignIn();
@@ -19,12 +21,12 @@ watchEffect(() => {
   totpEnabled.value = settingsResponse.value.totpEnabled;
 });
 
-const changeNameDialog = useDialog<{ name: string }>();
+const changeNameDialog = useDialog<OnFail.KeepOpen, { name: string }>();
 
 async function changeName() {
   const data = reactive({ name: me.name });
 
-  await changeNameDialog.open(data).keepOpenOnFail(async () => {
+  await changeNameDialog.open(data, async () => {
     if (data.name === me.name) {
       return;
     }

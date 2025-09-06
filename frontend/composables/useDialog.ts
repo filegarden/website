@@ -1,87 +1,114 @@
 import type { EffectScope, WatchHandle } from "vue";
 
-export default function useDialog<Data = undefined>(): DialogController<Data> {
+/** Determines what the dialog does when its form's submission fails. */
+export enum OnFail {
+  /** Immediately closes the dialog once its form is submitted. */
+  Close,
+
+  /**
+   * Keeps the dialog open while its form's submission loads, allowing the user
+   * to resubmit if it fails.
+   */
+  KeepOpen,
+}
+
+type OnFailType = OnFail;
+
+/**
+ * Creates a new dialog controller.
+ *
+ * @returns The dialog controller. Must be passed into a `Dialog` component's
+ * `value` prop.
+ */
+export default function useDialog<
+  OnFail extends OnFailType,
+  Data extends Record<string, unknown> | undefined = undefined,
+>(): DialogController<OnFail, Data> {
   // @ts-expect-error `DialogController`s can only be instantiated here.
   return new DialogController();
 }
 
-/** The value of a {@link DialogController}'s `state` property. */
-export interface DialogControllerState<Data> {
-  /**
-   * The current value of the data passed into the dialog when it was opened.
-   */
+/**
+ * @param returnValue The dialog's return value.
+ */
+export type DialogFormAction = (returnValue: string) => void | Promise<void>;
+
+/** @see {@link DialogController.state}. */
+export interface DialogControllerState<
+  Data extends Record<string, unknown> | undefined,
+> {
+  /** @see {@link useDialog}'s `data` parameter. */
   readonly data: Data;
 
-  /** The last value passed to {@link DialogOpenResult.keepOpenOnFail}. */
-  keepOpenOnFail?: false | ((returnValue: string) => unknown);
+  /** @see {@link useDialog}'s `formAction` parameter. */
+  formAction?: DialogFormAction;
 
   /** Handles the dialog element's `close` event. */
-  handleClose(event: Event): void;
+  handleClose: (event: Event) => void;
 
   /** The currently open dialog element if it's mounted yet. */
   element?: HTMLDialogElement;
-}
-
-export interface DialogOpenResult {
-  /**
-   * If a callback is given, submitting the dialog calls it, passing in the
-   * dialog's return value. The dialog shows a loading indicator until the
-   * callback completes. If it succeeds, the dialog closes, and the returned
-   * promise resolves. If it fails, the dialog stays open, letting the user
-   * resubmit.
-   *
-   * If `false` is given, this returns the dialog's return value once the dialog
-   * is closed.
-   *
-   * Calling this is the only way to obtain a dialog's return value because that
-   * forces an explicit decision of whether to keep the dialog open on failure.
-   * Otherwise, forgetting to make that decision could result in subtle UX bugs.
-   */
-  keepOpenOnFail<OnSubmit extends false | ((returnValue: string) => unknown)>(
-    onSubmit: OnSubmit,
-  ): OnSubmit extends false ? Promise<string> : Promise<void>;
 }
 
 /**
  * A value returned by {@link useDialog} that can be passed into a `Dialog`
  * component, with methods to manage the dialog imperatively.
  */
-export class DialogController<Data> {
-  protected constructor() {
-    markRaw(this);
-  }
-
-  private readonly stateRef = ref<DialogControllerState<Data>>();
-
-  /**
-   * The dialog's current open state, or `undefined` if the dialog isn't open.
-   */
-  get state() {
-    return this.stateRef.value;
-  }
-
-  set state(value) {
-    this.stateRef.value = value;
-  }
-
+export class DialogController<
+  OnFail extends OnFailType,
+  Data extends Record<string, unknown> | undefined = undefined,
+> {
   /**
    * The Vue scope of the `Dialog` component currently using the controller, or
    * `undefined` if the controller is not in use.
    */
   scope?: EffectScope;
 
+  protected constructor() {
+    markRaw(this);
+  }
+
+  readonly #state = ref<DialogControllerState<Data>>();
+
   /**
-   * Opens the dialog. Returns the dialog's return value once the dialog is
-   * closed.
-   *
-   * If the dialog is canceled (for example, by pressing `Esc`), its return
-   * value will be `""`. If the dialog is submitted, its return value will be
-   * the `value` attribute of the submit button. If no `value` is set on the
-   * submit button, the dialog's return value defaults to `"DEFAULT"`.
+   * The dialog's reactive open state, or `undefined` if the dialog isn't open.
    */
-  open(
-    ...[data]: Data extends undefined ? [data?: Data] : [data: Data]
-  ): DialogOpenResult {
+  get state() {
+    return this.#state.value;
+  }
+
+  set state(value) {
+    this.#state.value = value;
+  }
+
+  /**
+   * Opens the dialog.
+   *
+   * If the dialog is submitted, its return value is set to the submit button's
+   * `value` attribute. If no `value` is set when submitting, the dialog's
+   * return value defaults to `"DEFAULT"`. If the dialog is closed without being
+   * submitted, the dialog's return value is set to `""`.
+   *
+   * @param data - Reactive data that the dialog can use. The type of this data
+   * is defined by the generic parameter passed to {@link useDialog}.
+   * @param formAction - Each time the dialog is submitted, this function is
+   * called and passed the dialog's return value. If this function returns a
+   * promise, the dialog is disabled with a loading indicator until the promise
+   * settles. If the function completes successfully, the dialog closes. If it
+   * fails, the dialog stays open.
+   *
+   * @returns A promise that resolves once the dialog is closed. If
+   * {@link OnFail.Close} is provided to {@link useDialog}, the promise resolves
+   * to the dialog's return value. Otherwise, the callback provided to the
+   * `formAction` parameter receives the dialog's return value instead.
+   */
+  async open(
+    ...args: [
+      ...(Data extends undefined ? [] : [data: Data]),
+      ...(OnFail extends OnFail.Close ? [] : [formAction: DialogFormAction]),
+    ]
+    // @ts-expect-error TS can't prove the generic return type is correct.
+  ): OnFail extends OnFail.Close ? Promise<string> : Promise<void> {
     if (this.scope === undefined) {
       throw new Error(
         "Can't open dialog since no `Dialog` component is using it",
@@ -92,64 +119,44 @@ export class DialogController<Data> {
       throw new Error("Can't open a dialog that's already open");
     }
 
-    if (!(data === undefined || isReactive(data))) {
+    const data = args.find((arg) => typeof arg !== "function") as Data;
+    const formAction = args.find((arg) => typeof arg === "function");
+
+    if (data instanceof Object && !isReactive(data)) {
       throw new TypeError(
         "To avoid unexpected inconsistencies when updating a dialog's data " +
-          "outside the dialog, data must be reactive when passed into a " +
-          "dialog's `open` method",
+          "outside the dialog, mutable data must be reactive when passed " +
+          "into a dialog's `open` method",
       );
     }
 
-    // Unlike `this.state`, this remains undefined after reopening the dialog.
-    let currentState: DialogControllerState<Data> | undefined;
-
-    const returnValue = new Promise<string>((resolve) => {
+    const returnValue = await new Promise<string>((resolve) => {
       this.state = {
-        data: data as Data,
+        data,
+        formAction,
 
         handleClose(event) {
           resolve((event.target as HTMLDialogElement).returnValue);
         },
       };
-
-      // Store the current state after it has become reactive from being set
-      // into `this.state`'s ref.
-      currentState = this.state;
     }).finally(() => {
-      this.state = currentState = undefined;
+      this.state = undefined;
     });
 
-    return {
-      // @ts-expect-error TS can't prove this returns the correct overload type.
-      async keepOpenOnFail(keepOpenOnFail) {
-        if (currentState === undefined) {
-          throw new Error("Can't use `keepOpenOnFail` after dialog has closed");
-        }
-
-        if (currentState.keepOpenOnFail !== undefined) {
-          throw new Error(
-            "`keepOpenOnFail` can only be called once after opening a dialog",
-          );
-        }
-
-        currentState.keepOpenOnFail = keepOpenOnFail;
-
-        // Return the dialog's return value only if there isn't a callback to
-        // receive it.
-        if (keepOpenOnFail === false) {
-          return returnValue;
-        } else {
-          await returnValue;
-        }
-      },
-    };
+    // Return the dialog's return value only if the `formAction` callback
+    // doesn't already receive it.
+    if (!formAction) {
+      // @ts-expect-error TS can't prove the generic return type is correct.
+      return returnValue;
+    }
   }
 
   /**
-   * Closes the dialog with the specified return value. If no return value is
-   * specified, it will be set to `""`.
+   * Closes the dialog.
    *
-   * The returned promise resolves once the dialog is closed.
+   * @param returnValue - Sets the dialog's return value.
+   *
+   * @returns A promise that resolves once the dialog is closed.
    */
   close(returnValue = ""): Promise<void> {
     let unwatch: WatchHandle | undefined;
