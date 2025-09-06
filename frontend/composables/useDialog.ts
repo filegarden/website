@@ -37,10 +37,10 @@ export type DialogFormAction = (returnValue: string) => void | Promise<void>;
 export interface DialogControllerState<
   Data extends Record<string, unknown> | undefined,
 > {
-  /** @see {@link useDialog}'s `data` parameter. */
+  /** @see {@link DialogController.open}'s `data` parameter. */
   readonly data: Data;
 
-  /** @see {@link useDialog}'s `formAction` parameter. */
+  /** @see {@link DialogController.open}'s `formAction` parameter. */
   formAction?: DialogFormAction;
 
   /** Handles the dialog element's `close` event. */
