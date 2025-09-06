@@ -62,8 +62,7 @@ export default withNuxt([
         {
           // This is needed because `eslint-disable-next-line` comments can't be
           // multiline, and it's worse to make HTML attributes multiline.
-          ignorePattern: /^\s*(?:\/\/|<!--) eslint-disable-next-line |="/
-            .source,
+          ignorePattern: /(?:\/\/|<!--) eslint-disable-next-line |="/.source,
         },
       ],
       // #endregion
