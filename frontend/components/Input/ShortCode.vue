@@ -67,7 +67,7 @@ $SHORT-CODE-LENGTH: 6;
 
 :deep(input) {
   font-family: var(--font-family-monospace);
-  font-size: min(3em, 10vw);
+  font-size: min(2.5em, 10vw);
   line-height: 1.875;
 
   $letter-spacing: 0.5ch;
