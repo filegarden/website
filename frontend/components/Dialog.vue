@@ -5,10 +5,13 @@
 <script
   setup
   lang="ts"
-  generic="Data extends Record<string, unknown> | undefined"
+  generic="
+    OnFail extends OnFailType,
+    Data extends Record<string, unknown> | undefined
+  "
 >
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import type { OnFail } from "~/composables/useDialog";
+import type { OnFail as OnFailType } from "~/composables/useDialog";
 
 export interface DialogContext<Data extends Record<string, unknown> | undefined>
   extends Pick<NonNullable<DialogControllerState<Data>>, "data"> {
@@ -16,7 +19,10 @@ export interface DialogContext<Data extends Record<string, unknown> | undefined>
   cancel(): Promise<void>;
 }
 
-export interface DialogProps<Data extends Record<string, unknown> | undefined> {
+export interface DialogProps<
+  OnFail extends OnFailType,
+  Data extends Record<string, unknown> | undefined,
+> {
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
@@ -24,7 +30,7 @@ export interface DialogProps<Data extends Record<string, unknown> | undefined> {
   value: DialogController<OnFail, Data>;
 }
 
-const { value: controller } = defineProps<DialogProps<Data>>();
+const { value: controller } = defineProps<DialogProps<OnFail, Data>>();
 
 const scope = getCurrentScope();
 
