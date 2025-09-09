@@ -64,7 +64,6 @@ async function handleSubmit(event: SubmitEvent) {
 </script>
 
 <template>
-  <!-- @vue-expect-error vuejs/core#4098 prevents accepting `SubmitEvent`s. -->
   <!-- eslint-disable-next-line vue/no-restricted-html-elements -- This *is* the `Form` component, so `form` can be used here. -->
   <form ref="form" @submit="handleSubmit">
     <LoadingIndicator v-if="loading.value" />
