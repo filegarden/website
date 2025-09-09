@@ -29,7 +29,9 @@ export default function useDialog<
 }
 
 /**
- * @param returnValue The dialog's return value.
+ * The `formAction` parameter of {@link DialogController.open}.
+ *
+ * @param returnValue The return value to be set on the dialog once closed.
  *
  * @returns Optionally, a promise that keeps the dialog's form disabled by a
  * loading indicator until it settles.
