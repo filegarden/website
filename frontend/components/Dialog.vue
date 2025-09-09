@@ -102,15 +102,13 @@ async function formAction(event: SubmitEvent) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
   const dialog = dialogRef.value!;
 
-  // To match the default submit behavior that was prevented, use the submit
-  // button's value as the dialog's return value, but don't set it on the dialog
-  // until the dialog is actually closing.
-  let returnValue: string =
-    event.submitter instanceof HTMLButtonElement ? event.submitter.value : "";
+  // To match the default form `method="dialog"` submit behavior that was
+  // prevented:
+  // - Use the submit button's `value` attribute as the dialog's return value.
+  // - If the button or attribute is absent, leave the return value as is.
+  // - Don't set the return value on the dialog until it's actually closing.
 
-  // Default to a truthy return value so that a falsy return value easily
-  // distinguishes that a dialog was canceled instead of submitted.
-  returnValue ||= "DEFAULT";
+  const returnValue = event.submitter?.getAttribute("value") ?? undefined;
 
   await controller.state?.formAction?.(returnValue);
 

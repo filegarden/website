@@ -31,12 +31,13 @@ export default function useDialog<
 /**
  * The `formAction` parameter of {@link DialogController.open}.
  *
- * @param returnValue The return value to be set on the dialog once closed.
+ * @param returnValue The return value to be set on the dialog once closed (if
+ * any).
  *
  * @returns Optionally, a promise that keeps the dialog's form disabled by a
  * loading indicator until it settles.
  */
-export type DialogFormAction = (returnValue: string) => void | Promise<void>;
+export type DialogFormAction = (returnValue?: string) => void | Promise<void>;
 
 /** @see {@link DialogController.state}. */
 export interface DialogControllerState<
@@ -89,10 +90,8 @@ export class DialogController<
   /**
    * Opens the dialog.
    *
-   * If the dialog is submitted, its return value is set to the submit button's
-   * `value` attribute. If no `value` is set when submitting, the dialog's
-   * return value defaults to `"DEFAULT"`. If the dialog is closed without being
-   * submitted, the dialog's return value is set to `""`.
+   * Silently throws a {@link DialogCancelError} if the dialog is closed without
+   * being submitted.
    *
    * @param data - Reactive data that the dialog can use. The type of this data
    * is defined by the generic parameter passed to {@link useDialog}.
@@ -102,10 +101,12 @@ export class DialogController<
    * settles. If the function completes successfully, the dialog closes. If it
    * fails, the dialog stays open.
    *
-   * @returns A promise that resolves once the dialog is closed. If
-   * {@link OnFail.Close} is provided to {@link useDialog}, the promise resolves
-   * to the dialog's return value. Otherwise, the callback provided to the
-   * `formAction` parameter receives the dialog's return value instead.
+   * @returns A promise that resolves once the dialog is submitted and closed.
+   * If {@link OnFail.Close} is provided to {@link useDialog}, the promise
+   * resolves to the dialog's return value. Otherwise, the callback provided to
+   * the `formAction` parameter receives the dialog's return value instead. Note
+   * that a dialog's return value is determined by the `value` attribute of its
+   * form's submit button and defaults to `""` if none is set.
    */
   async open(
     ...args: [
@@ -137,24 +138,46 @@ export class DialogController<
       );
     }
 
-    const returnValue = await new Promise<string>((resolve) => {
-      this.state = {
-        data,
-        formAction,
+    // TODO: Use `Promise.withResolvers` once it's Baseline widely available.
+    let resolve: (value: string | PromiseLike<string>) => void;
+    let reject: (reason?: unknown) => void;
+    const returnValue = new Promise<string>((resolveArg, rejectArg) => {
+      resolve = resolveArg;
+      reject = rejectArg;
+    });
 
-        handleClose(event) {
-          resolve((event.target as HTMLDialogElement).returnValue);
-        },
-      };
-    }).finally(() => {
+    let submitted = false;
+
+    this.state = {
+      data,
+
+      async formAction(...args) {
+        await formAction?.(...args);
+
+        submitted = true;
+      },
+
+      handleClose(event) {
+        const { returnValue } = event.target as HTMLDialogElement;
+
+        if (submitted) {
+          resolve(returnValue);
+        } else {
+          reject(new DialogCancelError({ returnValue }));
+        }
+      },
+    };
+
+    await returnValue.finally(() => {
       this.state = undefined;
     });
 
-    // Return the dialog's return value only if the `formAction` callback
-    // doesn't already receive it.
+    // Return the dialog's return value only if the `formAction` callback didn't
+    // already receive it.
     if (!formAction) {
-      // @ts-expect-error TS can't prove the generic return type is correct.
-      return returnValue;
+      return returnValue as OnFail.Close extends OnFail
+        ? Promise<string>
+        : never;
     }
   }
 
@@ -195,5 +218,24 @@ export class DialogController<
     }).finally(() => {
       unwatch?.();
     });
+  }
+}
+
+/**
+ * A silent exception thrown when a dialog is closed without being submitted.
+ */
+export class DialogCancelError extends Error {
+  override readonly name = this.constructor.name;
+
+  /** The dialog's return value. */
+  readonly returnValue: string;
+
+  constructor({ returnValue }: Pick<DialogCancelError, "returnValue">) {
+    super("Dialog canceled");
+
+    // This error type generally shouldn't need to be caught.
+    silence(this);
+
+    this.returnValue = returnValue;
   }
 }
