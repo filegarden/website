@@ -148,9 +148,9 @@ export class DialogController<
         data,
 
         async formAction(returnValue) {
-          submitted = {
-            formActionResult: await formAction?.(returnValue),
-          };
+          const formActionResult = await formAction?.(returnValue);
+
+          submitted = { formActionResult };
         },
 
         handleClose(event) {
