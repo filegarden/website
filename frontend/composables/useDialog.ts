@@ -37,7 +37,7 @@ export default function useDialog<
  * @returns Optionally, a promise that keeps the dialog's form disabled by a
  * loading indicator until it settles.
  */
-export type DialogFormAction = (returnValue?: string) => void | Promise<void>;
+export type DialogFormAction<T> = (returnValue?: string) => T | Promise<T>;
 
 /** @see {@link DialogController.state}. */
 export interface DialogControllerState<
@@ -47,7 +47,7 @@ export interface DialogControllerState<
   readonly data: Data;
 
   /** @see {@link DialogController.open}'s `formAction` parameter. */
-  readonly formAction?: DialogFormAction;
+  readonly formAction?: DialogFormAction<unknown>;
 
   /** Handles the dialog element's `close` event. */
   readonly handleClose: (event: Event) => void;
@@ -104,19 +104,22 @@ export class DialogController<
    * @returns A promise that resolves once the dialog is submitted and closed.
    * If {@link OnFail.Close} is provided to {@link useDialog}, the promise
    * resolves to the dialog's return value. Otherwise, the callback provided to
-   * the `formAction` parameter receives the dialog's return value instead. Note
-   * that a dialog's return value is determined by the `value` attribute of its
-   * form's submit button and defaults to `""` if none is set.
+   * the `formAction` parameter receives the dialog's return value, and this
+   * promise forwards the callback's return value.
+   *
+   * Note that a dialog's return value is determined by the `value` attribute of
+   * its form's submit button and defaults to `""` if none is set.
    */
-  async open(
+  async open<T extends OnFail.Close extends OnFail ? never : unknown>(
     ...args: [
       // Type parameters here are intentionally on the right side of `extends`
       // to prevent unions from distributing both choices of the conditional.
       ...(undefined extends Data ? [] : [data: Data]),
-      ...(OnFail.Close extends OnFail ? [] : [formAction: DialogFormAction]),
+      ...(OnFail.Close extends OnFail ? [] : [formAction: DialogFormAction<T>]),
     ]
-    // @ts-expect-error TS can't prove the generic return type is correct.
-  ): OnFail.Close extends OnFail ? Promise<string> : Promise<void> {
+  ): Promise<OnFail.Close extends OnFail ? string : Awaited<T>> {
+    type R = OnFail.Close extends OnFail ? string : Awaited<T>;
+
     if (this.scope === undefined) {
       throw new Error(
         "Can't open dialog since no `Dialog` component is using it",
@@ -138,47 +141,38 @@ export class DialogController<
       );
     }
 
-    // TODO: Use `Promise.withResolvers` once it's Baseline widely available.
-    let resolve: (value: string | PromiseLike<string>) => void;
-    let reject: (reason?: unknown) => void;
-    const returnValue = new Promise<string>((resolveArg, rejectArg) => {
-      resolve = resolveArg;
-      reject = rejectArg;
-    });
+    let submitted: { formActionResult?: Awaited<T> } | undefined;
 
-    let submitted = false;
+    return new Promise<R>((resolve, reject) => {
+      this.state = {
+        data,
 
-    this.state = {
-      data,
+        async formAction(returnValue) {
+          submitted = {
+            formActionResult: await formAction?.(returnValue),
+          };
+        },
 
-      async formAction(...args) {
-        await formAction?.(...args);
+        handleClose(event) {
+          const { returnValue } = event.target as HTMLDialogElement;
 
-        submitted = true;
-      },
+          if (!submitted) {
+            reject(new DialogCancelError({ returnValue }));
+            return;
+          }
 
-      handleClose(event) {
-        const { returnValue } = event.target as HTMLDialogElement;
-
-        if (submitted) {
-          resolve(returnValue);
-        } else {
-          reject(new DialogCancelError({ returnValue }));
-        }
-      },
-    };
-
-    await returnValue.finally(() => {
+          resolve(
+            formAction
+              ? (submitted.formActionResult as OnFail.Close extends OnFail
+                  ? never
+                  : Awaited<T>)
+              : (returnValue as OnFail.Close extends OnFail ? string : never),
+          );
+        },
+      };
+    }).finally(() => {
       this.state = undefined;
     });
-
-    // Return the dialog's return value only if the `formAction` callback didn't
-    // already receive it.
-    if (!formAction) {
-      return returnValue as OnFail.Close extends OnFail
-        ? Promise<string>
-        : never;
-    }
   }
 
   /**
