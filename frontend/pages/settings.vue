@@ -153,6 +153,5 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
-  margin: 1em 0;
 }
 </style>

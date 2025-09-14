@@ -48,5 +48,13 @@ const model = defineModel<string>({ default: "" });
 <style scoped lang="scss">
 .input-text {
   margin: 1em 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>

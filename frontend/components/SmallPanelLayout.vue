@@ -56,7 +56,11 @@ main {
   box-sizing: border-box;
   width: $panel-width;
   max-width: 100%;
-  padding: 2rem;
+  padding: min(3rem, 12.5vw);
+
+  &:has(h1) {
+    padding-top: 0;
+  }
 
   @media (max-width: $panel-width) {
     flex-grow: 1;
@@ -67,7 +71,7 @@ main {
 
 :deep(h1) {
   font-size: 1.5rem;
-  margin: 0;
+  margin: 2rem 0;
   text-align: center;
 }
 

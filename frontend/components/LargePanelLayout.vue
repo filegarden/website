@@ -21,12 +21,18 @@ main {
   box-sizing: border-box;
   width: $panel-width;
   max-width: 100%;
+  padding: min(3rem, 12.5vw);
 
-  $base-padding: clamp(1rem, 6vw, 2.5rem);
-  padding: $base-padding calc($base-padding + 1rem);
+  &:has(h1:not(.long-text *)) {
+    padding-top: 0;
+  }
 
   @media (max-width: $panel-width) {
     flex-grow: 1;
   }
+}
+
+:deep(h1:not(.long-text *)) {
+  margin: 2rem 0;
 }
 </style>
