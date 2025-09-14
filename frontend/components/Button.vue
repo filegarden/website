@@ -17,9 +17,8 @@ defineProps<ButtonProps>();
 
 <style scoped lang="scss">
 .button {
-  // Make `a` styles consistent with `button` styles.
+  // Make `a` styles and `button` styles consistent.
   display: inline-block;
-  box-sizing: border-box;
   text-decoration: none;
 
   vertical-align: middle;

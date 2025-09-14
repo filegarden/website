@@ -123,7 +123,6 @@ async function signOut() {
   margin: 0 auto;
   width: 100%;
   max-width: max(66.7%, 750px);
-  box-sizing: border-box;
   padding: clamp(1rem, 6vw, 2rem);
   z-index: 100;
 
@@ -157,9 +156,6 @@ $nav-height: 4rem;
   // the image's area. This also lets screen readers read the image's alt text
   // when hovering anywhere in the link rather than just the image's content.
   :deep(img) {
-    // Don't let adjacent elements invade padding added to the image.
-    box-sizing: border-box;
-
     height: $nav-height;
     padding: math.div($nav-height - $logo-height, 2);
   }

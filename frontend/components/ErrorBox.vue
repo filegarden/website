@@ -53,7 +53,6 @@ const reportUrl = computed(
 
 <style scoped lang="scss">
 .error-box {
-  box-sizing: border-box;
   width: 100%;
   padding: 1.25rem;
 

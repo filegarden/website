@@ -75,7 +75,6 @@ $error-boxes-padding: 1.5rem;
 
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
   padding: $error-boxes-padding;
 
   // The scrollable element must fill the page so its content isn't clipped.

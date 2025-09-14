@@ -1,5 +1,9 @@
 @use "~/assets/styles/themes.scss";
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   height: 100%;
   font-family: var(--font-family);

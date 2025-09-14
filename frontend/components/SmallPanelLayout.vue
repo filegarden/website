@@ -53,7 +53,6 @@ header {
 }
 
 main {
-  box-sizing: border-box;
   width: $panel-width;
   max-width: 100%;
   padding: min(3rem, 12.5vw);

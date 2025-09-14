@@ -153,7 +153,6 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(50%, 20rem, 100%), 1fr));
 
-  box-sizing: border-box;
   min-width: min(1200px, 60%);
   width: 560px;
   max-width: 100%;

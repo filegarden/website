@@ -190,7 +190,6 @@ function handleBackdropClick() {
 
   display: flex;
 
-  box-sizing: border-box;
   padding: 1rem;
   min-height: 100%;
 }
@@ -218,7 +217,6 @@ function handleBackdropClick() {
 .dialog-form {
   margin: auto;
 
-  box-sizing: border-box;
   padding: 2rem;
   max-width: min(56rem, 100%);
 
