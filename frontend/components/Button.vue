@@ -30,6 +30,11 @@ defineProps<ButtonProps>();
   border-radius: 0.6em;
   padding: 0 1.375em;
   background-color: var(--color-foreground);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-foreground-light),
+    var(--color-foreground)
+  );
   cursor: pointer;
 
   $box-shadow: inset 0 2px 0 -1px var(--color-edge-outer);
