@@ -155,19 +155,19 @@ textarea {
 
   vertical-align: middle;
 
-  $box-shadow:
-    0 1px var(--color-edge-inner),
-    inset 0 1px 0.6rem -1px var(--color-shadow-medium);
+  border-radius: 0.25rem;
+  background-color: var(--color-input-background);
+  // The outline should look as if it's outside the input, not inside the input.
+  background-clip: padding-box;
+  border: 1px solid var(--color-outline);
 
-  border: none;
   // A transparent default outline makes transitions to other outlines smoother.
   outline: 1px solid transparent;
-  // Override any user agent defaults.
-  outline-offset: 0;
-  background-color: var(--color-input-background);
-  border-radius: 0.25rem;
-  margin: 1px;
-  box-shadow: $box-shadow;
+  // Overlay the outline on top of the border.
+  outline-offset: -1px;
+
+  $box-shadow-base: inset 0 1px 0.6rem -1px var(--color-shadow-medium);
+  box-shadow: $box-shadow-base;
 
   overflow: hidden;
 
@@ -181,7 +181,7 @@ textarea {
     color: var(--color-input-text-hover);
     outline-color: var(--color-outline-hover);
     box-shadow:
-      $box-shadow,
+      $box-shadow-base,
       0 0 0.5rem -0.25rem var(--color-glow);
   }
 
@@ -190,7 +190,7 @@ textarea {
     color: var(--color-input-text-active);
     outline-color: var(--color-outline-active);
     box-shadow:
-      $box-shadow,
+      $box-shadow-base,
       0 0 0.5rem var(--color-glow);
   }
 
