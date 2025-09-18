@@ -23,6 +23,66 @@ const BACKUP_CODE_LENGTH: usize = 8;
 /// The number of backup authentication codes to generate for a user.
 const BACKUP_CODE_COUNT: usize = 10;
 
+/// A `DELETE` request body for this API route.
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub(crate) struct DeleteRequest {
+    /// The user's password in plain text.
+    pub password: UserPassword,
+}
+
+/// Disables TOTP for the current authenticated user.
+///
+/// # Errors
+///
+/// See [`crate::api::Error`].
+#[debug_handler]
+pub(crate) async fn delete(
+    AuthToken(token_hash): AuthToken,
+    Json(body): Json<DeleteRequest>,
+) -> impl Response<DeleteResponse> {
+    let is_totp_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        let Some(user) = sqlx::query!(
+            "SELECT users.id, users.password_hash
+                FROM users
+                INNER JOIN sessions ON sessions.user_id = users.id
+                WHERE sessions.token_hash = $1",
+            token_hash.as_ref(),
+        )
+        .fetch_optional(tx.as_mut())
+        .await?
+        else {
+            return Err(TxError::Abort(api::Error::AuthFailed));
+        };
+
+        if !verify_hash(&body.password, &user.password_hash) {
+            return Err(TxError::Abort(api::Error::UserCredentialsWrong));
+        }
+
+        Ok(sqlx::query!(
+            "DELETE FROM totp
+                WHERE user_id = $1",
+            user.id,
+        )
+        .execute(tx.as_mut())
+        .await?
+        .rows_affected()
+            != 0)
+    })
+    .await?;
+
+    if !is_totp_deleted {
+        return Err(api::Error::ResourceNotFound);
+    }
+
+    Ok((StatusCode::OK, Json(DeleteResponse {})))
+}
+
+/// A `DELETE` response body for this API route.
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct DeleteResponse {}
+
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]

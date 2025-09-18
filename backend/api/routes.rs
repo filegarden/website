@@ -51,7 +51,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             delete(v0::users::me::sessions::session::delete),
         )
         .route("/users/me/settings", get(v0::users::me::settings::get))
-        .route("/users/me/totp", post(v0::users::me::totp::post))
+        .route(
+            "/users/me/totp",
+            delete(v0::users::me::totp::delete).post(v0::users::me::totp::post),
+        )
         .route(
             "/users/me/totp-request",
             post(v0::users::me::totp_request::post),
