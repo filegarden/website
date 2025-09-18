@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3",
+    "qrcode": "^1",
     "vue-turnstile": "^1"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
     "@types/eslint": "^9",
     "@types/eslint-config-prettier": "^6",
     "@types/node": "^24",
+    "@types/qrcode": "^1.5.5",
     "eslint": "^9",
     "eslint-config-prettier": "^10",
     "eslint-plugin-es-x": "^9",
