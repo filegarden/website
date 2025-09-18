@@ -189,7 +189,7 @@ async function completeSignUp() {
       <Captcha v-model="captchaToken" />
     </div>
 
-    <p v-else-if="page === 'verification-sent'" class="verification-sent-info">
+    <p v-else-if="page === 'verification-sent'" class="distinguished">
       To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
@@ -313,13 +313,7 @@ async function completeSignUp() {
   justify-content: center;
 }
 
-.verification-sent-info {
-  font-size: 1.125em;
-  padding: 1em 0;
-}
-
 .intro {
-  margin: 0;
   text-align: center;
 }
 

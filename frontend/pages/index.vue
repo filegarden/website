@@ -162,10 +162,11 @@ h2 {
 
 .advantage {
   margin: 0.75rem;
-  padding: 1rem 2rem;
+  padding: 2rem;
 }
 
 .advantage-heading {
+  margin-top: 0;
   font-size: 1.25em;
 }
 

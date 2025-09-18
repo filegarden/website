@@ -112,7 +112,7 @@ async function submitNewPassword() {
       </Button>
     </Form>
 
-    <p v-else-if="page === 'requested'" class="requested-info">
+    <p v-else-if="page === 'requested'" class="distinguished">
       To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
@@ -158,9 +158,7 @@ async function submitNewPassword() {
     </p>
 
     <template v-else-if="page === 'done'">
-      <p class="distinguished">
-        Password successfully changed! You are now signed in.
-      </p>
+      <p class="distinguished">Password changed! You are now signed in.</p>
 
       <p>
         <Button :href="`/files/u/${userId}`">Visit Your Garden</Button>
@@ -190,11 +188,6 @@ async function submitNewPassword() {
   :deep(main) {
     text-align: center;
   }
-}
-
-.requested-info {
-  font-size: 1.125em;
-  padding: 1em 0;
 }
 
 .distinguished {

@@ -55,6 +55,14 @@ li {
   }
 }
 
+p:first-child {
+  margin-top: 0;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
 li {
   margin: 0.5em 0;
 
