@@ -232,11 +232,11 @@ function handleBackdropClick() {
   }
 
   &.size-small {
-    width: 24rem;
+    width: 28rem;
   }
 
   &.size-medium {
-    width: 36rem;
+    width: 35rem;
   }
 
   &.size-large {
