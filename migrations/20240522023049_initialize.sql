@@ -30,6 +30,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE totp (
+    created_at timestamptz(3) NOT NULL DEFAULT now(),
     user_id bytea PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
     secret bytea,
     code_used_last text
