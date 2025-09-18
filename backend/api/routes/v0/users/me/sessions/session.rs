@@ -89,7 +89,7 @@ pub(crate) async fn delete(
             SessionQuery::Id(id) => id.as_slice(),
         };
 
-        let sessions_deleted = sqlx::query!(
+        Ok(sqlx::query!(
             "DELETE FROM sessions
                 WHERE user_id = $1 AND token_hash = $2",
             user_id,
@@ -97,9 +97,8 @@ pub(crate) async fn delete(
         )
         .execute(tx.as_mut())
         .await?
-        .rows_affected();
-
-        Ok(sessions_deleted != 0)
+        .rows_affected()
+            != 0)
     })
     .await?;
 
