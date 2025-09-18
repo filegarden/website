@@ -5,6 +5,8 @@
 -->
 
 <script setup lang="ts">
+import useOpenDialogCount from "~/composables/useOpenDialogCount";
+
 useSilencedErrorHandlers();
 
 useHead({
@@ -29,10 +31,12 @@ if (import.meta.server) {
     ogImage: "",
   });
 }
+
+const openDialogCount = useOpenDialogCount();
 </script>
 
 <template>
-  <div id="app">
+  <div id="app" :inert="openDialogCount !== 0">
     <slot></slot>
 
     <Teleport to="#teleports">

@@ -50,6 +50,8 @@ watchEffect(() => {
 
 const dialogRef = useTemplateRef("dialog");
 
+const openDialogCount = useOpenDialogCount();
+
 watchEffect(() => {
   const dialog = dialogRef.value;
   if (!(controller.state && dialog)) {
@@ -65,18 +67,11 @@ watchEffect(() => {
   dialog.show();
 
   disableBodyScroll(dialog, { reserveScrollBarGap: true });
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The `App` component is always present.
-  const appElement = document.getElementById("app")!;
-  appElement.inert = true;
+  openDialogCount.value++;
 
   onWatcherCleanup(() => {
     enableBodyScroll(dialog);
-
-    const otherOpenDialog = document.querySelector("dialog[open]");
-    if (!otherOpenDialog) {
-      appElement.inert = false;
-    }
+    openDialogCount.value--;
   });
 });
 
