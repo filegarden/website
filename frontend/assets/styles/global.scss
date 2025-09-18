@@ -63,6 +63,15 @@ li {
   }
 }
 
+hr {
+  margin: 1em 0;
+
+  border: 1px solid currentColor;
+  border-bottom-width: 0;
+
+  color: var(--color-outline);
+}
+
 .long-text {
   line-height: 1.75;
 
