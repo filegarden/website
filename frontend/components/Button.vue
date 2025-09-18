@@ -37,7 +37,7 @@ defineProps<ButtonProps>();
   );
   cursor: pointer;
 
-  $box-shadow: inset 0 2px 0 -1px var(--color-edge-outer);
+  $box-shadow: inset 0 2px 0 -1px var(--color-shiny-edge);
 
   border: none;
   // A transparent default outline makes transitions to other outlines smoother.
