@@ -10,39 +10,24 @@ export default function useLoading(
 }
 
 export class LoadingState {
-  /** How many things are currently loading. */
-  protected count = 0;
-  protected readonly track: () => void;
-  protected readonly trigger: () => void;
+  /** A reactive array of all the active loading identifiers. */
+  // This must be a set rather than a simple count ref because incrementing or
+  // decrementing a ref's value both tracks and triggers it, causing an infinite
+  // update loop when used inside `watchEffect` for example. `add` and `delete`
+  // trigger without tracking on a set. (This also can't be an array because
+  // deleting from an array requires both tracking and triggering with `indexOf`
+  // and `splice` respectively.)
+  protected readonly activeIds = reactive(new Set<symbol>());
 
   protected constructor(
     protected overrideLoading: MaybeRefOrGetter<boolean> = false,
   ) {
     markRaw(this);
-
-    let track: () => void = undefined as never;
-    let trigger: () => void = undefined as never;
-
-    // See `start` method for why a `customRef` is needed.
-    customRef((trackArg, triggerArg) => {
-      track = trackArg;
-      trigger = triggerArg;
-
-      function forbidUse() {
-        throw new Error("`LoadingState`'s ref shouldn't be used directly");
-      }
-
-      return { get: forbidUse, set: forbidUse };
-    });
-
-    this.track = track;
-    this.trigger = trigger;
   }
 
   /** Whether the loading state is active. */
   get value(): boolean {
-    this.track();
-    return this.count !== 0 || toValue(this.overrideLoading);
+    return this.activeIds.size !== 0 || toValue(this.overrideLoading);
   }
 
   /**
@@ -50,24 +35,15 @@ export class LoadingState {
    * of the loading state.
    */
   start() {
-    // `++` on a normal ref's value would both track and trigger, which would
-    // cause an infinite update loop in `watchEffect` for example. Abstractly,
-    // it doesn't make sense for starting/stopping loading to count as reading
-    // the loading state, so this triggers without tracking using a custom ref.
-    this.count++;
-    this.trigger();
-
-    let stopped = false;
+    const id = Symbol();
+    this.activeIds.add(id);
 
     const stop = () => {
-      if (stopped) {
+      const deleted = this.activeIds.delete(id);
+
+      if (import.meta.dev && !deleted) {
         throw new Error("Loading can't stop because it was already stopped");
       }
-
-      stopped = true;
-
-      this.count--;
-      this.trigger();
     };
 
     return stop;
