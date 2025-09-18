@@ -30,6 +30,10 @@ export interface DialogProps<
   value: DialogController<OnFail, Data>;
 }
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const { value: controller } = defineProps<DialogProps<OnFail, Data>>();
 
 const scope = getCurrentScope();
@@ -129,6 +133,7 @@ function handleBackdropClick() {
       :class="{ loading: loading.value }"
       :closedby="loading.value ? 'none' : 'closerequest'"
       aria-modal="true"
+      v-bind="$attrs"
       @close="handleClose"
     >
       <div class="dialog-scrollable-content">
