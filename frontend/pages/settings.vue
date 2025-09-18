@@ -106,7 +106,7 @@ async function changeName() {
 </template>
 
 <style scoped lang="scss">
-$panel-width: 540px;
+$panel-width: 33.75rem;
 
 :deep(main) {
   // This must take priority over `LargePanelLayout` so a flash of incorrect

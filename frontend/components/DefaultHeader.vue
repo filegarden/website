@@ -122,7 +122,7 @@ async function signOut() {
   top: 0;
   margin: 0 auto;
   width: 100%;
-  max-width: max(66.7%, 750px);
+  max-width: max(66.7%, 46.875rem);
   padding: clamp(1rem, 6vw, 2rem);
   z-index: 100;
 

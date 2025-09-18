@@ -7,7 +7,7 @@
 </template>
 
 <style scoped lang="scss">
-$panel-width: 900px;
+$panel-width: 56.25rem;
 
 .layout {
   min-height: 100%;
