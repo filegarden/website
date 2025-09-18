@@ -47,6 +47,7 @@ watchEffect(() => {
   box-sizing: content-box;
   height: 196px;
   width: 196px;
+  flex-shrink: 0;
 
   // Prevent the canvas from overflowing the border radius.
   overflow: hidden;
