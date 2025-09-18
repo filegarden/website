@@ -56,7 +56,11 @@ const reportUrl = computed(
   width: 100%;
   padding: 1.25rem;
 
-  background-color: var(--color-error-background);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-error-background-light),
+    var(--color-error-background)
+  );
   box-shadow: 0 0 2rem var(--color-error-glow);
   color: var(--color-error-text);
   animation: 0.125s fade-in;
