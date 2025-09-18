@@ -74,6 +74,7 @@ $SHORT-CODE-LENGTH: 6;
   letter-spacing: $letter-spacing;
   text-indent: $letter-spacing;
   width: $letter-spacing + $SHORT-CODE-LENGTH * (1ch + $letter-spacing);
+  box-sizing: content-box;
 
   // It's better to convert the input's value to uppercase with CSS rather than
   // JS to avoid the UX problems of overwriting an input's value (such as wiping
