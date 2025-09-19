@@ -1,8 +1,12 @@
 <script lang="ts">
-async function renderQrCode(canvas: HTMLCanvasElement, data: string) {
+async function renderQrCode(
+  canvas: HTMLCanvasElement,
+  data: string,
+  scale: number,
+) {
   const QRCode = await import("qrcode");
 
-  return QRCode.toCanvas(canvas, data);
+  return QRCode.toCanvas(canvas, data, { scale });
 }
 </script>
 
@@ -10,9 +14,12 @@ async function renderQrCode(canvas: HTMLCanvasElement, data: string) {
 export interface QrCodeCanvasProps {
   /** The data to encode into a QR code. */
   data: string;
+
+  /** How many pixels per cell of the QR code. */
+  scale?: number;
 }
 
-const { data } = defineProps<QrCodeCanvasProps>();
+const { data, scale = 3 } = defineProps<QrCodeCanvasProps>();
 
 const canvas = useTemplateRef("canvas");
 
@@ -23,7 +30,7 @@ watchEffect(() => {
     return;
   }
 
-  const rendering = renderQrCode(canvas.value, data);
+  const rendering = renderQrCode(canvas.value, data, scale);
   void loading.during(() => rendering);
 });
 </script>
@@ -41,12 +48,13 @@ watchEffect(() => {
   display: inline-block;
 
   box-shadow: 0 2px 0.375rem var(--color-shadow-small);
+  border-radius: calc(v-bind(scale) * 4px);
 
   // Match the canvas's expected size to prevent layout shift when the QR code
   // finishes loading.
   box-sizing: content-box;
-  height: 196px;
-  width: 196px;
+  height: calc(v-bind(scale) * 49px);
+  width: calc(v-bind(scale) * 49px);
   flex-shrink: 0;
 
   // Prevent the canvas from overflowing the border radius.
