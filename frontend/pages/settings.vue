@@ -485,7 +485,6 @@ h2 {
 
 .totp-setup-dialog h3 {
   font-size: 1.5em;
-  margin-top: 0;
 }
 
 .heading-numbering::after {
