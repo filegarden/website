@@ -19,7 +19,7 @@ export interface QrCodeCanvasProps {
   scale?: number;
 }
 
-const { data, scale = 3 } = defineProps<QrCodeCanvasProps>();
+const { data, scale = 4 } = defineProps<QrCodeCanvasProps>();
 
 const canvas = useTemplateRef("canvas");
 
