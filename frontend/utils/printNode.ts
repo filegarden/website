@@ -1,4 +1,4 @@
-export default async function printHtml(node: Node) {
+export default async function printNode(node: Node) {
   const iframe = document.createElement("iframe");
   iframe.hidden = true;
   iframe.srcdoc =
