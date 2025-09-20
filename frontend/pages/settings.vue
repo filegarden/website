@@ -472,6 +472,10 @@ h2 {
   gap: 1em;
 }
 
+:global(.totp-setup-dialog h2) {
+  color: var(--color-text-weaker);
+}
+
 .totp-setup-dialog h3 {
   font-size: 1.5em;
   margin-top: 0;
