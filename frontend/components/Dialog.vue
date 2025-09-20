@@ -262,6 +262,18 @@ function handleBackdropClick() {
 
 .dialog-content {
   margin: 1.5rem 0;
+
+  // It looks inconsistent if a series of consecutive `p`s doesn't have the same
+  // spacing as the dialog's content section does.
+  > :deep(p) {
+    &:not(p + *) {
+      margin-top: 1.5rem;
+    }
+
+    &:not(:has(+ p)) {
+      margin-bottom: 1.5rem;
+    }
+  }
 }
 
 .dialog-actions {
