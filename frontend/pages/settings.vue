@@ -162,7 +162,7 @@ async function enableTotp() {
 
         body.append(ul);
 
-        printNode(body);
+        return printNode(body);
       },
     }),
   );
