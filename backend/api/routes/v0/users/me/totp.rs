@@ -29,6 +29,17 @@ const BACKUP_CODE_COUNT: usize = 10;
 pub(crate) struct DeleteRequest {
     /// The user's password in plain text.
     pub password: UserPassword,
+    // `otp` is notably absent here. Requiring 2FA to disable 2FA would mitigate attacks where your
+    // session token and password are both compromised (e.g., by malware that steals browser cookies
+    // and autofill data), but it would also lock you out if you lose your 2FA device and backup
+    // codes. Both are common, but a lockout is far riskier:
+    //
+    // - On one hand, being unable to disable 2FA after losing your 2FA device would require proving
+    //   account ownership to a support admin, which is prone to social engineering, and the
+    //   worst-case scenario is having insufficient proof and losing access permanently.
+    // - On the other hand, an attacker disabling 2FA with your session token and password allows
+    //   them to take over your account, but malicious changes can be reverted by a support admin
+    //   with little risk and no need for proof of ownership.
 }
 
 /// Disables TOTP for the current authenticated user.
