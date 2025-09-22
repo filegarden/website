@@ -28,7 +28,7 @@ const reportUrl = computed(
         "\n\n" +
         props.value.code +
         "\n\nThe above error appeared when I did the following:\n\n",
-    }).toString(),
+    }),
 );
 </script>
 
