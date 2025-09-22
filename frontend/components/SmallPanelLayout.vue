@@ -31,7 +31,6 @@ $panel-width: 30rem;
 .space-around-panel {
   @media not (max-width: $panel-width) {
     // This vertically centers the panel.
-
     flex-grow: 1;
     // This is the minimum space above and below the panel.
     flex-basis: 2rem;
