@@ -135,9 +135,7 @@ export class DialogController<
 
     if (data instanceof Object && !isReactive(data)) {
       throw new TypeError(
-        "To avoid unexpected inconsistencies when updating a dialog's data " +
-          "outside the dialog, mutable data must be reactive when passed " +
-          "into a dialog's `open` method",
+        "To avoid unexpected inconsistencies when updating a dialog's data outside the dialog, mutable data must be reactive when passed into a dialog's `open` method",
       );
     }
 

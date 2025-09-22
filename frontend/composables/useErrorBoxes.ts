@@ -29,8 +29,7 @@ export default function useErrorBoxes() {
 
       if (error instanceof FetchError && error.response) {
         errorBoxes.open({
-          message:
-            "Error " + error.response.status + ": " + error.response.statusText,
+          message: `Error ${error.response.status}: ${error.response.statusText}`,
           code:
             (error.options?.method ?? "GET") +
             " " +

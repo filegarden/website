@@ -56,17 +56,6 @@ export default withNuxt([
       "@eslint-community/eslint-comments/require-description": "error",
       // #endregion
 
-      // #region Enabled from `@stylistic/eslint-plugin`.
-      "@stylistic/max-len": [
-        "error",
-        {
-          // This is needed because `eslint-disable-next-line` comments can't be
-          // multiline, and it's worse to make HTML attributes multiline.
-          ignorePattern: /(?:\/\/|<!--) eslint-disable-next-line |="/.source,
-        },
-      ],
-      // #endregion
-
       // #region Enabled from `eslint-plugin-vue`.
       "vue/block-lang": [
         "error",
