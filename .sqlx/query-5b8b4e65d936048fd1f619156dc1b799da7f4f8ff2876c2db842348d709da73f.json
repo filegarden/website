@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT users.password_hash FROM users\n                INNER JOIN sessions ON sessions.user_id = users.id\n                WHERE sessions.token_hash = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "password_hash",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "5b8b4e65d936048fd1f619156dc1b799da7f4f8ff2876c2db842348d709da73f"
+}
