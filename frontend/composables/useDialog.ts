@@ -1,5 +1,3 @@
-import type { EffectScope, WatchHandle } from "vue";
-
 /** Determines what the dialog does when its form's submission fails. */
 export enum OnFail {
   /** Immediately closes the dialog once its form is submitted. */
@@ -22,7 +20,7 @@ type OnFailType = OnFail;
  */
 export default function useDialog<
   OnFail extends OnFailType,
-  Data extends Record<string, unknown> | undefined = undefined,
+  Data extends object | undefined = undefined,
 >(): DialogController<OnFail, Data> {
   // @ts-expect-error `DialogController`s can only be instantiated here.
   return new DialogController();
@@ -39,11 +37,12 @@ export default function useDialog<
  */
 export type DialogFormAction<T> = (returnValue?: string) => T | Promise<T>;
 
-/** @see {@link DialogController.state}. */
-export interface DialogControllerState<
-  Data extends Record<string, unknown> | undefined,
-> {
-  /** @see {@link DialogController.open}'s `data` parameter. */
+/** A dialog's open state. */
+export interface DialogState<Data extends object | undefined> {
+  /**
+   * The reactive data passed to {@link DialogController.open}'s `data`
+   * argument.
+   */
   readonly data: Data;
 
   /** @see {@link DialogController.open}'s `formAction` parameter. */
@@ -51,9 +50,6 @@ export interface DialogControllerState<
 
   /** Handles the dialog element's `close` event. */
   readonly handleClose: (event: Event) => void;
-
-  /** The currently open dialog element if it's mounted yet. */
-  element?: HTMLDialogElement;
 }
 
 /**
@@ -62,19 +58,13 @@ export interface DialogControllerState<
  */
 export class DialogController<
   OnFail extends OnFailType,
-  Data extends Record<string, unknown> | undefined = undefined,
+  Data extends object | undefined = undefined,
 > {
-  /**
-   * The Vue scope of the `Dialog` component currently using the controller, or
-   * `undefined` if the controller is not in use.
-   */
-  scope?: EffectScope;
-
   protected constructor() {
     markRaw(this);
   }
 
-  readonly #state = ref<DialogControllerState<Data>>();
+  readonly #state = ref<DialogState<Data>>();
 
   /**
    * The dialog's reactive open state, or `undefined` if the dialog isn't open.
@@ -120,12 +110,6 @@ export class DialogController<
   ): Promise<OnFail.Close extends OnFail ? string : Awaited<T>> {
     type R = OnFail.Close extends OnFail ? string : Awaited<T>;
 
-    if (this.scope === undefined) {
-      throw new Error(
-        "Can't open dialog since no `Dialog` component is using it",
-      );
-    }
-
     if (this.state !== undefined) {
       throw new Error("Can't open a dialog that's already open");
     }
@@ -139,9 +123,9 @@ export class DialogController<
       );
     }
 
-    let submitted: { formActionResult?: Awaited<T> } | undefined;
-
     return new Promise<R>((resolve, reject) => {
+      let submitted: { formActionResult?: Awaited<T> } | undefined;
+
       this.state = {
         data,
 
@@ -170,45 +154,6 @@ export class DialogController<
       };
     }).finally(() => {
       this.state = undefined;
-    });
-  }
-
-  /**
-   * Closes the dialog.
-   *
-   * @param returnValue - Sets the dialog's return value.
-   *
-   * @returns A promise that resolves once the dialog is closed.
-   */
-  close(returnValue = ""): Promise<void> {
-    let unwatch: WatchHandle | undefined;
-
-    return new Promise<void>((resolve) => {
-      if (this.scope === undefined) {
-        throw new Error(
-          "Cannot close dialog since no `Dialog` component is using it",
-        );
-      }
-
-      this.scope.run(() => {
-        unwatch = watchEffect(() => {
-          // Ensure the dialog is fully cleaned up before resolving.
-          if (this.state === undefined) {
-            resolve();
-            return;
-          }
-
-          const dialog = this.state.element;
-          if (!dialog) {
-            // The dialog element hasn't mounted yet.
-            return;
-          }
-
-          dialog.close(returnValue);
-        });
-      });
-    }).finally(() => {
-      unwatch?.();
     });
   }
 }

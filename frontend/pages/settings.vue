@@ -251,7 +251,11 @@ async function disableTotp() {
       <Button>Download Account Data</Button>
     </div>
 
-    <Dialog size="small" :value="changeNameDialog">
+    <Dialog
+      v-if="changeNameDialog.state"
+      :state="changeNameDialog.state"
+      size="small"
+    >
       <template #heading>Change display name</template>
 
       <template #default="{ data }">
@@ -271,7 +275,11 @@ async function disableTotp() {
       </template>
     </Dialog>
 
-    <Dialog size="medium" :value="enableTotpDialog">
+    <Dialog
+      v-if="enableTotpDialog.state"
+      :state="enableTotpDialog.state"
+      size="medium"
+    >
       <template #heading>Enable 2FA</template>
 
       <template #default="{ data }">
@@ -297,7 +305,12 @@ async function disableTotp() {
       </template>
     </Dialog>
 
-    <Dialog class="totp-setup-dialog" size="medium" :value="totpSetupDialog">
+    <Dialog
+      v-if="totpSetupDialog.state"
+      :state="totpSetupDialog.state"
+      class="totp-setup-dialog"
+      size="medium"
+    >
       <template #heading>2FA Setup</template>
 
       <template #default="{ data }">
@@ -375,7 +388,11 @@ async function disableTotp() {
       </template>
     </Dialog>
 
-    <Dialog size="medium" :value="totpBackupCodesDialog">
+    <Dialog
+      v-if="totpBackupCodesDialog.state"
+      :state="totpBackupCodesDialog.state"
+      size="medium"
+    >
       <template #heading>2FA Backup Codes</template>
 
       <template #default="{ data }">
@@ -410,7 +427,11 @@ async function disableTotp() {
       </template>
     </Dialog>
 
-    <Dialog size="medium" :value="disableTotpDialog">
+    <Dialog
+      v-if="disableTotpDialog.state"
+      :state="disableTotpDialog.state"
+      size="medium"
+    >
       <template #heading>Disable 2FA</template>
 
       <template #default="{ data }">

@@ -1,70 +1,38 @@
-<!-- eslint-disable vue/no-mutating-props -- The `DialogController` prop is
-  tightly coupled with this component. Mutating it here is less error-prone than
-  alternatives. -->
-
-<script
-  setup
-  lang="ts"
-  generic="
-    OnFail extends OnFailType,
-    Data extends Record<string, unknown> | undefined
-  "
->
+<script setup lang="ts" generic="Data extends object | undefined">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import type { OnFail as OnFailType } from "~/composables/useDialog";
+import type { DialogState } from "~/composables/useDialog";
 
-export interface DialogContext<Data extends Record<string, unknown> | undefined>
-  extends Pick<NonNullable<DialogControllerState<Data>>, "data"> {
+export interface DialogContext<Data extends object | undefined>
+  extends Pick<NonNullable<DialogState<Data>>, "data"> {
   /** Closes the dialog with its return value set to `""`. */
-  cancel(): Promise<void>;
+  readonly cancel: () => void;
 }
 
-export interface DialogProps<
-  OnFail extends OnFailType,
-  Data extends Record<string, unknown> | undefined,
-> {
+export interface DialogProps<Data extends object | undefined> {
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
-  /** The dialog controller returned from {@link useDialog}. */
-  value: DialogController<OnFail, Data>;
+  /** The `state` of a dialog controller returned from {@link useDialog}. */
+  state: DialogState<Data>;
 }
 
 defineOptions({
   inheritAttrs: false,
 });
 
-const { value: controller } = defineProps<DialogProps<OnFail, Data>>();
+const { state } = defineProps<DialogProps<Data>>();
 
-const scope = getCurrentScope();
-
-watchEffect(() => {
-  if (controller.scope !== undefined) {
-    throw new Error(
-      "The dialog controller is already in use by another `Dialog` component",
-    );
-  }
-
-  controller.scope = scope;
-
-  onWatcherCleanup(() => {
-    controller.scope = undefined;
-  });
-});
-
-const dialogRef = useTemplateRef("dialog");
+const dialogElement = useTemplateRef("dialog");
 
 const openDialogCount = useOpenDialogCount();
 
 watchEffect(() => {
-  const dialog = dialogRef.value;
-  if (!(controller.state && dialog)) {
+  const dialog = dialogElement.value;
+  if (!dialog) {
     return;
   }
 
-  controller.state.element = markRaw(dialog);
-
-  // It'd be great to use `showModal` instead of recreating its behavior with
+  // It'd be nice to use `showModal` instead of recreating its behavior with
   // `show`, but it's currently impossible to make outside elements (like error
   // boxes and toasts) appear over the top layer. And moving such elements into
   // the top layer isn't seamless since it resets DOM state and CSS animations.
@@ -79,27 +47,26 @@ watchEffect(() => {
   });
 });
 
-function cancel() {
-  return controller.close("");
-}
-
-const context = computed<DialogContext<Data> | undefined>(
-  () =>
-    controller.state && {
-      cancel,
-      data: controller.state.data,
-    },
-);
-
-function handleClose(event: Event) {
-  controller.state?.handleClose(event);
-}
-
 const loading = useLoading();
+
+// Don't let close requests close the dialog while it's loading because it would
+// be unclear to the user whether the loading was canceled.
+const closedBy = computed(() => (loading.value ? "none" : "closerequest"));
+
+function handleBackdropClick() {
+  // To match the default behavior of `closedby="none"`, ignore the backdrop
+  // being clicked.
+  if (closedBy.value === "none") {
+    return;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its backdrop was clicked.
+  dialogElement.value!.close();
+}
 
 async function formAction(event: SubmitEvent) {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The dialog element must be mounted since its form was submitted.
-  const dialog = dialogRef.value!;
+  const dialog = dialogElement.value!;
 
   // To match the default form `method="dialog"` submit behavior that was
   // prevented:
@@ -109,32 +76,32 @@ async function formAction(event: SubmitEvent) {
 
   const returnValue = event.submitter?.getAttribute("value") ?? undefined;
 
-  await controller.state?.formAction?.(returnValue);
+  await state.formAction?.(returnValue);
 
   dialog.close(returnValue);
 }
 
-function handleBackdropClick() {
-  // Don't close the dialog while it loads because it would be unclear to the
-  // user whether the loading was canceled.
-  if (loading.value) {
-    return;
-  }
+const context: DialogContext<Data> = {
+  cancel() {
+    dialogElement.value?.close("");
+  },
 
-  void cancel();
-}
+  get data() {
+    return state.data;
+  },
+};
 </script>
 
 <template>
-  <Teleport v-if="context" to="#dialog-teleports">
+  <Teleport to="#dialog-teleports">
     <dialog
       ref="dialog"
       class="dialog"
       :class="{ loading: loading.value }"
-      :closedby="loading.value ? 'none' : 'closerequest'"
+      :closedby="closedBy"
       aria-modal="true"
       v-bind="$attrs"
-      @close="handleClose"
+      @close="state.handleClose"
     >
       <div class="dialog-scrollable-content">
         <div class="dialog-backdrop" @click="handleBackdropClick"></div>
