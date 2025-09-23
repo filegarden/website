@@ -13,7 +13,7 @@ const { action } = defineProps<FormProps>();
 const form = useTemplateRef("form");
 
 const loading = defineModel<LoadingState>("loading", {
-  default: useLoading(),
+  default: () => useLoading(),
 });
 
 async function handleSubmit(event: SubmitEvent) {
