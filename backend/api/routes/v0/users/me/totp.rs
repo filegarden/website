@@ -11,7 +11,7 @@ use crate::{
         self, Json,
         extract::AuthToken,
         response::Response,
-        validation::{Otp, UserPassword},
+        validation::{Otp, TotpSecret, UserPassword},
     },
     crypto::{generate_short_code, verify_hash, verify_totp},
     db::{self, TxError, TxResult},
@@ -54,8 +54,7 @@ pub(crate) async fn delete(
 ) -> impl Response<DeleteResponse> {
     let is_totp_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT users.id, users.password_hash
-                FROM users
+            "SELECT users.id, users.password_hash FROM users
                 INNER JOIN sessions ON sessions.user_id = users.id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
@@ -101,6 +100,10 @@ pub(crate) struct PostRequest {
     /// The user's password in plain text.
     pub password: UserPassword,
 
+    /// The user's new TOTP secret. Generated client-side to significantly reduce backend
+    /// complexity. A client should ensure it generates this using a CSPRNG.
+    pub secret: TotpSecret,
+
     /// The user's TOTP authentication code.
     pub otp: Otp,
 }
@@ -117,10 +120,8 @@ pub(crate) async fn post(
 ) -> impl Response<PostResponse> {
     let backup_codes = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT users.id, users.password_hash, totp.unverified_secret as totp_unverified_secret
-                FROM users
+            "SELECT users.id, users.password_hash FROM users
                 INNER JOIN sessions ON sessions.user_id = users.id
-                LEFT JOIN totp ON totp.user_id = users.id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
         )
@@ -134,28 +135,30 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::UserCredentialsWrong));
         }
 
-        let Some(unverified_secret) = user.totp_unverified_secret else {
-            return Err(TxError::Abort(api::Error::ResourceNotFound));
-        };
-
-        if !verify_totp(&body.otp, &unverified_secret) {
+        if !verify_totp(&body.otp, body.secret.as_ref()) {
             return Err(TxError::Abort(api::Error::OtpWrong));
         }
 
         let backup_codes: [String; BACKUP_CODE_COUNT] =
             array::from_fn(|_| generate_short_code(BACKUP_CODE_LENGTH));
 
-        sqlx::query!(
-            "UPDATE totp
-                SET secret = unverified_secret,
-                    code_used_last = $1,
-                    unused_backup_codes = $2,
-                    unverified_secret = NULL",
+        match sqlx::query!(
+            "INSERT INTO totp (user_id, secret, otp_used_last, unused_backup_codes)
+                VALUES ($1, $2, $3, $4)",
+            user.id,
+            body.secret.as_ref(),
             *body.otp,
             &backup_codes,
         )
         .execute(tx.as_mut())
-        .await?;
+        .await
+        {
+            Err(sqlx::Error::Database(error)) if error.constraint() == Some("totp_pkey") => {
+                // The user already has a TOTP configuration.
+                return Err(TxError::Abort(api::Error::AlreadyExists));
+            }
+            result => result?,
+        };
 
         Ok(backup_codes)
     })

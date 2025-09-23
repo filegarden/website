@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT users.id, users.password_hash\n                FROM users\n                INNER JOIN sessions ON sessions.user_id = users.id\n                WHERE sessions.token_hash = $1",
+  "query": "SELECT users.id, users.password_hash FROM users\n                INNER JOIN sessions ON sessions.user_id = users.id\n                WHERE sessions.token_hash = $1",
   "describe": {
     "columns": [
       {
@@ -24,5 +24,5 @@
       false
     ]
   },
-  "hash": "fa5371aad72b4fa86abb2ea44084d96809e897301fc6d98c99134f697ab91d50"
+  "hash": "b33a5fbf4f0739e9662667fd182d1ff67c2434874221b621707eed6dfe98e9cd"
 }

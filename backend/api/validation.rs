@@ -225,6 +225,53 @@ fn normalize_email_address_user(user: &str) -> Cow<'_, str> {
     }
 }
 
+/// A TOTP secret decoded from RFC-4648-compliant Base32. Must be 160 bits as recommended by RFC
+/// 4226 (section 4).
+#[derive(Deref, AsRef, DeserializeFromStr, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+pub(crate) struct TotpSecret([u8; 20]);
+
+impl TotpSecret {
+    /// The number of Base32 characters needed to encode a `TotpSecret`.
+    const ENCODED_LENGTH: usize = 32;
+}
+
+/// An error constructing a [`TotpSecret`].
+#[derive(Error, Copy, Clone, Debug)]
+#[non_exhaustive]
+pub(crate) enum TotpSecretError {
+    /// The Base32 encoding was invalid.
+    #[error("invalid Base32 encoding (according to RFC 4648)")]
+    Base32,
+
+    /// The Base32 string length is incorrect.
+    #[error("invalid encoded string length {}, expected {}", .0, TotpSecret::ENCODED_LENGTH)]
+    EncodedLength(usize),
+
+    /// The decoded number of bytes is incorrect.
+    #[error("invalid decoded byte count {}, expected {}", .0, size_of::<TotpSecret>())]
+    DecodedLength(usize),
+}
+
+impl FromStr for TotpSecret {
+    type Err = TotpSecretError;
+
+    fn from_str(str: &str) -> Result<Self, Self::Err> {
+        // Check the encoded length preemptively to avoid the cost of decoding very long inputs.
+        if str.len() != Self::ENCODED_LENGTH {
+            return Err(TotpSecretError::EncodedLength(str.len()));
+        }
+
+        let Some(bytes) = base32::decode(base32::Alphabet::Rfc4648 { padding: false }, str) else {
+            return Err(TotpSecretError::Base32);
+        };
+
+        match bytes.try_into() {
+            Ok(bytes) => Ok(Self(bytes)),
+            Err(bytes) => Err(TotpSecretError::DecodedLength(bytes.len())),
+        }
+    }
+}
+
 #[cfg(test)]
 #[expect(clippy::missing_errors_doc, reason = "See rust-lang/rust-clippy#13391")]
 mod tests {

@@ -32,14 +32,10 @@ CREATE TABLE users (
 CREATE TABLE totp (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     user_id bytea PRIMARY KEY REFERENCES users (id) ON DELETE CASCADE,
-    secret bytea,
-    code_used_last text
-        CHECK ((secret IS NULL) = (code_used_last IS NULL)),
-    code_used_2nd_to_last text,
-    unused_backup_codes text[]
-        CHECK ((secret IS NULL) = (unused_backup_codes IS NULL)),
-    unverified_secret bytea
-        CHECK ((secret IS NULL) != (unverified_secret IS NULL))
+    secret bytea NOT NULL,
+    otp_used_last text NOT NULL,
+    otp_used_2nd_to_last text,
+    unused_backup_codes text[] NOT NULL
 );
 
 CREATE TABLE unverified_emails (

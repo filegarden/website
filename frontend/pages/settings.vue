@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { base32 } from "rfc4648";
 import type { OnFail } from "~/composables/useDialog";
 
 useTitle("Settings");
 
 const me = await useMeOrSignIn();
 
-const email = ref<string>();
+const email = ref<string>(undefined as never);
 const totpEnabled = ref(false);
 
 const { data: settingsResponse } = await useApi("/users/me/settings", {
@@ -49,7 +50,7 @@ const totpSetupDialog = useDialog<
   OnFail.KeepOpen,
   {
     otpauthUri: string;
-    totpSecret: string;
+    secret: string;
     otp: string;
     isOtpWrong: boolean;
   }
@@ -74,8 +75,8 @@ async function enableTotp() {
     },
   );
 
-  const { otpauthUri } = await enableTotpDialog.open(data, () =>
-    api<{ otpauthUri: string }>("/users/me/totp-request", {
+  await enableTotpDialog.open(data, () =>
+    api("/users/me/password/verify", {
       method: "POST",
       body: { password: data.password },
 
@@ -87,12 +88,18 @@ async function enableTotp() {
     }),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The backend always provides a `secret` parameter.
-  const totpSecret = new URL(otpauthUri).searchParams.get("secret")!;
+  // RFC 4226 (section 4) recommends TOTP secrets be 160 bits.
+  const secretBytes = crypto.getRandomValues(new Uint8Array(160 / 8));
+
+  const issuer = encodeURIComponent("File Garden");
+  const accountName = encodeURIComponent(email.value);
+  const secret = base32.stringify(secretBytes);
+
+  const otpauthUri = `otpauth://totp/${issuer}:${accountName}?secret=${secret}&issuer=${issuer}`;
 
   const confirmData = reactive({
     otpauthUri,
-    totpSecret,
+    secret,
     otp: "",
     isOtpWrong: false,
   });
@@ -109,6 +116,7 @@ async function enableTotp() {
       method: "POST",
       body: {
         password: data.password,
+        secret: confirmData.secret,
         otp: confirmData.otp,
       },
 
@@ -327,7 +335,7 @@ async function disableTotp() {
 
                 <code class="totp-setup-secret">
                   {{
-                    data.totpSecret
+                    data.secret
                       .toLowerCase()
                       .replace(/(.{4})/g, "$1 ")
                       .trimEnd()

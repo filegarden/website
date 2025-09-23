@@ -59,10 +59,6 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             "/users/me/totp",
             delete(v0::users::me::totp::delete).post(v0::users::me::totp::post),
         )
-        .route(
-            "/users/me/totp-request",
-            post(v0::users::me::totp_request::post),
-        )
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
         .method_not_allowed_fallback(|| async { api::Error::MethodNotAllowed });
