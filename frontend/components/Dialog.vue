@@ -16,9 +16,7 @@ export interface DialogProps<Data extends object | undefined> {
   state: DialogState<Data>;
 }
 
-defineOptions({
-  inheritAttrs: false,
-});
+defineOptions({ inheritAttrs: false });
 
 const { state } = defineProps<DialogProps<Data>>();
 

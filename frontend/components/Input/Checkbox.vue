@@ -4,9 +4,7 @@ export interface InputCheckboxProps {
   autofocus?: boolean;
 }
 
-defineOptions({
-  inheritAttrs: false,
-});
+defineOptions({ inheritAttrs: false });
 
 defineProps<InputCheckboxProps>();
 

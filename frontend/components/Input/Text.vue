@@ -10,9 +10,7 @@ export interface InputTextProps {
   customValidity?: string;
 }
 
-defineOptions({
-  inheritAttrs: false,
-});
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<InputTextProps>();
 
