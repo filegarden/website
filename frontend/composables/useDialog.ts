@@ -1,70 +1,68 @@
-/** Determines what the dialog does when its form's submission fails. */
-export enum OnFail {
-  /** Immediately closes the dialog once its form is submitted. */
-  Close,
+/** A type representing a dialog's interface. */
+export interface DialogType {
+  /**
+   * The initial data passed to {@link DialogController.open} that the dialog
+   * can use.
+   */
+  initialData?: unknown;
 
   /**
-   * Keeps the dialog open while its form's submission loads, allowing the user
-   * to resubmit if it fails.
+   * The awaited return value of the dialog's form action, or unset if the
+   * dialog has no form action.
    */
-  KeepOpen,
+  result?: unknown;
 }
-
-type OnFailType = OnFail;
 
 /**
  * Creates a new dialog controller.
  *
- * @returns The dialog controller. Must be passed into a `Dialog` component's
- * `value` prop.
+ * @returns The dialog controller.
  */
-export default function useDialog<
-  OnFail extends OnFailType,
-  Data extends object | undefined = undefined,
->(): DialogController<OnFail, Data> {
-  // @ts-expect-error `DialogController`s can only be instantiated here.
-  return new DialogController();
+export default function useDialog<T extends DialogType>(): DialogController<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `DialogController`s can only be instantiated here.
+  return new (DialogController as any)();
 }
 
-/**
- * The `formAction` parameter of {@link DialogController.open}.
- *
- * @param returnValue The return value to be set on the dialog once closed (if
- * any).
- *
- * @returns Optionally, a promise that keeps the dialog's form disabled by a
- * loading indicator until it settles.
- */
-export type DialogFormAction<T> = (returnValue?: string) => T | Promise<T>;
-
 /** A dialog's open state. */
-export interface DialogState<Data extends object | undefined> {
+export interface DialogState<T extends DialogType> {
+  /** The data passed to {@link DialogController.open}. */
+  readonly initialData: T["initialData"];
+
   /**
-   * The reactive data passed to {@link DialogController.open}'s `data`
-   * argument.
+   * Handles successful submission of the dialog's form.
+   *
+   * @param result - The awaited return value of the dialog's form action, or
+   * the dialog's return value if the dialog has no form action.
    */
-  readonly data: Data;
+  readonly handleSubmit: (result: DialogResult<T>) => void;
 
-  /** @see {@link DialogController.open}'s `formAction` parameter. */
-  readonly formAction?: DialogFormAction<unknown>;
-
-  /** Handles the dialog element's `close` event. */
+  /**
+   * Handles the dialog element's `close` event.
+   *
+   * @param event - The `close` event.
+   */
   readonly handleClose: (event: Event) => void;
 }
 
+/** The awaited return value of {@link DialogController.open}. */
+export type DialogResult<T extends DialogType> = T extends {
+  result: infer Result;
+}
+  ? // Forward the return value from the dialog's form action.
+    Awaited<Result>
+  : // The dialog has no action, so forward the dialog's `returnValue`.
+    string;
+
 /**
- * A value returned by {@link useDialog} that can be passed into a `Dialog`
- * component, with methods to manage the dialog imperatively.
+ * A value returned by {@link useDialog} that can be used to manage a `Dialog`
+ * component imperatively.
  */
-export class DialogController<
-  OnFail extends OnFailType,
-  Data extends object | undefined = undefined,
-> {
+export class DialogController<T extends DialogType> {
   protected constructor() {
     markRaw(this);
   }
 
-  readonly #state = ref<DialogState<Data>>();
+  readonly #state = ref<DialogState<T>>();
 
   /**
    * The dialog's reactive open state, or `undefined` if the dialog isn't open.
@@ -83,73 +81,45 @@ export class DialogController<
    * Silently throws a {@link DialogCancelError} if the dialog is closed without
    * being submitted.
    *
-   * @param data - Reactive data that the dialog can use. The type of this data
-   * is defined by the generic parameter passed to {@link useDialog}.
-   * @param formAction - Each time the dialog is submitted, this function is
-   * called and passed the dialog's return value. If this function returns a
-   * promise, the dialog is disabled with a loading indicator until the promise
-   * settles. If the function completes successfully, the dialog closes. If it
-   * fails, the dialog stays open.
+   * @param initialData - Initial data that the dialog can use.
    *
    * @returns A promise that resolves once the dialog is submitted and closed.
-   * If {@link OnFail.Close} is provided to {@link useDialog}, the promise
-   * resolves to the dialog's return value. Otherwise, the callback provided to
-   * the `formAction` parameter receives the dialog's return value, and this
-   * promise forwards the callback's return value.
+   * The promise resolves to the dialog's `returnValue` if the dialog has no
+   * form action. If it does have a form action, the form action receives the
+   * dialog's `returnValue` instead, and this promise forwards the form action's
+   * return value.
    *
-   * Note that a dialog's return value is determined by the `value` attribute of
-   * its form's submit button and defaults to `""` if none is set.
+   * Note that a dialog's `returnValue` is determined by the `value` attribute
+   * of its form's submit button and defaults to `""` if none is set.
    */
-  async open<T extends OnFail.Close extends OnFail ? never : unknown>(
-    ...args: [
-      // Type parameters here are intentionally on the right side of `extends`
-      // to prevent unions from distributing both choices of the conditional.
-      ...(undefined extends Data ? [] : [data: Data]),
-      ...(OnFail.Close extends OnFail ? [] : [formAction: DialogFormAction<T>]),
-    ]
-  ): Promise<OnFail.Close extends OnFail ? string : Awaited<T>> {
-    type R = OnFail.Close extends OnFail ? string : Awaited<T>;
-
+  async open(
+    ...[initialData]: undefined extends T["initialData"]
+      ? [initialData?: T["initialData"]]
+      : [initialData: T["initialData"]]
+  ): Promise<DialogResult<T>> {
     if (this.state !== undefined) {
       throw new Error("Can't open a dialog that's already open");
     }
 
-    const data = args.find((arg) => typeof arg !== "function") as Data;
-    const formAction = args.find((arg) => typeof arg === "function");
-
-    if (data instanceof Object && !isReactive(data)) {
-      throw new TypeError(
-        "To avoid unexpected inconsistencies when updating a dialog's data outside the dialog, mutable data must be reactive when passed into a dialog's `open` method",
-      );
-    }
-
-    return new Promise<R>((resolve, reject) => {
-      let submitted: { formActionResult?: Awaited<T> } | undefined;
+    return new Promise<DialogResult<T>>((resolve, reject) => {
+      let submitted = false;
 
       this.state = {
-        data,
+        initialData,
 
-        async formAction(returnValue) {
-          const formActionResult = await formAction?.(returnValue);
-
-          submitted = { formActionResult };
+        handleSubmit(result) {
+          submitted = true;
+          resolve(result);
         },
 
         handleClose(event) {
-          const { returnValue } = event.target as HTMLDialogElement;
-
-          if (!submitted) {
-            reject(new DialogCancelError({ returnValue }));
+          if (submitted) {
             return;
           }
 
-          resolve(
-            formAction
-              ? (submitted.formActionResult as OnFail.Close extends OnFail
-                  ? never
-                  : Awaited<T>)
-              : (returnValue as OnFail.Close extends OnFail ? string : never),
-          );
+          const dialog = event.target as HTMLDialogElement;
+
+          reject(new DialogCancelError({ returnValue: dialog.returnValue }));
         },
       };
     }).finally(() => {

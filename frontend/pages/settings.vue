@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { base32 } from "rfc4648";
-import type { OnFail } from "~/composables/useDialog";
+import type { ChangeNameDialog } from "~/components/Dialog/ChangeName.vue";
+import type { DisableTotpDialog } from "~/components/Dialog/DisableTotp.vue";
+import type { EnableTotpDialog } from "~/components/Dialog/EnableTotp.vue";
+import type { TotpBackupCodesDialog } from "~/components/Dialog/TotpBackupCodes.vue";
+import type { TotpSetupDialog } from "~/components/Dialog/TotpSetup.vue";
 
 useTitle("Settings");
 
@@ -22,188 +25,31 @@ watchEffect(() => {
   totpEnabled.value = settingsResponse.value.totpEnabled;
 });
 
-const changeNameDialog = useDialog<OnFail.KeepOpen, { name: string }>();
+const changeNameDialog = useDialog<ChangeNameDialog>();
 
 async function changeName() {
-  const data = reactive({ name: me.name });
+  const { name } = await changeNameDialog.open();
 
-  await changeNameDialog.open(data, async () => {
-    if (data.name === me.name) {
-      return;
-    }
-
-    const { name } = await api("/users/me/name", {
-      method: "PUT",
-      body: { name: data.name },
-    });
-
-    me.name = name;
-  });
+  me.name = name;
 }
 
-const enableTotpDialog = useDialog<
-  OnFail.KeepOpen,
-  { password: string; isPasswordWrong: boolean }
->();
-
-const totpSetupDialog = useDialog<
-  OnFail.KeepOpen,
-  {
-    otpauthUri: string;
-    secret: string;
-    otp: string;
-    isOtpWrong: boolean;
-  }
->();
-
-const totpBackupCodesDialog = useDialog<
-  OnFail.Close,
-  {
-    backupCodes: string[];
-    copyBackupCodes: () => void;
-    printBackupCodes: () => void;
-  }
->();
+const enableTotpDialog = useDialog<EnableTotpDialog>();
+const totpSetupDialog = useDialog<TotpSetupDialog>();
+const totpBackupCodesDialog = useDialog<TotpBackupCodesDialog>();
 
 async function enableTotp() {
-  const data = reactive({ password: "", isPasswordWrong: false });
-
-  watch(
-    () => data.password,
-    () => {
-      data.isPasswordWrong = false;
-    },
-  );
-
-  await enableTotpDialog.open(data, () =>
-    api("/users/me/password/verify", {
-      method: "POST",
-      body: { password: data.password },
-
-      onApiError: {
-        USER_CREDENTIALS_WRONG: () => {
-          data.isPasswordWrong = true;
-        },
-      },
-    }),
-  );
-
-  // RFC 4226 (section 4) recommends TOTP secrets be 160 bits.
-  const secretBytes = crypto.getRandomValues(new Uint8Array(160 / 8));
-
-  const issuer = encodeURIComponent("File Garden");
-  const accountName = encodeURIComponent(email.value);
-  const secret = base32.stringify(secretBytes);
-
-  const otpauthUri = `otpauth://totp/${issuer}:${accountName}?secret=${secret}&issuer=${issuer}`;
-
-  const confirmData = reactive({
-    otpauthUri,
-    secret,
-    otp: "",
-    isOtpWrong: false,
-  });
-
-  watch(
-    () => confirmData.otp,
-    () => {
-      confirmData.isOtpWrong = false;
-    },
-  );
-
-  const { backupCodes } = await totpSetupDialog.open(confirmData, () =>
-    api<{ backupCodes: string[] }>("/users/me/totp", {
-      method: "POST",
-      body: {
-        password: data.password,
-        secret: confirmData.secret,
-        otp: confirmData.otp,
-      },
-
-      onApiError: {
-        OTP_WRONG: () => {
-          confirmData.isOtpWrong = true;
-        },
-      },
-    }),
-  );
+  const { password } = await enableTotpDialog.open();
+  const { backupCodes } = await totpSetupDialog.open({ password });
 
   totpEnabled.value = true;
 
-  void totpBackupCodesDialog.open(
-    reactive({
-      backupCodes,
-
-      copyBackupCodes() {
-        const totpBackupCodes = document.getElementsByClassName(
-          "totp-backup-codes",
-        )[0] as HTMLTextAreaElement;
-
-        totpBackupCodes.select();
-
-        // eslint-disable-next-line @typescript-eslint/no-deprecated -- The Clipboard API only works in secure contexts.
-        document.execCommand("copy");
-      },
-
-      printBackupCodes() {
-        const body = document.createDocumentFragment();
-
-        const h1 = document.createElement("h1");
-        h1.append("File Garden");
-        body.append(h1);
-
-        const h2 = document.createElement("h2");
-        h2.append("2FA Backup Codes");
-        body.append(h2);
-
-        const ul = document.createElement("ul");
-
-        for (const backupCode of backupCodes) {
-          const li = document.createElement("li");
-          const code = document.createElement("code");
-
-          code.append(backupCode);
-
-          li.append(code);
-          ul.append(li);
-        }
-
-        body.append(ul);
-
-        return printNode(body);
-      },
-    }),
-  );
+  void totpBackupCodesDialog.open({ backupCodes });
 }
 
-const disableTotpDialog = useDialog<
-  OnFail.KeepOpen,
-  { password: string; isPasswordWrong: boolean }
->();
+const disableTotpDialog = useDialog<DisableTotpDialog>();
 
 async function disableTotp() {
-  const data = reactive({ password: "", isPasswordWrong: false });
-
-  watch(
-    () => data.password,
-    () => {
-      data.isPasswordWrong = false;
-    },
-  );
-
-  await disableTotpDialog.open(data, () =>
-    api("/users/me/totp", {
-      method: "DELETE",
-      body: { password: data.password },
-
-      onApiError: {
-        RESOURCE_NOT_FOUND: () => Promise.resolve(),
-        USER_CREDENTIALS_WRONG: () => {
-          data.isPasswordWrong = true;
-        },
-      },
-    }),
-  );
+  await disableTotpDialog.open();
 
   totpEnabled.value = false;
 }
@@ -251,210 +97,28 @@ async function disableTotp() {
       <Button>Download Account Data</Button>
     </div>
 
-    <Dialog
+    <DialogChangeName
       v-if="changeNameDialog.state"
       :state="changeNameDialog.state"
-      size="small"
-    >
-      <template #heading>Change display name</template>
-
-      <template #default="{ data }">
-        <InputText
-          v-model="data.name"
-          label="Display Name"
-          minlength="1"
-          maxlength="64"
-          required
-          autocomplete="username"
-        />
-      </template>
-
-      <template #actions="{ cancel }">
-        <Button type="submit">Confirm</Button>
-        <Button @click="cancel">Cancel</Button>
-      </template>
-    </Dialog>
-
-    <Dialog
+      :name="me.name"
+    />
+    <DialogEnableTotp
       v-if="enableTotpDialog.state"
       :state="enableTotpDialog.state"
-      size="medium"
-    >
-      <template #heading>Enable 2FA</template>
-
-      <template #default="{ data }">
-        <p>
-          Secure your account against stolen passwords by enabling 2-factor
-          authentication (2FA). A one-time code generated by a mobile app will
-          be required in addition to your password when signing in.
-        </p>
-
-        <InputText
-          v-model="data.password"
-          label="Verify Current Password"
-          type="password"
-          maxlength="256"
-          required
-          :custom-validity="data.isPasswordWrong ? 'Incorrect password.' : ''"
-        />
-      </template>
-
-      <template #actions="{ cancel }">
-        <Button type="submit">2FA Setup</Button>
-        <Button @click="cancel">Cancel</Button>
-      </template>
-    </Dialog>
-
-    <Dialog
+    />
+    <DialogTotpSetup
       v-if="totpSetupDialog.state"
       :state="totpSetupDialog.state"
-      class="totp-setup-dialog"
-      size="medium"
-    >
-      <template #heading>2FA Setup</template>
-
-      <template #default="{ data }">
-        <section>
-          <h3>
-            <span class="heading-numbering">1.</span>
-            Install an authenticator app
-          </h3>
-
-          <p>
-            Install any authenticator app on your mobile device. We recommend
-            <A href="https://ente.io/auth/" target="_blank">Ente Auth</A>.
-          </p>
-        </section>
-
-        <hr />
-
-        <section>
-          <h3>
-            <span class="heading-numbering">2.</span>
-            Scan the QR code
-          </h3>
-
-          <div class="totp-setup-step-qr-code">
-            <div class="totp-setup-qr-code-wrapper">
-              <QrCode :data="data.otpauthUri" />
-            </div>
-
-            <div class="totp-setup-qr-code-info">
-              <p>Open your authenticator app, and use it to scan this image.</p>
-
-              <p>
-                Can't scan the image? Manually enter this secret key into the
-                app:
-
-                <code class="totp-setup-secret">
-                  {{
-                    data.secret
-                      .toLowerCase()
-                      .replace(/(.{4})/g, "$1 ")
-                      .trimEnd()
-                  }}
-                </code>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <hr />
-
-        <section>
-          <h3>
-            <span class="heading-numbering">3.</span>
-            Verify your 2FA code
-          </h3>
-
-          <p>
-            Enter the 6-digit code generated by your authenticator app to
-            confirm your 2FA is set up correctly.
-          </p>
-
-          <InputShortCode
-            v-model="data.otp"
-            label="2FA Code"
-            required
-            autofocus
-            :custom-validity="data.isOtpWrong ? 'Incorrect 2FA code.' : ''"
-          />
-        </section>
-      </template>
-
-      <template #actions="{ cancel }">
-        <Button type="submit">Enable 2FA</Button>
-        <Button @click="cancel">Cancel</Button>
-      </template>
-    </Dialog>
-
-    <Dialog
+      :email
+    />
+    <DialogTotpBackupCodes
       v-if="totpBackupCodesDialog.state"
       :state="totpBackupCodesDialog.state"
-      size="medium"
-    >
-      <template #heading>2FA Backup Codes</template>
-
-      <template #default="{ data }">
-        <p>
-          These single-use codes can be used as 2FA codes if you lose access to
-          your authenticator app.
-        </p>
-
-        <p>
-          <strong>
-            SAVE THESE CODES! Otherwise, you'll be permanently locked out of
-            your account if you lose your mobile device.
-          </strong>
-        </p>
-
-        <textarea
-          class="totp-backup-codes"
-          :value="data.backupCodes.join(' ')"
-          readonly
-        ></textarea>
-
-        <div class="totp-backup-codes-actions">
-          <Button autofocus @click="data.copyBackupCodes">Copy</Button>
-          <Button @click="data.printBackupCodes">Print</Button>
-        </div>
-
-        <p>Protect these codes like a password. Don't share them.</p>
-      </template>
-
-      <template #actions>
-        <Button type="submit">I understand</Button>
-      </template>
-    </Dialog>
-
-    <Dialog
+    />
+    <DialogDisableTotp
       v-if="disableTotpDialog.state"
       :state="disableTotpDialog.state"
-      size="medium"
-    >
-      <template #heading>Disable 2FA</template>
-
-      <template #default="{ data }">
-        <p>
-          Your account will no longer be secured against stolen passwords. Only
-          your password will be required when signing in.
-        </p>
-
-        <InputText
-          v-model="data.password"
-          label="Verify Current Password"
-          type="password"
-          maxlength="256"
-          required
-          :custom-validity="data.isPasswordWrong ? 'Incorrect password.' : ''"
-        />
-      </template>
-
-      <template #actions="{ cancel }">
-        <Button type="submit">Disable 2FA</Button>
-        <Button @click="cancel">Cancel</Button>
-      </template>
-    </Dialog>
+    />
   </LargePanelLayout>
 </template>
 

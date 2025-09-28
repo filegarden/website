@@ -1,24 +1,39 @@
-<script setup lang="ts" generic="Data extends object | undefined">
+<script setup lang="ts" generic="T extends DialogType">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import type { DialogState } from "~/composables/useDialog";
+import type { DialogState, DialogType } from "~/composables/useDialog";
 
-export interface DialogContext<Data extends object | undefined>
-  extends Pick<NonNullable<DialogState<Data>>, "data"> {
+export interface DialogContext {
   /** Closes the dialog with its return value set to `""`. */
   readonly cancel: () => void;
 }
 
-export interface DialogProps<Data extends object | undefined> {
+export interface BaseDialogProps<T extends DialogType> {
+  /** The `state` of a dialog controller returned from {@link useDialog}. */
+  state: DialogState<T>;
+}
+
+export interface DialogProps<T extends DialogType> extends BaseDialogProps<T> {
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
-  /** The `state` of a dialog controller returned from {@link useDialog}. */
-  state: DialogState<Data>;
+  /**
+   * Handles the dialog's form submission.
+   *
+   * @param returnValue - The return value to be set on the dialog once closed
+   * (if any).
+   *
+   * @returns Optionally, a promise that keeps the dialog's form disabled by a
+   * loading indicator until it settles. This return value is forwarded as
+   * {@link DialogController.open}'s return value.
+   */
+  action: T extends { result: infer Result }
+    ? (returnValue?: string) => Awaited<Result> | Promise<Awaited<Result>>
+    : undefined;
 }
 
 defineOptions({ inheritAttrs: false });
 
-const { state } = defineProps<DialogProps<Data>>();
+const { state, action } = defineProps<DialogProps<T>>();
 
 const dialogElement = useTemplateRef("dialog");
 
@@ -74,18 +89,27 @@ async function formAction(event: SubmitEvent) {
 
   const returnValue = event.submitter?.getAttribute("value") ?? undefined;
 
-  await state.formAction?.(returnValue);
+  state.handleSubmit(
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ESLint thinks `action` is `never`, but it's not.
+    action
+      ? ((await action(returnValue)) as T extends {
+          result: infer Result;
+        }
+          ? Awaited<Result>
+          : never)
+      : ((returnValue ?? dialog.returnValue) as T extends {
+          result: infer _;
+        }
+          ? never
+          : string),
+  );
 
   dialog.close(returnValue);
 }
 
-const context: DialogContext<Data> = {
+const context: DialogContext = {
   cancel() {
     dialogElement.value?.close("");
-  },
-
-  get data() {
-    return state.data;
   },
 };
 </script>
