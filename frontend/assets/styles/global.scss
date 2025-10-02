@@ -293,7 +293,7 @@ code {
 
 @keyframes fade-in {
   from {
-    animation-timing-function: ease;
+    animation-timing-function: ease-out;
     opacity: 0;
   }
   to {

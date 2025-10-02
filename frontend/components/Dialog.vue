@@ -194,7 +194,7 @@ const context: DialogContext = {
   background-color: var(--color-background);
   opacity: 0.667;
 
-  animation: 0.1s dialog-backdrop-opening ease;
+  animation: 0.1s dialog-backdrop-opening ease-out;
 }
 
 @keyframes dialog-backdrop-opening {
@@ -213,7 +213,7 @@ const context: DialogContext = {
     0 4px 8px var(--color-shadow-large),
     0 0 16px var(--color-shadow-large);
 
-  animation: 0.1s dialog-opening ease;
+  animation: 0.1s dialog-opening ease-out;
   transition: 0.1s ease transform;
 
   .dialog.loading:has(.dialog-backdrop:active) & {
