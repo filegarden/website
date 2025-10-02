@@ -71,10 +71,6 @@ export class DialogController<T extends DialogType> {
     return this.#state.value;
   }
 
-  set state(value) {
-    this.#state.value = value;
-  }
-
   /**
    * Opens the dialog.
    *
@@ -104,7 +100,7 @@ export class DialogController<T extends DialogType> {
     return new Promise<DialogResult<T>>((resolve, reject) => {
       let submitted = false;
 
-      this.state = {
+      this.#state.value = {
         initialData,
 
         handleSubmit(result) {
@@ -123,7 +119,7 @@ export class DialogController<T extends DialogType> {
         },
       };
     }).finally(() => {
-      this.state = undefined;
+      this.#state.value = undefined;
     });
   }
 }
