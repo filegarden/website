@@ -1,10 +1,10 @@
 <!--
-  Please put globals in the `App` component instead of this file. See the top
-  comment in `App`.
+  Please put globals in `TheApp` instead of here. See the comment at the top of
+  `TheApp`.
 -->
 
 <template>
-  <App>
+  <TheApp>
     <NuxtPage />
-  </App>
+  </TheApp>
 </template>

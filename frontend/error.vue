@@ -11,7 +11,7 @@ useTitle(title);
 </script>
 
 <template>
-  <App>
+  <TheApp>
     <SmallPanelLayout>
       <h1>{{ title() }}</h1>
 
@@ -23,7 +23,7 @@ useTitle(title);
         </p>
       </template>
     </SmallPanelLayout>
-  </App>
+  </TheApp>
 </template>
 
 <style scoped lang="scss">
