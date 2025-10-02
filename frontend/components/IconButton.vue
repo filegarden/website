@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { ButtonProps } from "~/components/Button.vue";
-
-export interface IconButtonProps extends ButtonProps {
+export interface IconButtonProps {
   /** A human-readable label for accessibility. */
   label: string;
 }

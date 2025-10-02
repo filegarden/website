@@ -1,13 +1,5 @@
-<script setup lang="ts">
-import type { AProps } from "~/components/A.vue";
-
-export type ButtonProps = AProps;
-
-defineProps<ButtonProps>();
-</script>
-
 <template>
-  <A v-if="href" class="button" v-bind="$props">
+  <A v-if="$attrs.href" class="button">
     <slot></slot>
   </A>
   <button v-else type="button" class="button">

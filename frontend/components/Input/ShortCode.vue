@@ -1,15 +1,9 @@
 <script lang="ts">
-import type { InputTextProps } from "~/components/Input/Text.vue";
-
 /** The required length for a `InputShortCode`'s value. */
 export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
-export type InputShortCodeProps = InputTextProps;
-
-defineProps<InputShortCodeProps>();
-
 const model = defineModel<string>({ default: "" });
 
 function handleBeforeInput(event: InputEvent) {
@@ -56,7 +50,6 @@ async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
     :minlength="SHORT_CODE_LENGTH"
     :maxlength="SHORT_CODE_LENGTH"
     autocomplete="one-time-code"
-    v-bind="$props"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
   />
