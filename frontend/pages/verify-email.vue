@@ -37,10 +37,9 @@ async function generateCode() {
   code.value = codeResponse.code;
 }
 
-function handleCodeInputClick(
-  event: FocusEvent & { target: HTMLInputElement },
-) {
-  event.target.select();
+function handleCodeInputClick(event: MouseEvent) {
+  const input = event.target as HTMLInputElement;
+  input.select();
 }
 </script>
 

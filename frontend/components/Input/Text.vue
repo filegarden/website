@@ -14,6 +14,13 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<InputTextProps>();
 
+// TODO: Remove this when vuejs/language-tools#5680 is fixed.
+const emit = defineEmits<{
+  input: [event: InputEvent];
+  beforeinput: [event: InputEvent];
+  click: [event: MouseEvent];
+}>();
+
 const input = useTemplateRef("input");
 
 watchEffect(() => {
@@ -23,6 +30,17 @@ watchEffect(() => {
 const id = useId();
 
 const model = defineModel<string>({ default: "" });
+
+// TODO: Remove these event handlers when vuejs/language-tools#5680 is fixed.
+function handleInput(event: InputEvent) {
+  emit("input", event);
+}
+function handleBeforeInput(event: InputEvent) {
+  emit("beforeinput", event);
+}
+function handleClick(event: MouseEvent) {
+  emit("click", event);
+}
 </script>
 
 <template>
@@ -37,6 +55,9 @@ const model = defineModel<string>({ default: "" });
       v-model="model"
       v-autofocus="autofocus"
       v-bind="$attrs"
+      @input="handleInput"
+      @beforeinput="handleBeforeInput"
+      @click="handleClick"
     />
 
     <slot name="after"></slot>

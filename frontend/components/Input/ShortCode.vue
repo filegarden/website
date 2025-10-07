@@ -4,6 +4,11 @@ export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
+// TODO: Remove this when vuejs/language-tools#5680 is fixed.
+const emit = defineEmits<{
+  click: [event: MouseEvent];
+}>();
+
 const model = defineModel<string>({ default: "" });
 
 function handleBeforeInput(event: InputEvent) {
@@ -18,16 +23,18 @@ function handleBeforeInput(event: InputEvent) {
   }
 }
 
-async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
+async function handleInput(event: InputEvent) {
+  const input = event.target as HTMLInputElement;
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This can't be null for text inputs.
-  const selectionStart = event.target.selectionStart!;
+  const selectionStart = input.selectionStart!;
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Same here.
-  const selectionEnd = event.target.selectionEnd!;
+  const selectionEnd = input.selectionEnd!;
 
   const valueParts = [
-    event.target.value.slice(0, selectionStart),
-    event.target.value.slice(selectionStart, selectionEnd),
-    event.target.value.slice(selectionEnd),
+    input.value.slice(0, selectionStart),
+    input.value.slice(selectionStart, selectionEnd),
+    input.value.slice(selectionEnd),
   ].map((substring) => substring.replace(/[^0-9A-Z]/gi, "")) as [
     string,
     string,
@@ -37,9 +44,13 @@ async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
   model.value = valueParts.join("");
 
   await nextTick();
-  event.target.selectionStart = valueParts[0].length;
-  event.target.selectionEnd =
-    event.target.selectionStart + valueParts[1].length;
+  input.selectionStart = valueParts[0].length;
+  input.selectionEnd = input.selectionStart + valueParts[1].length;
+}
+
+// TODO: Remove this when vuejs/language-tools#5680 is fixed.
+function handleClick(event: MouseEvent) {
+  emit("click", event);
 }
 </script>
 
@@ -52,6 +63,7 @@ async function handleInput(event: InputEvent & { target: HTMLInputElement }) {
     autocomplete="one-time-code"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
+    @click="handleClick"
   />
 </template>
 

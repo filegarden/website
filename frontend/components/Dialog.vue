@@ -116,6 +116,7 @@ const context: DialogContext = {
 
 <template>
   <Teleport to="#dialog-teleports">
+    <!-- @vue-expect-error The `closedby` attribute isn't typed yet. -->
     <dialog
       ref="dialog"
       class="dialog"

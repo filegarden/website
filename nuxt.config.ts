@@ -6,6 +6,13 @@ export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
 
   typescript: {
+    tsConfig: {
+      vueCompilerOptions: {
+        fallthroughAttributes: true,
+        strictTemplates: true,
+      },
+    },
+
     nodeTsConfig: {
       // Nuxt's TS config doesn't include the ESLint config by default.
       include: ["../eslint.config.*"],
