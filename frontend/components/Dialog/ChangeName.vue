@@ -9,7 +9,7 @@ const { name } = defineProps<DialogChangeNameProps>();
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss -- This ref shouldn't react to changes in this initial value.
 const newName = ref(name);
 
-async function action() {
+function action() {
   if (newName.value === name) {
     throw new Error("TODO: Cancel dialog");
   }

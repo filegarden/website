@@ -29,7 +29,7 @@ watch(otp, () => {
   isOtpWrong.value = false;
 });
 
-async function action() {
+function action() {
   return api<{ backupCodes: string[] }>("/users/me/totp", {
     method: "POST",
     body: {
