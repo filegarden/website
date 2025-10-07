@@ -1,20 +1,59 @@
-<script setup lang="ts" generic="T extends DialogType">
+<script lang="ts">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import type { DialogState, DialogType } from "~/composables/useDialog";
 
+function requireHandle(): never {
+  throw new Error("A `Dialog` component's `handle` prop is required");
+}
+</script>
+
+<script setup lang="ts" generic="Action extends DialogAction">
+/** The `action` prop of a dialog component. */
+export type DialogAction = ((returnValue?: string) => unknown) | undefined;
+
+/** The awaited return value of {@link DialogController.open}. */
+export type DialogResult<Action extends DialogAction> = Action extends (
+  ...args: unknown[]
+) => unknown
+  ? Awaited<ReturnType<Action>>
+  : string;
+
+/** An open dialog's handle. */
+export interface DialogHandle<Action extends DialogAction> {
+  /**
+   * Handles successful submission of the dialog's form.
+   *
+   * @param result - The awaited return value of the dialog's form action, or
+   * the dialog's return value if the dialog has no form action.
+   */
+  readonly onSubmitted: (result: DialogResult<Action>) => void;
+
+  /**
+   * Handles the dialog element's `close` event.
+   *
+   * @param event - The `close` event.
+   */
+  readonly onClose: (event: Event) => void;
+}
+
+/** An object passed to the `Dialog` component's slots. */
 export interface DialogContext {
   /** Closes the dialog with its return value set to `""`. */
   readonly cancel: () => void;
 }
 
-export interface BaseDialogProps<T extends DialogType> {
-  /** The `state` of a dialog controller returned from {@link useDialog}. */
-  state: DialogState<T>;
-}
-
-export interface DialogProps<T extends DialogType> extends BaseDialogProps<T> {
+export interface DialogProps<Action extends DialogAction> {
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
+
+  /**
+   * The `handle` of a dialog controller returned from {@link useDialog}, to
+   * ensure the dialog component is controlled correctly.
+   *
+   * This is required at runtime, despite being typed as optional so it can be
+   * passed via fallthrough attributes with inferred types instead of explicitly
+   * typed props.
+   */
+  handle?: DialogHandle<Action>;
 
   /**
    * Handles the dialog's form submission.
@@ -22,21 +61,19 @@ export interface DialogProps<T extends DialogType> extends BaseDialogProps<T> {
    * @param returnValue - The return value to be set on the dialog once closed
    * (if any).
    *
-   * @returns Optionally, a promise that keeps the dialog's form disabled by a
-   * loading indicator until it settles. This return value is forwarded as
-   * {@link DialogController.open}'s return value.
+   * @returns A value to await and pass to the `submitted` event. If this is a
+   * promise, it keeps the dialog's form disabled with a loading indicator until
+   * settled.
    */
-  action: T extends { result: infer Result }
-    ? (returnValue?: string) => Awaited<Result> | Promise<Awaited<Result>>
-    : undefined;
+  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
+  action?: Action;
 }
 
 defineOptions({ inheritAttrs: false });
 
-const { state, action } = defineProps<DialogProps<T>>();
+const { handle = requireHandle(), action } = defineProps<DialogProps<Action>>();
 
 const dialogElement = useTemplateRef("dialog");
-
 const openDialogCount = useOpenDialogCount();
 
 watchEffect(() => {
@@ -89,20 +126,17 @@ async function formAction(event: SubmitEvent) {
 
   const returnValue = event.submitter?.getAttribute("value") ?? undefined;
 
-  state.handleSubmit(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- ESLint thinks `action` is `never`, but it's not.
-    action
-      ? ((await action(returnValue)) as T extends {
-          result: infer Result;
-        }
-          ? Awaited<Result>
-          : never)
-      : ((returnValue ?? dialog.returnValue) as T extends {
-          result: infer _;
-        }
-          ? never
-          : string),
-  );
+  type Callable = (...args: unknown[]) => unknown;
+
+  const result = action
+    ? ((await action(returnValue)) as Action extends Callable
+        ? Awaited<ReturnType<Action>>
+        : never)
+    : ((returnValue ?? dialog.returnValue) as Action extends Callable
+        ? never
+        : string);
+
+  handle.onSubmitted(result);
 
   dialog.close(returnValue);
 }
@@ -124,7 +158,7 @@ const context: DialogContext = {
       :closedby="closedBy"
       aria-modal="true"
       v-bind="$attrs"
-      @close="state.handleClose"
+      @close="handle.onClose"
     >
       <div class="dialog-scrollable-content">
         <div class="dialog-backdrop" @click="handleBackdropClick"></div>

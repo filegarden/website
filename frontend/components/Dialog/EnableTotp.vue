@@ -1,14 +1,4 @@
 <script setup lang="ts">
-import type { BaseDialogProps } from "~/components/Dialog.vue";
-
-export interface EnableTotpDialog {
-  result: { password: string };
-}
-
-export type DialogEnableTotpProps = BaseDialogProps<EnableTotpDialog>;
-
-defineProps<DialogEnableTotpProps>();
-
 const password = ref("");
 const isPasswordWrong = ref(false);
 
@@ -33,7 +23,7 @@ async function action() {
 </script>
 
 <template>
-  <Dialog size="medium" :state :action>
+  <Dialog size="medium" :action>
     <template #heading>Enable 2FA</template>
 
     <p>

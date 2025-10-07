@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { ChangeNameDialog } from "~/components/Dialog/ChangeName.vue";
-import type { DisableTotpDialog } from "~/components/Dialog/DisableTotp.vue";
-import type { EnableTotpDialog } from "~/components/Dialog/EnableTotp.vue";
-import type { TotpBackupCodesDialog } from "~/components/Dialog/TotpBackupCodes.vue";
-import type { TotpSetupDialog } from "~/components/Dialog/TotpSetup.vue";
+import type ChangeName from "~/components/Dialog/ChangeName.vue";
+import type DisableTotp from "~/components/Dialog/DisableTotp.vue";
+import type EnableTotp from "~/components/Dialog/EnableTotp.vue";
+import type TotpBackupCodes from "~/components/Dialog/TotpBackupCodes.vue";
+import type TotpSetup from "~/components/Dialog/TotpSetup.vue";
 
 useTitle("Settings");
 
@@ -25,7 +25,7 @@ watchEffect(() => {
   totpEnabled.value = settingsResponse.value.totpEnabled;
 });
 
-const changeNameDialog = useDialog<ChangeNameDialog>();
+const changeNameDialog = useDialog<typeof ChangeName>();
 
 async function changeName() {
   const { name } = await changeNameDialog.open();
@@ -33,9 +33,12 @@ async function changeName() {
   me.name = name;
 }
 
-const enableTotpDialog = useDialog<EnableTotpDialog>();
-const totpSetupDialog = useDialog<TotpSetupDialog>();
-const totpBackupCodesDialog = useDialog<TotpBackupCodesDialog>();
+const enableTotpDialog = useDialog<typeof EnableTotp>();
+const totpSetupDialog = useDialog<typeof TotpSetup, { password: string }>();
+const totpBackupCodesDialog = useDialog<
+  typeof TotpBackupCodes,
+  { backupCodes: string[] }
+>();
 
 async function enableTotp() {
   const { password } = await enableTotpDialog.open();
@@ -46,7 +49,7 @@ async function enableTotp() {
   void totpBackupCodesDialog.open({ backupCodes });
 }
 
-const disableTotpDialog = useDialog<DisableTotpDialog>();
+const disableTotpDialog = useDialog<typeof DisableTotp>();
 
 async function disableTotp() {
   await disableTotpDialog.open();
@@ -98,26 +101,28 @@ async function disableTotp() {
     </div>
 
     <DialogChangeName
-      v-if="changeNameDialog.state"
-      :state="changeNameDialog.state"
+      v-if="changeNameDialog.isOpen"
+      :handle="changeNameDialog.handle"
       :name="me.name"
     />
     <DialogEnableTotp
-      v-if="enableTotpDialog.state"
-      :state="enableTotpDialog.state"
+      v-if="enableTotpDialog.isOpen"
+      :handle="enableTotpDialog.handle"
     />
     <DialogTotpSetup
-      v-if="totpSetupDialog.state"
-      :state="totpSetupDialog.state"
+      v-if="totpSetupDialog.isOpen"
+      :handle="totpSetupDialog.handle"
       :email
+      :password="totpSetupDialog.data.password"
     />
     <DialogTotpBackupCodes
-      v-if="totpBackupCodesDialog.state"
-      :state="totpBackupCodesDialog.state"
+      v-if="totpBackupCodesDialog.isOpen"
+      :handle="totpBackupCodesDialog.handle"
+      :backup-codes="totpBackupCodesDialog.data.backupCodes"
     />
     <DialogDisableTotp
-      v-if="disableTotpDialog.state"
-      :state="disableTotpDialog.state"
+      v-if="disableTotpDialog.isOpen"
+      :handle="disableTotpDialog.handle"
     />
   </LargePanelLayout>
 </template>

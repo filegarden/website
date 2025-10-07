@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import { base32 } from "rfc4648";
-import type { BaseDialogProps } from "~/components/Dialog.vue";
 
-export interface TotpSetupDialog {
-  initialData: { password: string };
-  result: { backupCodes: string[] };
-}
-
-export interface DialogTotpSetupProps extends BaseDialogProps<TotpSetupDialog> {
+export interface DialogTotpSetupProps {
   /** The user's email. */
   email: string;
+
+  /** The user's password. */
+  password: string;
 }
 
-const { state, email } = defineProps<DialogTotpSetupProps>();
+const { email, password } = defineProps<DialogTotpSetupProps>();
 
 // RFC 4226 (section 4) recommends TOTP secrets be 160 bits.
 const secretBytes = crypto.getRandomValues(new Uint8Array(160 / 8));
@@ -33,10 +30,10 @@ watch(otp, () => {
 });
 
 async function action() {
-  return api("/users/me/totp", {
+  return api<{ backupCodes: string[] }>("/users/me/totp", {
     method: "POST",
     body: {
-      password: state.initialData.password,
+      password,
       secret,
       otp: otp.value,
     },
@@ -51,7 +48,7 @@ async function action() {
 </script>
 
 <template>
-  <Dialog class="dialog-totp-setup" size="medium" :state :action>
+  <Dialog class="dialog-totp-setup" size="medium" :action>
     <template #heading>2FA Setup</template>
 
     <section>

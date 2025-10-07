@@ -1,13 +1,10 @@
 <script setup lang="ts">
-import type { BaseDialogProps } from "~/components/Dialog.vue";
-
-export interface TotpBackupCodesDialog {
-  initialData: { backupCodes: string[] };
+export interface DialogTotpBackupCodesProps {
+  /** The new TOTP backup codes. */
+  backupCodes: string[];
 }
 
-export type DialogTotpBackupCodesProps = BaseDialogProps<TotpBackupCodesDialog>;
-
-const { state } = defineProps<DialogTotpBackupCodesProps>();
+const { backupCodes } = defineProps<DialogTotpBackupCodesProps>();
 
 const backupCodesElement = useTemplateRef("backup-codes");
 
@@ -32,7 +29,7 @@ function printBackupCodes() {
 
   const ul = document.createElement("ul");
 
-  for (const backupCode of state.initialData.backupCodes) {
+  for (const backupCode of backupCodes) {
     const li = document.createElement("li");
     const code = document.createElement("code");
 
@@ -49,7 +46,7 @@ function printBackupCodes() {
 </script>
 
 <template>
-  <Dialog size="medium" :state :action="undefined">
+  <Dialog size="medium">
     <template #heading>2FA Backup Codes</template>
 
     <p>
@@ -67,7 +64,7 @@ function printBackupCodes() {
     <textarea
       ref="backup-codes"
       class="totp-backup-codes"
-      :value="state.initialData.backupCodes.join(' ')"
+      :value="backupCodes.join(' ')"
       readonly
     ></textarea>
 

@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import type { BaseDialogProps } from "~/components/Dialog.vue";
-
-export interface ChangeNameDialog {
-  result: { name: string };
-}
-
-export interface DialogChangeNameProps
-  extends BaseDialogProps<ChangeNameDialog> {
+export interface DialogChangeNameProps {
   /** The user's current name. */
   name: string;
 }
 
-const { state, name } = defineProps<DialogChangeNameProps>();
+const { name } = defineProps<DialogChangeNameProps>();
 
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss -- This ref shouldn't react to changes in this initial value.
 const newName = ref(name);
@@ -21,7 +14,7 @@ async function action() {
     throw new Error("TODO: Cancel dialog");
   }
 
-  return api("/users/me/name", {
+  return api<{ name: string }>("/users/me/name", {
     method: "PUT",
     body: { name: newName.value },
   });
@@ -29,7 +22,7 @@ async function action() {
 </script>
 
 <template>
-  <Dialog size="small" :state :action>
+  <Dialog size="small" :action>
     <template #heading>Change display name</template>
 
     <InputText

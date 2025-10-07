@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import type { BaseDialogProps } from "~/components/Dialog.vue";
-
-export interface ChangeEmailDialog {
-  result: { email: string };
-}
-
-export interface DialogChangeEmailProps
-  extends BaseDialogProps<ChangeEmailDialog> {
+export interface DialogChangeEmailProps {
   /** The user's current email. */
   email: string;
 }
 
-const { state, email } = defineProps<DialogChangeEmailProps>();
+const { email } = defineProps<DialogChangeEmailProps>();
 
 const newEmail = ref("");
 
@@ -21,7 +14,7 @@ function action() {
 </script>
 
 <template>
-  <Dialog size="small" :state :action>
+  <Dialog size="small" :action>
     <template #heading>Change email</template>
 
     <InputText
