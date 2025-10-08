@@ -146,6 +146,8 @@ const context: DialogContext = {
     dialogElement.value?.close("");
   },
 };
+
+defineExpose(context);
 </script>
 
 <template>
