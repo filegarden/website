@@ -10,9 +10,8 @@ export default function silence<T extends WeakKey>(error: T): T {
 
 /** Checks if {@link silence} was ever called on an error. */
 export function isSilenced(error: unknown): boolean {
-  // @ts-expect-error `WeakSet.prototype.has` already returns `false` for
-  // incorrect types, which is the desired behavior.
-  return silencedErrors.has(error);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `WeakSet.prototype.has` already returns `false` for incorrect types, which is the desired behavior.
+  return silencedErrors.has(error as any);
 }
 
 /**

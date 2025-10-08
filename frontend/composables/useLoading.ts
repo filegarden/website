@@ -9,8 +9,8 @@
 export default function useLoading(
   overrideLoading?: MaybeRefOrGetter<boolean>,
 ): LoadingState {
-  // @ts-expect-error `LoadingState`s can only be instantiated here.
-  return new LoadingState(overrideLoading);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `LoadingState`s can only be instantiated here.
+  return new (LoadingState as any)(overrideLoading);
 }
 
 export class LoadingState {
