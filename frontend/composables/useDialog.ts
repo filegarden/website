@@ -50,14 +50,10 @@ async function open<T extends Component, Data>(
         resolve(result);
       },
 
-      onClose: (event) => {
-        if (submitted) {
-          return;
+      onClose: () => {
+        if (!submitted) {
+          reject(new DialogCancelError());
         }
-
-        const dialog = event.target as HTMLDialogElement;
-
-        reject(new DialogCancelError({ returnValue: dialog.returnValue }));
       },
     };
 
@@ -133,15 +129,10 @@ export interface DialogControllerOpen<T extends Component, Data>
 export class DialogCancelError extends Error {
   override readonly name = this.constructor.name;
 
-  /** The dialog's return value. */
-  readonly returnValue: string;
-
-  constructor({ returnValue }: Pick<DialogCancelError, "returnValue">) {
+  constructor() {
     super("Dialog canceled");
 
-    // This error type generally shouldn't need to be caught.
+    // It generally doesn't matter if this error type is uncaught.
     silence(this);
-
-    this.returnValue = returnValue;
   }
 }
