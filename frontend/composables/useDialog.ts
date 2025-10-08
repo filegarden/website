@@ -52,7 +52,7 @@ async function open<T extends Component, Data>(
 
       onClose: () => {
         if (!submitted) {
-          reject(new DialogCancelError());
+          reject(new DialogCancelException());
         }
       },
     };
@@ -92,8 +92,8 @@ export interface DialogControllerBase<T extends Component, Data> {
   /**
    * Opens the dialog.
    *
-   * Silently throws a {@link DialogCancelError} if the dialog is closed without
-   * being submitted.
+   * Silently throws a {@link DialogCancelException} if the dialog is closed
+   * without being submitted.
    *
    * @param data - A value to use as the dialog controller's `data` while open.
    *
@@ -126,7 +126,7 @@ export interface DialogControllerOpen<T extends Component, Data>
 /**
  * A silent exception thrown when a dialog is closed without being submitted.
  */
-export class DialogCancelError extends Error {
+export class DialogCancelException extends Error {
   override readonly name = this.constructor.name;
 
   constructor() {

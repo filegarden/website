@@ -11,7 +11,7 @@ const newName = ref(name);
 
 function action() {
   if (newName.value === name) {
-    throw new DialogCancelError();
+    throw new DialogCancelException();
   }
 
   return api<{ name: string }>("/users/me/name", {

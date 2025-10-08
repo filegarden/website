@@ -135,7 +135,7 @@ async function formAction(event: SubmitEvent) {
         ? Awaited<ReturnType<Action>>
         : never;
     } catch (error) {
-      if (error instanceof DialogCancelError) {
+      if (error instanceof DialogCancelException) {
         dialog.close("");
       }
 
