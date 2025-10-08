@@ -11,6 +11,11 @@ export interface UseApiOptions<ResT, CaughtResT>
 /**
  * A custom [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch)
  * wrapper for our API.
+ *
+ * @param url - The URL to fetch.
+ * @param options - The `useFetch` options.
+ *
+ * @returns The async data of the response from `useFetch`.
  */
 export default function useApi<ResT = DefaultResT, CaughtResT = never>(
   url: MaybeRefOrGetter<string>,

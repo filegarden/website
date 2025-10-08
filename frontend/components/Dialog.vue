@@ -61,9 +61,9 @@ export interface DialogProps<Action extends DialogAction> {
    * @param returnValue - The return value to be set on the dialog once closed
    * (if any).
    *
-   * @returns A value to await and pass to the `submitted` event. If this is a
-   * promise, it keeps the dialog's form disabled with a loading indicator until
-   * settled.
+   * @returns A value to use as the result of {@link DialogController.open}. If
+   * this is a promise, the dialog's form is disabled with a loading indicator
+   * until the promise settles.
    */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
   action?: Action;

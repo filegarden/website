@@ -5,11 +5,15 @@ function useRawMe() {
 }
 
 /**
- * Returns the current authenticated user, or `null` if the user is not
+ * Gets the global reactive state for the current authenticated user. Fetches
+ * the value if it's unknown.
+ *
+ * @returns The current authenticated user, or `null` if the user is not
  * authenticated.
  *
- * The returned ref is shallowly read-only because `setMe` should be used to set
- * its value instead. `setMe` doesn't require an HTTP request like `useMe` does.
+ * The returned ref is shallowly read-only because {@link setMe} should be used
+ * to set its value instead. `setMe` doesn't require an HTTP request like
+ * `useMe` does.
  */
 export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
   const me = useRawMe();
@@ -29,15 +33,17 @@ export default async function useMe(): Promise<Readonly<Ref<User | null>>> {
     });
   }
 
-  // We assert the user can't be unknown at this point, and it should never be
-  // unknown again.
+  // The user can't be unknown at this point, and it should never be unknown
+  // again.
   return me as Ref<Exclude<UnwrapRef<typeof me>, "UNKNOWN">>;
 }
 
 /**
- * Sets the value of the current authenticated user.
+ * Sets the global reactive state for the current authenticated user.
  *
- * This avoids the HTTP request sometimes required by `useMe`.
+ * This avoids the HTTP request sometimes required by {@link useMe}.
+ *
+ * @param user - The value to set into the state.
  */
 export function setMe(user: User | null) {
   const me = useRawMe();

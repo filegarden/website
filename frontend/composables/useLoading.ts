@@ -1,7 +1,7 @@
 /**
  * Creates a new reactive loading state.
  *
- * @param overrideLoading - A reactive boolean that, when true, overrides the
+ * @param overrideLoading - A reactive Boolean that, when true, overrides the
  * loading state to be active.
  *
  * @returns The new loading state.
@@ -14,7 +14,7 @@ export default function useLoading(
 }
 
 export class LoadingState {
-  /** A reactive array of all the active loading identifiers. */
+  /** A reactive set of all the active loading identifiers. */
   // This must be a set rather than a simple count ref because incrementing or
   // decrementing a ref's value both tracks and triggers it, causing an infinite
   // update loop when used inside `watchEffect` for example. `add` and `delete`
@@ -58,7 +58,7 @@ export class LoadingState {
    * Activates the loading state for the duration of a promise.
    *
    * @param callback - An immediately invoked function that returns a promise.
-   * The loading state is made active as long as the promise is unsettled.
+   * The loading state is made active until the promise is settled.
    *
    * @returns A promise that resolves once the callback completes.
    */

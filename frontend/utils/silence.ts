@@ -1,23 +1,30 @@
 const silencedErrors = new WeakSet();
 
 /**
- * Prevents an error from causing a console message or displaying an error box.
+ * Prevents an error from ever causing a console message or displaying an error
+ * box.
+ *
+ * @param error - The error to silence.
+ *
+ * @returns The same error.
  */
 export default function silence<T extends WeakKey>(error: T): T {
   silencedErrors.add(error);
   return error;
 }
 
-/** Checks if {@link silence} was ever called on an error. */
+/**
+ * Checks if {@link silence} was ever called on an error.
+ *
+ * @param error - The error to check.
+ *
+ * @returns Whether the error was ever silenced.
+ */
 export function isSilenced(error: unknown): boolean {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `WeakSet.prototype.has` already returns `false` for incorrect types, which is the desired behavior.
   return silencedErrors.has(error as any);
 }
 
-/**
- * Handles synchronously thrown silenced errors by preventing a console message
- * and stopping later event listeners from seeing the error.
- */
 function handleError(event: ErrorEvent) {
   if (isSilenced(event.error)) {
     event.preventDefault();
@@ -25,10 +32,6 @@ function handleError(event: ErrorEvent) {
   }
 }
 
-/**
- * Handles silenced errors from promise rejections by preventing a console
- * message and stopping later event listeners from seeing the error.
- */
 function handleRejection(event: PromiseRejectionEvent) {
   if (isSilenced(event.reason)) {
     event.preventDefault();

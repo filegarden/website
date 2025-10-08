@@ -1,8 +1,13 @@
 <script setup lang="ts">
 export interface FormProps {
   /**
-   * Handles form submission. If the handler returns a promise, the form
-   * disables and shows a loading indicator until the promise settles.
+   * Handles form submission. If set, the default behavior of the form's
+   * `submit` event is prevented.
+   *
+   * @param event - The `submit` event.
+   *
+   * @returns Optionally, a promise that disables the form with a loading
+   * indicator until settled.
    */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
   action?: (event: SubmitEvent) => void | Promise<void>;

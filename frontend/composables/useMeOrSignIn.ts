@@ -1,9 +1,11 @@
 /**
- * Returns the current authenticated user, or redirects to the sign-in page and
- * throws silently if the user is unauthenticated.
+ * Gets the global reactive state for the current authenticated user, or if the
+ * user is unauthenticated, redirects to the sign-in page and throws silently.
+ * If the user is authenticated but later becomes unauthenticated, this
+ * redirects to the sign-in page and leaves the returned state at its prior
+ * value.
  *
- * Also redirects to the sign-in page (and leaves the old return value) if the
- * user ever becomes unauthenticated later.
+ * @returns The current authenticated user.
  */
 export default async function useMeOrSignIn(): Promise<User> {
   const scope = getCurrentScope();

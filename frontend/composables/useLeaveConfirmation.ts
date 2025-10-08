@@ -1,18 +1,19 @@
 const LEAVE_CONFIRMATION_MESSAGE =
   "Are you sure you want to leave? Changes you made may not be saved.";
 
-/** The number of active {@link preventLeaveConfirmations} calls. */
 function usePreventionCount() {
   return useState(() => 0);
 }
 
 /**
  * Prevents all leave confirmations from {@link useLeaveConfirmation} for the
- * duration of the callback.
+ * duration of a callback.
  *
- * The callback is executed synchronously to avoid preventing leave
- * confirmations from concurrent operations outside the callback. Forwards the
- * callback's return value (if any).
+ * @param callback - The callback to prevent leave confirmations during.
+ * Executed synchronously to avoid preventing leave confirmations from
+ * concurrent operations outside the callback.
+ *
+ * @returns The callback's return value (if any).
  */
 export function preventLeaveConfirmations<T>(callback: () => T): T {
   const preventionCount = usePreventionCount();
@@ -34,6 +35,8 @@ export function preventLeaveConfirmations<T>(callback: () => T): T {
 /**
  * Asks the user for confirmation to leave the page (e.g. if there are unsaved
  * changes).
+ *
+ * @param enabled - A reactive value of whether to enable leave confirmations.
  */
 export default function useLeaveConfirmation(
   enabled: MaybeRefOrGetter<boolean>,
