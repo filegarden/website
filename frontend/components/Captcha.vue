@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import VueTurnstile from "vue-turnstile";
 
-const { turnstileSiteKey } = useRuntimeConfig().public;
-
 const model = defineModel<string>({ required: true });
+
+const { turnstileSiteKey } = useRuntimeConfig().public;
 </script>
 
 <template>

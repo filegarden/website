@@ -97,7 +97,14 @@ export default withNuxt([
       "vue/define-macros-order": [
         "error",
         {
-          order: ["defineOptions", "defineProps", "defineEmits", "defineSlots"],
+          order: [
+            "defineOptions",
+            "defineProps",
+            "defineEmits",
+            "defineModel",
+            "defineSlots",
+          ],
+          defineExposeLast: true,
         },
       ],
       "vue/define-props-declaration": "error",

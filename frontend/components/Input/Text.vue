@@ -19,6 +19,8 @@ const emit = defineEmits<{
   click: [event: MouseEvent];
 }>();
 
+const model = defineModel<string>({ default: "" });
+
 const input = useTemplateRef("input");
 
 watchEffect(() => {
@@ -26,8 +28,6 @@ watchEffect(() => {
 });
 
 const id = useId();
-
-const model = defineModel<string>({ default: "" });
 
 // TODO: Remove these event handlers when vuejs/language-tools#5680 is fixed.
 function handleInput(event: InputEvent) {
