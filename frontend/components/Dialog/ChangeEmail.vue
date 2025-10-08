@@ -1,10 +1,8 @@
 <script setup lang="ts">
-export interface DialogChangeEmailProps {
+const { email } = defineProps<{
   /** The user's current email. */
   email: string;
-}
-
-const { email } = defineProps<DialogChangeEmailProps>();
+}>();
 
 const newEmail = ref("");
 

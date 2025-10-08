@@ -41,7 +41,9 @@ export interface DialogContext {
   readonly cancel: () => void;
 }
 
-export interface DialogProps<Action extends DialogAction> {
+defineOptions({ inheritAttrs: false });
+
+const { handle = requireHandle(), action } = defineProps<{
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
@@ -67,11 +69,7 @@ export interface DialogProps<Action extends DialogAction> {
    */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
   action?: Action;
-}
-
-defineOptions({ inheritAttrs: false });
-
-const { handle = requireHandle(), action } = defineProps<DialogProps<Action>>();
+}>();
 
 const dialogElement = useTemplateRef("dialog");
 const openDialogCount = useOpenDialogCount();

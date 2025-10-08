@@ -1,10 +1,8 @@
 <script setup lang="ts">
-export interface DialogChangeNameProps {
+const { name } = defineProps<{
   /** The user's current name. */
   name: string;
-}
-
-const { name } = defineProps<DialogChangeNameProps>();
+}>();
 
 // eslint-disable-next-line vue/no-setup-props-reactivity-loss -- This ref shouldn't react to changes in this initial value.
 const newName = ref(name);

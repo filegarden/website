@@ -1,16 +1,14 @@
 <script setup lang="ts">
-export interface InputCheckboxProps {
-  /** Whether the input should be focused on mount. */
-  autofocus?: boolean;
-}
-
 defineOptions({ inheritAttrs: false });
 
-defineProps<InputCheckboxProps>();
-
-const id = useId();
+defineProps<{
+  /** Whether the input should be focused on mount. */
+  autofocus?: boolean;
+}>();
 
 const model = defineModel<boolean>({ default: false });
+
+const id = useId();
 </script>
 
 <template>

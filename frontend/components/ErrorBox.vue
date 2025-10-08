@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import type { ErrorBoxInfo } from "~/composables/useErrorBoxes";
 
-export interface ErrorBoxProps {
+const props = defineProps<{
   /** The information to display in the error box. */
   value: ErrorBoxInfo;
-}
+}>();
 
-export interface ErrorBoxEmits {
+const emit = defineEmits<{
   close: [errorBox: ErrorBoxInfo];
-}
-
-const props = defineProps<ErrorBoxProps>();
-
-const emit = defineEmits<ErrorBoxEmits>();
+}>();
 
 function close() {
   emit("close", props.value);

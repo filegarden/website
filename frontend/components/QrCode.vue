@@ -11,15 +11,13 @@ async function renderQrCode(
 </script>
 
 <script setup lang="ts">
-export interface QrCodeCanvasProps {
+const { data, scale = 4 } = defineProps<{
   /** The data to encode into a QR code. */
   data: string;
 
   /** How many pixels per cell of the QR code. */
   scale?: number;
-}
-
-const { data, scale = 4 } = defineProps<QrCodeCanvasProps>();
+}>();
 
 const canvas = useTemplateRef("canvas");
 

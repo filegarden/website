@@ -1,10 +1,8 @@
 <script setup lang="ts">
-export interface DialogTotpBackupCodesProps {
+const { backupCodes } = defineProps<{
   /** The new TOTP backup codes. */
   backupCodes: string[];
-}
-
-const { backupCodes } = defineProps<DialogTotpBackupCodesProps>();
+}>();
 
 const backupCodesElement = useTemplateRef("backup-codes");
 

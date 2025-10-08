@@ -1,5 +1,7 @@
 <script setup lang="ts">
-export interface InputTextProps {
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<{
   /** The label's content. If undefined, an `aria-label` should be set. */
   label?: string;
 
@@ -8,11 +10,7 @@ export interface InputTextProps {
 
   /** A custom validity message using `setCustomValidity`. */
   customValidity?: string;
-}
-
-defineOptions({ inheritAttrs: false });
-
-const props = defineProps<InputTextProps>();
+}>();
 
 // TODO: Remove this when vuejs/language-tools#5680 is fixed.
 const emit = defineEmits<{

@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { base32 } from "rfc4648";
 
-export interface DialogTotpSetupProps {
+const { email, password } = defineProps<{
   /** The user's email. */
   email: string;
 
   /** The user's password. */
   password: string;
-}
-
-const { email, password } = defineProps<DialogTotpSetupProps>();
+}>();
 
 // RFC 4226 (section 4) recommends TOTP secrets be 160 bits.
 const secretBytes = crypto.getRandomValues(new Uint8Array(160 / 8));

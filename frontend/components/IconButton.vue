@@ -1,10 +1,8 @@
 <script setup lang="ts">
-export interface IconButtonProps {
+defineProps<{
   /** A human-readable label for accessibility. */
   label: string;
-}
-
-defineProps<IconButtonProps>();
+}>();
 </script>
 
 <template>

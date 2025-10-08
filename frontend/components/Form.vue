@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface FormProps {
+const { action } = defineProps<{
   /**
    * Handles form submission. If set, the default behavior of the form's
    * `submit` event is prevented.
@@ -11,9 +11,7 @@ export interface FormProps {
    */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
   action?: (event: SubmitEvent) => void | Promise<void>;
-}
-
-const { action } = defineProps<FormProps>();
+}>();
 
 const form = useTemplateRef("form");
 
