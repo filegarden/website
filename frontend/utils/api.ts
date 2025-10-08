@@ -1,5 +1,5 @@
 import type { NuxtApp } from "#app";
-import type { FetchContext, FetchError, FetchOptions } from "ofetch";
+import { FetchError, type FetchContext, type FetchOptions } from "ofetch";
 
 const nuxtAppsByFetchContext = new WeakMap<FetchContext, NuxtApp>();
 
@@ -79,28 +79,27 @@ export default function api<ResT = any, CaughtResT = never>(
 
   if (onApiError) {
     promise = promise.catch((error: unknown) => {
-      const code = getApiErrorCode(error);
+      if (!(error instanceof FetchError)) {
+        throw error;
+      }
 
+      const code = error.data?.code;
       if (code === undefined) {
         throw error;
       }
 
-      // `getApiErrorCode` checked that `error` is a `FetchError`.
-      const fetchError = error as FetchError;
       const handler = onApiError[code];
-
       if (handler === undefined) {
-        throw fetchError;
+        throw error;
       }
 
       if (handler === "silence") {
-        throw silence(fetchError);
+        throw silence(error);
       }
 
-      const value = handler(fetchError) as Promise<CaughtResT> | undefined;
-
+      const value = handler(error);
       if (value === undefined) {
-        throw silence(fetchError);
+        throw silence(error);
       }
 
       return value;
