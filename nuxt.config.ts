@@ -1,6 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-18",
+  compatibilityDate: "2025-10-07",
   devtools: { enabled: true },
   srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
