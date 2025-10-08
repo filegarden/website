@@ -11,7 +11,7 @@ const newName = ref(name);
 
 function action() {
   if (newName.value === name) {
-    throw new Error("TODO: Cancel dialog");
+    throw new DialogCancelError();
   }
 
   return api<{ name: string }>("/users/me/name", {

@@ -127,17 +127,27 @@ async function formAction(event: SubmitEvent) {
   const returnValue = event.submitter?.getAttribute("value") ?? undefined;
 
   type Callable = (...args: unknown[]) => unknown;
+  let result: DialogResult<Action>;
 
-  const result = action
-    ? ((await action(returnValue)) as Action extends Callable
+  if (action) {
+    try {
+      result = (await action(returnValue)) as Action extends Callable
         ? Awaited<ReturnType<Action>>
-        : never)
-    : ((returnValue ?? dialog.returnValue) as Action extends Callable
-        ? never
-        : string);
+        : never;
+    } catch (error) {
+      if (error instanceof DialogCancelError) {
+        dialog.close("");
+      }
+
+      throw error;
+    }
+  } else {
+    result = (returnValue ?? dialog.returnValue) as Action extends Callable
+      ? never
+      : string;
+  }
 
   handle.onSubmitted(result);
-
   dialog.close(returnValue);
 }
 
