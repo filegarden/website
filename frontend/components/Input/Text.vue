@@ -2,7 +2,7 @@
 defineOptions({ inheritAttrs: false });
 
 const { customValidity = "" } = defineProps<{
-  /** The label's content. If undefined, an `aria-label` should be set. */
+  /** The label's content. If empty, an `aria-label` must be set. */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
   label?: string;
 
@@ -44,7 +44,7 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <div class="input-text">
-    <LabelBlock>
+    <LabelBlock v-if="label">
       <label :for="id">{{ label }}</label>
     </LabelBlock>
 
