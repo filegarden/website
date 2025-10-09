@@ -1,7 +1,7 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false });
 
-defineProps<{
+const { autofocus } = defineProps<{
   /** Whether the input should be focused on mount. */
   autofocus?: boolean;
 }>();

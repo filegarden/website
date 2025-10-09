@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{
+const { label } = defineProps<{
   /** A human-readable label for accessibility. */
   label: string;
 }>();

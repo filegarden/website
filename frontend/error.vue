@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
 
-const props = defineProps<{
+const { error } = defineProps<{
   /** The error passed into the page by Nuxt. */
   error: NuxtError;
 }>();
 
-const title = () => `Error ${props.error.statusCode}`;
+const title = () => `Error ${error.statusCode}`;
 useTitle(title);
 </script>
 

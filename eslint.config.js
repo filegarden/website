@@ -108,6 +108,7 @@ export default withNuxt([
         },
       ],
       "vue/define-props-declaration": "error",
+      "vue/define-props-destructuring": "error",
       "vue/html-button-has-type": "error",
       "vue/html-comment-content-newline": "error",
       "vue/html-comment-content-spacing": "error",

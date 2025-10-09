@@ -67,7 +67,7 @@ const { handle = requireHandle(), action } = defineProps<{
    * this is a promise, the dialog's form is disabled with a loading indicator
    * until the promise settles.
    */
-  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
+  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
   action?: Action;
 }>();
 

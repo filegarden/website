@@ -9,7 +9,7 @@ const { action } = defineProps<{
    * @returns Optionally, a promise that disables the form with a loading
    * indicator until settled.
    */
-  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- This should default to `undefined`.
+  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
   action?: (event: SubmitEvent) => void | Promise<void>;
 }>();
 

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false });
 
-const props = defineProps<{
+const { customValidity = "" } = defineProps<{
   /** The label's content. If undefined, an `aria-label` should be set. */
+  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
   label?: string;
 
   /** Whether the input should be focused on mount. */
@@ -24,7 +25,7 @@ const model = defineModel<string>({ default: "" });
 const input = useTemplateRef("input");
 
 watchEffect(() => {
-  input.value?.setCustomValidity(props.customValidity ?? "");
+  input.value?.setCustomValidity(customValidity);
 });
 
 const id = useId();

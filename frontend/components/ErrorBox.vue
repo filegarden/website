@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ErrorBoxInfo } from "~/composables/useErrorBoxes";
 
-const props = defineProps<{
+const { value } = defineProps<{
   /** The information to display in the error box. */
   value: ErrorBoxInfo;
 }>();
@@ -11,7 +11,7 @@ const emit = defineEmits<{
 }>();
 
 function close() {
-  emit("close", props.value);
+  emit("close", value);
 }
 
 const reportUrl = computed(
@@ -20,9 +20,9 @@ const reportUrl = computed(
     new URLSearchParams({
       subject: "Error Report",
       body:
-        props.value.message +
+        value.message +
         "\n\n" +
-        props.value.code +
+        value.code +
         "\n\nThe above error appeared when I did the following:\n\n",
     }),
 );
