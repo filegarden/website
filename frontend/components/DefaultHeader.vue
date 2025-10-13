@@ -182,9 +182,7 @@ $nav-height: 4rem;
 }
 
 .account-button {
-  // This must take priority over `.button` so a flash of incorrect font size
-  // can't happen depending on the order of `style` tags.
-  font-size: 1.25em !important;
+  font-size: 1.25em;
 }
 
 .account-icon {

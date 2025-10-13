@@ -1,5 +1,9 @@
 @use "~/assets/styles/themes.scss";
 
+// `base` includes styling for base components that should have the lowest
+// priority.
+@layer base;
+
 * {
   box-sizing: border-box;
 }
