@@ -4,19 +4,21 @@
       <NavLogo class="logo" />
     </header>
 
-    <main class="panel">
+    <MainPanel>
       <slot></slot>
 
       <div v-if="$slots['bottom-text']" class="bottom-text">
         <slot name="bottom-text"></slot>
       </div>
-    </main>
+    </MainPanel>
 
     <div class="space-around-panel"></div>
   </div>
 </template>
 
 <style scoped lang="scss">
+@use "~/assets/styles/main-panel.scss" as *;
+
 $panel-width: 30rem;
 
 .layout {
@@ -51,17 +53,12 @@ header {
   font-size: 3rem;
 }
 
-main {
-  width: $panel-width;
-  max-width: 100%;
-  padding: min(3rem, 12.5vw);
+@layer base {
+  @include main-panel($panel-width);
+}
 
-  &:has(h1) {
-    padding-top: 0;
-  }
-
+:deep(main) {
   @media (max-width: $panel-width) {
-    flex-grow: 1;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -69,7 +66,6 @@ main {
 
 :deep(h1) {
   font-size: 1.5rem;
-  margin: 2rem 0;
   text-align: center;
 }
 

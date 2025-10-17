@@ -1,0 +1,15 @@
+@mixin main-panel($width) {
+  :deep(main) {
+    width: $width;
+
+    @media (max-width: $width) {
+      flex-grow: 1;
+    }
+
+    // Override any media queries from other instances of this mixin included
+    // with a different `$width`.
+    @media not (max-width: $width) {
+      flex-grow: 0;
+    }
+  }
+}

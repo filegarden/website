@@ -1,13 +1,13 @@
 <template>
   <DefaultLayout class="layout">
-    <main class="panel">
+    <MainPanel>
       <slot></slot>
-    </main>
+    </MainPanel>
   </DefaultLayout>
 </template>
 
 <style scoped lang="scss">
-$panel-width: 56.25rem;
+@use "~/assets/styles/main-panel.scss" as *;
 
 .layout {
   min-height: 100%;
@@ -17,21 +17,7 @@ $panel-width: 56.25rem;
   align-items: center;
 }
 
-main {
-  width: $panel-width;
-  max-width: 100%;
-  padding: min(3rem, 12.5vw);
-
-  &:has(h1:not(.long-text *)) {
-    padding-top: 0;
-  }
-
-  @media (max-width: $panel-width) {
-    flex-grow: 1;
-  }
-}
-
-:deep(h1:not(.long-text *)) {
-  margin: 2rem 0;
+@layer base {
+  @include main-panel($width: 56.25rem);
 }
 </style>

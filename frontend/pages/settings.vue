@@ -128,21 +128,9 @@ async function disableTotp() {
 </template>
 
 <style scoped lang="scss">
-$panel-width: 33.75rem;
+@use "~/assets/styles/main-panel.scss" as *;
 
-:deep(main) {
-  // This must take priority over `LargePanelLayout` so a flash of incorrect
-  // width can't happen depending on the order of `style` tags.
-  width: $panel-width !important;
-
-  // These must take priority over `LargePanelLayout`'s media query since its
-  // panel width differs.
-  flex-grow: 0 !important;
-
-  @media (max-width: $panel-width) {
-    flex-grow: 1 !important;
-  }
-}
+@include main-panel($width: 33.75rem);
 
 h1 {
   font-size: 1.5rem;
