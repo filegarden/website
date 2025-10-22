@@ -8,7 +8,7 @@ use crate::{
     api::{
         self, Json,
         cookie::{CookieWrapper, SessionCookie},
-        db_helpers::{create_session, delete_all_sessions_for_user},
+        db_helpers::create_session,
         extract::Query,
         response::{Response, body::User},
         validation::NewUserPassword,
@@ -73,7 +73,13 @@ pub(crate) async fn post(
             .fetch_one(tx.as_mut())
             .await?;
 
-            delete_all_sessions_for_user(tx, &password_reset.user_id).await?;
+            sqlx::query!(
+                "DELETE FROM sessions
+                    WHERE user_id = $1",
+                password_reset.user_id,
+            )
+            .execute(tx.as_mut())
+            .await?;
 
             let session_token = create_session(tx, &password_reset.user_id).await?;
 
