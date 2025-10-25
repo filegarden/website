@@ -13,13 +13,6 @@ const { customValidity = "" } = defineProps<{
   customValidity?: string;
 }>();
 
-// TODO: Remove this when vuejs/language-tools#5680 is fixed.
-const emit = defineEmits<{
-  input: [event: InputEvent];
-  beforeinput: [event: InputEvent];
-  click: [event: MouseEvent];
-}>();
-
 const model = defineModel<string>({ default: "" });
 
 const input = useTemplateRef("input");
@@ -29,17 +22,6 @@ watchEffect(() => {
 });
 
 const id = useId();
-
-// TODO: Remove these event handlers when vuejs/language-tools#5680 is fixed.
-function handleInput(event: InputEvent) {
-  emit("input", event);
-}
-function handleBeforeInput(event: InputEvent) {
-  emit("beforeinput", event);
-}
-function handleClick(event: MouseEvent) {
-  emit("click", event);
-}
 </script>
 
 <template>
@@ -54,9 +36,6 @@ function handleClick(event: MouseEvent) {
       v-model="model"
       v-autofocus="autofocus"
       v-bind="$attrs"
-      @input="handleInput"
-      @beforeinput="handleBeforeInput"
-      @click="handleClick"
     />
 
     <slot name="after"></slot>

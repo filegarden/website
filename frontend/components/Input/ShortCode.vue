@@ -4,11 +4,6 @@ export const SHORT_CODE_LENGTH = 6;
 </script>
 
 <script setup lang="ts">
-// TODO: Remove this when vuejs/language-tools#5680 is fixed.
-const emit = defineEmits<{
-  click: [event: MouseEvent];
-}>();
-
 const model = defineModel<string>({ default: "" });
 
 function handleBeforeInput(event: InputEvent) {
@@ -47,11 +42,6 @@ async function handleInput(event: InputEvent) {
   input.selectionStart = valueParts[0].length;
   input.selectionEnd = input.selectionStart + valueParts[1].length;
 }
-
-// TODO: Remove this when vuejs/language-tools#5680 is fixed.
-function handleClick(event: MouseEvent) {
-  emit("click", event);
-}
 </script>
 
 <template>
@@ -63,7 +53,6 @@ function handleClick(event: MouseEvent) {
     autocomplete="one-time-code"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
-    @click="handleClick"
   />
 </template>
 
