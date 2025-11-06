@@ -48,7 +48,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
 ///
 /// # Errors
 ///
-/// Returns an error if the database operations fail.
+/// Returns an error if a database query fails.
 async fn sync_terms_version_to_db() -> sqlx::Result<()> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!("../frontend/components/TermsOfService.md"));
