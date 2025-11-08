@@ -7,14 +7,17 @@ watch(password, () => {
 });
 
 async function action() {
-  await api("/users/me/password/verify", {
+  await api("/users/me/verify-credentials", {
     method: "POST",
-    body: { password: password.value },
+    body: {
+      credentials: { password: password.value },
+    },
 
     onApiError: {
-      USER_CREDENTIALS_WRONG: () => {
+      FIRST_FACTOR_CREDENTIALS_WRONG: () => {
         isPasswordWrong.value = true;
       },
+      SECOND_FACTOR_CREDENTIALS_WRONG: () => Promise.resolve(),
     },
   });
 

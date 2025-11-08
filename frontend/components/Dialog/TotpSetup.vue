@@ -31,13 +31,13 @@ function action() {
   return api<{ backupCodes: string[] }>("/users/me/totp", {
     method: "POST",
     body: {
-      password,
+      credentials: { password },
       secret,
       otp: otp.value,
     },
 
     onApiError: {
-      OTP_WRONG: () => {
+      TOTP_SETUP_WRONG: () => {
         isOtpWrong.value = true;
       },
     },

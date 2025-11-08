@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT users.id, users.password_hash FROM users\n                INNER JOIN sessions ON sessions.user_id = users.id\n                WHERE sessions.token_hash = $1",
+  "query": "SELECT users.id, users.name FROM users\n                WHERE users.email = $1",
   "describe": {
     "columns": [
       {
@@ -10,13 +10,18 @@
       },
       {
         "ordinal": 1,
-        "name": "password_hash",
+        "name": "name",
         "type_info": "Text"
       }
     ],
     "parameters": {
       "Left": [
-        "Bytea"
+        {
+          "Custom": {
+            "name": "citext",
+            "kind": "Simple"
+          }
+        }
       ]
     },
     "nullable": [
@@ -24,5 +29,5 @@
       false
     ]
   },
-  "hash": "b33a5fbf4f0739e9662667fd182d1ff67c2434874221b621707eed6dfe98e9cd"
+  "hash": "0a92e27219a53e148a8a7d8a4072a05644140cd2d0a7755aab3cd9a9fb2e8d1d"
 }

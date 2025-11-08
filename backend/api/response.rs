@@ -52,6 +52,14 @@ pub(crate) enum Error {
     #[error("Incorrect email verification token or code.")]
     EmailVerificationWrong,
 
+    /// The requested user doesn't exist, or the first-factor authentication credentials specified
+    /// in the request are incorrect.
+    ///
+    /// Nonexistent users are included in the same error variant as incorrect credentials to
+    /// mitigate user enumeration.
+    #[error("Nonexistent user or incorrect first-factor authentication credentials.")]
+    FirstFactorCredentialsWrong,
+
     /// An internal error occurred on the server which is unknown or expected never to happen.
     ///
     /// For security, this must not expose error details to clients since there's no way to tell if
@@ -87,13 +95,14 @@ pub(crate) enum Error {
     #[error("The requested API route doesn't exist.")]
     RouteNotFound,
 
-    /// The TOTP or backup authentication code specified in the request is incorrect.
-    #[error("Incorrect TOTP or backup authentication code.")]
-    OtpWrong,
+    /// The specified first-factor authentication credentials (if any) were correct, but
+    /// second-factor credentials are incorrect or missing.
+    #[error("Incorrect or missing second-factor authentication credentials.")]
+    SecondFactorCredentialsWrong,
 
-    /// The requested user doesn't exist, or the password specified in the request is incorrect.
-    #[error("Nonexistent user or incorrect password.")]
-    UserCredentialsWrong,
+    /// The OTP specified in the TOTP setup request is incorrect.
+    #[error("Incorrect verification code for TOTP setup.")]
+    TotpSetupWrong,
 }
 
 impl Error {
@@ -107,6 +116,7 @@ impl Error {
             Self::BodyTooLarge => StatusCode::PAYLOAD_TOO_LARGE,
             Self::CaptchaFailed => StatusCode::FORBIDDEN,
             Self::EmailVerificationWrong => StatusCode::FORBIDDEN,
+            Self::FirstFactorCredentialsWrong => StatusCode::FORBIDDEN,
             Self::Internal(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::JsonContentType => StatusCode::UNSUPPORTED_MEDIA_TYPE,
             Self::JsonSyntax(_) => StatusCode::BAD_REQUEST,
@@ -115,8 +125,8 @@ impl Error {
             Self::QueryDataInvalid(_) => StatusCode::BAD_REQUEST,
             Self::ResourceNotFound => StatusCode::NOT_FOUND,
             Self::RouteNotFound => StatusCode::NOT_FOUND,
-            Self::OtpWrong => StatusCode::FORBIDDEN,
-            Self::UserCredentialsWrong => StatusCode::FORBIDDEN,
+            Self::SecondFactorCredentialsWrong => StatusCode::FORBIDDEN,
+            Self::TotpSetupWrong => StatusCode::FORBIDDEN,
         }
     }
 

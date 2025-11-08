@@ -10,9 +10,11 @@ use crate::{
         cookie::{CookieWrapper, SessionCookie},
         db_helpers::create_session,
         response::{Response, body::User},
-        validation::{UserEmail, UserPassword},
+        validation::{
+            UserEmail,
+            auth::{MultiFactorCredentials, VerifyCredentials},
+        },
     },
-    crypto::verify_hash,
     db::{self, TxError, TxResult},
     id::Token,
 };
@@ -24,8 +26,8 @@ pub(crate) struct PostRequest {
     /// The email address of the user signing in.
     pub email: UserEmail,
 
-    /// The user's password in plain text.
-    pub password: UserPassword,
+    /// The user's credentials.
+    pub credentials: MultiFactorCredentials,
 }
 
 /// Signs a user in, creating a sign-in session and returning a session cookie.
@@ -37,17 +39,19 @@ pub(crate) struct PostRequest {
 pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostResponse> {
     let (token, user_id, user_name) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT id, password_hash, name FROM users
-                WHERE email = $1",
+            "SELECT users.id, users.name FROM users
+                WHERE users.email = $1",
             body.email.as_str(),
         )
         .fetch_optional(tx.as_mut())
         .await?
-        .filter(|user| verify_hash(&body.password, &user.password_hash)) else {
-            // To prevent user enumeration, send this same error response whether it was the email
-            // or the password that was incorrect.
-            return Err(TxError::Abort(api::Error::UserCredentialsWrong));
+        else {
+            // To mitigate user enumeration, send this same error response whether it was the email
+            // or the credentials that were incorrect.
+            return Err(TxError::Abort(api::Error::FirstFactorCredentialsWrong));
         };
+
+        body.credentials.verify(tx, &user.id).await?;
 
         let token: Token = create_session(tx, &user.id).await?;
 

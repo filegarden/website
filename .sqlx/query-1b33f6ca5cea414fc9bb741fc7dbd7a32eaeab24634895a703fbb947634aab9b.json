@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE totp\n                        SET unused_backup_codes = array_remove(unused_backup_codes, $1)\n                        WHERE user_id = $2 AND $1 = ANY (unused_backup_codes)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1b33f6ca5cea414fc9bb741fc7dbd7a32eaeab24634895a703fbb947634aab9b"
+}

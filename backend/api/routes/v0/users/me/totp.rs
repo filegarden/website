@@ -11,9 +11,12 @@ use crate::{
         self, Json,
         extract::AuthToken,
         response::Response,
-        validation::{Otp, TotpSecret, UserPassword},
+        validation::{
+            Otp, TotpSecret,
+            auth::{FirstFactorCredentials, VerifyCredentials},
+        },
     },
-    crypto::{generate_short_code, verify_hash, verify_totp},
+    crypto::{generate_short_code, verify_totp},
     db::{self, TxError, TxResult},
 };
 
@@ -27,12 +30,11 @@ const BACKUP_CODE_COUNT: usize = 10;
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct DeleteRequest {
-    /// The user's password in plain text.
-    pub password: UserPassword,
-    // `otp` is notably absent here. Requiring 2FA to disable 2FA would mitigate attacks where your
-    // session token and password are both compromised (e.g., by malware that steals browser cookies
-    // and autofill data), but it would also lock you out if you lose your 2FA device and backup
-    // codes. Both are common, but a lockout is far riskier:
+    /// The user's credentials.
+    // Notably, the credentials are single-factor. Requiring 2FA to disable 2FA would mitigate
+    // attacks where your session token and password are both compromised (e.g., by malware that
+    // steals browser cookies and autofill data), but it would also lock you out if you lose your
+    // 2FA device and backup codes. Both are common, but a lockout is far riskier:
     //
     // - On one hand, being unable to disable 2FA after losing your 2FA device would require proving
     //   account ownership to a support admin, which is prone to social engineering, and the
@@ -40,6 +42,7 @@ pub(crate) struct DeleteRequest {
     // - On the other hand, an attacker disabling 2FA with your session token and password allows
     //   them to take over your account, but malicious changes can be reverted by a support admin
     //   with little risk and no need for proof of ownership.
+    pub credentials: FirstFactorCredentials,
 }
 
 /// Disables TOTP for the current authenticated user.
@@ -54,7 +57,7 @@ pub(crate) async fn delete(
 ) -> impl Response<DeleteResponse> {
     let is_totp_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT users.id, users.password_hash FROM users
+            "SELECT users.id FROM users
                 INNER JOIN sessions ON sessions.user_id = users.id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
@@ -65,9 +68,7 @@ pub(crate) async fn delete(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        if !verify_hash(&body.password, &user.password_hash) {
-            return Err(TxError::Abort(api::Error::UserCredentialsWrong));
-        }
+        body.credentials.verify(tx, &user.id).await?;
 
         Ok(sqlx::query!(
             "DELETE FROM totp
@@ -97,14 +98,14 @@ pub(crate) struct DeleteResponse {}
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
-    /// The user's password in plain text.
-    pub password: UserPassword,
+    /// The user's credentials.
+    pub credentials: FirstFactorCredentials,
 
     /// The user's new TOTP secret. Generated client-side to significantly reduce backend
     /// complexity. A client should ensure it generates this using a CSPRNG.
     pub secret: TotpSecret,
 
-    /// The user's TOTP authentication code.
+    /// The user's TOTP verification code.
     pub otp: Otp,
 }
 
@@ -120,7 +121,7 @@ pub(crate) async fn post(
 ) -> impl Response<PostResponse> {
     let backup_codes = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let Some(user) = sqlx::query!(
-            "SELECT users.id, users.password_hash FROM users
+            "SELECT users.id FROM users
                 INNER JOIN sessions ON sessions.user_id = users.id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
@@ -131,12 +132,10 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        if !verify_hash(&body.password, &user.password_hash) {
-            return Err(TxError::Abort(api::Error::UserCredentialsWrong));
-        }
+        body.credentials.verify(tx, &user.id).await?;
 
         if !verify_totp(&body.otp, body.secret.as_ref()) {
-            return Err(TxError::Abort(api::Error::OtpWrong));
+            return Err(TxError::Abort(api::Error::TotpSetupWrong));
         }
 
         let backup_codes: [String; BACKUP_CODE_COUNT] =

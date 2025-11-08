@@ -9,11 +9,13 @@ watch(password, () => {
 async function action() {
   await api("/users/me/totp", {
     method: "DELETE",
-    body: { password: password.value },
+    body: {
+      credentials: { password: password.value },
+    },
 
     onApiError: {
       RESOURCE_NOT_FOUND: () => Promise.resolve(),
-      USER_CREDENTIALS_WRONG: () => {
+      FIRST_FACTOR_CREDENTIALS_WRONG: () => {
         isPasswordWrong.value = true;
       },
     },

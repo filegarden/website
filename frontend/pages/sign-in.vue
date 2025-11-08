@@ -17,11 +17,11 @@ async function submitSignIn() {
     method: "POST",
     body: {
       email: email.value,
-      password: password.value,
+      credentials: { password: password.value },
     },
 
     onApiError: {
-      USER_CREDENTIALS_WRONG: () => {
+      FIRST_FACTOR_CREDENTIALS_WRONG: () => {
         areCredentialsWrong.value = true;
       },
     },

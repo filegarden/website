@@ -11,7 +11,10 @@ use crate::{
         db_helpers::create_session,
         extract::Query,
         response::{Response, body::User},
-        validation::NewUserPassword,
+        validation::{
+            NewUserPassword,
+            auth::{SecondFactorCredentials, VerifyCredentials},
+        },
     },
     crypto::{hash_with_salt, hash_without_salt},
     db::{self, TxError, TxResult},
@@ -30,6 +33,9 @@ pub(crate) struct PostQuery {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
+    /// The user's credentials.
+    pub credentials: SecondFactorCredentials,
+
     /// The user's new password in plain text.
     pub password: NewUserPassword,
 }
@@ -61,6 +67,8 @@ pub(crate) async fn post(
             else {
                 return Err(TxError::Abort(api::Error::ResourceNotFound));
             };
+
+            body.credentials.verify(tx, &password_reset.user_id).await?;
 
             let user = sqlx::query!(
                 "UPDATE users

@@ -5,20 +5,24 @@ use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    api::{self, Json, extract::AuthToken, response::Response, validation::UserPassword},
-    crypto::verify_hash,
-    db::{self, TxResult},
+    api::{
+        self, Json,
+        extract::AuthToken,
+        response::Response,
+        validation::auth::{MultiFactorCredentials, VerifyCredentials},
+    },
+    db::{self, TxError, TxResult},
 };
 
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
-    /// The user's current password in plain text.
-    pub password: UserPassword,
+    /// The user's credentials.
+    pub credentials: MultiFactorCredentials,
 }
 
-/// Verifies that the submitted password is correct for the current authenticated user. Responds
+/// Verifies that the submitted credentials are correct for the current authenticated user. Responds
 /// with an HTTP error if not.
 ///
 /// # Errors
@@ -29,24 +33,24 @@ pub(crate) async fn post(
     AuthToken(token_hash): AuthToken,
     Json(body): Json<PostRequest>,
 ) -> impl Response<PostResponse> {
-    let Some(user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        Ok(sqlx::query!(
-            "SELECT users.password_hash FROM users
+    db::transaction!(async |tx| -> TxResult<_, api::Error> {
+        let Some(user) = sqlx::query!(
+            "SELECT users.id FROM users
                 INNER JOIN sessions ON sessions.user_id = users.id
                 WHERE sessions.token_hash = $1",
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
-        .await?)
-    })
-    .await?
-    else {
-        return Err(api::Error::AuthFailed);
-    };
+        .await?
+        else {
+            return Err(TxError::Abort(api::Error::AuthFailed));
+        };
 
-    if !verify_hash(&body.password, &user.password_hash) {
-        return Err(api::Error::UserCredentialsWrong);
-    }
+        body.credentials.verify(tx, &user.id).await?;
+
+        Ok(())
+    })
+    .await?;
 
     Ok((StatusCode::OK, Json(PostResponse {})))
 }

@@ -10,6 +10,8 @@ use serde::{Deserialize, Serialize};
 use serde_with::{DeserializeFromStr, SerializeDisplay};
 use thiserror::Error;
 
+pub(crate) mod auth;
+
 /// A user's name.
 pub(crate) type UserName = BoundedString<1, 64>;
 

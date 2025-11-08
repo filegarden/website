@@ -45,10 +45,6 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route("/users", post(v0::users::post))
         .route("/users/me", get(v0::users::me::get))
         .route("/users/me/name", put(v0::users::me::name::put))
-        .route(
-            "/users/me/password/verify",
-            post(v0::users::me::password::verify::post),
-        )
         .route("/users/me/sessions", get(v0::users::me::sessions::get))
         .route(
             "/users/me/sessions/{session_id}",
@@ -58,6 +54,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route(
             "/users/me/totp",
             delete(v0::users::me::totp::delete).post(v0::users::me::totp::post),
+        )
+        .route(
+            "/users/me/verify-credentials",
+            post(v0::users::me::verify_credentials::post),
         )
         .route("/users/{user_id}", get(v0::users::user::get))
         .fallback(|| async { api::Error::RouteNotFound })
