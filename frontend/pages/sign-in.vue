@@ -36,8 +36,9 @@ async function submitSignIn() {
 <template>
   <SmallPanelLayout v-if="redirecting" class="page-redirecting">
     <LoadingIndicator />
-
-    <p>Redirecting...</p>
+    <div>
+      <p>Redirecting...</p>
+    </div>
   </SmallPanelLayout>
 
   <SmallPanelLayout v-else>
