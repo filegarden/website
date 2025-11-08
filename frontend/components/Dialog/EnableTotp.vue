@@ -45,7 +45,7 @@ async function action() {
     />
 
     <template #actions="{ cancel }">
-      <Button type="submit">2FA Setup</Button>
+      <Button type="submit">Set Up 2FA</Button>
       <Button @click="cancel">Cancel</Button>
     </template>
   </Dialog>
