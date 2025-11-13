@@ -183,7 +183,9 @@ impl VerifyCredentials for ExclusiveSecondFactorCredentials {
                     "UPDATE totp
                         SET otp_used_2nd_to_last = otp_used_last,
                             otp_used_last = $1
-                        WHERE user_id = $2 AND otp_used_last != $1 AND otp_used_2nd_to_last != $1
+                        WHERE user_id = $2
+                            AND $1 IS DISTINCT FROM otp_used_last
+                            AND $1 IS DISTINCT FROM otp_used_2nd_to_last
                         RETURNING secret",
                     otp.as_str(),
                     user_id.as_ref(),
