@@ -3,13 +3,25 @@ useTitle("Sign In");
 
 const redirecting = await useRedirectIfSignedIn();
 
+const page = ref<"password" | "totp">("password");
+
+function goToPasswordPage() {
+  page.value = "password";
+}
+
 const email = useSignInEmail();
 const password = ref("");
+const otp = ref("");
 
-const areCredentialsWrong = ref(false);
+const firstFactorCredentialsWrong = ref(false);
+const secondFactorCredentialsWrong = ref(false);
 
 watch([email, password], () => {
-  areCredentialsWrong.value = false;
+  firstFactorCredentialsWrong.value = false;
+});
+
+watch(otp, () => {
+  secondFactorCredentialsWrong.value = false;
 });
 
 async function submitSignIn() {
@@ -17,12 +29,35 @@ async function submitSignIn() {
     method: "POST",
     body: {
       email: email.value,
-      credentials: { password: password.value },
+      credentials: {
+        password: password.value,
+        otp: page.value === "totp" ? otp.value : undefined,
+      },
     },
 
     onApiError: {
       FIRST_FACTOR_CREDENTIALS_WRONG: () => {
-        areCredentialsWrong.value = true;
+        firstFactorCredentialsWrong.value = true;
+
+        if (page.value === "password") {
+          return;
+        }
+
+        page.value = "password";
+
+        void nextTick(() => {
+          document
+            .querySelector<HTMLFormElement>("main form")
+            ?.reportValidity();
+        });
+      },
+
+      SECOND_FACTOR_CREDENTIALS_WRONG: () => {
+        page.value = "totp";
+
+        if (otp.value) {
+          secondFactorCredentialsWrong.value = true;
+        }
       },
     },
   });
@@ -41,7 +76,7 @@ async function submitSignIn() {
     </div>
   </SmallPanelLayout>
 
-  <SmallPanelLayout v-else>
+  <SmallPanelLayout v-else-if="page === 'password'">
     <h1>Sign In</h1>
 
     <Form :action="submitSignIn">
@@ -53,7 +88,7 @@ async function submitSignIn() {
         required
         autofocus
         :custom-validity="
-          areCredentialsWrong ? 'Incorrect email or password.' : ''
+          firstFactorCredentialsWrong ? 'Incorrect email or password.' : ''
         "
       />
 
@@ -64,7 +99,7 @@ async function submitSignIn() {
         maxlength="256"
         required
         :custom-validity="
-          areCredentialsWrong ? 'Incorrect email or password.' : ''
+          firstFactorCredentialsWrong ? 'Incorrect email or password.' : ''
         "
       >
         <template #after>
@@ -79,6 +114,30 @@ async function submitSignIn() {
 
     <template #bottom-text>
       <p>Don't have an account? <A href="/sign-up" prefetch>Sign up</A></p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else>
+    <h1>Sign In</h1>
+
+    <Form :action="submitSignIn">
+      <InputShortCode
+        v-model="otp"
+        label="2FA Code"
+        required
+        autofocus
+        :custom-validity="
+          secondFactorCredentialsWrong ? 'Incorrect or expired 2FA code.' : ''
+        "
+      />
+
+      <Button type="submit">Sign In</Button>
+    </Form>
+
+    <template #bottom-text>
+      <p>
+        <A href="/sign-in" @click="goToPasswordPage">Back</A>
+      </p>
     </template>
   </SmallPanelLayout>
 </template>
