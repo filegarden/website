@@ -56,8 +56,9 @@ function handleCodeInputClick(event: MouseEvent) {
       </p>
 
       <div class="distinguished">
-        <InputShortCode
+        <InputOneTimeCode
           aria-label="Verification Code"
+          allow="alphanumeric"
           readonly
           autofocus
           :model-value="code"

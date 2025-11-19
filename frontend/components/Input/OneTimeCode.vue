@@ -1,10 +1,20 @@
-<script lang="ts">
-/** The required length for a `InputShortCode`'s value. */
-export const SHORT_CODE_LENGTH = 6;
-</script>
-
 <script setup lang="ts">
+const { allow, size = 6 } = defineProps<{
+  /** Which characters to allow in the input. */
+  allow: "numeric" | "alphanumeric";
+
+  /** The number of characters required in the code. */
+  size?: number;
+}>();
+
 const model = defineModel<string>({ default: "" });
+
+const validCharacters = computed(() =>
+  allow === "numeric" ? /\d/ : /[0-9A-Z]/i,
+);
+const allInvalidCharacters = computed(() =>
+  allow === "numeric" ? /\D/g : /[^0-9A-Z]/gi,
+);
 
 function handleBeforeInput(event: InputEvent) {
   // Even though the input handler removes invalid characters, preventing them
@@ -13,7 +23,7 @@ function handleBeforeInput(event: InputEvent) {
   //
   // Importantly, this doesn't prevent invalid inputs that also contain valid
   // characters, because users expect only the invalid characters to be removed.
-  if (event.data && !/[0-9A-Z]/i.test(event.data)) {
+  if (event.data && !validCharacters.value.test(event.data)) {
     event.preventDefault();
   }
 }
@@ -30,7 +40,7 @@ async function handleInput(event: InputEvent) {
     input.value.slice(0, selectionStart),
     input.value.slice(selectionStart, selectionEnd),
     input.value.slice(selectionEnd),
-  ].map((substring) => substring.replace(/[^0-9A-Z]/gi, "")) as [
+  ].map((substring) => substring.replace(allInvalidCharacters.value, "")) as [
     string,
     string,
     string,
@@ -47,9 +57,10 @@ async function handleInput(event: InputEvent) {
 <template>
   <InputText
     v-model="model"
-    :placeholder="'-'.repeat(SHORT_CODE_LENGTH)"
-    :minlength="SHORT_CODE_LENGTH"
-    :maxlength="SHORT_CODE_LENGTH"
+    :inputmode="allow === 'numeric' ? 'numeric' : 'text'"
+    :placeholder="'-'.repeat(size)"
+    :minlength="size"
+    :maxlength="size"
     autocomplete="one-time-code"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
@@ -57,8 +68,6 @@ async function handleInput(event: InputEvent) {
 </template>
 
 <style scoped lang="scss">
-$SHORT-CODE-LENGTH: 6;
-
 :deep(input) {
   font-family: var(--font-family-monospace);
   font-size: min(2.5em, 10vw);
@@ -67,7 +76,7 @@ $SHORT-CODE-LENGTH: 6;
   $letter-spacing: 0.5ch;
   letter-spacing: $letter-spacing;
   text-indent: $letter-spacing;
-  width: $letter-spacing + $SHORT-CODE-LENGTH * (1ch + $letter-spacing);
+  width: calc($letter-spacing + v-bind(size) * (1ch + $letter-spacing));
   box-sizing: content-box;
 
   // It's better to convert the input's value to uppercase with CSS rather than

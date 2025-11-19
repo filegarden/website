@@ -106,9 +106,10 @@ function action() {
         your 2FA is set up correctly.
       </p>
 
-      <InputShortCode
+      <InputOneTimeCode
         v-model="otp"
         label="2FA Code"
+        allow="numeric"
         required
         autofocus
         :custom-validity="isOtpWrong ? 'Incorrect 2FA code.' : ''"

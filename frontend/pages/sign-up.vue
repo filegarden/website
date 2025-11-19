@@ -203,9 +203,10 @@ async function completeSignUp() {
       </p>
 
       <Form class="code-form" :action="submitCode">
-        <InputShortCode
+        <InputOneTimeCode
           v-model="code"
           aria-label="Verification Code"
+          allow="alphanumeric"
           required
           autofocus
           :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"

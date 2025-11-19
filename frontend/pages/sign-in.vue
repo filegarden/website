@@ -121,9 +121,10 @@ async function submitSignIn() {
     <h1>Sign In</h1>
 
     <Form :action="submitSignIn">
-      <InputShortCode
+      <InputOneTimeCode
         v-model="otp"
         label="2FA Code"
+        allow="numeric"
         required
         autofocus
         :custom-validity="
