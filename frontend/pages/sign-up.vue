@@ -161,10 +161,10 @@ async function completeSignUp() {
 </script>
 
 <template>
-  <SmallPanelLayout :class="`page-${page}`">
-    <h1 v-if="page === 'email' || page === 'verification-sent'">Sign Up</h1>
+  <SmallPanelLayout v-if="page === 'email'">
+    <h1>Sign Up</h1>
 
-    <Form v-if="page === 'email'" :action="openCaptchaPage">
+    <Form :action="openCaptchaPage">
       <InputText
         v-model="email"
         label="Email"
@@ -185,94 +185,27 @@ async function completeSignUp() {
       <Button type="submit">Create Account</Button>
     </Form>
 
-    <div v-else-if="page === 'captcha'" class="captcha-wrapper">
+    <template #bottom-text>
+      <p>Already have an account? <A href="/sign-in" prefetch>Sign in</A></p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'captcha'">
+    <div class="captcha-wrapper">
       <Captcha v-model="captchaToken" />
     </div>
+  </SmallPanelLayout>
 
-    <p v-else-if="page === 'verification-sent'" class="distinguished">
+  <SmallPanelLayout v-else-if="page === 'verification-sent'" class="centered">
+    <h1>Sign Up</h1>
+
+    <p class="distinguished">
       To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
 
-    <template v-else-if="page === 'code'">
-      <p class="intro">Have a code from another browser?</p>
-
+    <template #bottom-text>
       <p>
-        Generate a verification code by clicking the link sent to<br />
-        <strong>{{ email }}</strong>
-      </p>
-
-      <Form class="code-form" :action="submitCode">
-        <InputOneTimeCode
-          v-model="code"
-          aria-label="Verification Code"
-          allow="alphanumeric"
-          required
-          autofocus
-          :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"
-        />
-
-        <Button type="submit">Verify</Button>
-      </Form>
-    </template>
-
-    <template v-else-if="page === 'final'">
-      <LoadingIndicator v-if="emailFromToken.status.value === 'pending'" />
-
-      <Form v-else :action="completeSignUp">
-        <p class="intro">One last step...</p>
-
-        <InputText label="Email" type="email" disabled :model-value="email" />
-        <InputText
-          v-model="name"
-          label="Display Name"
-          minlength="1"
-          maxlength="64"
-          required
-          autofocus
-          autocomplete="username"
-        />
-        <InputText
-          v-model="password"
-          label="Password"
-          type="password"
-          minlength="8"
-          maxlength="256"
-          required
-          autocomplete="new-password"
-        />
-        <InputText
-          v-model="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          minlength="8"
-          maxlength="256"
-          required
-          autocomplete="new-password"
-          :custom-validity="
-            confirmPassword && password !== confirmPassword
-              ? 'Please make sure both passwords match.'
-              : ''
-          "
-        />
-
-        <Button type="submit">Create Account</Button>
-      </Form>
-    </template>
-
-    <p v-else-if="page === 'failed'" class="distinguished">
-      Your email verification request is invalid or expired.
-    </p>
-
-    <template v-if="page === 'email'" #bottom-text>
-      <p>Already have an account? <A href="/sign-in" prefetch>Sign in</A></p>
-    </template>
-
-    <template
-      v-else-if="page === 'code' || page === 'verification-sent'"
-      #bottom-text
-    >
-      <p v-if="page === 'verification-sent'">
         Have a code from another browser?
         <A href="javascript:" @click="openCodePage">Enter verification code</A>
       </p>
@@ -282,8 +215,87 @@ async function completeSignUp() {
         <A href="/sign-up" @click="tryAgain">try again</A>
       </p>
     </template>
+  </SmallPanelLayout>
 
-    <template v-else-if="page === 'failed'" #bottom-text>
+  <SmallPanelLayout v-else-if="page === 'code'" class="centered">
+    <p class="intro">Have a code from another browser?</p>
+
+    <p>
+      Generate a verification code by clicking the link sent to<br />
+      <strong>{{ email }}</strong>
+    </p>
+
+    <Form class="code-form" :action="submitCode">
+      <InputOneTimeCode
+        v-model="code"
+        aria-label="Verification Code"
+        allow="alphanumeric"
+        required
+        autofocus
+        :custom-validity="isCodeWrong ? 'Incorrect verification code.' : ''"
+      />
+
+      <Button type="submit">Verify</Button>
+    </Form>
+
+    <template #bottom-text>
+      <p>
+        Don't see the email? Check spam or
+        <A href="/sign-up" @click="tryAgain">try again</A>
+      </p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'final'">
+    <LoadingIndicator v-if="emailFromToken.status.value === 'pending'" />
+
+    <Form v-else :action="completeSignUp">
+      <p class="intro">One last step...</p>
+
+      <InputText label="Email" type="email" disabled :model-value="email" />
+      <InputText
+        v-model="name"
+        label="Display Name"
+        minlength="1"
+        maxlength="64"
+        required
+        autofocus
+        autocomplete="username"
+      />
+      <InputText
+        v-model="password"
+        label="Password"
+        type="password"
+        minlength="8"
+        maxlength="256"
+        required
+        autocomplete="new-password"
+      />
+      <InputText
+        v-model="confirmPassword"
+        label="Confirm Password"
+        type="password"
+        minlength="8"
+        maxlength="256"
+        required
+        autocomplete="new-password"
+        :custom-validity="
+          confirmPassword && password !== confirmPassword
+            ? 'Please make sure both passwords match.'
+            : ''
+        "
+      />
+
+      <Button type="submit">Create Account</Button>
+    </Form>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'failed'" class="centered">
+    <p class="distinguished">
+      Your email verification request is invalid or expired.
+    </p>
+
+    <template #bottom-text>
       <p>
         <A href="/sign-up" @click="tryAgain">Back to Sign Up</A>
       </p>
@@ -292,13 +304,8 @@ async function completeSignUp() {
 </template>
 
 <style scoped lang="scss">
-.page-redirecting,
-.page-verification-sent,
-.page-code,
-.page-failed {
-  :deep(main) {
-    text-align: center;
-  }
+.centered :deep(main) {
+  text-align: center;
 }
 
 .distinguished {
