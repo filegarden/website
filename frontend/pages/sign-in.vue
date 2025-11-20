@@ -3,18 +3,10 @@ useTitle("Sign In");
 
 const redirecting = await useRedirectIfSignedIn();
 
-const page = ref<"password" | "totp" | "backup-totp">("password");
+const page = ref<"password" | "totp">("password");
 
 function openPasswordPage() {
   page.value = "password";
-}
-
-function openTotpPage() {
-  page.value = "totp";
-}
-
-function openBackupTotpPage() {
-  page.value = "backup-totp";
 }
 
 const email = useSignInEmail();
@@ -26,14 +18,6 @@ const secondFactorCredentialsWrong = ref(false);
 
 watch([email, password], () => {
   firstFactorCredentialsWrong.value = false;
-});
-
-watch(otp, () => {
-  secondFactorCredentialsWrong.value = false;
-});
-
-watch(page, () => {
-  otp.value = "";
 });
 
 async function submitSignIn() {
@@ -135,58 +119,12 @@ async function submitSignIn() {
     <h1>Sign In</h1>
 
     <Form :action="submitSignIn">
-      <InputOneTimeCode
+      <InputTotp
         v-model="otp"
-        label="2FA Code"
-        allow="numeric"
+        v-model:wrong="secondFactorCredentialsWrong"
         required
         autofocus
-        :custom-validity="
-          secondFactorCredentialsWrong ? 'Incorrect or expired 2FA code.' : ''
-        "
-      >
-        <template #after>
-          <div>
-            <A href="javascript:" @click="openBackupTotpPage">
-              Use a backup code instead
-            </A>
-          </div>
-        </template>
-      </InputOneTimeCode>
-
-      <Button type="submit">Sign In</Button>
-    </Form>
-
-    <template #bottom-text>
-      <p>
-        <A href="/sign-in" @click="openPasswordPage">Cancel</A>
-      </p>
-    </template>
-  </SmallPanelLayout>
-
-  <SmallPanelLayout v-else-if="page === 'backup-totp'">
-    <h1>Sign In</h1>
-
-    <Form :action="submitSignIn">
-      <InputOneTimeCode
-        v-model="otp"
-        label="Backup 2FA Code"
-        allow="alphanumeric"
-        :size="8"
-        required
-        autofocus
-        :custom-validity="
-          secondFactorCredentialsWrong
-            ? 'Incorrect or expired backup 2FA code.'
-            : ''
-        "
-      >
-        <template #after>
-          <A href="javascript:" @click="openTotpPage">
-            Never mind, I have a 2FA code
-          </A>
-        </template>
-      </InputOneTimeCode>
+      />
 
       <Button type="submit">Sign In</Button>
     </Form>

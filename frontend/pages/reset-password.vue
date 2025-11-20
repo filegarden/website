@@ -3,22 +3,8 @@ useTitle("Reset Password");
 
 const route = useRoute();
 const page = ref<
-  | "email"
-  | "requested"
-  | "password"
-  | "totp"
-  | "backup-totp"
-  | "failed"
-  | "done"
+  "email" | "requested" | "password" | "totp" | "failed" | "done"
 >(route.query.token === undefined ? "email" : "password");
-
-function openTotpPage() {
-  page.value = "totp";
-}
-
-function openBackupTotpPage() {
-  page.value = "backup-totp";
-}
 
 const email = useSignInEmail();
 
@@ -78,14 +64,6 @@ const confirmPassword = ref("");
 const otp = ref("");
 
 const secondFactorCredentialsWrong = ref(false);
-
-watch(otp, () => {
-  secondFactorCredentialsWrong.value = false;
-});
-
-watch(page, () => {
-  otp.value = "";
-});
 
 const userId = ref<string>();
 
@@ -207,52 +185,12 @@ async function submitNewPassword() {
     <h1>Reset Password</h1>
 
     <Form :action="submitNewPassword">
-      <InputOneTimeCode
+      <InputTotp
         v-model="otp"
-        label="2FA Code"
-        allow="numeric"
+        v-model:wrong="secondFactorCredentialsWrong"
         required
         autofocus
-        :custom-validity="
-          secondFactorCredentialsWrong ? 'Incorrect or expired 2FA code.' : ''
-        "
-      >
-        <template #after>
-          <div>
-            <A href="javascript:" @click="openBackupTotpPage">
-              Use a backup code instead
-            </A>
-          </div>
-        </template>
-      </InputOneTimeCode>
-
-      <Button type="submit">Change Password</Button>
-    </Form>
-  </SmallPanelLayout>
-
-  <SmallPanelLayout v-else-if="page === 'backup-totp'">
-    <h1>Reset Password</h1>
-
-    <Form :action="submitNewPassword">
-      <InputOneTimeCode
-        v-model="otp"
-        label="2FA Backup Code"
-        allow="alphanumeric"
-        :size="8"
-        required
-        autofocus
-        :custom-validity="
-          secondFactorCredentialsWrong
-            ? 'Incorrect or expired backup 2FA code.'
-            : ''
-        "
-      >
-        <template #after>
-          <A href="javascript:" @click="openTotpPage">
-            Never mind, I have a 2FA code
-          </A>
-        </template>
-      </InputOneTimeCode>
+      />
 
       <Button type="submit">Change Password</Button>
     </Form>
