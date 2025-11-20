@@ -43,7 +43,7 @@ async function submitSignIn() {
       email: email.value,
       credentials: {
         password: password.value,
-        otp: page.value === "totp" ? otp.value : undefined,
+        otp: otp.value || undefined,
       },
     },
 
