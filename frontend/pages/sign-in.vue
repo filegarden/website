@@ -3,10 +3,18 @@ useTitle("Sign In");
 
 const redirecting = await useRedirectIfSignedIn();
 
-const page = ref<"password" | "totp">("password");
+const page = ref<"password" | "totp" | "backup-totp">("password");
 
 function goToPasswordPage() {
   page.value = "password";
+}
+
+function goToTotpPage() {
+  page.value = "totp";
+}
+
+function goToBackupTotpPage() {
+  page.value = "backup-totp";
 }
 
 const email = useSignInEmail();
@@ -22,6 +30,10 @@ watch([email, password], () => {
 
 watch(otp, () => {
   secondFactorCredentialsWrong.value = false;
+});
+
+watch(page, () => {
+  otp.value = "";
 });
 
 async function submitSignIn() {
@@ -53,7 +65,9 @@ async function submitSignIn() {
       },
 
       SECOND_FACTOR_CREDENTIALS_WRONG: () => {
-        page.value = "totp";
+        if (page.value === "password") {
+          page.value = "totp";
+        }
 
         if (otp.value) {
           secondFactorCredentialsWrong.value = true;
@@ -117,7 +131,7 @@ async function submitSignIn() {
     </template>
   </SmallPanelLayout>
 
-  <SmallPanelLayout v-else>
+  <SmallPanelLayout v-else-if="page === 'totp'">
     <h1>Sign In</h1>
 
     <Form :action="submitSignIn">
@@ -130,14 +144,56 @@ async function submitSignIn() {
         :custom-validity="
           secondFactorCredentialsWrong ? 'Incorrect or expired 2FA code.' : ''
         "
-      />
+      >
+        <template #after>
+          <div>
+            <A href="javascript:" @click="goToBackupTotpPage">
+              Use a backup code instead
+            </A>
+          </div>
+        </template>
+      </InputOneTimeCode>
 
       <Button type="submit">Sign In</Button>
     </Form>
 
     <template #bottom-text>
       <p>
-        <A href="/sign-in" @click="goToPasswordPage">Back</A>
+        <A href="/sign-in" @click="goToPasswordPage">Cancel</A>
+      </p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'backup-totp'">
+    <h1>Sign In</h1>
+
+    <Form :action="submitSignIn">
+      <InputOneTimeCode
+        v-model="otp"
+        label="Backup 2FA Code"
+        allow="alphanumeric"
+        :size="8"
+        required
+        autofocus
+        :custom-validity="
+          secondFactorCredentialsWrong
+            ? 'Incorrect or expired backup 2FA code.'
+            : ''
+        "
+      >
+        <template #after>
+          <A href="javascript:" @click="goToTotpPage">
+            Never mind, I have a 2FA code
+          </A>
+        </template>
+      </InputOneTimeCode>
+
+      <Button type="submit">Sign In</Button>
+    </Form>
+
+    <template #bottom-text>
+      <p>
+        <A href="/sign-in" @click="goToPasswordPage">Cancel</A>
       </p>
     </template>
   </SmallPanelLayout>
