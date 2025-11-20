@@ -2,9 +2,23 @@
 useTitle("Reset Password");
 
 const route = useRoute();
-const page = ref<"email" | "requested" | "password" | "failed" | "done">(
-  route.query.token === undefined ? "email" : "password",
-);
+const page = ref<
+  | "email"
+  | "requested"
+  | "password"
+  | "totp"
+  | "backup-totp"
+  | "failed"
+  | "done"
+>(route.query.token === undefined ? "email" : "password");
+
+function openTotpPage() {
+  page.value = "totp";
+}
+
+function openBackupTotpPage() {
+  page.value = "backup-totp";
+}
 
 const email = useSignInEmail();
 
@@ -66,6 +80,17 @@ watchEffect(() => {
 
 const password = ref("");
 const confirmPassword = ref("");
+const otp = ref("");
+
+const secondFactorCredentialsWrong = ref(false);
+
+watch(otp, () => {
+  secondFactorCredentialsWrong.value = false;
+});
+
+watch(page, () => {
+  otp.value = "";
+});
 
 const userId = ref<string>();
 
@@ -73,11 +98,26 @@ async function submitNewPassword() {
   const passwordResponse = await api("/password-reset/password", {
     method: "POST",
     query: { token: route.query.token },
-    body: { password: password.value },
+    body: {
+      credentials: {
+        otp: otp.value || undefined,
+      },
+      password: password.value,
+    },
 
     onApiError: {
       RESOURCE_NOT_FOUND: () => {
         page.value = "failed";
+      },
+
+      SECOND_FACTOR_CREDENTIALS_WRONG: () => {
+        if (page.value === "password") {
+          page.value = "totp";
+        }
+
+        if (otp.value) {
+          secondFactorCredentialsWrong.value = true;
+        }
       },
     },
   });
@@ -90,12 +130,10 @@ async function submitNewPassword() {
 </script>
 
 <template>
-  <SmallPanelLayout :class="`page-${page}`">
-    <h1 v-if="page === 'email' || page === 'password' || page === 'requested'">
-      Reset Password
-    </h1>
+  <SmallPanelLayout v-if="page === 'email'">
+    <h1>Reset Password</h1>
 
-    <Form v-if="page === 'email'" :action="requestPasswordReset">
+    <Form :action="requestPasswordReset">
       <InputText
         v-model="email"
         label="Email"
@@ -112,82 +150,147 @@ async function submitNewPassword() {
       </Button>
     </Form>
 
-    <p v-else-if="page === 'requested'" class="distinguished">
+    <template #bottom-text>
+      <p>
+        <A href="/sign-in">Back to Sign In</A>
+      </p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'requested'" class="centered">
+    <h1>Reset Password</h1>
+
+    <p class="distinguished">
       To continue, check the email sent to<br />
       <strong>{{ email }}</strong>
     </p>
 
-    <template v-else-if="page === 'password'">
-      <LoadingIndicator
-        v-if="passwordResetResponse.status.value === 'pending'"
+    <template #bottom-text>
+      <p>
+        <A href="/sign-in">Back to Sign In</A>
+      </p>
+    </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'password'">
+    <h1>Reset Password</h1>
+
+    <LoadingIndicator v-if="passwordResetResponse.status.value === 'pending'" />
+
+    <Form :action="submitNewPassword">
+      <InputText label="Email" type="email" disabled :model-value="email" />
+      <InputText
+        v-model="password"
+        label="New Password"
+        type="password"
+        minlength="8"
+        maxlength="256"
+        required
+        autofocus
+        autocomplete="new-password"
+      />
+      <InputText
+        v-model="confirmPassword"
+        label="Confirm Password"
+        type="password"
+        minlength="8"
+        maxlength="256"
+        required
+        autocomplete="new-password"
+        :custom-validity="
+          confirmPassword && password !== confirmPassword
+            ? 'Please make sure both passwords match.'
+            : ''
+        "
       />
 
-      <Form v-else :action="submitNewPassword">
-        <InputText label="Email" type="email" disabled :model-value="email" />
-        <InputText
-          v-model="password"
-          label="New Password"
-          type="password"
-          minlength="8"
-          maxlength="256"
-          required
-          autofocus
-          autocomplete="new-password"
-        />
-        <InputText
-          v-model="confirmPassword"
-          label="Confirm Password"
-          type="password"
-          minlength="8"
-          maxlength="256"
-          required
-          autocomplete="new-password"
-          :custom-validity="
-            confirmPassword && password !== confirmPassword
-              ? 'Please make sure both passwords match.'
-              : ''
-          "
-        />
+      <Button type="submit">Change Password</Button>
+    </Form>
+  </SmallPanelLayout>
 
-        <Button type="submit">Change Password</Button>
-      </Form>
-    </template>
+  <SmallPanelLayout v-else-if="page === 'totp'">
+    <h1>Reset Password</h1>
 
-    <p v-else-if="page === 'failed'" class="distinguished">
+    <Form :action="submitNewPassword">
+      <InputOneTimeCode
+        v-model="otp"
+        label="2FA Code"
+        allow="numeric"
+        required
+        autofocus
+        :custom-validity="
+          secondFactorCredentialsWrong ? 'Incorrect or expired 2FA code.' : ''
+        "
+      >
+        <template #after>
+          <div>
+            <A href="javascript:" @click="openBackupTotpPage">
+              Use a backup code instead
+            </A>
+          </div>
+        </template>
+      </InputOneTimeCode>
+
+      <Button type="submit">Change Password</Button>
+    </Form>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'backup-totp'">
+    <h1>Reset Password</h1>
+
+    <Form :action="submitNewPassword">
+      <InputOneTimeCode
+        v-model="otp"
+        label="2FA Backup Code"
+        allow="alphanumeric"
+        :size="8"
+        required
+        autofocus
+        :custom-validity="
+          secondFactorCredentialsWrong
+            ? 'Incorrect or expired backup 2FA code.'
+            : ''
+        "
+      >
+        <template #after>
+          <A href="javascript:" @click="openTotpPage">
+            Never mind, I have a 2FA code
+          </A>
+        </template>
+      </InputOneTimeCode>
+
+      <Button type="submit">Change Password</Button>
+    </Form>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else-if="page === 'failed'" class="centered">
+    <p class="distinguished">
       Your password reset request is invalid or expired.
     </p>
 
-    <template v-else-if="page === 'done'">
-      <p class="distinguished">Password changed! You are now signed in.</p>
-
-      <p>
-        <Button :href="`/files/u/${userId}`">Visit Your Garden</Button>
-      </p>
+    <template #bottom-text>
+      <p><A href="/reset-password">Try again</A> or <A href="/">go home</A></p>
     </template>
+  </SmallPanelLayout>
 
-    <template v-if="page !== 'password'" #bottom-text>
-      <p v-if="page === 'failed'">
-        <A href="/reset-password">Try again</A> or <A href="/">go home</A>
-      </p>
+  <SmallPanelLayout v-else-if="page === 'done'" class="centered">
+    <p class="distinguished">Password changed! You are now signed in.</p>
 
-      <p v-else-if="page === 'done'">
+    <p>
+      <Button :href="`/files/u/${userId}`">Visit Your Garden</Button>
+    </p>
+
+    <template #bottom-text>
+      <p>
         <A href="/">Go Home</A>
-      </p>
-
-      <p v-else>
-        <A href="/sign-in">Back to Sign In</A>
       </p>
     </template>
   </SmallPanelLayout>
 </template>
 
 <style scoped lang="scss">
-.page-requested,
-.page-failed,
-.page-done {
-  :deep(main) {
-    text-align: center;
-  }
+.centered :deep(main) {
+  text-align: center;
 }
 
 .distinguished {
