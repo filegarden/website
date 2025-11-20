@@ -38,7 +38,9 @@ const id = useId();
       v-bind="$attrs"
     />
 
-    <slot name="after"></slot>
+    <div v-if="$slots.after" class="input-after">
+      <slot name="after"></slot>
+    </div>
   </div>
 </template>
 
@@ -53,5 +55,12 @@ const id = useId();
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.input-after {
+  margin: 0.667em 1px;
+
+  font-size: 0.75em;
+  color: var(--color-text-weaker);
 }
 </style>

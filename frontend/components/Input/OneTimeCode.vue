@@ -64,7 +64,11 @@ async function handleInput(event: InputEvent) {
     autocomplete="one-time-code"
     @beforeinput="handleBeforeInput"
     @input="handleInput"
-  />
+  >
+    <template v-if="$slots.after" #after>
+      <slot name="after"></slot>
+    </template>
+  </InputText>
 </template>
 
 <style scoped lang="scss">

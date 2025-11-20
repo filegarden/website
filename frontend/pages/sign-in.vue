@@ -150,10 +150,6 @@ async function submitSignIn() {
 
 .reset-password-link-wrapper {
   text-align: right;
-  margin: 0.667em 1px;
-
-  font-size: 0.75em;
-  color: var(--color-text-weaker);
 
   // Don't let this add too much awkward empty space below the password input.
   height: 0;
