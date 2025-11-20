@@ -5,15 +5,15 @@ const redirecting = await useRedirectIfSignedIn();
 
 const page = ref<"password" | "totp" | "backup-totp">("password");
 
-function goToPasswordPage() {
+function openPasswordPage() {
   page.value = "password";
 }
 
-function goToTotpPage() {
+function openTotpPage() {
   page.value = "totp";
 }
 
-function goToBackupTotpPage() {
+function openBackupTotpPage() {
   page.value = "backup-totp";
 }
 
@@ -147,7 +147,7 @@ async function submitSignIn() {
       >
         <template #after>
           <div>
-            <A href="javascript:" @click="goToBackupTotpPage">
+            <A href="javascript:" @click="openBackupTotpPage">
               Use a backup code instead
             </A>
           </div>
@@ -159,7 +159,7 @@ async function submitSignIn() {
 
     <template #bottom-text>
       <p>
-        <A href="/sign-in" @click="goToPasswordPage">Cancel</A>
+        <A href="/sign-in" @click="openPasswordPage">Cancel</A>
       </p>
     </template>
   </SmallPanelLayout>
@@ -182,7 +182,7 @@ async function submitSignIn() {
         "
       >
         <template #after>
-          <A href="javascript:" @click="goToTotpPage">
+          <A href="javascript:" @click="openTotpPage">
             Never mind, I have a 2FA code
           </A>
         </template>
@@ -193,7 +193,7 @@ async function submitSignIn() {
 
     <template #bottom-text>
       <p>
-        <A href="/sign-in" @click="goToPasswordPage">Cancel</A>
+        <A href="/sign-in" @click="openPasswordPage">Cancel</A>
       </p>
     </template>
   </SmallPanelLayout>
