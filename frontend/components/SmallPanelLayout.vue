@@ -69,14 +69,16 @@ header {
   text-align: center;
 }
 
-.bottom-text {
-  margin-top: 2em;
+@layer base {
+  .bottom-text {
+    margin-top: 2em;
 
-  font-size: 0.875em;
-  color: var(--color-text-weak);
+    font-size: 0.875em;
+    color: var(--color-text-weak);
 
-  :deep(p:last-child) {
-    margin-bottom: 0;
+    :deep(p:last-child) {
+      margin-bottom: 0;
+    }
   }
 }
 </style>
