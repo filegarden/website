@@ -58,9 +58,6 @@ pub(crate) enum FirstFactorCredentials {
 /// User credentials where second-factor authentication is required (if enabled). Multi-factor
 /// authentication credentials are also accepted because they cover the second factor, but never
 /// required.
-// TODO: Should exclusively multi-factor credentials be required if enabled when no exclusively
-// second-factor credentials are enabled? For instance, should resetting your password require a
-// passkey if you have passkeys enabled but not TOTP?
 #[derive(Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[serde(rename_all = "camelCase", untagged)]
 pub(crate) enum SecondFactorCredentials {
