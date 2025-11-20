@@ -43,6 +43,21 @@ pub(crate) enum ExclusiveSecondFactorCredentials {
 #[serde(rename_all = "camelCase", untagged)]
 pub(crate) enum ExclusiveMultiFactorCredentials {}
 
+/// User credentials which are required only if the user has them enabled.
+#[derive(Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[serde(rename_all = "camelCase", untagged)]
+pub(crate) enum IfEnabled<T> {
+    /// The user's credentials, accepted only if the user has these credentials enabled.
+    Enabled(T),
+
+    /// An empty struct, accepted only if the user has these credentials disabled.
+    #[expect(
+        clippy::empty_enum_variants_with_brackets,
+        reason = "This should be deserialized from `{}` in JSON."
+    )]
+    Disabled {},
+}
+
 /// User credentials for first-factor authentication. Multi-factor authentication credentials are
 /// also accepted because they cover the first factor.
 #[derive(Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
@@ -63,7 +78,7 @@ pub(crate) enum FirstFactorCredentials {
 pub(crate) enum SecondFactorCredentials {
     /// The user's exclusively second-factor authentication credentials (if the user has 2FA
     /// enabled).
-    Second(Option<ExclusiveSecondFactorCredentials>),
+    Second(IfEnabled<ExclusiveSecondFactorCredentials>),
 
     /// The user's multi-factor authentication credentials, covering the second factor.
     Multi(ExclusiveMultiFactorCredentials),
@@ -82,7 +97,7 @@ pub(crate) enum MultiFactorCredentials {
 
         /// The user's second-factor authentication credentials (if the user has 2FA enabled).
         #[serde(flatten)]
-        second: Option<ExclusiveSecondFactorCredentials>,
+        second: IfEnabled<ExclusiveSecondFactorCredentials>,
     },
 
     /// Credentials for MFA not using separate first and second authentication factors.
@@ -200,13 +215,13 @@ impl VerifyCredentials for ExclusiveSecondFactorCredentials {
     }
 }
 
-impl VerifyCredentials for Option<ExclusiveSecondFactorCredentials> {
+impl VerifyCredentials for IfEnabled<ExclusiveSecondFactorCredentials> {
     async fn verify<UserId: AsRef<[u8]>>(
         &self,
         tx: &mut PgTransaction<'static>,
         user_id: &UserId,
     ) -> TxResult<(), api::Error> {
-        if let Some(credentials) = self {
+        if let Self::Enabled(credentials) = self {
             return credentials.verify(tx, &user_id).await;
         }
 
