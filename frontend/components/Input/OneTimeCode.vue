@@ -70,7 +70,7 @@ async function handleInput(event: InputEvent) {
 <style scoped lang="scss">
 :deep(input) {
   font-family: var(--font-family-monospace);
-  font-size: min(2.5em, 10vw);
+  font-size: min(2.5em, 66.7vw / v-bind(size));
   line-height: 1.875;
 
   $letter-spacing: 0.5ch;
