@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false });
+
 const model = defineModel<string>({ default: "" });
 const wrong = defineModel<boolean>("wrong", { default: false });
 
@@ -45,6 +47,7 @@ onUnmounted(() => {
     label="2FA Code"
     allow="numeric"
     :custom-validity="wrong ? 'Incorrect or expired 2FA code.' : ''"
+    v-bind="$attrs"
   >
     <template #after>
       <div>
@@ -55,19 +58,26 @@ onUnmounted(() => {
     </template>
   </InputOneTimeCode>
 
-  <InputOneTimeCode
-    v-else-if="type === 'backup-totp'"
-    ref="input"
-    v-model="model"
-    label="2FA Backup Code"
-    allow="alphanumeric"
-    :size="8"
-    :custom-validity="wrong ? 'Incorrect or expired 2FA backup code.' : ''"
-  >
-    <template #after>
-      <A href="javascript:" @click="switchToTotp">
-        Never mind, I have a 2FA code
-      </A>
-    </template>
-  </InputOneTimeCode>
+  <template v-else-if="type === 'backup-totp'">
+    <InputOneTimeCode
+      ref="input"
+      v-model="model"
+      label="2FA Backup Code"
+      allow="alphanumeric"
+      :size="8"
+      :custom-validity="wrong ? 'Incorrect or expired 2FA backup code.' : ''"
+      v-bind="$attrs"
+    >
+      <template #after>
+        <A href="javascript:" @click="switchToTotp">
+          Never mind, I have a 2FA code
+        </A>
+      </template>
+    </InputOneTimeCode>
+
+    <p>
+      Note: 2FA backup codes are single-use. If you lost your authenticator app,
+      disable and re-enable 2FA as soon as possible after signing in.
+    </p>
+  </template>
 </template>
