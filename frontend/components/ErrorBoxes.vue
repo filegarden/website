@@ -29,7 +29,7 @@ watch(() => route.name, clearErrorBoxes);
 
 <template>
   <Teleport v-if="errorBoxes.value.length" to="#teleports">
-    <div class="error-boxes">
+    <div class="error-boxes" role="log" aria-label="Errors">
       <div
         v-if="errorBoxes.value.length >= 2"
         class="error-boxes-section clear-button-wrapper"
