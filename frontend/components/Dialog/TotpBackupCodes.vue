@@ -45,36 +45,34 @@ function printBackupCodes() {
 
 <template>
   <Dialog size="medium">
-    <template #heading>2FA Backup Codes</template>
+    <template #heading>2FA Setup</template>
 
-    <p>
-      These single-use backup codes can be used as 2FA codes if you lose access
-      to your authenticator app.
-    </p>
+    <p>Your account is now more secure against stolen passwords.</p>
 
     <p>
       <strong>
-        SAVE THESE CODES! Otherwise, you'll be permanently locked out of your
-        account if you lose your mobile device.
+        Save these backup codes, or you'll be permanently locked out of your
+        account if you lose access to your authenticator app!
       </strong>
     </p>
 
     <textarea
       ref="backup-codes"
+      aria-label="2FA Backup Codes"
       class="totp-backup-codes"
       :value="backupCodes.join(' ')"
       readonly
     ></textarea>
 
     <div class="totp-backup-codes-actions">
-      <Button autofocus @click="copyBackupCodes">Copy</Button>
+      <Button @click="copyBackupCodes">Copy</Button>
       <Button @click="printBackupCodes">Print</Button>
     </div>
 
     <p>Protect these codes like a password. Don't share them.</p>
 
     <template #actions>
-      <Button type="submit">I understand</Button>
+      <Button type="submit">Got it</Button>
     </template>
   </Dialog>
 </template>
