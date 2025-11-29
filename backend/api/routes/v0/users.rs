@@ -22,11 +22,8 @@ pub(crate) mod user;
 
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase", deny_unknown_fields)]
+#[serde(rename_all = "camelCase")]
 pub(crate) struct PostRequest {
-    /// The user's email address.
-    pub email: UserEmail,
-
     /// Information that verifies the user's email address.
     #[serde(flatten)]
     pub email_verification: EmailVerification,
@@ -39,15 +36,24 @@ pub(crate) struct PostRequest {
 }
 
 #[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
+#[serde(rename_all = "camelCase", untagged)]
 pub(crate) enum EmailVerification {
-    /// The verification code for the user's email address.
-    #[serde(rename = "emailVerificationCode")]
-    Code(EmailVerificationCode),
+    /// Email verification using a code.
+    Code {
+        /// The user's email address.
+        email: UserEmail,
 
-    /// The verification token for the user's email address.
-    #[serde(rename = "emailVerificationToken")]
-    Token(Token),
+        /// The verification code for the user's email address.
+        #[serde(rename = "emailVerificationCode")]
+        code: EmailVerificationCode,
+    },
+
+    /// Email verification using a token.
+    Token {
+        /// The verification token for the user's email address.
+        #[serde(rename = "emailVerificationToken")]
+        token: Token,
+    },
 }
 
 /// Creates a new user. Signs in the user if successful.
@@ -60,13 +66,13 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     let password_hash = hash_with_salt(&body.password);
 
     let (user_id, session_token) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let accepted_terms_at = match &body.email_verification {
-            EmailVerification::Code(code) => {
+        let (accepted_terms_at, email) = match &body.email_verification {
+            EmailVerification::Code { email, code } => {
                 let Some(unverified_user) = sqlx::query!(
                     "DELETE FROM unverified_users
                         WHERE email = $1
                         RETURNING accepted_terms_at, code_hash",
-                    body.email.as_str(),
+                    email.as_str(),
                 )
                 .fetch_optional(tx.as_mut())
                 .await?
@@ -82,16 +88,15 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                     return Err(TxError::Abort(api::Error::EmailVerificationWrong));
                 }
 
-                unverified_user.accepted_terms_at
+                (unverified_user.accepted_terms_at, email.to_string())
             }
-            EmailVerification::Token(token) => {
+            EmailVerification::Token { token } => {
                 let token_hash = hash_without_salt(&token);
 
                 let Some(unverified_user) = sqlx::query!(
                     "DELETE FROM unverified_users
-                        WHERE email = $1 AND token_hash = $2
-                        RETURNING accepted_terms_at",
-                    body.email.as_str(),
+                        WHERE token_hash = $1
+                        RETURNING accepted_terms_at, email",
                     token_hash.as_ref(),
                 )
                 .fetch_optional(tx.as_mut())
@@ -100,7 +105,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                     return Err(TxError::Abort(api::Error::EmailVerificationWrong));
                 };
 
-                unverified_user.accepted_terms_at
+                (unverified_user.accepted_terms_at, unverified_user.email)
             }
         };
 
@@ -111,7 +116,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                 VALUES ($1, $2, $3, $4, $5)",
             accepted_terms_at,
             user_id.as_slice(),
-            body.email.as_str(),
+            email.as_str(),
             *body.name,
             password_hash,
         )

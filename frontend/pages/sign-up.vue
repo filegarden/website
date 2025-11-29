@@ -139,9 +139,11 @@ async function completeSignUp() {
   const user = await api("/users", {
     method: "POST",
     body: {
-      email: email.value,
       ...(route.query.token === undefined
-        ? { emailVerificationCode: code.value.toUpperCase() }
+        ? {
+            email: email.value,
+            emailVerificationCode: code.value.toUpperCase(),
+          }
         : { emailVerificationToken: String(route.query.token) }),
       name: name.value,
       password: password.value,

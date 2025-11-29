@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "INSERT INTO unverified_emails (token_hash, email)\n                VALUES ($1, $2)",
+  "query": "INSERT INTO unverified_users (token_hash, email)\n                VALUES ($1, $2)",
   "describe": {
     "columns": [],
     "parameters": {
@@ -16,5 +16,5 @@
     },
     "nullable": []
   },
-  "hash": "4dd0a8d9c683e850543142efc3128afd94e388865d3ddf168e14b0dfde190585"
+  "hash": "f45d783e17aeee11edbae25e5985a3bb4bc98c184b37198f4660d26062b072c4"
 }

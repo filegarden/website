@@ -1,10 +1,15 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT email FROM unverified_emails\n                WHERE token_hash = $1 AND user_id IS NULL",
+  "query": "DELETE FROM unverified_users\n                        WHERE token_hash = $1\n                        RETURNING accepted_terms_at, email",
   "describe": {
     "columns": [
       {
         "ordinal": 0,
+        "name": "accepted_terms_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 1,
         "name": "email",
         "type_info": {
           "Custom": {
@@ -20,8 +25,9 @@
       ]
     },
     "nullable": [
+      false,
       false
     ]
   },
-  "hash": "a8b5825b5c79944c7a2d7f59749f6b15720b0fe13216a3a67f78a3d84860e903"
+  "hash": "b9c3c9ab7323b8777296cb0bc0d5aeb8b9bd65a32de5892632e059dee9e90b49"
 }

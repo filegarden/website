@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "UPDATE unverified_emails\n                SET code_hash = $1\n                WHERE token_hash = $2 AND user_id IS NULL\n                RETURNING email",
+  "query": "SELECT email FROM unverified_users\n                WHERE token_hash = $1",
   "describe": {
     "columns": [
       {
@@ -16,7 +16,6 @@
     ],
     "parameters": {
       "Left": [
-        "Text",
         "Bytea"
       ]
     },
@@ -24,5 +23,5 @@
       false
     ]
   },
-  "hash": "a542f20c9095be6ca3340a703b549fdae433611b4b39d58c535da7281f4e567f"
+  "hash": "c9a3ff969d7ca7aa4fb4f0d1c9c2562a5978e29187bddfaeebd0a0a663656ef3"
 }
