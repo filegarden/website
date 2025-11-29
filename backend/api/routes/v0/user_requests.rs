@@ -39,24 +39,24 @@ pub(crate) struct GetQuery {
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetResponse> {
-    let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let Some(unverified_user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            r#"SELECT email, code_hash as "code_hash!" FROM unverified_emails
-                WHERE user_id IS NULL AND email = $1 AND code_hash IS NOT NULL"#,
+            r#"SELECT email, code_hash as "code_hash!" FROM unverified_users
+                WHERE email = $1 AND code_hash IS NOT NULL"#,
             query.email.as_str(),
         )
         .fetch_optional(tx.as_mut())
         .await?)
     })
     .await?
-    .filter(|unverified_email| verify_hash(&query.code, &unverified_email.code_hash)) else {
+    .filter(|unverified_user| verify_hash(&query.code, &unverified_user.code_hash)) else {
         return Err(api::Error::ResourceNotFound);
     };
 
     Ok((
         StatusCode::OK,
         Json(GetResponse {
-            email: unverified_email.email,
+            email: unverified_user.email,
         }),
     ))
 }
@@ -124,8 +124,8 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 
         // Expire any previous email verification request.
         sqlx::query!(
-            "DELETE FROM unverified_emails
-                WHERE user_id IS NULL AND email = $1",
+            "DELETE FROM unverified_users
+                WHERE email = $1",
             body.email.as_str(),
         )
         .execute(tx.as_mut())
@@ -135,7 +135,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         let token_hash = hash_without_salt(&token);
 
         sqlx::query!(
-            "INSERT INTO unverified_emails (token_hash, email)
+            "INSERT INTO unverified_users (token_hash, email)
                 VALUES ($1, $2)",
             token_hash.as_ref(),
             body.email.as_str(),

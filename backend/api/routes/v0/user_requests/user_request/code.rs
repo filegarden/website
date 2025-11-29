@@ -29,11 +29,11 @@ pub(crate) async fn post(Path(token): PathParams) -> impl Response<PostResponse>
     let code = generate_short_code(EMAIL_VERIFICATION_CODE_LENGTH);
     let code_hash = hash_with_salt(&code);
 
-    let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let Some(unverified_user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "UPDATE unverified_emails
+            "UPDATE unverified_users
                 SET code_hash = $1
-                WHERE token_hash = $2 AND user_id IS NULL
+                WHERE token_hash = $2
                 RETURNING email",
             code_hash,
             token_hash.as_ref(),
@@ -49,7 +49,7 @@ pub(crate) async fn post(Path(token): PathParams) -> impl Response<PostResponse>
     Ok((
         StatusCode::CREATED,
         Json(PostResponse {
-            email: unverified_email.email,
+            email: unverified_user.email,
             code,
         }),
     ))

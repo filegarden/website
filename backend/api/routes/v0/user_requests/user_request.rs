@@ -25,10 +25,10 @@ type PathParams = Path<Token>;
 pub(crate) async fn get(Path(token): PathParams) -> impl Response<GetResponse> {
     let token_hash = hash_without_salt(&token);
 
-    let Some(unverified_email) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
+    let Some(unverified_user) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         Ok(sqlx::query!(
-            "SELECT email FROM unverified_emails
-                WHERE token_hash = $1 AND user_id IS NULL",
+            "SELECT email FROM unverified_users
+                WHERE token_hash = $1",
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
@@ -42,7 +42,7 @@ pub(crate) async fn get(Path(token): PathParams) -> impl Response<GetResponse> {
     Ok((
         StatusCode::OK,
         Json(GetResponse {
-            email: unverified_email.email,
+            email: unverified_user.email,
         }),
     ))
 }

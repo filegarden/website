@@ -20,6 +20,14 @@ CREATE TABLE terms_version (
     privacy_hash bytea NOT NULL
 );
 
+CREATE TABLE unverified_users (
+    created_at timestamptz(3) NOT NULL DEFAULT now(),
+    token_hash bytea PRIMARY KEY,
+    accepted_terms_at timestamptz(3) NOT NULL DEFAULT now(),
+    email citext NOT NULL UNIQUE,
+    code_hash text
+);
+
 CREATE TABLE users (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     accepted_terms_at timestamptz(3) NOT NULL,
@@ -38,17 +46,12 @@ CREATE TABLE totp (
     unused_backup_codes text[] NOT NULL
 );
 
-CREATE TABLE unverified_emails (
+CREATE TABLE email_change_requests (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     token_hash bytea PRIMARY KEY,
-    user_accepted_terms_at timestamptz(3) NOT NULL DEFAULT now(),
-    user_id bytea UNIQUE REFERENCES users (id) ON DELETE CASCADE,
-    email citext NOT NULL,
-    code_hash text
+    user_id bytea NOT NULL UNIQUE REFERENCES users (id) ON DELETE CASCADE,
+    email citext NOT NULL
 );
-
-CREATE UNIQUE INDEX unverified_user_emails ON unverified_emails (email)
-    WHERE user_id IS NULL;
 
 CREATE TABLE password_resets (
     created_at timestamptz(3) NOT NULL DEFAULT now(),

@@ -62,10 +62,10 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
     let (user_id, session_token) = db::transaction!(async |tx| -> TxResult<_, api::Error> {
         let accepted_terms_at = match &body.email_verification {
             EmailVerification::Code(code) => {
-                let Some(unverified_email) = sqlx::query!(
-                    "DELETE FROM unverified_emails
-                        WHERE user_id IS NULL AND email = $1
-                        RETURNING user_accepted_terms_at, code_hash",
+                let Some(unverified_user) = sqlx::query!(
+                    "DELETE FROM unverified_users
+                        WHERE email = $1
+                        RETURNING accepted_terms_at, code_hash",
                     body.email.as_str(),
                 )
                 .fetch_optional(tx.as_mut())
@@ -74,7 +74,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                     return Err(TxError::Abort(api::Error::EmailVerificationWrong));
                 };
 
-                let does_code_match = unverified_email
+                let does_code_match = unverified_user
                     .code_hash
                     .is_some_and(|code_hash| verify_hash(&code, &code_hash));
 
@@ -82,15 +82,15 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                     return Err(TxError::Abort(api::Error::EmailVerificationWrong));
                 }
 
-                unverified_email.user_accepted_terms_at
+                unverified_user.accepted_terms_at
             }
             EmailVerification::Token(token) => {
                 let token_hash = hash_without_salt(&token);
 
-                let Some(unverified_email) = sqlx::query!(
-                    "DELETE FROM unverified_emails
-                        WHERE user_id IS NULL AND email = $1 AND token_hash = $2
-                        RETURNING user_accepted_terms_at",
+                let Some(unverified_user) = sqlx::query!(
+                    "DELETE FROM unverified_users
+                        WHERE email = $1 AND token_hash = $2
+                        RETURNING accepted_terms_at",
                     body.email.as_str(),
                     token_hash.as_ref(),
                 )
@@ -100,7 +100,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
                     return Err(TxError::Abort(api::Error::EmailVerificationWrong));
                 };
 
-                unverified_email.user_accepted_terms_at
+                unverified_user.accepted_terms_at
             }
         };
 
