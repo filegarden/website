@@ -93,16 +93,11 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         return Err(api::Error::CaptchaFailed);
     }
 
-    enum SendMessage {
-        /// Sends a [`PasswordResetMessage`].
-        PasswordReset {
-            /// The password reset token.
-            token: Token,
-            /// The name of the user to send a password reset request.
-            user_name: String,
-        },
+    enum SendMessage<F: FnOnce(), G: FnOnce()> {
         /// Sends a [`PasswordResetFailedMessage`].
-        PasswordResetFailed,
+        PasswordResetFailed(G),
+        /// Sends a [`PasswordResetMessage`].
+        PasswordReset(F),
     }
 
     match db::transaction!(async |tx| -> TxResult<_, api::Error> {
@@ -114,7 +109,13 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .fetch_optional(tx.as_mut())
         .await?
         else {
-            return Ok(SendMessage::PasswordResetFailed);
+            return Ok(SendMessage::PasswordResetFailed(|| {
+                PasswordResetFailedMessage {
+                    email: body.email.as_str(),
+                }
+                .to(Mailbox::new(None, body.email.clone().into_inner()))
+                .send();
+            }));
         };
 
         // Expire any previous password reset request.
@@ -138,28 +139,26 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .execute(tx.as_mut())
         .await?;
 
-        Ok(SendMessage::PasswordReset {
-            token,
-            user_name: user.name,
-        })
-    })
-    .await?
-    {
-        SendMessage::PasswordReset { token, user_name } => {
+        Ok(SendMessage::PasswordReset(|| {
+            let user_name = user.name;
+            let token = token;
+
             PasswordResetMessage {
                 email: body.email.as_str(),
                 password_reset_url: &format!("{}/reset-password?token={}", *WEBSITE_ORIGIN, token),
             }
-            .to(Mailbox::new(Some(user_name), (*body.email).clone()))
+            .to(Mailbox::new(
+                Some(user_name),
+                body.email.clone().into_inner(),
+            ))
             .send();
-        }
-        SendMessage::PasswordResetFailed => {
-            PasswordResetFailedMessage {
-                email: body.email.as_str(),
-            }
-            .to(Mailbox::new(None, (*body.email).clone()))
-            .send();
-        }
+        }))
+    })
+    .await?
+    {
+        // Construct and send the message outside the database transaction.
+        SendMessage::PasswordResetFailed(send) => send(),
+        SendMessage::PasswordReset(send) => send(),
     }
 
     // To prevent user enumeration, send this same successful response even if the user doesn't

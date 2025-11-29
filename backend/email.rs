@@ -14,8 +14,8 @@ use crate::WEBSITE_ORIGIN;
 
 /// An email template asking a user to verify their email.
 #[derive(Template, Debug)]
-#[template(path = "email/verification.html")]
-pub(crate) struct VerificationMessage<'a> {
+#[template(path = "email/sign_up_verification.html")]
+pub(crate) struct SignUpVerificationMessage<'a> {
     /// The email address being verified.
     pub(crate) email: &'a str,
 
@@ -23,7 +23,7 @@ pub(crate) struct VerificationMessage<'a> {
     pub(crate) verification_url: &'a str,
 }
 
-impl MessageTemplate for VerificationMessage<'_> {
+impl MessageTemplate for SignUpVerificationMessage<'_> {
     fn subject(&self) -> String {
         "Verify your email".into()
     }
@@ -32,15 +32,15 @@ impl MessageTemplate for VerificationMessage<'_> {
 /// An email template informing a user that someone tried to sign up with their email despite them
 /// already having an account.
 #[derive(Template, Debug)]
-#[template(path = "email/email_taken.html")]
-pub(crate) struct EmailTakenMessage<'a> {
+#[template(path = "email/sign_up_email_taken.html")]
+pub(crate) struct SignUpEmailTakenMessage<'a> {
     /// The email address used to try to sign up.
     pub(crate) email: &'a str,
 }
 
-impl MessageTemplate for EmailTakenMessage<'_> {
+impl MessageTemplate for SignUpEmailTakenMessage<'_> {
     fn subject(&self) -> String {
-        "Sign-up failed for existing account".into()
+        "Sign-up failed due to existing account".into()
     }
 }
 

@@ -137,7 +137,6 @@ impl UserEmail {
     }
 
     /// Consumes the [`UserEmail`], returning the inner [`Address`].
-    #[expect(dead_code, reason = "This should be part of the interface regardless")]
     pub(crate) fn into_inner(self) -> Address {
         self.0
     }

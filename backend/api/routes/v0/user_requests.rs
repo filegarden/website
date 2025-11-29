@@ -15,7 +15,7 @@ use crate::{
     },
     crypto::{hash_without_salt, verify_hash},
     db::{self, TxResult},
-    email::{EmailTakenMessage, MessageTemplate, VerificationMessage},
+    email::{MessageTemplate, SignUpEmailTakenMessage, SignUpVerificationMessage},
     id::Token,
 };
 
@@ -93,18 +93,15 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         return Err(api::Error::CaptchaFailed);
     }
 
-    enum SendMessage {
-        /// Sends an [`EmailTakenMessage`].
-        EmailTaken {
-            /// The name of the existing user who took the email.
-            user_name: String,
-        },
-        /// Sends a [`VerificationMessage`].
-        Verification(Token),
+    enum SendMessage<F: FnOnce(), G: FnOnce()> {
+        /// Sends a [`SignUpEmailTakenMessage`].
+        EmailTaken(F),
+        /// Sends a [`SignUpVerificationMessage`].
+        Verification(G),
     }
 
     match db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let existing_user = sqlx::query!(
+        let taken_user = sqlx::query!(
             "SELECT name FROM users
                 WHERE email = $1",
             body.email.as_str(),
@@ -112,10 +109,17 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .fetch_optional(tx.as_mut())
         .await?;
 
-        if let Some(user) = existing_user {
-            return Ok(SendMessage::EmailTaken {
-                user_name: user.name,
-            });
+        if let Some(taken_user) = taken_user {
+            return Ok(SendMessage::EmailTaken(|| {
+                SignUpEmailTakenMessage {
+                    email: body.email.as_str(),
+                }
+                .to(Mailbox::new(
+                    Some(taken_user.name),
+                    body.email.clone().into_inner(),
+                ))
+                .send();
+            }));
         }
 
         // Expire any previous email verification request.
@@ -139,25 +143,22 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
         .execute(tx.as_mut())
         .await?;
 
-        Ok(SendMessage::Verification(token))
-    })
-    .await?
-    {
-        SendMessage::EmailTaken { user_name } => {
-            EmailTakenMessage {
-                email: body.email.as_str(),
-            }
-            .to(Mailbox::new(Some(user_name), (*body.email).clone()))
-            .send();
-        }
-        SendMessage::Verification(token) => {
-            VerificationMessage {
+        Ok(SendMessage::Verification(|| {
+            let token = token;
+
+            SignUpVerificationMessage {
                 email: body.email.as_str(),
                 verification_url: &format!("{}/verify-email?token={}", *WEBSITE_ORIGIN, token),
             }
-            .to(Mailbox::new(None, (*body.email).clone()))
+            .to(Mailbox::new(None, body.email.clone().into_inner()))
             .send();
-        }
+        }))
+    })
+    .await?
+    {
+        // Construct and send the message outside the database transaction.
+        SendMessage::EmailTaken(send) => send(),
+        SendMessage::Verification(send) => send(),
     }
 
     // To prevent user enumeration, send this same successful response even if the email is taken.
