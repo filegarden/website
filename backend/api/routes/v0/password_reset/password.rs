@@ -81,6 +81,8 @@ pub(crate) async fn post(
             .fetch_one(tx.as_mut())
             .await?;
 
+            // Expiring all other sessions is a conventionally expected security feature whenever a
+            // user's password is changed.
             sqlx::query!(
                 "DELETE FROM sessions
                     WHERE user_id = $1",
