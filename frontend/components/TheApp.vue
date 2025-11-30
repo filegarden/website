@@ -41,13 +41,13 @@ const openDialogCount = useOpenDialogCount();
 
     <Teleport to="#teleports">
       <div id="dialog-teleports"></div>
-    </Teleport>
 
-    <!--
-      Having everything above this (including other teleports) ensures error
-      boxes are consistently tabbed to last (regardless of teleport order).
-    -->
-    <ErrorBoxes />
+      <!--
+        Having everything above this (including other teleports) ensures error
+        boxes are consistently tabbed to last (regardless of teleport order).
+      -->
+      <ErrorBoxes />
+    </Teleport>
   </div>
 </template>
 

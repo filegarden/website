@@ -9,7 +9,14 @@ function handleRejection(event: PromiseRejectionEvent) {
   errorBoxes.handleError(event.reason);
 }
 
+const showErrors = ref(false);
+
 onMounted(() => {
+  // ARIA `log`s only announce content added after mounting, so this announces
+  // any initial error boxes. It also avoids hydration mismatches, since both
+  // the server and the client will initially render no error boxes.
+  showErrors.value = true;
+
   window.addEventListener("error", handleError);
   window.addEventListener("unhandledrejection", handleRejection);
 });
@@ -28,8 +35,8 @@ watch(() => route.name, clearErrorBoxes);
 </script>
 
 <template>
-  <Teleport v-if="errorBoxes.value.length" to="#teleports">
-    <div class="error-boxes" role="log" aria-label="Errors">
+  <div class="error-boxes" role="log" aria-label="Errors">
+    <template v-if="showErrors">
       <div
         v-if="errorBoxes.value.length >= 2"
         class="error-boxes-section clear-button-wrapper"
@@ -39,12 +46,15 @@ watch(() => route.name, clearErrorBoxes);
         </Button>
       </div>
 
-      <div class="error-boxes-section error-boxes-above-the-fold">
+      <div
+        v-if="errorBoxes.value[0]"
+        class="error-boxes-section error-boxes-above-the-fold"
+      >
         <!--
           We don't want to cover the screen with errors unless the user scrolls
           down, so show only the first one above the fold.
         -->
-        <ErrorBox :value="errorBoxes.value[0]!" @close="errorBoxes.close" />
+        <ErrorBox :value="errorBoxes.value[0]" @close="errorBoxes.close" />
       </div>
 
       <div
@@ -60,8 +70,8 @@ watch(() => route.name, clearErrorBoxes);
           />
         </div>
       </div>
-    </div>
-  </Teleport>
+    </template>
+  </div>
 </template>
 
 <style scoped lang="scss">
