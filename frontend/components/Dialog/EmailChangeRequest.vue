@@ -21,13 +21,13 @@ function handleTryAgain() {
   <Dialog ref="dialog" size="small">
     <template #heading>Change email</template>
 
-    <p class="centered">
+    <p>
       To continue, check the email sent to
       <strong>{{ email }}</strong
       >.
     </p>
 
-    <p class="centered">
+    <p class="weak">
       Don't see the email? Check spam or
       <A href="javascript:" @click="handleTryAgain">try again</A>.
     </p>
@@ -37,3 +37,10 @@ function handleTryAgain() {
     </template>
   </Dialog>
 </template>
+
+<style scoped lang="scss">
+.weak {
+  font-size: 0.875em;
+  color: var(--color-text-weak);
+}
+</style>
