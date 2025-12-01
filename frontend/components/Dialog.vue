@@ -74,8 +74,7 @@ const { handle = requireHandle(), action } = defineProps<{
 const dialogElement = useTemplateRef("dialog");
 const openDialogCount = useOpenDialogCount();
 
-watchEffect(() => {
-  const dialog = dialogElement.value;
+watch(dialogElement, (dialog) => {
   if (!dialog) {
     return;
   }
