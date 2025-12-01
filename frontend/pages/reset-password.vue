@@ -107,14 +107,7 @@ async function submitNewPassword() {
     <h1>Reset Password</h1>
 
     <Form :action="requestPasswordReset">
-      <InputText
-        v-model="email"
-        label="Email"
-        type="email"
-        maxlength="254"
-        required
-        autofocus
-      />
+      <InputEmail v-model="email" required autofocus />
 
       <Captcha v-model="captchaToken" />
 
@@ -151,25 +144,17 @@ async function submitNewPassword() {
     <LoadingIndicator v-if="passwordResetResponse.status.value === 'pending'" />
 
     <Form :action="submitNewPassword">
-      <InputText label="Email" type="email" disabled :model-value="email" />
-      <InputText
+      <InputEmail disabled :model-value="email" />
+      <InputNewPassword
         v-model="password"
         label="New Password"
-        type="password"
-        minlength="8"
-        maxlength="256"
         required
         autofocus
-        autocomplete="new-password"
       />
-      <InputText
+      <InputNewPassword
         v-model="confirmPassword"
         label="Confirm Password"
-        type="password"
-        minlength="8"
-        maxlength="256"
         required
-        autocomplete="new-password"
         :custom-validity="
           confirmPassword && password !== confirmPassword
             ? 'Please make sure both passwords match.'

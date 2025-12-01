@@ -39,18 +39,11 @@ async function action() {
   <Dialog size="small" :action>
     <template #heading>Change email</template>
 
-    <InputText
-      label="Current Email"
-      type="email"
-      disabled
-      :model-value="email"
-    />
+    <InputEmail label="Current Email" disabled :model-value="email" />
 
-    <InputText
+    <InputEmail
       v-model="newEmail"
       label="New Email"
-      type="email"
-      maxlength="254"
       required
       :custom-validity="
         newEmail === email
@@ -59,11 +52,9 @@ async function action() {
       "
     />
 
-    <InputText
+    <InputPassword
       v-model="password"
       label="Verify Current Password"
-      type="password"
-      maxlength="256"
       required
       :custom-validity="isPasswordWrong ? 'Incorrect password.' : ''"
     />

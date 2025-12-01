@@ -32,11 +32,9 @@ async function action() {
       password will be required when signing in.
     </p>
 
-    <InputText
+    <InputPassword
       v-model="password"
       label="Verify Current Password"
-      type="password"
-      maxlength="256"
       required
       :custom-validity="isPasswordWrong ? 'Incorrect password.' : ''"
     />

@@ -167,14 +167,7 @@ async function completeSignUp() {
     <h1>Sign Up</h1>
 
     <Form :action="openCaptchaPage">
-      <InputText
-        v-model="email"
-        label="Email"
-        type="email"
-        maxlength="254"
-        required
-        autofocus
-      />
+      <InputEmail v-model="email" required autofocus />
 
       <InputCheckbox v-model="acceptTerms" required>
         <template #label>
@@ -254,33 +247,13 @@ async function completeSignUp() {
     <Form v-else :action="completeSignUp">
       <p class="intro">One last step...</p>
 
-      <InputText label="Email" type="email" disabled :model-value="email" />
-      <InputText
-        v-model="name"
-        label="Display Name"
-        minlength="1"
-        maxlength="64"
-        required
-        autofocus
-        autocomplete="username"
-      />
-      <InputText
-        v-model="password"
-        label="Password"
-        type="password"
-        minlength="8"
-        maxlength="256"
-        required
-        autocomplete="new-password"
-      />
-      <InputText
+      <InputEmail disabled :model-value="email" />
+      <InputUsername v-model="name" required autofocus />
+      <InputNewPassword v-model="password" label="Password" required />
+      <InputNewPassword
         v-model="confirmPassword"
         label="Confirm Password"
-        type="password"
-        minlength="8"
-        maxlength="256"
         required
-        autocomplete="new-password"
         :custom-validity="
           confirmPassword && password !== confirmPassword
             ? 'Please make sure both passwords match.'

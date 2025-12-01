@@ -78,11 +78,8 @@ async function submitSignIn() {
     <h1>Sign In</h1>
 
     <Form :action="submitSignIn">
-      <InputText
+      <InputEmail
         v-model="email"
-        label="Email"
-        type="email"
-        maxlength="254"
         required
         autofocus
         :custom-validity="
@@ -90,11 +87,9 @@ async function submitSignIn() {
         "
       />
 
-      <InputText
+      <InputPassword
         v-model="password"
         label="Password"
-        type="password"
-        maxlength="256"
         required
         :custom-validity="
           firstFactorCredentialsWrong ? 'Incorrect email or password.' : ''
@@ -105,7 +100,7 @@ async function submitSignIn() {
             <A href="/reset-password">Forgot password?</A>
           </div>
         </template>
-      </InputText>
+      </InputPassword>
 
       <Button type="submit">Sign In</Button>
     </Form>

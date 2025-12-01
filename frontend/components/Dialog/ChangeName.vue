@@ -23,14 +23,7 @@ function action() {
   <Dialog size="small" :action>
     <template #heading>Change display name</template>
 
-    <InputText
-      v-model="newName"
-      label="Display Name"
-      minlength="1"
-      maxlength="64"
-      required
-      autocomplete="username"
-    />
+    <InputUsername v-model="newName" required />
 
     <template #actions="{ cancel }">
       <Button type="submit">Confirm</Button>
