@@ -44,30 +44,20 @@ function handleCodeInputClick(event: MouseEvent) {
 </script>
 
 <template>
-  <SmallPanelLayout>
-    <p v-if="!email" class="distinguished">
+  <SmallPanelLayout v-if="!email">
+    <p class="distinguished">
       This email verification link is invalid or expired.
     </p>
 
-    <template v-else-if="code">
+    <template #bottom-text>
       <p>
-        Use this code to verify your email<br />
-        <strong>{{ email }}</strong>
+        <A href="/">Go Home</A>
       </p>
-
-      <div class="distinguished">
-        <InputOneTimeCode
-          aria-label="Verification Code"
-          allow="alphanumeric"
-          readonly
-          autofocus
-          :model-value="code"
-          @click="handleCodeInputClick"
-        />
-      </div>
     </template>
+  </SmallPanelLayout>
 
-    <template v-else-if="isSameBrowser">
+  <SmallPanelLayout v-else-if="!code">
+    <template v-if="isSameBrowser">
       <p>
         Click the button below to verify your email<br />
         <strong>{{ email }}</strong>
@@ -85,15 +75,32 @@ function handleCodeInputClick(event: MouseEvent) {
       <Button type="submit">Get Verification Code</Button>
     </Form>
 
-    <template v-if="!code" #bottom-text>
-      <p v-if="email">
+    <template #bottom-text>
+      <p>
         If you don't want to verify this email, you can safely close this page.
       </p>
-
       <p>
-        <A href="/">Back to Home</A>
+        <A href="/">Go Home</A>
       </p>
     </template>
+  </SmallPanelLayout>
+
+  <SmallPanelLayout v-else>
+    <p>
+      Use this code to verify your email<br />
+      <strong>{{ email }}</strong>
+    </p>
+
+    <div class="distinguished">
+      <InputOneTimeCode
+        aria-label="Verification Code"
+        allow="alphanumeric"
+        readonly
+        autofocus
+        :model-value="code"
+        @click="handleCodeInputClick"
+      />
+    </div>
   </SmallPanelLayout>
 </template>
 
