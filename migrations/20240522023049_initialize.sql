@@ -53,6 +53,8 @@ CREATE TABLE email_change_requests (
     email citext NOT NULL
 );
 
+CREATE INDEX unverified_user_emails ON email_change_requests (email);
+
 CREATE TABLE password_resets (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     token_hash bytea PRIMARY KEY,

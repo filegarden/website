@@ -6,8 +6,32 @@ const { email } = defineProps<{
 
 const newEmail = ref("");
 
-function action() {
-  return { email: newEmail.value };
+const password = ref("");
+const isPasswordWrong = ref(false);
+
+watch(password, () => {
+  isPasswordWrong.value = false;
+});
+
+async function action() {
+  const { email: normalizedEmail } = await api<{ email: string }>(
+    "/users/me/email-change-request",
+    {
+      method: "POST",
+      body: {
+        credentials: { password: password.value },
+        email: newEmail.value,
+      },
+
+      onApiError: {
+        FIRST_FACTOR_CREDENTIALS_WRONG: () => {
+          isPasswordWrong.value = true;
+        },
+      },
+    },
+  );
+
+  return { email: normalizedEmail };
 }
 </script>
 
@@ -33,6 +57,15 @@ function action() {
           ? 'Please choose an email different from your current one.'
           : ''
       "
+    />
+
+    <InputText
+      v-model="password"
+      label="Verify Current Password"
+      type="password"
+      maxlength="256"
+      required
+      :custom-validity="isPasswordWrong ? 'Incorrect password.' : ''"
     />
 
     <template #actions="{ cancel }">

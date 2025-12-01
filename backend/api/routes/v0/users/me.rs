@@ -12,6 +12,7 @@ use crate::{
     db::{self, TxResult},
 };
 
+pub(crate) mod email_change_request;
 pub(crate) mod name;
 pub(crate) mod sessions;
 pub(crate) mod settings;

@@ -12,6 +12,7 @@ use crate::api;
 mod v0 {
     //! The routes for version 1 of the HTTP API.
 
+    pub(crate) mod email_change_requests;
     pub(crate) mod password_reset;
     pub(crate) mod sessions;
     pub(crate) mod user_requests;
@@ -21,6 +22,14 @@ mod v0 {
 /// The API router.
 pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
     let v0_router = Router::new()
+        .route(
+            "/email-change-requests/{token}",
+            get(v0::email_change_requests::email_change_request::get),
+        )
+        .route(
+            "/email-change-requests/{token}/verify",
+            post(v0::email_change_requests::email_change_request::verify::post),
+        )
         .route(
             "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
@@ -44,6 +53,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         )
         .route("/users", post(v0::users::post))
         .route("/users/me", get(v0::users::me::get))
+        .route(
+            "/users/me/email-change-request",
+            post(v0::users::me::email_change_request::post),
+        )
         .route("/users/me/name", put(v0::users::me::name::put))
         .route("/users/me/sessions", get(v0::users::me::sessions::get))
         .route(

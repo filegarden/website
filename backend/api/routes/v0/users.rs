@@ -109,6 +109,14 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             }
         };
 
+        sqlx::query!(
+            "DELETE FROM email_change_requests
+                WHERE email = $1",
+            email,
+        )
+        .execute(tx.as_mut())
+        .await?;
+
         let user_id = NewUserId::generate();
 
         match sqlx::query!(

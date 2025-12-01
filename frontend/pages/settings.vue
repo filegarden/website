@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type ChangeEmail from "~/components/Dialog/ChangeEmail.vue";
 import type ChangeName from "~/components/Dialog/ChangeName.vue";
 import type DisableTotp from "~/components/Dialog/DisableTotp.vue";
+import type EmailChangeRequest from "~/components/Dialog/EmailChangeRequest.vue";
 import type EnableTotp from "~/components/Dialog/EnableTotp.vue";
 import type TotpBackupCodes from "~/components/Dialog/TotpBackupCodes.vue";
 import type TotpSetup from "~/components/Dialog/TotpSetup.vue";
@@ -24,6 +26,18 @@ watchEffect(() => {
   email.value = settingsResponse.value.email;
   totpEnabled.value = settingsResponse.value.totpEnabled;
 });
+
+const changeEmailDialog = useDialog<typeof ChangeEmail>();
+const emailChangeRequestDialog = useDialog<
+  typeof EmailChangeRequest,
+  { email: string }
+>();
+
+async function changeEmail() {
+  const { email } = await changeEmailDialog.open();
+
+  void emailChangeRequestDialog.open({ email });
+}
 
 const changeNameDialog = useDialog<typeof ChangeName>();
 
@@ -68,7 +82,7 @@ async function disableTotp() {
         <div class="setting-value">{{ email }}</div>
       </div>
       <div class="setting-action">
-        <Button aria-label="Change Email">Change</Button>
+        <Button aria-label="Change Email" @click="changeEmail">Change</Button>
       </div>
     </div>
 
@@ -100,6 +114,17 @@ async function disableTotp() {
       <Button>Download Account Data</Button>
     </div>
 
+    <DialogChangeEmail
+      v-if="changeEmailDialog.isOpen"
+      :handle="changeEmailDialog.handle"
+      :email
+    />
+    <DialogEmailChangeRequest
+      v-if="emailChangeRequestDialog.isOpen"
+      :handle="emailChangeRequestDialog.handle"
+      :email="emailChangeRequestDialog.data.email"
+      :try-again="changeEmail"
+    />
     <DialogChangeName
       v-if="changeNameDialog.isOpen"
       :handle="changeNameDialog.handle"

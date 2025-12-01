@@ -44,6 +44,44 @@ impl MessageTemplate for SignUpEmailTakenMessage<'_> {
     }
 }
 
+/// An email template asking a user to verify their email change.
+#[derive(Template, Debug)]
+#[template(path = "email/email_change_verification.html")]
+pub(crate) struct EmailChangeVerificationMessage<'a> {
+    /// The requester's current email address.
+    pub(crate) current_email: &'a str,
+
+    /// The email address requested for the email change.
+    pub(crate) requested_email: &'a str,
+
+    /// The URL the user must visit to verify their email change.
+    pub(crate) verification_url: &'a str,
+}
+
+impl MessageTemplate for EmailChangeVerificationMessage<'_> {
+    fn subject(&self) -> String {
+        "Verify your email".into()
+    }
+}
+
+/// An email template informing a user that they already have an account under an email someone
+/// requested to change their account's email to.
+#[derive(Template, Debug)]
+#[template(path = "email/email_change_taken.html")]
+pub(crate) struct EmailChangeTakenMessage<'a> {
+    /// The requester's current email address.
+    pub(crate) current_email: &'a str,
+
+    /// The recipient's current email address which was requested for the email change.
+    pub(crate) requested_email: &'a str,
+}
+
+impl MessageTemplate for EmailChangeTakenMessage<'_> {
+    fn subject(&self) -> String {
+        "Email change failed due to existing account".into()
+    }
+}
+
 /// An email template giving a user a link to reset their password.
 #[derive(Template, Debug)]
 #[template(path = "email/password_reset.html")]
