@@ -14,6 +14,7 @@ use crate::{
 
 pub(crate) mod email_change_request;
 pub(crate) mod name;
+pub(crate) mod password;
 pub(crate) mod sessions;
 pub(crate) mod settings;
 pub(crate) mod totp;

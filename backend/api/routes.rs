@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 
 use axum::{
     Router,
-    routing::{delete, get, post, put},
+    routing::{delete, get, patch, post, put},
 };
 
 use crate::api;
@@ -58,6 +58,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::users::me::email_change_request::post),
         )
         .route("/users/me/name", put(v0::users::me::name::put))
+        .route("/users/me/password", patch(v0::users::me::password::patch))
         .route("/users/me/sessions", get(v0::users::me::sessions::get))
         .route(
             "/users/me/sessions/{session_id}",

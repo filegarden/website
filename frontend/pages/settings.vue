@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type ChangeEmail from "~/components/Dialog/ChangeEmail.vue";
 import type ChangeName from "~/components/Dialog/ChangeName.vue";
+import type ChangePassword from "~/components/Dialog/ChangePassword.vue";
 import type DisableTotp from "~/components/Dialog/DisableTotp.vue";
 import type EmailChangeRequest from "~/components/Dialog/EmailChangeRequest.vue";
 import type EnableTotp from "~/components/Dialog/EnableTotp.vue";
@@ -45,6 +46,12 @@ async function changeName() {
   const { name } = await changeNameDialog.open();
 
   me.name = name;
+}
+
+const changePasswordDialog = useDialog<typeof ChangePassword>();
+
+async function changePassword() {
+  await changePasswordDialog.open();
 }
 
 const enableTotpDialog = useDialog<typeof EnableTotp>();
@@ -101,7 +108,7 @@ async function disableTotp() {
     <h2>Security</h2>
 
     <div class="button-group">
-      <Button>Change Password</Button>
+      <Button @click="changePassword">Change Password</Button>
 
       <Button v-if="totpEnabled" @click="disableTotp">Disable 2FA</Button>
       <Button v-else @click="enableTotp">Enable 2FA</Button>
@@ -129,6 +136,10 @@ async function disableTotp() {
       v-if="changeNameDialog.isOpen"
       :handle="changeNameDialog.handle"
       :name="me.name"
+    />
+    <DialogChangePassword
+      v-if="changePasswordDialog.isOpen"
+      :handle="changePasswordDialog.handle"
     />
     <DialogEnableTotp
       v-if="enableTotpDialog.isOpen"
