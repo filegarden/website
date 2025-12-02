@@ -16,7 +16,6 @@ use crate::{
         },
     },
     db::{self, TxError, TxResult},
-    id::Token,
 };
 
 /// A `POST` request body for this API route.
@@ -53,7 +52,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 
         body.credentials.verify(tx, &user.id).await?;
 
-        let token: Token = create_session(tx, &user.id).await?;
+        let token = create_session(tx, &user.id).await?;
 
         Ok((token, user.id, user.name))
     })
