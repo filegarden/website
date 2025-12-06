@@ -1,51 +1,10 @@
 <script setup lang="ts">
 const me = await useMe();
-
-const isAccountMenuOpen = ref(false);
-
-function toggleAccountMenu() {
-  isAccountMenuOpen.value = !isAccountMenuOpen.value;
-}
-
-const accountNavItem = useTemplateRef("account-nav-item");
-const accountMenu = useTemplateRef("account-menu");
-
-async function handleAccountMenuBlur() {
-  // Wait for the next element to focus.
-  await timeout();
-
-  if (
-    accountNavItem.value?.contains(document.activeElement) ||
-    accountMenu.value?.contains(document.activeElement)
-  ) {
-    return;
-  }
-
-  isAccountMenuOpen.value = false;
-}
-
-const loading = useLoading();
-
-async function signOut() {
-  await loading.during(async () => {
-    await api("/users/me/sessions/current", {
-      method: "DELETE",
-
-      onApiError: {
-        AUTH_FAILED: () => Promise.resolve(),
-      },
-    });
-
-    setMe(null);
-  });
-}
 </script>
 
 <template>
   <header class="default-header">
     <nav class="default-header-nav panel frosted">
-      <LoadingIndicator v-if="loading.value" />
-
       <NavLogo class="logo" />
 
       <div class="nav-items">
@@ -53,19 +12,8 @@ async function signOut() {
           <Button>Support Us</Button>
         </div>
 
-        <div
-          v-if="me"
-          ref="account-nav-item"
-          class="nav-item"
-          @blur.capture="handleAccountMenuBlur"
-        >
-          <IconButton
-            class="account-button"
-            label="Account Menu"
-            @click="toggleAccountMenu"
-          >
-            <IconAccountCircle class="account-icon" />
-          </IconButton>
+        <div v-if="me" class="nav-item">
+          <AccountMenu teleport-menu-to="#account-menu-wrapper" :me />
         </div>
 
         <div v-else class="nav-item">
@@ -74,43 +22,7 @@ async function signOut() {
       </div>
     </nav>
 
-    <div v-if="isAccountMenuOpen && me" class="account-menu-wrapper">
-      <!--
-        `tabindex="-1"` makes the menu focusable so it still counts as focused
-        (and thus stays open) when clicking an otherwise unfocusable area in the
-        menu.
-      -->
-      <div
-        ref="account-menu"
-        class="account-menu panel frosted"
-        tabindex="-1"
-        @blur.capture="handleAccountMenuBlur"
-      >
-        <ul class="account-menu-list">
-          <li class="account-menu-item">
-            <Button
-              v-autofocus
-              class="account-menu-button"
-              :href="`/files/u/${me.id}`"
-            >
-              Your Garden
-            </Button>
-          </li>
-
-          <li class="account-menu-item">
-            <Button class="account-menu-button" href="/settings">
-              Settings
-            </Button>
-          </li>
-
-          <li class="account-menu-item">
-            <Button class="account-menu-button" @click="signOut">
-              Sign Out
-            </Button>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div id="account-menu-wrapper"></div>
   </header>
 </template>
 
@@ -181,39 +93,8 @@ $nav-height: 4rem;
   }
 }
 
-.account-button {
-  font-size: 1.25em;
-}
-
-.account-icon {
-  width: 100%;
-  height: 100%;
-}
-
-.account-menu-wrapper {
+#account-menu-wrapper {
   // Restrict the account menu from overflowing into the parent's padding.
   position: relative;
-}
-
-.account-menu {
-  position: absolute;
-  right: 0;
-  margin-top: 0.5em;
-  padding: 0.25em;
-}
-
-.account-menu-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: inherit;
-}
-
-.account-menu-item {
-  margin: 0.5em;
-}
-
-.account-menu-button {
-  width: 100%;
 }
 </style>
