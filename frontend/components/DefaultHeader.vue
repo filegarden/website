@@ -126,11 +126,11 @@ async function signOut() {
   padding: clamp(1rem, 6vw, 2rem);
   z-index: 100;
 
-  // The header's area shouldn't block the cursor...
+  // The header's outer area shouldn't block the cursor...
   pointer-events: none;
 
   > * {
-    // ...but everything in the heading should.
+    // ...but everything in the header should.
     pointer-events: auto;
   }
 }
