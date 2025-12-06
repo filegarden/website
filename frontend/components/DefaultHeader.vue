@@ -27,8 +27,6 @@ const me = await useMe();
 </template>
 
 <style scoped lang="scss">
-@use "sass:math";
-
 .default-header {
   position: sticky;
   top: 0;
@@ -47,30 +45,20 @@ const me = await useMe();
   }
 }
 
-$nav-height: 4rem;
-
 .default-header-nav {
+  container-type: size;
+  height: 4rem;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  height: $nav-height;
 
   // Prevent nav links from being clickable outside the panel's border radius.
   overflow: hidden;
 }
 
 .logo {
-  $logo-height: 1.75rem;
-  font-size: $logo-height;
-
-  // Apply padding to the image instead of its link so the link's area matches
-  // the image's area. This also lets screen readers read the image's alt text
-  // when hovering anywhere in the link rather than just the image's content.
-  :deep(img) {
-    height: $nav-height;
-    padding: math.div($nav-height - $logo-height, 2);
-  }
+  font-size: 1.75rem;
 }
 
 .nav-items {
