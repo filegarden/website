@@ -1,8 +1,15 @@
+<script setup lang="ts">
+const { accented } = defineProps<{
+  /** Whether to use accent colors for the button. */
+  accented?: boolean;
+}>();
+</script>
+
 <template>
-  <A v-if="$attrs.href" class="button">
+  <A v-if="$attrs.href" class="button" :class="{ accented }">
     <slot></slot>
   </A>
-  <button v-else type="button" class="button">
+  <button v-else type="button" class="button" :class="{ accented }">
     <slot></slot>
   </button>
 </template>
@@ -73,6 +80,14 @@
     &:disabled {
       opacity: 0.5;
       cursor: default;
+    }
+
+    &.accented {
+      --color-input-text: var(--color-accent-input-text);
+      --color-input-text-hover: var(--color-accent-input-text-hover);
+      --color-input-text-active: var(--color-accent-input-text-active);
+      --color-foreground-light: var(--color-accent-foreground-light);
+      --color-foreground: var(--color-accent-foreground);
     }
   }
 }
