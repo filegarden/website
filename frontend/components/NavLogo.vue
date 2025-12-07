@@ -1,15 +1,7 @@
 <template>
   <A class="nav-logo-link" href="/">
-    <img
-      class="nav-logo-image nav-logo-glow"
-      src="/assets/brand/logo.svg"
-      aria-hidden
-    />
-    <img
-      class="nav-logo-image nav-logo"
-      src="/assets/brand/logo.svg"
-      alt="File Garden"
-    />
+    <img class="nav-logo-glow" src="/assets/brand/logo.svg" aria-hidden />
+    <img class="nav-logo" src="/assets/brand/logo.svg" alt="File Garden" />
   </A>
 </template>
 
@@ -21,19 +13,10 @@
   line-height: 1;
 }
 
-.nav-logo-image {
-  box-sizing: content-box;
+img {
   max-width: 100%;
   height: 1em;
   vertical-align: bottom;
-
-  // Only add padding if there is a container height to extend the padding to.
-  @container (height >= 0) {
-    // Apply padding to the image instead of its link so the link's area matches
-    // the image's area. This also lets screen readers read the image's alt text
-    // when hovering anywhere in the link rather than just the image's content.
-    padding: calc((100cqh - 1em) / 2);
-  }
 }
 
 .nav-logo {

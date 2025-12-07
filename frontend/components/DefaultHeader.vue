@@ -51,6 +51,12 @@
 
 .logo {
   font-size: 1.75rem;
+
+  :deep(img) {
+    // Expand the logo's clickable area to fill the container height.
+    border: calc((100cqh - 1em) / 2) solid transparent;
+    box-sizing: content-box;
+  }
 }
 
 .nav-items {
