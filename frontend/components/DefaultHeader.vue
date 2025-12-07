@@ -1,7 +1,3 @@
-<script setup lang="ts">
-const me = await useMe();
-</script>
-
 <template>
   <header class="default-header">
     <nav class="default-header-nav panel frosted">
@@ -12,12 +8,8 @@ const me = await useMe();
           <Button>Support Us</Button>
         </div>
 
-        <div v-if="me" class="nav-item">
-          <AccountMenu teleport-menu-to="#account-menu-wrapper" :me />
-        </div>
-
-        <div v-else class="nav-item">
-          <Button href="/sign-in">Sign In</Button>
+        <div class="nav-item">
+          <AccountMenu teleport-menu-to="#account-menu-wrapper" />
         </div>
       </div>
     </nav>

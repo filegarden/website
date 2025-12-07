@@ -1,14 +1,13 @@
 <script setup lang="ts">
-const { me } = defineProps<{
-  /** The current authenticated user. */
-  me: User;
-
+const { teleportMenuTo } = defineProps<{
   /**
    * The target container of the account menu when open, or a query selector to
    * the target container.
    */
   teleportMenuTo: string | HTMLElement;
 }>();
+
+const me = await useMe();
 
 const loading = useLoading();
 
@@ -53,53 +52,58 @@ async function signOut() {
 <template>
   <LoadingIndicator v-if="loading.value" />
 
-  <IconButton
-    ref="account-button"
-    class="account-button"
-    label="Account Menu"
-    @click="toggle"
-    @blur.capture="handleBlur"
-  >
-    <IconAccountCircle class="account-icon" />
-  </IconButton>
+  <Button v-if="!me" href="/sign-in">Sign In</Button>
 
-  <Teleport v-if="isOpen" :to="teleportMenuTo">
-    <!--
-      `tabindex="-1"` makes the menu focusable so it still counts as focused
-      (and thus stays open) when clicking an otherwise unfocusable area in the
-      menu.
-    -->
-    <div
-      ref="account-menu"
-      class="account-menu panel frosted"
-      tabindex="-1"
+  <template v-else>
+    <IconButton
+      v-if="me"
+      ref="account-button"
+      class="account-button"
+      label="Account Menu"
+      @click="toggle"
       @blur.capture="handleBlur"
     >
-      <ul class="account-menu-list">
-        <li class="account-menu-item">
-          <Button
-            v-autofocus
-            class="account-menu-button"
-            :href="`/files/u/${me.id}`"
-          >
-            Your Garden
-          </Button>
-        </li>
+      <IconAccountCircle class="account-icon" />
+    </IconButton>
 
-        <li class="account-menu-item">
-          <Button class="account-menu-button" href="/settings">
-            Settings
-          </Button>
-        </li>
+    <Teleport v-if="isOpen" :to="teleportMenuTo">
+      <!--
+        `tabindex="-1"` makes the menu focusable so it still counts as focused
+        (and thus stays open) when clicking an otherwise unfocusable area in the
+        menu.
+      -->
+      <div
+        ref="account-menu"
+        class="account-menu panel frosted"
+        tabindex="-1"
+        @blur.capture="handleBlur"
+      >
+        <ul class="account-menu-list">
+          <li class="account-menu-item">
+            <Button
+              v-autofocus
+              class="account-menu-button"
+              :href="`/files/u/${me.id}`"
+            >
+              Your Garden
+            </Button>
+          </li>
 
-        <li class="account-menu-item">
-          <Button class="account-menu-button" @click="signOut">
-            Sign Out
-          </Button>
-        </li>
-      </ul>
-    </div>
-  </Teleport>
+          <li class="account-menu-item">
+            <Button class="account-menu-button" href="/settings">
+              Settings
+            </Button>
+          </li>
+
+          <li class="account-menu-item">
+            <Button class="account-menu-button" @click="signOut">
+              Sign Out
+            </Button>
+          </li>
+        </ul>
+      </div>
+    </Teleport>
+  </template>
 </template>
 
 <style scoped lang="scss">
