@@ -46,6 +46,8 @@ const { label } = defineProps<{
   }
 
   .icon {
+    font-size: 1.5em;
+
     transition: 0.1s ease-out filter;
 
     .icon-button:hover &,
@@ -76,10 +78,6 @@ const { label } = defineProps<{
       filter: blur(0.2813em);
       transition-duration: 0.067s, 0.067s;
     }
-  }
-
-  .icon-button :deep(svg) {
-    vertical-align: bottom;
   }
 }
 </style>

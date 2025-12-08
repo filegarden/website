@@ -1,8 +1,7 @@
 <template>
   <svg
+    class="icon"
     xmlns="http://www.w3.org/2000/svg"
-    width="1.5em"
-    height="1.5em"
     fill="none"
     stroke-width="1.5"
     stroke="currentColor"
@@ -11,3 +10,15 @@
     <slot></slot>
   </svg>
 </template>
+
+<style scoped lang="scss">
+@layer base {
+  .icon {
+    width: 1em;
+
+    // Vertically center the icon in the line.
+    height: 1lh;
+    vertical-align: bottom;
+  }
+}
+</style>
