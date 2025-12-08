@@ -121,6 +121,7 @@ async function signOut() {
   right: 0;
   margin-top: 0.5rem;
   padding: 0.25rem;
+  z-index: 1;
 }
 
 .account-menu-list {
