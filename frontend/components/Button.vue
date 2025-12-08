@@ -21,6 +21,8 @@ const { accented } = defineProps<{
     display: inline-block;
     text-decoration: none;
 
+    position: relative;
+
     vertical-align: middle;
     line-height: 2.5;
     font-size: 1em;
@@ -37,18 +39,15 @@ const { accented } = defineProps<{
     );
     cursor: pointer;
 
-    $box-shadow: inset 0 2px 0 -1px var(--color-shiny-edge);
-
     border: none;
     // A transparent default outline smoothens transitions to other outlines.
     outline: 1px solid transparent;
     outline-offset: -1px;
-    box-shadow:
-      $box-shadow,
-      0 1px 0.25rem -1px var(--color-shadow-small);
+
+    $box-shadow-base: inset 0 2px 0 -1px var(--color-shiny-edge);
+    box-shadow: $box-shadow-base;
 
     white-space: nowrap;
-    overflow: hidden;
     user-select: none;
     text-align: center;
 
@@ -58,13 +57,27 @@ const { accented } = defineProps<{
       0.1s ease-out box-shadow,
       0.1s ease-out opacity;
 
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+
+      // Put shadow behind the element so it doesn't overlap adjacent elements.
+      z-index: -1;
+      box-shadow: 0 1px 0.25rem -1px var(--color-shadow-small);
+    }
+
     &:hover:not(:disabled) {
       color: var(--color-input-text-hover);
       outline-color: var(--color-outline-hover);
       box-shadow:
-        $box-shadow,
-        0 2px 0.375rem var(--color-shadow-medium),
+        $box-shadow-base,
         inset 0 0 0.5em -0.25em var(--color-glow);
+
+      &::before {
+        box-shadow: 0 2px 0.375rem var(--color-shadow-medium);
+      }
     }
 
     &:active:not(:disabled),
@@ -72,9 +85,12 @@ const { accented } = defineProps<{
       color: var(--color-input-text-active);
       outline-color: var(--color-outline-active);
       box-shadow:
-        $box-shadow,
-        0 2px 0.75rem var(--color-shadow-medium),
+        $box-shadow-base,
         inset 0 0 0.5em var(--color-glow);
+
+      &::before {
+        box-shadow: 0 2px 0.75rem var(--color-shadow-medium);
+      }
     }
 
     &:disabled {
