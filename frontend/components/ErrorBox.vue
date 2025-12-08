@@ -31,7 +31,7 @@ const reportUrl = computed(
 <template>
   <div class="error-box panel frosted">
     <IconButton class="close-button" label="Close" @click="close">
-      <IconClose />
+      <IconXMark />
     </IconButton>
 
     <p class="error-message">{{ value.message }}</p>

@@ -63,7 +63,7 @@ async function signOut() {
       @click="toggle"
       @blur.capture="handleBlur"
     >
-      <IconAccountCircle class="account-icon" />
+      <IconUserCircle class="account-icon" />
     </IconButton>
 
     <Teleport v-if="isOpen" :to="teleportMenuTo">
