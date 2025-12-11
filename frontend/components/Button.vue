@@ -93,6 +93,11 @@ const { accented } = defineProps<{
       }
     }
 
+    &:not(:disabled):is(:hover, :active, :focus-visible)::before {
+      // Let a highlighted button's shadow overlap adjacent elements.
+      z-index: 0;
+    }
+
     &:disabled {
       opacity: 0.5;
       cursor: default;
