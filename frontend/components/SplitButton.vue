@@ -14,23 +14,23 @@ const { popoverButtonAriaLabel, accented } = defineProps<{
     <Button class="popover-button" :aria-label="popoverButtonAriaLabel">
       <IconChevronDown />
     </Button>
+
+    <div class="popover-button-background"></div>
   </fieldset>
 </template>
 
 <style scoped lang="scss">
 $gap: 1px;
-$popover-button-padding-x: 0.6em;
 $inner-border-radius: 2px;
+$popover-button-padding-x: 0.6em;
+$popover-button-width: calc(2 * $popover-button-padding-x + 1em);
 
 .split-button {
   position: relative;
   display: inline-flex;
   gap: $gap;
 
-  // TODO: Don't hard-code this being copied from button styles.
-  border-radius: 0.6em;
-
-  // Prevent outside elements from covering the `z-index: -1` pseudo-elements.
+  // Prevent outside elements from covering any `z-index: -1` descendants.
   isolation: isolate;
 
   &.accented {
@@ -40,42 +40,6 @@ $inner-border-radius: 2px;
     --color-foreground-light: var(--color-accent-foreground-light);
     --color-foreground: var(--color-accent-foreground);
   }
-
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-
-    // TODO: Don't hard-code these being copied from button styles.
-    background-color: var(--color-foreground);
-    background-image: linear-gradient(
-      135deg,
-      var(--color-foreground-light),
-      var(--color-foreground)
-    );
-  }
-
-  $popover-button-width: calc(2 * $popover-button-padding-x + 1em);
-
-  &::before {
-    clip-path: rect(
-      0 calc(100% - $popover-button-width - $gap) 100% 0 round
-        $inner-border-radius
-    );
-  }
-
-  &::after {
-    clip-path: rect(
-      0 100% 100% calc(100% - $popover-button-width) round $inner-border-radius
-    );
-  }
-}
-
-.split-button > * {
-  background: none;
 }
 
 .split-button > :first-child {
@@ -83,6 +47,8 @@ $inner-border-radius: 2px;
 
   border-top-right-radius: $inner-border-radius;
   border-bottom-right-radius: $inner-border-radius;
+
+  background-size: calc(100% + $popover-button-width) 100%;
 }
 
 .popover-button {
@@ -90,5 +56,37 @@ $inner-border-radius: 2px;
 
   border-top-left-radius: $inner-border-radius;
   border-bottom-left-radius: $inner-border-radius;
+
+  background: none;
+}
+
+.popover-button-background {
+  container: split-button / size;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: $popover-button-width;
+    height: 100%;
+
+    // TODO: Don't hard-code this being copied from button styles.
+    border-radius: 0.6em;
+    border-top-left-radius: $inner-border-radius;
+    border-bottom-left-radius: $inner-border-radius;
+
+    background-color: var(--color-foreground);
+    // TODO: Don't hard-code this being copied from button styles.
+    background-image: linear-gradient(
+      135deg,
+      var(--color-foreground-light),
+      var(--color-foreground)
+    );
+    background-size: 100cqw 100%;
+    background-position: right;
+  }
 }
 </style>
