@@ -68,6 +68,11 @@ const { accented } = defineProps<{
       box-shadow: 0 1px 0.25rem -1px var(--color-shadow-small);
     }
 
+    &:not(:disabled):is(:hover, :active, :focus-visible) {
+      // Let a highlighted button's shadow overlap adjacent elements.
+      z-index: 1;
+    }
+
     &:hover:not(:disabled) {
       color: var(--color-input-text-hover);
       outline-color: var(--color-outline-hover);
@@ -91,11 +96,6 @@ const { accented } = defineProps<{
       &::before {
         box-shadow: 0 2px 0.75rem var(--color-shadow-medium);
       }
-    }
-
-    &:not(:disabled):is(:hover, :active, :focus-visible)::before {
-      // Let a highlighted button's shadow overlap adjacent elements.
-      z-index: 0;
     }
 
     &:disabled {
