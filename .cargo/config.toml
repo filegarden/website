@@ -5,7 +5,7 @@ rustflags = [
     "-Ctarget-cpu=native",
 
     # ==== Lints ====
-    # Last updated for Clippy version: 1.89
+    # Last updated for Clippy version: 1.92
 
     # Enforces soundness.
     "-Dunsafe_code",

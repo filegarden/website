@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # We use Alpine Linux since it's lightweight (much smaller and faster to build).
-FROM rust:1.89-alpine AS build
+FROM rust:1.92-alpine AS build
 
 WORKDIR /app
 
