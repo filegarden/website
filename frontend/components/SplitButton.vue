@@ -12,7 +12,7 @@ const { popoverButtonAriaLabel, accented } = defineProps<{
   <fieldset class="split-button" :class="{ accented }">
     <slot name="button"></slot>
 
-    <div class="popover-button-container">
+    <div class="popover-button-wrapper">
       <Button class="popover-button" :aria-label="popoverButtonAriaLabel">
         <IconChevronDown />
       </Button>
@@ -52,7 +52,7 @@ $popover-button-width: calc(2 * $popover-button-padding-x + 1em);
   background-size: calc(100% + $popover-button-width) 100%;
 }
 
-.popover-button-container {
+.popover-button-wrapper {
   container: split-button / size;
   position: absolute;
   inset: 0;
