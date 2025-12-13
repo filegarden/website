@@ -80,21 +80,16 @@ async function signOut() {
       >
         <ul class="account-menu-list">
           <li class="account-menu-item">
-            <Button
-              v-autofocus
-              class="account-menu-button"
-              :href="`/files/u/${me.id}`"
-            >
-              <IconFolder />
-              Your Garden
-            </Button>
+            <MenuButton v-autofocus :href="`/files/u/${me.id}`">
+              <IconFolder />Your Garden
+            </MenuButton>
           </li>
 
           <li class="account-menu-item">
-            <Button class="account-menu-button" href="/settings">
+            <MenuButton href="/settings">
               <IconCog6Tooth />
               Settings
-            </Button>
+            </MenuButton>
           </li>
 
           <li class="account-menu-item" aria-hidden="true">
@@ -102,10 +97,10 @@ async function signOut() {
           </li>
 
           <li class="account-menu-item">
-            <Button class="account-menu-button" @click="signOut">
+            <MenuButton @click="signOut">
               <IconArrowRightStartOnRectangle />
               Sign Out
-            </Button>
+            </MenuButton>
           </li>
         </ul>
       </div>
@@ -146,66 +141,5 @@ async function signOut() {
   > :deep(hr) {
     margin: var(--border-radius-containing-block) 1px;
   }
-}
-
-@property --account-menu-button-glow-start-color {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: transparent;
-}
-
-@property --account-menu-button-glow-start-position {
-  syntax: "<length> | <percentage>";
-  inherits: false;
-  initial-value: 0;
-}
-
-.account-menu-button {
-  width: 100%;
-  padding-left: 1em;
-  padding-right: 1.5em;
-  text-align: left;
-
-  border-radius: 0;
-  box-shadow: none;
-  background-color: transparent;
-
-  --account-menu-button-glow-start-color: transparent;
-  --account-menu-button-glow-start-position: -150%;
-  background-image: linear-gradient(
-    135deg,
-    var(--account-menu-button-glow-start-color)
-      var(--account-menu-button-glow-start-position),
-    transparent 100%
-  );
-
-  transition:
-    0.1s ease-out color,
-    0.1s ease-out opacity,
-    0.1s ease-out --account-menu-button-glow-start-color,
-    0.1s ease-out --account-menu-button-glow-start-position;
-
-  &:hover:not(:disabled) {
-    --account-menu-button-glow-start-color: var(--color-glow);
-  }
-
-  &:active:not(:disabled),
-  &:focus-visible:not(:disabled) {
-    --account-menu-button-glow-start-color: var(--color-glow);
-    --account-menu-button-glow-start-position: -100%;
-  }
-
-  &::before {
-    display: none;
-  }
-
-  &::after {
-    border-width: 0 0 0 1px;
-  }
-}
-
-.account-menu-button > :deep(svg) {
-  width: 1.25em;
-  margin-right: 1ch;
 }
 </style>
