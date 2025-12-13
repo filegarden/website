@@ -171,7 +171,7 @@ async function signOut() {
   background-color: transparent;
 
   --account-menu-button-glow-start-color: transparent;
-  --account-menu-button-glow-start-position: -50%;
+  --account-menu-button-glow-start-position: -150%;
   background-image: linear-gradient(
     135deg,
     var(--account-menu-button-glow-start-color)
@@ -186,13 +186,13 @@ async function signOut() {
     0.1s ease-out --account-menu-button-glow-start-position;
 
   &:hover:not(:disabled) {
-    --account-menu-button-glow-start-color: var(--color-glow-weak);
+    --account-menu-button-glow-start-color: var(--color-glow);
   }
 
   &:active:not(:disabled),
   &:focus-visible:not(:disabled) {
-    --account-menu-button-glow-start-color: var(--color-glow-weak);
-    --account-menu-button-glow-start-position: 0;
+    --account-menu-button-glow-start-color: var(--color-glow);
+    --account-menu-button-glow-start-position: -100%;
   }
 
   &::before {
