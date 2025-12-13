@@ -85,18 +85,25 @@ async function signOut() {
               class="account-menu-button"
               :href="`/files/u/${me.id}`"
             >
+              <IconFolder />
               Your Garden
             </Button>
           </li>
 
           <li class="account-menu-item">
             <Button class="account-menu-button" href="/settings">
+              <IconCog6Tooth />
               Settings
             </Button>
           </li>
 
+          <li class="account-menu-item" aria-hidden="true">
+            <hr />
+          </li>
+
           <li class="account-menu-item">
             <Button class="account-menu-button" @click="signOut">
+              <IconArrowRightStartOnRectangle />
               Sign Out
             </Button>
           </li>
@@ -120,8 +127,10 @@ async function signOut() {
   position: absolute;
   right: 0;
   margin-top: 0.5rem;
-  padding: 0.25rem;
   z-index: 1;
+
+  --border-radius-containing-block: 0.5rem;
+  padding: var(--border-radius-containing-block) 0;
 }
 
 .account-menu-list {
@@ -132,10 +141,71 @@ async function signOut() {
 }
 
 .account-menu-item {
-  margin: 0.5rem;
+  margin: 0;
+
+  > :deep(hr) {
+    margin: var(--border-radius-containing-block) 1px;
+  }
+}
+
+@property --account-menu-button-glow-start-color {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@property --account-menu-button-glow-start-position {
+  syntax: "<length> | <percentage>";
+  inherits: false;
+  initial-value: 0;
 }
 
 .account-menu-button {
   width: 100%;
+  padding-left: 1em;
+  padding-right: 1.5em;
+  text-align: left;
+
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+
+  --account-menu-button-glow-start-color: transparent;
+  --account-menu-button-glow-start-position: -50%;
+  background-image: linear-gradient(
+    135deg,
+    var(--account-menu-button-glow-start-color)
+      var(--account-menu-button-glow-start-position),
+    transparent 100%
+  );
+
+  transition:
+    0.1s ease-out color,
+    0.1s ease-out opacity,
+    0.1s ease-out --account-menu-button-glow-start-color,
+    0.1s ease-out --account-menu-button-glow-start-position;
+
+  &:hover:not(:disabled) {
+    --account-menu-button-glow-start-color: var(--color-glow-weak);
+  }
+
+  &:active:not(:disabled),
+  &:focus-visible:not(:disabled) {
+    --account-menu-button-glow-start-color: var(--color-glow-weak);
+    --account-menu-button-glow-start-position: 0;
+  }
+
+  &::before {
+    display: none;
+  }
+
+  &::after {
+    border-width: 0 0 0 1px;
+  }
+}
+
+.account-menu-button > :deep(svg) {
+  width: 1.25em;
+  margin-right: 1ch;
 }
 </style>
