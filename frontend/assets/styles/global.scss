@@ -170,9 +170,11 @@ hr {
   backdrop-filter: blur(2rem);
 }
 
-:link:not(:active),
-:visited:not(:active) {
-  color: currentColor;
+@layer base {
+  :link:not(:active),
+  :visited:not(:active) {
+    color: currentColor;
+  }
 }
 
 fieldset {
