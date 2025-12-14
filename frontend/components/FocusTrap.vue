@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const focusTrap = useTemplateRef("focus-trap");
 const startTrap = useTemplateRef("start-trap");
 const endTrap = useTemplateRef("end-trap");
 
@@ -25,8 +26,16 @@ function nextElement(element: Element): Element | null {
   );
 }
 
-function attemptTabFocus(element: Element): boolean {
-  if (!(element instanceof HTMLElement) || element.tabIndex < 0) {
+interface FocusOptions {
+  filter: "focusable" | "tabbable";
+}
+
+function attemptFocus(element: Element, { filter }: FocusOptions): boolean {
+  if (!(element instanceof HTMLElement)) {
+    return false;
+  }
+
+  if (filter === "tabbable" && element.tabIndex < 0) {
     return false;
   }
 
@@ -34,8 +43,8 @@ function attemptTabFocus(element: Element): boolean {
   return element === document.activeElement;
 }
 
-function focusFirstTabbableElement(event: FocusEvent) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since another element in the component was focused.
+function focusFirstElement(options: FocusOptions): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
   let element: Element | null = startTrap.value!;
 
   while (true) {
@@ -45,16 +54,16 @@ function focusFirstTabbableElement(event: FocusEvent) {
       break;
     }
 
-    if (attemptTabFocus(element)) {
-      return;
+    if (attemptFocus(element, options)) {
+      return true;
     }
   }
 
-  (event.target as HTMLElement).blur();
+  return false;
 }
 
-function focusLastTabbableElement(event: FocusEvent) {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since another element in the component was focused.
+function focusLastElement(options: FocusOptions): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
   let element: Element | null = endTrap.value!;
 
   while (true) {
@@ -64,29 +73,54 @@ function focusLastTabbableElement(event: FocusEvent) {
       break;
     }
 
-    if (attemptTabFocus(element)) {
-      return;
+    if (attemptFocus(element, options)) {
+      return true;
     }
   }
 
-  (event.target as HTMLElement).blur();
+  return false;
+}
+
+onMounted(() => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted because this is `onMounted`.
+  if (focusTrap.value!.contains(document.activeElement)) {
+    return;
+  }
+
+  if (!focusFirstElement({ filter: "focusable" })) {
+    throw new Error("A `FocusTrap` must contain a focusable element");
+  }
+});
+
+function handleStartTrapFocus(event: FocusEvent) {
+  if (!focusLastElement({ filter: "tabbable" })) {
+    (event.target as HTMLElement).blur();
+  }
+}
+
+function handleEndTrapFocus(event: FocusEvent) {
+  if (!focusFirstElement({ filter: "tabbable" })) {
+    (event.target as HTMLElement).blur();
+  }
 }
 </script>
 
 <template>
-  <div
-    ref="start-trap"
-    aria-hidden="true"
-    tabindex="0"
-    @focus="focusLastTabbableElement"
-  ></div>
+  <div ref="focus-trap">
+    <div
+      ref="start-trap"
+      aria-hidden="true"
+      tabindex="0"
+      @focus="handleStartTrapFocus"
+    ></div>
 
-  <slot></slot>
+    <slot></slot>
 
-  <div
-    ref="end-trap"
-    aria-hidden="true"
-    tabindex="0"
-    @focus="focusFirstTabbableElement"
-  ></div>
+    <div
+      ref="end-trap"
+      aria-hidden="true"
+      tabindex="0"
+      @focus="handleEndTrapFocus"
+    ></div>
+  </div>
 </template>
