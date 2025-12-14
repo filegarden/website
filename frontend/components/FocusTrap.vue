@@ -30,11 +30,13 @@ function attemptTabFocus(element: Element): boolean {
     return false;
   }
 
-  if ((element as { disabled?: unknown }).disabled) {
+  if (element.tabIndex < 0) {
     return false;
   }
 
-  if (element.tabIndex < 0) {
+  // This isn't the same as `element.disabled` because an ancestor `fieldset`
+  // could be disabled while `element.disabled` is false.
+  if (element.matches(":disabled")) {
     return false;
   }
 
