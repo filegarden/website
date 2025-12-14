@@ -26,17 +26,7 @@ function nextElement(element: Element): Element | null {
 }
 
 function attemptTabFocus(element: Element): boolean {
-  if (!(element instanceof HTMLElement)) {
-    return false;
-  }
-
-  if (element.tabIndex < 0) {
-    return false;
-  }
-
-  // This isn't the same as `element.disabled` because an ancestor `fieldset`
-  // could be disabled while `element.disabled` is false.
-  if (element.matches(":disabled")) {
+  if (!(element instanceof HTMLElement) || element.tabIndex < 0) {
     return false;
   }
 
