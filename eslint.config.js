@@ -33,6 +33,12 @@ export default withNuxt([
       // extremely hesitant to disable or overwrite rules. Every rule in this
       // region should be explained by a comment above.
 
+      // There's no reason to disallow explicit infinite loops that use `break`.
+      "@typescript-eslint/no-unnecessary-condition": [
+        "error",
+        { allowConstantLoopConditions: "only-allowed-literals" },
+      ],
+
       // If I'm explicitly choosing to use `any`, I've already decided to use it
       // and shouldn't have to re-decide that every time I interact with it.
       "@typescript-eslint/no-unsafe-argument": "off",
