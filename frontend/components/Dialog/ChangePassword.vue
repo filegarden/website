@@ -34,7 +34,6 @@ async function action() {
       v-model="currentPassword"
       label="Current Password"
       required
-      autofocus
       :custom-validity="isPasswordWrong ? 'Incorrect password.' : ''"
     />
     <InputNewPassword v-model="newPassword" label="New Password" required />
