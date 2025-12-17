@@ -87,9 +87,7 @@ onMounted(() => {
     return;
   }
 
-  if (!focusFirstElement({ filter: "focusable" })) {
-    throw new Error("A `FocusTrap` must contain a focusable element");
-  }
+  focusFirstElement({ filter: "focusable" });
 });
 
 function handleStartTrapFocus(event: FocusEvent) {
