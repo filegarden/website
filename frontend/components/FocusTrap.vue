@@ -104,9 +104,10 @@ function handleEndTrapFocus(event: FocusEvent) {
 </script>
 
 <template>
-  <div ref="focus-trap">
+  <div ref="focus-trap" class="focus-trap">
     <div
       ref="start-trap"
+      class="focus-trap-bound"
       aria-hidden="true"
       tabindex="0"
       @focus="handleStartTrapFocus"
@@ -116,9 +117,27 @@ function handleEndTrapFocus(event: FocusEvent) {
 
     <div
       ref="end-trap"
+      class="focus-trap-bound"
       aria-hidden="true"
       tabindex="0"
       @focus="handleEndTrapFocus"
     ></div>
   </div>
 </template>
+
+<style scoped lang="scss">
+// Disarm the focus trap when focus isn't inside it, or else the tab sequence
+// when focusing into it is incorrect.
+.focus-trap:not(:has(:focus)) > .focus-trap-bound {
+  // Without the delay, `display: none` is applied each time focus changes.
+  animation: 0.1ms disarm step-end forwards;
+}
+
+@keyframes disarm {
+  from {
+  }
+  to {
+    display: none;
+  }
+}
+</style>
