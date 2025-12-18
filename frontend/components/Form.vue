@@ -27,14 +27,15 @@ async function handleSubmit(event: SubmitEvent) {
   event.preventDefault();
 
   let preservedFocus =
+    document.activeElement !== null &&
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The form must be mounted because it was submitted.
     form.value!.contains(document.activeElement) &&
-    document.activeElement instanceof HTMLElement
+    hasFocusMethod(document.activeElement)
       ? document.activeElement
-      : undefined;
+      : null;
 
   function stopPreservingFocus() {
-    preservedFocus = undefined;
+    preservedFocus = null;
   }
 
   if (preservedFocus) {

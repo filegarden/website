@@ -31,11 +31,16 @@ interface FocusOptions {
 }
 
 function attemptFocus(element: Element, { filter }: FocusOptions): boolean {
-  if (!(element instanceof HTMLElement)) {
+  if (!hasFocusMethod(element)) {
     return false;
   }
 
-  if (filter === "tabbable" && element.tabIndex < 0) {
+  if (
+    filter === "tabbable" &&
+    typeof (element as typeof element & { tabIndex?: unknown }).tabIndex ===
+      "number" &&
+    (element as typeof element & { tabIndex: number }).tabIndex < 0
+  ) {
     return false;
   }
 

@@ -87,10 +87,8 @@ watch(dialogElement, (dialog) => {
 
   if (
     import.meta.dev &&
-    !(
-      document.activeElement instanceof HTMLElement &&
-      document.activeElement.autofocus
-    )
+    !(document.activeElement as (Element & { autofocus?: unknown }) | null)
+      ?.autofocus
   ) {
     throw new Error(
       `Dialog should contain a focusable element with the \`autofocus\` attribute (according to HTML Living Standard, 4.11.4)`,
