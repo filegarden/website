@@ -85,6 +85,18 @@ watch(dialogElement, (dialog) => {
   // the top layer isn't seamless since it resets DOM state and CSS animations.
   dialog.show();
 
+  if (
+    import.meta.dev &&
+    !(
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement.autofocus
+    )
+  ) {
+    throw new Error(
+      `Dialog should contain a focusable element with the \`autofocus\` attribute (according to HTML Living Standard, 4.11.4)`,
+    );
+  }
+
   disableBodyScroll(dialog, { reserveScrollBarGap: true });
   openDialogCount.value++;
 

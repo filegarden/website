@@ -45,6 +45,7 @@ async function action() {
       v-model="newEmail"
       label="New Email"
       required
+      autofocus
       :custom-validity="
         newEmail === email
           ? 'Please choose an email different from your current one.'

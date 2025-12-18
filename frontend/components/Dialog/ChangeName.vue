@@ -23,7 +23,7 @@ function action() {
   <Dialog size="small" :action>
     <template #heading>Change display name</template>
 
-    <InputUsername v-model="newName" required />
+    <InputUsername v-model="newName" required autofocus />
 
     <template #actions="{ cancel }">
       <Button type="submit">Confirm</Button>

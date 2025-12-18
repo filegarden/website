@@ -65,7 +65,7 @@ function printBackupCodes() {
     ></textarea>
 
     <div class="totp-backup-codes-actions">
-      <Button @click="copyBackupCodes">Copy</Button>
+      <Button autofocus @click="copyBackupCodes">Copy</Button>
       <Button @click="printBackupCodes">Print</Button>
     </div>
 
