@@ -26,29 +26,7 @@ function nextElement(element: Element): Element | null {
   );
 }
 
-interface FocusOptions {
-  filter: "focusable" | "tabbable";
-}
-
-function attemptFocus(element: Element, { filter }: FocusOptions): boolean {
-  if (!hasFocusMethod(element)) {
-    return false;
-  }
-
-  if (
-    filter === "tabbable" &&
-    typeof (element as typeof element & { tabIndex?: unknown }).tabIndex ===
-      "number" &&
-    (element as typeof element & { tabIndex: number }).tabIndex < 0
-  ) {
-    return false;
-  }
-
-  element.focus();
-  return element === document.activeElement;
-}
-
-function focusFirstElement(options: FocusOptions): boolean {
+function focusFirstElement(options: AttemptFocusOptions): boolean {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
   let element: Element | null = startTrap.value!;
 
@@ -67,7 +45,7 @@ function focusFirstElement(options: FocusOptions): boolean {
   return false;
 }
 
-function focusLastElement(options: FocusOptions): boolean {
+function focusLastElement(options: AttemptFocusOptions): boolean {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
   let element: Element | null = endTrap.value!;
 
