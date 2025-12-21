@@ -215,21 +215,23 @@ defineExpose(context);
           method="dialog"
           :action="formAction"
         >
-          <!--
-            Modal dialogs should use `h1` because the document's main `h1` is
-            inert, and an accessibility tree should always have one `h1`.
-          -->
-          <h1 class="dialog-heading">
-            <slot name="heading" v-bind="context"></slot>
-          </h1>
+          <FocusTrap>
+            <!--
+              Modal dialogs should use `h1` because the document's main `h1` is
+              inert, and an accessibility tree should always have one `h1`.
+            -->
+            <h1 class="dialog-heading">
+              <slot name="heading" v-bind="context"></slot>
+            </h1>
 
-          <div class="dialog-content">
-            <slot v-bind="context"></slot>
-          </div>
+            <div class="dialog-content">
+              <slot v-bind="context"></slot>
+            </div>
 
-          <div class="dialog-actions">
-            <slot name="actions" v-bind="context"></slot>
-          </div>
+            <div class="dialog-actions">
+              <slot name="actions" v-bind="context"></slot>
+            </div>
+          </FocusTrap>
         </Form>
       </div>
     </dialog>
