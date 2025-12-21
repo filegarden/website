@@ -4,6 +4,10 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 function requireHandle(): never {
   throw new Error("A `Dialog` component's `handle` prop is required");
 }
+
+// This is shared between all dialogs so the last dialog in a series can restore
+// focus to an element that was active before the first dialog.
+const previousActiveElements = new IterableWeakSet<Element>();
 </script>
 
 <script setup lang="ts" generic="Action extends DialogAction">
@@ -96,11 +100,9 @@ watch(dialogElement, (dialog) => {
   }
 
   disableBodyScroll(dialog, { reserveScrollBarGap: true });
-  openDialogCount.value++;
 
   onWatcherCleanup(() => {
     enableBodyScroll(dialog);
-    openDialogCount.value--;
   });
 });
 
@@ -157,6 +159,30 @@ async function formAction(event: SubmitEvent) {
   handle.onSubmitted(result);
   dialog.close(returnValue);
 }
+
+onBeforeMount(() => {
+  if (document.activeElement !== null) {
+    previousActiveElements.add(document.activeElement);
+  }
+});
+
+onMounted(() => {
+  openDialogCount.value++;
+});
+
+onUnmounted(async () => {
+  openDialogCount.value--;
+
+  // Wait for previous active elements to possibly stop being inert.
+  await nextTick();
+
+  for (const element of previousActiveElements) {
+    if (attemptFocus(element)) {
+      previousActiveElements.delete(element);
+      break;
+    }
+  }
+});
 
 const context: DialogContext = {
   cancel() {
