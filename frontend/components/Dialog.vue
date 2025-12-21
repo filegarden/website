@@ -218,7 +218,8 @@ defineExpose(context);
           <FocusTrap>
             <!--
               Modal dialogs should use `h1` because the document's main `h1` is
-              inert, and an accessibility tree should always have one `h1`.
+              inert, and `h1` should always be the first heading in an
+              accessibility tree.
             -->
             <h1 class="dialog-heading">
               <slot name="heading" v-bind="context"></slot>
