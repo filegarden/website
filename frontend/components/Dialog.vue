@@ -235,6 +235,8 @@ onUnmounted(async () => {
   }
 });
 
+const headingId = useId();
+
 const context: DialogContext = {
   cancel() {
     dialogElement.value?.close("");
@@ -253,6 +255,7 @@ defineExpose(context);
       :class="{ loading: loading.value }"
       :closedby="closedBy"
       aria-modal="true"
+      :aria-labelledby="$attrs['aria-label'] ? undefined : headingId"
       v-bind="$attrs"
       @close="handle.onClose"
     >
@@ -272,7 +275,7 @@ defineExpose(context);
               inert, and `h1` should always be the first heading in an
               accessibility tree.
             -->
-            <h1 class="dialog-heading">
+            <h1 :id="headingId" class="dialog-heading">
               <slot name="heading" v-bind="context"></slot>
             </h1>
 
