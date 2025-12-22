@@ -112,15 +112,8 @@ function handleEndTrapFocus(event: FocusEvent) {
 // Disarm the focus trap when focus isn't inside it, or else the tab sequence
 // when focusing into it is incorrect.
 .focus-trap:not(:has(:focus)) > .focus-trap-bound {
-  // Without the delay, `display: none` is applied each time focus changes.
-  animation: 0.1ms disarm step-end forwards;
-}
-
-@keyframes disarm {
-  from {
-  }
-  to {
-    display: none;
-  }
+  // Without the delay, `visibility: hidden` is applied each time focus changes.
+  transition: 0.1ms linear visibility;
+  visibility: hidden;
 }
 </style>
