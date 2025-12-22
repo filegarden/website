@@ -78,8 +78,9 @@ async function disableTotp() {
   totpEnabled.value = false;
 }
 
-const disableTotpButton = useTemplateRef("disable-totp-button");
-const enableTotpButton = useTemplateRef("enable-totp-button");
+function toggleTotp() {
+  return totpEnabled.value ? disableTotp() : enableTotp();
+}
 </script>
 
 <template>
@@ -113,11 +114,12 @@ const enableTotpButton = useTemplateRef("enable-totp-button");
     <div class="button-group">
       <Button @click="changePassword">Change Password</Button>
 
-      <Button v-if="totpEnabled" ref="disable-totp-button" @click="disableTotp">
-        Disable 2FA
-      </Button>
-      <Button v-else ref="enable-totp-button" @click="enableTotp">
-        Enable 2FA
+      <!--
+        Use the same button for both enabling and disabling TOTP so it doesn't
+        lose focus when changing state.
+      -->
+      <Button @click="toggleTotp">
+        {{ totpEnabled ? "Disable 2FA" : "Enable 2FA" }}
       </Button>
     </div>
 
@@ -162,12 +164,10 @@ const enableTotpButton = useTemplateRef("enable-totp-button");
       v-if="totpBackupCodesDialog.isOpen"
       :handle="totpBackupCodesDialog.handle"
       :backup-codes="totpBackupCodesDialog.data.backupCodes"
-      :focus-on-close="() => disableTotpButton?.$el"
     />
     <DialogDisableTotp
       v-if="disableTotpDialog.isOpen"
       :handle="disableTotpDialog.handle"
-      :focus-on-close="() => enableTotpButton?.$el"
     />
   </LargePanelLayout>
 </template>
