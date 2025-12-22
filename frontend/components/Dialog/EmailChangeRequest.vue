@@ -35,7 +35,7 @@ const descriptionId = useId();
     </p>
 
     <template #actions>
-      <Button type="submit" autofocus>Okay</Button>
+      <Button type="submit" autofocus>Done</Button>
     </template>
   </Dialog>
 </template>
