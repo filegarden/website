@@ -43,9 +43,6 @@ function action() {
     },
   });
 }
-
-// TODO: Fix violation of the ARIA APG Dialog (Modal) Pattern, Keyboard
-// Interaction note 1.
 </script>
 
 <template>
@@ -53,7 +50,12 @@ function action() {
     <template #heading>2FA Setup</template>
 
     <section>
-      <h2 class="step-heading">
+      <!--
+        The ARIA APG recommends that long dialogs auto-focus a static element at
+        the start instead of applying `aria-describedby`.
+      -->
+      <!-- @vue-expect-error It falsely thinks `autofocus` isn't an attribute. -->
+      <h2 class="step-heading" tabindex="-1" autofocus>
         <span class="step-numbering">1.</span>
         Install an authenticator app
       </h2>
@@ -114,7 +116,6 @@ function action() {
         label="2FA Code"
         allow="numeric"
         required
-        autofocus
         :custom-validity="isOtpWrong ? 'Incorrect 2FA code.' : ''"
       />
     </section>

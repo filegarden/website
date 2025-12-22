@@ -175,6 +175,11 @@ hr {
   :visited:not(:active) {
     color: currentColor;
   }
+
+  [tabindex="-1"] {
+    // It's confusing for an untabbable static element to have a focus outline.
+    outline: none;
+  }
 }
 
 fieldset {
