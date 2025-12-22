@@ -8,6 +8,32 @@ function requireHandle(): never {
 // This is shared between all dialogs so the last dialog in a series can restore
 // focus to an element that was active before the first dialog.
 const previousActiveElements = new IterableWeakSet<Element>();
+
+/**
+ * Saves the current active element (if any) to be focused once any dialogs over
+ * it close.
+ */
+function saveFocus() {
+  if (document.activeElement && document.activeElement !== document.body) {
+    previousActiveElements.add(document.activeElement);
+  }
+}
+
+/**
+ * Restores a previously saved active element to be focused again.
+ *
+ * @returns Whether a previous active element's focus was restored.
+ */
+function restoreFocus() {
+  for (const element of previousActiveElements) {
+    if (attemptFocus(element)) {
+      previousActiveElements.delete(element);
+      return true;
+    }
+  }
+
+  return false;
+}
 </script>
 
 <script setup lang="ts" generic="Action extends DialogAction">
@@ -47,7 +73,11 @@ export interface DialogContext {
 
 defineOptions({ inheritAttrs: false });
 
-const { handle = requireHandle(), action } = defineProps<{
+const {
+  handle = requireHandle(),
+  action,
+  focusOnClose,
+} = defineProps<{
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
@@ -73,6 +103,18 @@ const { handle = requireHandle(), action } = defineProps<{
    */
   // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
   action?: Action;
+
+  /**
+   * A callback that returns an element to focus once the dialog is closed.
+   *
+   * This must be a callback rather than the element itself because the `Dialog`
+   * might be unmounted and stop receiving prop updates by the time the element
+   * itself is mounted.
+   *
+   * @returns The element to focus.
+   */
+  // eslint-disable-next-line vue/require-default-prop, vue/require-prop-comment -- False positive from vuejs/eslint-plugin-vue#2741.
+  focusOnClose?: () => FocusableElement | null | undefined;
 }>();
 
 const dialogElement = useTemplateRef("dialog");
@@ -160,11 +202,7 @@ async function formAction(event: SubmitEvent) {
   dialog.close(returnValue);
 }
 
-onBeforeMount(() => {
-  if (document.activeElement !== null) {
-    previousActiveElements.add(document.activeElement);
-  }
-});
+onBeforeMount(saveFocus);
 
 onMounted(() => {
   openDialogCount.value++;
@@ -173,14 +211,27 @@ onMounted(() => {
 onUnmounted(async () => {
   openDialogCount.value--;
 
-  // Wait for previous active elements to possibly stop being inert.
-  await nextTick();
+  // Wait for any cascade of state changes triggered from closing the dialog
+  // (not just changes until the `nextTick`), in case the best focus target
+  // isn't mounted yet.
+  await timeout();
 
-  for (const element of previousActiveElements) {
-    if (attemptFocus(element)) {
-      previousActiveElements.delete(element);
-      break;
-    }
+  // Note: Focus should always be restored even if `focusOnClose` is used, or
+  // else previous active elements will persist too long.
+  restoreFocus();
+
+  const focusTarget = focusOnClose?.();
+  if (focusTarget) {
+    attemptFocus(focusTarget);
+  }
+
+  if (
+    import.meta.dev &&
+    (!document.activeElement || document.activeElement === document.body)
+  ) {
+    throw new Error(
+      "Focus lost after closing a dialog, violating the ARIA APG; consider using the dialog's `focus-on-close` prop",
+    );
   }
 });
 

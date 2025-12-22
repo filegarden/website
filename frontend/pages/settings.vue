@@ -77,6 +77,9 @@ async function disableTotp() {
 
   totpEnabled.value = false;
 }
+
+const disableTotpButton = useTemplateRef("disable-totp-button");
+const enableTotpButton = useTemplateRef("enable-totp-button");
 </script>
 
 <template>
@@ -110,8 +113,12 @@ async function disableTotp() {
     <div class="button-group">
       <Button @click="changePassword">Change Password</Button>
 
-      <Button v-if="totpEnabled" @click="disableTotp">Disable 2FA</Button>
-      <Button v-else @click="enableTotp">Enable 2FA</Button>
+      <Button v-if="totpEnabled" ref="disable-totp-button" @click="disableTotp">
+        Disable 2FA
+      </Button>
+      <Button v-else ref="enable-totp-button" @click="enableTotp">
+        Enable 2FA
+      </Button>
     </div>
 
     <h2>Data Management</h2>
@@ -155,10 +162,12 @@ async function disableTotp() {
       v-if="totpBackupCodesDialog.isOpen"
       :handle="totpBackupCodesDialog.handle"
       :backup-codes="totpBackupCodesDialog.data.backupCodes"
+      :focus-on-close="() => disableTotpButton?.$el"
     />
     <DialogDisableTotp
       v-if="disableTotpDialog.isOpen"
       :handle="disableTotpDialog.handle"
+      :focus-on-close="() => enableTotpButton?.$el"
     />
   </LargePanelLayout>
 </template>

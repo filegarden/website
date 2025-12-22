@@ -1,3 +1,6 @@
+/** An {@link Element} with a `focus` method. */
+export type FocusableElement = Element & Pick<HTMLElement, "focus">;
+
 /**
  * A type guard that checks if the `focus` method is present on an `Element`.
  *
@@ -5,9 +8,7 @@
  *
  * @returns Whether the element has a `focus` method.
  */
-export function hasFocusMethod(
-  element: Element,
-): element is Element & Pick<HTMLElement, "focus"> {
+export function hasFocusMethod(element: Element): element is FocusableElement {
   return typeof (element as Element & { focus?: unknown }).focus === "function";
 }
 
