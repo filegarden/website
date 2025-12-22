@@ -43,6 +43,9 @@ function action() {
     },
   });
 }
+
+// TODO: Fix violation of the ARIA APG Dialog (Modal) Pattern, Keyboard
+// Interaction note 1.
 </script>
 
 <template>

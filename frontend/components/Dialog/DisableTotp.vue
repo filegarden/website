@@ -21,13 +21,15 @@ async function action() {
     },
   });
 }
+
+const descriptionId = useId();
 </script>
 
 <template>
-  <Dialog size="medium" :action>
+  <Dialog size="medium" :action :aria-describedby="descriptionId">
     <template #heading>Disable 2FA</template>
 
-    <p>
+    <p :id="descriptionId">
       Your account will no longer be secured against stolen passwords. Only your
       password will be required when signing in.
     </p>

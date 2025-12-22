@@ -15,13 +15,15 @@ function handleTryAgain() {
 
   tryAgain();
 }
+
+const descriptionId = useId();
 </script>
 
 <template>
-  <Dialog ref="dialog" size="small">
+  <Dialog ref="dialog" size="small" :aria-describedby="descriptionId">
     <template #heading>Change email</template>
 
-    <p>
+    <p :id="descriptionId">
       To continue, check the email sent to
       <strong>{{ email }}</strong
       >.

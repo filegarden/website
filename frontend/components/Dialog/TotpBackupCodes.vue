@@ -41,15 +41,19 @@ function printBackupCodes() {
 
   return printNode(body);
 }
+
+const descriptionIds = [useId(), useId()];
 </script>
 
 <template>
-  <Dialog size="medium">
+  <Dialog size="medium" :aria-describedby="descriptionIds.join(' ')">
     <template #heading>2FA Setup</template>
 
-    <p>Your account is now more secure against stolen passwords.</p>
+    <p :id="descriptionIds[0]">
+      Your account is now more secure against stolen passwords.
+    </p>
 
-    <p>
+    <p :id="descriptionIds[1]">
       <strong>
         Save these backup codes, or you'll be permanently locked out of your
         account if you lose access to your authenticator app!
