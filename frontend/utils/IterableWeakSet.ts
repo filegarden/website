@@ -88,7 +88,7 @@ export default class IterableWeakSet<T extends WeakKey>
     }
   }
 
-  /** @see {@link Set.prototype.forEach} */
+  /** @see {@link Set.forEach} */
   forEach(
     callback: (value: T, value2: T, set: this) => void,
     thisArg?: unknown,
