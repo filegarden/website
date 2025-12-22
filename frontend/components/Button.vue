@@ -43,6 +43,10 @@ const { accented } = defineProps<{
     $box-shadow-base: inset 0 2px 0 -1px var(--color-shiny-edge);
     box-shadow: $box-shadow-base;
 
+    // Hide the default button focus outline since there's already a custom one
+    // using pseudo-element borders.
+    outline: none;
+
     white-space: nowrap;
     user-select: none;
     text-align: center;
