@@ -13,8 +13,8 @@ const showErrors = ref(false);
 
 onMounted(() => {
   // ARIA `log`s only announce content added after mounting, so this announces
-  // any initial error boxes. It also avoids hydration mismatches, since both
-  // the server and the client will initially render no error boxes.
+  // any initial error boxes. It also avoids hydration mismatches by initially
+  // rendering no error boxes on both the server and the client.
   showErrors.value = true;
 
   window.addEventListener("error", handleError);
