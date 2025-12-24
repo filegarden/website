@@ -5,8 +5,6 @@
 -->
 
 <script setup lang="ts">
-import useOpenDialogCount from "~/composables/useOpenDialogCount";
-
 useSilencedErrorHandlers();
 
 useHead({
@@ -31,20 +29,16 @@ if (import.meta.server) {
     ogImage: "",
   });
 }
-
-const openDialogCount = useOpenDialogCount();
 </script>
 
 <template>
-  <div id="app" :inert="openDialogCount !== 0">
+  <div id="app">
     <slot></slot>
 
     <Teleport to="#teleports">
-      <div id="dialog-teleports"></div>
-
       <!--
         Having everything above this (including other teleports) ensures error
-        boxes are consistently tabbed to last (regardless of teleport order).
+        boxes are consistently tabbed to last.
       -->
       <ErrorBoxes />
     </Teleport>

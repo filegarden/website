@@ -118,18 +118,13 @@ const {
 }>();
 
 const dialogElement = useTemplateRef("dialog");
-const openDialogCount = useOpenDialogCount();
 
 watch(dialogElement, (dialog) => {
   if (!dialog) {
     return;
   }
 
-  // It'd be nice to use `showModal` instead of recreating its behavior with
-  // `show`, but it's currently impossible to make outside elements (like error
-  // boxes and toasts) appear over the top layer. And moving such elements into
-  // the top layer isn't seamless since it resets DOM state and CSS animations.
-  dialog.show();
+  dialog.showModal();
 
   if (
     import.meta.dev &&
@@ -204,13 +199,7 @@ async function formAction(event: SubmitEvent) {
 
 onBeforeMount(saveFocus);
 
-onMounted(() => {
-  openDialogCount.value++;
-});
-
 onUnmounted(async () => {
-  openDialogCount.value--;
-
   // Wait for any cascade of state changes triggered from closing the dialog
   // (not just changes until the `nextTick`), in case the best focus target
   // isn't mounted yet.
@@ -247,50 +236,55 @@ defineExpose(context);
 </script>
 
 <template>
-  <Teleport to="#dialog-teleports">
-    <!-- @vue-expect-error The `closedby` attribute isn't typed yet. -->
-    <dialog
-      ref="dialog"
-      class="dialog"
-      :class="{ loading: loading.value }"
-      :closedby="closedBy"
-      aria-modal="true"
-      :aria-labelledby="$attrs['aria-label'] ? undefined : headingId"
-      v-bind="$attrs"
-      @close="handle.onClose"
-    >
-      <div class="dialog-scrollable-content">
-        <div class="dialog-backdrop" @click="handleBackdropClick"></div>
+  <!-- @vue-expect-error The `closedby` attribute isn't typed yet. -->
+  <dialog
+    ref="dialog"
+    class="dialog"
+    :class="{ loading: loading.value }"
+    :closedby="closedBy"
+    aria-modal="true"
+    :aria-labelledby="$attrs['aria-label'] ? undefined : headingId"
+    v-bind="$attrs"
+    @close="handle.onClose"
+  >
+    <FocusTrap class="dialog-scrollable-content">
+      <div
+        class="dialog-backdrop-click-target"
+        @click="handleBackdropClick"
+      ></div>
 
-        <Form
-          v-model:loading="loading"
-          class="dialog-form panel frosted"
-          :class="`size-${size}`"
-          method="dialog"
-          :action="formAction"
-        >
-          <FocusTrap>
-            <!--
-              Modal dialogs should use `h1` because the document's main `h1` is
-              inert, and `h1` should always be the first heading in an
-              accessibility tree.
-            -->
-            <h1 :id="headingId" class="dialog-heading">
-              <slot name="heading" v-bind="context"></slot>
-            </h1>
+      <Form
+        v-model:loading="loading"
+        class="dialog-form panel frosted"
+        :class="`size-${size}`"
+        method="dialog"
+        :action="formAction"
+      >
+        <!--
+          Modal dialogs should use `h1` because the document's main `h1` is
+          inert, and `h1` should always be the first heading in an
+          accessibility tree.
+        -->
+        <h1 :id="headingId" class="dialog-heading">
+          <slot name="heading" v-bind="context"></slot>
+        </h1>
 
-            <div class="dialog-content">
-              <slot v-bind="context"></slot>
-            </div>
+        <div class="dialog-content">
+          <slot v-bind="context"></slot>
+        </div>
 
-            <div class="dialog-actions">
-              <slot name="actions" v-bind="context"></slot>
-            </div>
-          </FocusTrap>
-        </Form>
-      </div>
-    </dialog>
-  </Teleport>
+        <div class="dialog-actions">
+          <slot name="actions" v-bind="context"></slot>
+        </div>
+      </Form>
+
+      <!--
+        Elements shown over the top layer must be descendants of the modal
+        dialog in the top layer in order to appear in the accessibility tree.
+      -->
+      <MoveTeleportsHere />
+    </FocusTrap>
+  </dialog>
 </template>
 
 <style scoped lang="scss">
@@ -311,6 +305,21 @@ defineExpose(context);
   z-index: 1000;
 
   overflow: hidden auto;
+
+  &::backdrop {
+    // Using the page's background color makes panels over the backdrop tend to
+    // the same color as panels over the page background.
+    background-color: var(--color-background);
+    opacity: 0.667;
+
+    animation: 0.1s dialog-backdrop-opening ease;
+  }
+}
+
+@keyframes dialog-backdrop-opening {
+  from {
+    opacity: 0;
+  }
 }
 
 .dialog-scrollable-content {
@@ -324,24 +333,11 @@ defineExpose(context);
   min-height: 100%;
 }
 
-.dialog-backdrop {
+.dialog-backdrop-click-target {
   // This can't be `fixed` because hovering a fixed element prevents scrolling
   // its parent.
   position: absolute;
   inset: 0;
-
-  // Using the page's background color makes panels over the backdrop tend to
-  // the same color as panels over the page background.
-  background-color: var(--color-background);
-  opacity: 0.667;
-
-  animation: 0.1s dialog-backdrop-opening ease-out;
-}
-
-@keyframes dialog-backdrop-opening {
-  from {
-    opacity: 0;
-  }
 }
 
 .dialog-form {
@@ -357,7 +353,7 @@ defineExpose(context);
   animation: 0.1s dialog-opening ease-out;
   transition: 0.1s ease transform;
 
-  .dialog.loading:has(.dialog-backdrop:active) & {
+  .dialog.loading:has(.dialog-backdrop-click-target:active) & {
     transform: scale(0.98);
   }
 
