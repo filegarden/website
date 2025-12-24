@@ -3,7 +3,7 @@ import type { Directive } from "vue";
 export type AutofocusDirective = Directive<HTMLElement, boolean | undefined>;
 
 declare module "vue" {
-  export interface ComponentCustomProperties {
+  export interface GlobalDirectives {
     vAutofocus: AutofocusDirective;
   }
 }
