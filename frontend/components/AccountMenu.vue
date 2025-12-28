@@ -26,7 +26,7 @@ async function handleBlur() {
 
   if (
     accountButton.value?.$el.contains(document.activeElement) ||
-    accountMenu.value?.contains(document.activeElement)
+    accountMenu.value?.$el.contains(document.activeElement)
   ) {
     return;
   }
@@ -72,39 +72,39 @@ async function signOut() {
         (and thus stays open) when clicking an otherwise unfocusable area in the
         menu.
       -->
-      <div
+      <MenuPanel
         ref="account-menu"
-        class="account-menu panel frosted"
+        class="account-menu"
         tabindex="-1"
         @blur.capture="handleBlur"
       >
-        <ul class="account-menu-list">
-          <li class="account-menu-item">
-            <MenuButton v-autofocus :href="`/files/u/${me.id}`">
+        <ul>
+          <li>
+            <MenuButton :href="`/files/u/${me.id}`">
               <IconFolder />
               Your Garden
             </MenuButton>
           </li>
 
-          <li class="account-menu-item">
+          <li>
             <MenuButton href="/settings">
               <IconCog6Tooth />
               Settings
             </MenuButton>
           </li>
 
-          <li class="account-menu-item" aria-hidden="true">
+          <li aria-hidden="true">
             <hr />
           </li>
 
-          <li class="account-menu-item">
+          <li>
             <MenuButton @click="signOut">
               <IconArrowRightStartOnRectangle />
               Sign Out
             </MenuButton>
           </li>
         </ul>
-      </div>
+      </MenuPanel>
     </Teleport>
   </template>
 </template>
@@ -124,23 +124,5 @@ async function signOut() {
   right: 0;
   margin-top: 0.5rem;
   z-index: 1;
-
-  --border-radius-containing-block: 0.5rem;
-  padding: var(--border-radius-containing-block) 0;
-}
-
-.account-menu-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: inherit;
-}
-
-.account-menu-item {
-  margin: 0;
-
-  > :deep(hr) {
-    margin: var(--border-radius-containing-block) 1px;
-  }
 }
 </style>
