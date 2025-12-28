@@ -11,6 +11,10 @@
     </div>
 
     <div class="footer-item">
+      <A href="/ethics">Our Ethics</A>
+    </div>
+
+    <div class="footer-item">
       <A href="https://github.com/filegarden/website" target="_blank">GitHub</A>
     </div>
 
