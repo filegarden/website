@@ -6,7 +6,7 @@ Here are some examples of policies which follow from that goal.
 
 ## Sustainability Over Profit
 
-Our users see File Garden as a useful tool, and it should stay that way. Profit is nice, but profit is often at odds with usefulness. We only need profit to remain sustainable, so that this tool can keep being as useful as possible for as long as possible, and permalinks can keep being permanent.
+Our users see File Garden as a useful tool, and it should stay that way. Profit is nice, but putting profit first is at odds with usefulness, leading to <A href="https://en.wikipedia.org/wiki/Dark_pattern" target="_blank">dark patterns</A>. We only need profit to remain sustainable, so that this tool can keep being as useful as possible for as long as possible, and permalinks can keep being permanent.
 
 ## Never Publicly Traded
 
