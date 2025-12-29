@@ -14,7 +14,7 @@ Businesses that go public are effectively forced to prioritize value to investor
 
 ## Minimal Trust Required
 
-All of our code is free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, allowing users to verify every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to force the same on anyone who copies our code as well.
+All of our code is free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, allowing users to verify every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
 
 ## Encouraging Competition
 
