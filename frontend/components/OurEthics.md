@@ -18,7 +18,7 @@ All of our code is free and <A href="https://github.com/filegarden/website" targ
 
 ## Encouraging Competition
 
-Competition incentivizes us to improve File Garden for our users, which is our top priority. If a competitor is drawing users away from us, it's better for everyone that we improve File Garden to draw more users back, not make it harder for users to leave or for competitors to succeed.
+Monopolies and <A href="https://en.wikipedia.org/wiki/Closed_platform" target="_blank">walled gardens</A> (no pun intended) hamper innovation and restrict user freedom. Competitors incentivize each other to improve, making everything better and better for the broader ecosystem over time. This ultimately makes our users happier.
 
 ## Open to Feedback
 
