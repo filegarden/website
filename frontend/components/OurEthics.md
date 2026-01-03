@@ -20,6 +20,6 @@ All of our code is free and <A href="https://github.com/filegarden/website" targ
 
 Monopolies and <A href="https://en.wikipedia.org/wiki/Closed_platform" target="_blank">walled gardens</A> (no pun intended) hamper innovation and restrict user freedom. Competitors incentivize each other to improve, making everything better and better for the broader ecosystem over time. This ultimately makes our users happier.
 
-## Open to Feedback
+## Don't Ignore Users
 
-If you don't like something about File Garden, or you have ideas for improvements, we want to hear it! Please chat with us on <A href="/discord" target="_blank">Discord</A>.
+Widely hated changes often claim to be the result of user feedback. But where could any real users have participated in said "feedback"? We actively avoid making changes that users dislike by allowing public feedback on each change before the change is made. Currently, this takes place on <A href="/discord" target="_blank">our Discord server</A>.
