@@ -12,11 +12,11 @@ Our users see File Garden as a useful tool, and it should stay that way. Profit 
 
 Businesses that go public are effectively forced to prioritize value to investors over all else, and investors are very often out of touch with what makes users happy. We want our users to drive our business, not investors.
 
-## Minimal Trust Required
+## Require Minimal Trust
 
 All of our code is free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, allowing users to verify every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
 
-## Encouraging Competition
+## Encourage Competition
 
 Monopolies and <A href="https://en.wikipedia.org/wiki/Closed_platform" target="_blank">walled gardens</A> (no pun intended) hamper innovation and restrict user freedom. Competitors incentivize each other to improve, making everything better and better for the broader ecosystem over time. This ultimately makes our users happier.
 
