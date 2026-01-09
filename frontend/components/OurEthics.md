@@ -1,6 +1,6 @@
 # Our Ethics
 
-There is only one thing we care about: users. Everything we do must be in service of our non-malicious users. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If that ever changes, please stop using File Garden.** File Garden should face consequences if it's ever taken in the wrong direction. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
+Everything we do must be in service of our non-malicious users; that is the only thing we care about. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If that ever changes, please stop using File Garden.** File Garden should face consequences if it's ever taken in the wrong direction. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
 
 We created S.O.U.N.D. ethics in pursuit of this goal, the policies of which we pledge to follow:
 
