@@ -80,7 +80,7 @@ async function signOut() {
       >
         <ul>
           <li>
-            <MenuButton :href="`/files/u/${me.id}`">
+            <MenuButton v-autofocus :href="`/files/u/${me.id}`">
               <IconFolder />
               Your Garden
             </MenuButton>
