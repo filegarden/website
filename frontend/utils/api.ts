@@ -67,8 +67,7 @@ export interface ApiOnlyOptions<CaughtResT> {
 }
 
 export interface ApiOptions<CaughtResT>
-  extends $ApiOptions,
-    ApiOnlyOptions<CaughtResT> {}
+  extends $ApiOptions, ApiOnlyOptions<CaughtResT> {}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Same as for `$api`.
 export default function api<ResT = any, CaughtResT = never>(

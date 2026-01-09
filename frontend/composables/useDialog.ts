@@ -109,15 +109,19 @@ export interface DialogControllerBase<T extends Component, Data> {
   open: typeof open<T, Data>;
 }
 
-export interface DialogControllerClosed<T extends Component, Data>
-  extends DialogControllerBase<T, Data> {
+export interface DialogControllerClosed<
+  T extends Component,
+  Data,
+> extends DialogControllerBase<T, Data> {
   isOpen: false;
   data: undefined;
   handle: undefined;
 }
 
-export interface DialogControllerOpen<T extends Component, Data>
-  extends DialogControllerBase<T, Data> {
+export interface DialogControllerOpen<
+  T extends Component,
+  Data,
+> extends DialogControllerBase<T, Data> {
   isOpen: true;
   data: Data;
   handle: DialogComponentHandle<T>;

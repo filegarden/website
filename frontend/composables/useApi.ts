@@ -5,8 +5,7 @@ import type { ApiOnlyOptions } from "~/utils/api";
 type DefaultResT = any;
 
 export interface UseApiOptions<ResT, CaughtResT>
-  extends Omit<UseFetchOptions<ResT>, "$fetch">,
-    ApiOnlyOptions<CaughtResT> {}
+  extends Omit<UseFetchOptions<ResT>, "$fetch">, ApiOnlyOptions<CaughtResT> {}
 
 /**
  * A custom [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch)
