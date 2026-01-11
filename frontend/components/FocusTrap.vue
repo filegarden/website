@@ -18,12 +18,21 @@ function previousElement(element: Element): Element | null {
 }
 
 function nextElement(element: Element): Element | null {
-  return (
-    element.firstElementChild ??
-    element.nextElementSibling ??
-    element.parentElement?.nextElementSibling ??
-    null
-  );
+  if (element.firstElementChild) {
+    return element.firstElementChild;
+  }
+
+  while (true) {
+    if (element.nextElementSibling) {
+      return element.nextElementSibling
+    }
+
+    if (element.parentElement === null) {
+      return null;
+    }
+
+    element = element.parentElement
+  }
 }
 
 function focusFirstElement(options: AttemptFocusOptions): boolean {
