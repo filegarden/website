@@ -12,7 +12,7 @@ export function hasFocusMethod(element: Element): element is FocusableElement {
   return typeof (element as Element & { focus?: unknown }).focus === "function";
 }
 
-/** Options for {@link attemptFocus} */
+/** Options for {@link attemptFocus}. */
 export interface AttemptFocusOptions {
   /**
    * Whether to focus any focusable element or only elements that are part of a
