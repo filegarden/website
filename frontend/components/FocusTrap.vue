@@ -3,74 +3,26 @@ const focusTrap = useTemplateRef("focus-trap");
 const startTrap = useTemplateRef("start-trap");
 const endTrap = useTemplateRef("end-trap");
 
-function previousElement(element: Element): Element | null {
-  if (!element.previousElementSibling) {
-    return element.parentElement;
-  }
-
-  element = element.previousElementSibling;
-
-  while (element.lastElementChild) {
-    element = element.lastElementChild;
-  }
-
-  return element;
+function elementsInTrap() {
+  return elementsInRange(
+    "closing",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
+    startTrap.value!,
+    "before",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
+    endTrap.value!,
+  );
 }
 
-function nextElement(element: Element): Element | null {
-  if (element.firstElementChild) {
-    return element.firstElementChild;
-  }
-
-  while (true) {
-    if (element.nextElementSibling) {
-      return element.nextElementSibling
-    }
-
-    if (element.parentElement === null) {
-      return null;
-    }
-
-    element = element.parentElement
-  }
-}
-
-function focusFirstElement(options: AttemptFocusOptions): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-  let element: Element | null = startTrap.value!;
-
-  while (true) {
-    element = nextElement(element);
-
-    if (element === endTrap.value || element === null) {
-      break;
-    }
-
-    if (attemptFocus(element, options)) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function focusLastElement(options: AttemptFocusOptions): boolean {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-  let element: Element | null = endTrap.value!;
-
-  while (true) {
-    element = previousElement(element);
-
-    if (element === startTrap.value || element === null) {
-      break;
-    }
-
-    if (attemptFocus(element, options)) {
-      return true;
-    }
-  }
-
-  return false;
+function elementsInTrapReversed() {
+  return elementsInRangeReversed(
+    "closing",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
+    startTrap.value!,
+    "before",
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
+    endTrap.value!,
+  );
 }
 
 onMounted(() => {
@@ -79,17 +31,17 @@ onMounted(() => {
     return;
   }
 
-  focusFirstElement({ filter: "focusable" });
+  focusFirstFocusable(elementsInTrap());
 });
 
 function handleStartTrapFocus(event: FocusEvent) {
-  if (!focusLastElement({ filter: "tabbable" })) {
+  if (!focusFirstFocusable(elementsInTrapReversed(), { filter: "tabbable" })) {
     (event.target as HTMLElement).blur();
   }
 }
 
 function handleEndTrapFocus(event: FocusEvent) {
-  if (!focusFirstElement({ filter: "tabbable" })) {
+  if (!focusFirstFocusable(elementsInTrap(), { filter: "tabbable" })) {
     (event.target as HTMLElement).blur();
   }
 }

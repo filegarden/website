@@ -48,3 +48,24 @@ export function attemptFocus(
   element.focus();
   return element === document.activeElement;
 }
+
+/**
+ * Focuses the first focusable element from an iterable.
+ *
+ * @param elements - The elements to attempt to focus.
+ * @param options - The options to pass to {@link attemptFocus}.
+ *
+ * @returns The element that was successfully focused, if any.
+ */
+export function focusFirstFocusable(
+  elements: Iterable<Element>,
+  options?: AttemptFocusOptions,
+): Element | null {
+  for (const element of elements) {
+    if (attemptFocus(element, options)) {
+      return element;
+    }
+  }
+
+  return null;
+}

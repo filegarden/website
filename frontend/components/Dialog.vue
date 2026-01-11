@@ -273,9 +273,13 @@ defineExpose(context);
           <slot v-bind="context"></slot>
         </div>
 
-        <div class="dialog-actions">
+        <KeyboardFocus
+          arrows="all"
+          :home-and-end="false"
+          class="dialog-actions"
+        >
           <slot name="actions" v-bind="context"></slot>
-        </div>
+        </KeyboardFocus>
       </Form>
 
       <!--
