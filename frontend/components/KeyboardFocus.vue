@@ -66,14 +66,14 @@ function focusPrevious() {
 function focusNext() {
   const focusedNext = focusFirstFocusable(
     document.activeElement && document.activeElement !== container.value
-      ? elementsInRangeReversed(
+      ? elementsInRange(
           "after-opening",
           document.activeElement,
           "closing",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
         )
-      : elementsInRangeReversed(
+      : elementsInRange(
           "after-opening",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
