@@ -14,24 +14,18 @@ const container = useTemplateRef("container");
 
 function focusFirst() {
   focusFirstFocusable(
-    elementsInRange(
-      "after-opening",
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-      container.value!,
-      "closing",
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-      container.value!,
-    ),
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
+    elementRange("after-open", container.value!, "close", container.value!),
   );
 }
 
 function focusLast() {
   focusFirstFocusable(
-    elementsInRangeReversed(
-      "after-opening",
+    elementRangeReversed(
+      "after-open",
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
       container.value!,
-      "closing",
+      "close",
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
       container.value!,
     ),
@@ -41,18 +35,18 @@ function focusLast() {
 function focusPrevious() {
   const focusedPrevious = focusFirstFocusable(
     document.activeElement && document.activeElement !== container.value
-      ? elementsInRangeReversed(
-          "after-opening",
+      ? elementRangeReversed(
+          "after-open",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
           "before",
           document.activeElement,
         )
-      : elementsInRangeReversed(
-          "after-opening",
+      : elementRangeReversed(
+          "after-open",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
-          "closing",
+          "close",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
         ),
@@ -66,21 +60,15 @@ function focusPrevious() {
 function focusNext() {
   const focusedNext = focusFirstFocusable(
     document.activeElement && document.activeElement !== container.value
-      ? elementsInRange(
-          "after-opening",
+      ? elementRange(
+          "after-open",
           document.activeElement,
-          "closing",
+          "close",
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
           container.value!,
         )
-      : elementsInRange(
-          "after-opening",
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-          container.value!,
-          "closing",
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
-          container.value!,
-        ),
+      : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
+        elementRange("after-open", container.value!, "close", container.value!),
   );
 
   if (!focusedNext) {

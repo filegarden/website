@@ -74,37 +74,37 @@ export function nextElementAfterClosing(element: Element): Element | null {
   }
 }
 
-type ElementsInRangePosition = "before" | "after-opening" | "closing";
+type ElementRangePosition = "before" | "after-open" | "close";
 
 function elementBeforePosition(
-  position: ElementsInRangePosition,
+  position: ElementRangePosition,
   element: Element,
 ): Element | null {
   if (position === "before") {
     return previousElement(element);
   }
 
-  if (position === "after-opening") {
+  if (position === "after-open") {
     return element;
   }
 
-  position satisfies "closing";
+  position satisfies "close";
   return previousElementBeforeClosing(element);
 }
 
 function elementAfterPosition(
-  position: ElementsInRangePosition,
+  position: ElementRangePosition,
   element: Element,
 ): Element | null {
   if (position === "before") {
     return element;
   }
 
-  if (position === "after-opening") {
+  if (position === "after-open") {
     return nextElement(element);
   }
 
-  position satisfies "closing";
+  position satisfies "close";
   return nextElementAfterClosing(element);
 }
 
@@ -118,10 +118,10 @@ function elementAfterPosition(
  *
  * @yields The next element in the range.
  */
-export function* elementsInRange(
-  startPosition: ElementsInRangePosition,
+export function* elementRange(
+  startPosition: ElementRangePosition,
   startElement: Element,
-  endPosition: ElementsInRangePosition,
+  endPosition: ElementRangePosition,
   endElement: Element,
 ): Generator<Element, void, never> {
   let element = elementAfterPosition(startPosition, startElement);
@@ -131,7 +131,7 @@ export function* elementsInRange(
   while (element !== elementAfterPosition(endPosition, endElement)) {
     if (element === null) {
       throw new Error(
-        "`elementsInRange` was provided an invalid range (start position after end position in the DOM tree)",
+        "`elementRange` was provided an invalid range (start position after end position in the DOM tree)",
       );
     }
 
@@ -151,10 +151,10 @@ export function* elementsInRange(
  *
  * @yields The previous element in the range.
  */
-export function* elementsInRangeReversed(
-  startPosition: ElementsInRangePosition,
+export function* elementRangeReversed(
+  startPosition: ElementRangePosition,
   startElement: Element,
-  endPosition: ElementsInRangePosition,
+  endPosition: ElementRangePosition,
   endElement: Element,
 ): Generator<Element, void, never> {
   let element = elementBeforePosition(endPosition, endElement);
@@ -164,7 +164,7 @@ export function* elementsInRangeReversed(
   while (element !== elementBeforePosition(startPosition, startElement)) {
     if (element === null) {
       throw new Error(
-        "`elementsInRangeReversed` was provided an invalid range (start position after end position in the DOM tree)",
+        "`elementRangeReversed` was provided an invalid range (start position after end position in the DOM tree)",
       );
     }
 

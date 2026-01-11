@@ -4,19 +4,13 @@ const startTrap = useTemplateRef("start-trap");
 const endTrap = useTemplateRef("end-trap");
 
 function elementsInTrap() {
-  return elementsInRange(
-    "closing",
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
-    startTrap.value!,
-    "before",
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
-    endTrap.value!,
-  );
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the elements are mounted.
+  return elementRange("close", startTrap.value!, "before", endTrap.value!);
 }
 
 function elementsInTrapReversed() {
-  return elementsInRangeReversed(
-    "closing",
+  return elementRangeReversed(
+    "close",
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the element is mounted.
     startTrap.value!,
     "before",
