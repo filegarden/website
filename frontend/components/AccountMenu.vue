@@ -34,6 +34,12 @@ async function handleBlur() {
   isOpen.value = false;
 }
 
+function closeAndRestoreFocus() {
+  isOpen.value = false;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The menu button must be mounted if its menu is being closed.
+  accountButton.value!.$el.focus();
+}
+
 async function signOut() {
   await loading.during(async () => {
     await api("/users/me/sessions/current", {
@@ -60,8 +66,10 @@ async function signOut() {
       ref="account-button"
       class="account-button"
       label="Account Menu"
+      aria-haspopup="dialog"
+      :aria-expanded="isOpen"
       @click="toggle"
-      @blur.capture="handleBlur"
+      @blur="handleBlur"
     >
       <IconUserCircle class="account-icon" />
     </IconButton>
@@ -75,35 +83,40 @@ async function signOut() {
       <MenuPanel
         ref="account-menu"
         class="account-menu"
+        role="dialog"
+        aria-label="Account Menu"
         tabindex="-1"
         @blur.capture="handleBlur"
+        @keydown.esc="closeAndRestoreFocus"
       >
-        <ul>
-          <li>
-            <MenuButton v-autofocus :href="`/files/u/${me.id}`">
-              <IconFolder />
-              Your Garden
-            </MenuButton>
-          </li>
+        <FocusTrap>
+          <ul>
+            <li>
+              <MenuButton v-autofocus :href="`/files/u/${me.id}`">
+                <IconFolder />
+                Your Garden
+              </MenuButton>
+            </li>
 
-          <li>
-            <MenuButton href="/settings">
-              <IconCog6Tooth />
-              Settings
-            </MenuButton>
-          </li>
+            <li>
+              <MenuButton href="/settings">
+                <IconCog6Tooth />
+                Settings
+              </MenuButton>
+            </li>
 
-          <li aria-hidden="true">
-            <hr />
-          </li>
+            <li aria-hidden="true">
+              <hr />
+            </li>
 
-          <li>
-            <MenuButton @click="signOut">
-              <IconArrowRightStartOnRectangle />
-              Sign Out
-            </MenuButton>
-          </li>
-        </ul>
+            <li>
+              <MenuButton @click="signOut">
+                <IconArrowRightStartOnRectangle />
+                Sign Out
+              </MenuButton>
+            </li>
+          </ul>
+        </FocusTrap>
       </MenuPanel>
     </Teleport>
   </template>
