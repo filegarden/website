@@ -6,6 +6,10 @@
 
 <style scoped lang="scss">
 .menu-panel {
+  position: absolute;
+  z-index: 1;
+  margin-top: 4px;
+
   --border-radius-containing-block: 0.5rem;
   padding: var(--border-radius-containing-block) 0;
 }

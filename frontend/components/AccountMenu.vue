@@ -133,9 +133,6 @@ async function signOut() {
 }
 
 .account-menu {
-  position: absolute;
   right: 0;
-  margin-top: 0.5rem;
-  z-index: 1;
 }
 </style>
