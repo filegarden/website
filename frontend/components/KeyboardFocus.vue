@@ -12,6 +12,7 @@ const { arrows, homeAndEnd } = defineProps<{
 
 const container = useTemplateRef("container");
 
+/** Focuses the first focusable descendant. */
 function focusFirst() {
   focusFirstFocusable(
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The element must be mounted since this is only called while mounted.
@@ -19,6 +20,7 @@ function focusFirst() {
   );
 }
 
+/** Focuses the last focusable descendant. */
 function focusLast() {
   focusFirstFocusable(
     elementRangeReversed(
@@ -32,6 +34,7 @@ function focusLast() {
   );
 }
 
+/** Focuses the previous focusable descendant relative to the active element. */
 function focusPrevious() {
   const focusedPrevious =
     document.activeElement &&
@@ -51,6 +54,7 @@ function focusPrevious() {
   }
 }
 
+/** Focuses the next focusable descendant relative to the active element. */
 function focusNext() {
   const focusedNext =
     document.activeElement &&
@@ -96,6 +100,8 @@ function handleKeyDown(event: KeyboardEvent) {
     }
   }
 }
+
+defineExpose({ focusFirst, focusLast, focusPrevious, focusNext });
 </script>
 
 <template>
