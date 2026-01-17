@@ -37,6 +37,11 @@ useTitle("Files");
             Folder upload
           </MenuButton>
 
+          <MenuButton role="menuitem" tabindex="-1">
+            <IconLink />
+            URL upload
+          </MenuButton>
+
           <hr />
 
           <MenuButton role="menuitem" tabindex="-1">
