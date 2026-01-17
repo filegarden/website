@@ -76,26 +76,32 @@ function focusNext() {
 function handleKeyDown(event: KeyboardEvent) {
   if (event.key === "ArrowLeft") {
     if (arrows !== "up-down") {
+      event.stopPropagation();
       focusPrevious();
     }
   } else if (event.key === "ArrowUp") {
     if (arrows !== "left-right") {
+      event.stopPropagation();
       focusPrevious();
     }
   } else if (event.key === "ArrowRight") {
     if (arrows !== "up-down") {
+      event.stopPropagation();
       focusNext();
     }
   } else if (event.key === "ArrowDown") {
     if (arrows !== "left-right") {
+      event.stopPropagation();
       focusNext();
     }
   } else if (event.key === "Home") {
     if (homeAndEnd) {
+      event.stopPropagation();
       focusFirst();
     }
   } else if (event.key === "End") {
     if (homeAndEnd) {
+      event.stopPropagation();
       focusLast();
     }
   }
