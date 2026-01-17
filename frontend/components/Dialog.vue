@@ -206,7 +206,7 @@ onUnmounted(async () => {
   await timeout();
 
   // Note: Focus should always be restored even if `focusOnClose` is used, or
-  // else previous active elements will persist too long.
+  // else previous active elements will remain saved for too long.
   restoreFocus();
 
   const focusTarget = focusOnClose?.();
