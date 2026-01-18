@@ -1,27 +1,27 @@
 <template>
-  <A v-if="$attrs.href" class="menu-button">
+  <A v-if="$attrs.href" class="list-panel-item">
     <slot></slot>
   </A>
-  <button v-else type="button" class="menu-button">
+  <button v-else type="button" class="list-panel-item">
     <slot></slot>
   </button>
 </template>
 
 <style scoped lang="scss">
-@property --menu-button-glow-start-color {
+@property --list-panel-item-glow-start-color {
   syntax: "<color>";
   inherits: false;
   initial-value: transparent;
 }
 
-@property --menu-button-glow-start-position {
+@property --list-panel-item-glow-start-position {
   syntax: "<length> | <percentage>";
   inherits: false;
   initial-value: 0;
 }
 
 @layer base {
-  .menu-button {
+  .list-panel-item {
     // Make `a` styles and `button` styles consistent.
     text-decoration: none;
     border: none;
@@ -50,19 +50,20 @@
     white-space: nowrap;
     user-select: none;
 
-    --menu-button-glow-start-color: transparent;
-    --menu-button-glow-start-position: -150%;
+    --list-panel-item-glow-start-color: transparent;
+    --list-panel-item-glow-start-position: -150%;
     background-image: linear-gradient(
       135deg,
-      var(--menu-button-glow-start-color) var(--menu-button-glow-start-position),
+      var(--list-panel-item-glow-start-color)
+        var(--list-panel-item-glow-start-position),
       transparent 100%
     );
 
     transition:
       0.1s ease-out color,
       0.1s ease-out opacity,
-      0.1s ease-out --menu-button-glow-start-color,
-      0.1s ease-out --menu-button-glow-start-position;
+      0.1s ease-out --list-panel-item-glow-start-color,
+      0.1s ease-out --list-panel-item-glow-start-position;
 
     &::after {
       content: "";
@@ -77,7 +78,7 @@
 
     &:hover:not(:disabled) {
       color: var(--color-input-text-hover);
-      --menu-button-glow-start-color: var(--color-glow);
+      --list-panel-item-glow-start-color: var(--color-glow);
 
       &::after {
         border-color: var(--color-outline-hover);
@@ -87,8 +88,8 @@
     &:active:not(:disabled),
     &:focus-visible:not(:disabled) {
       color: var(--color-input-text-active);
-      --menu-button-glow-start-color: var(--color-glow);
-      --menu-button-glow-start-position: -100%;
+      --list-panel-item-glow-start-color: var(--color-glow);
+      --list-panel-item-glow-start-position: -100%;
 
       &::after {
         border-color: var(--color-outline-active);
@@ -102,7 +103,7 @@
   }
 }
 
-.menu-button > :deep(svg) {
+.list-panel-item > :deep(svg) {
   width: 1.25em;
 }
 </style>

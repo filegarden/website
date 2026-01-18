@@ -78,7 +78,7 @@ async function signOut() {
         (and thus stays open) when clicking an otherwise unfocusable area in the
         menu.
       -->
-      <MenuPanel
+      <ListPanel
         ref="account-menu"
         class="account-menu"
         role="dialog"
@@ -90,17 +90,17 @@ async function signOut() {
         <FocusTrap>
           <ul>
             <li>
-              <MenuButton v-autofocus :href="`/files/u/${me.id}`">
+              <ListPanelItem v-autofocus :href="`/files/u/${me.id}`">
                 <IconFolder />
                 Your Garden
-              </MenuButton>
+              </ListPanelItem>
             </li>
 
             <li>
-              <MenuButton href="/settings">
+              <ListPanelItem href="/settings">
                 <IconCog6Tooth />
                 Settings
-              </MenuButton>
+              </ListPanelItem>
             </li>
 
             <li aria-hidden="true">
@@ -108,14 +108,14 @@ async function signOut() {
             </li>
 
             <li>
-              <MenuButton @click="signOut">
+              <ListPanelItem @click="signOut">
                 <IconArrowRightStartOnRectangle />
                 Sign Out
-              </MenuButton>
+              </ListPanelItem>
             </li>
           </ul>
         </FocusTrap>
-      </MenuPanel>
+      </ListPanel>
     </Teleport>
   </template>
 </template>

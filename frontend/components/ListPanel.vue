@@ -1,11 +1,11 @@
 <template>
-  <div class="menu-panel panel frosted">
+  <div class="list-panel panel frosted">
     <slot></slot>
   </div>
 </template>
 
 <style scoped lang="scss">
-.menu-panel {
+.list-panel {
   position: absolute;
   z-index: 1;
   margin-top: 4px;
@@ -14,18 +14,18 @@
   padding: var(--border-radius-containing-block) 0;
 }
 
-.menu-panel :deep(ul) {
+.list-panel :deep(ul) {
   list-style: none;
   margin: 0;
   padding: 0;
   line-height: inherit;
 }
 
-.menu-panel :deep(li) {
+.list-panel :deep(li) {
   margin: 0;
 }
 
-.menu-panel :deep(hr) {
+.list-panel :deep(hr) {
   margin: var(--border-radius-containing-block) 1px;
 }
 </style>

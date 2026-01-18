@@ -72,7 +72,7 @@ function closeIfItemActivated(event: MouseEvent) {
 </script>
 
 <template>
-  <MenuPanel
+  <ListPanel
     ref="menu"
     class="menu"
     role="menu"
@@ -86,7 +86,7 @@ function closeIfItemActivated(event: MouseEvent) {
     <KeyboardFocus ref="keyboard-focus" arrows="all" home-and-end>
       <slot></slot>
     </KeyboardFocus>
-  </MenuPanel>
+  </ListPanel>
 </template>
 
 <style scoped lang="scss">
