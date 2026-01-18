@@ -30,7 +30,8 @@
 
     display: flex;
     position: relative;
-    width: 100%;
+    width: calc(100% + 2px);
+    margin: 0 -1px;
     gap: 0.5em;
 
     line-height: 2.5;

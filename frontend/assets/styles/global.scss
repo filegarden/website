@@ -143,27 +143,16 @@ hr {
   --border-radius-containing-block: 1rem;
   border-radius: var(--border-radius-containing-block);
 
+  border: 1px solid var(--color-outline);
   background-image: linear-gradient(
     135deg,
     var(--color-foreground-light),
     var(--color-foreground)
   );
+  background-origin: border-box;
   box-shadow: 0 4px 8px var(--color-shadow-large);
 
   text-align: left;
-
-  // The outline uses a pseudo-element's border instead of a simple outline
-  // offset by `-1px` because outlines don't line up perfectly on all zoom
-  // levels in Firefox.
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-
-    border: 1px solid var(--color-outline);
-  }
 }
 
 .frosted {

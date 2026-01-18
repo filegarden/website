@@ -26,6 +26,6 @@
 }
 
 .list-panel :deep(hr) {
-  margin: var(--border-radius-containing-block) 1px;
+  margin: var(--border-radius-containing-block) 0;
 }
 </style>
