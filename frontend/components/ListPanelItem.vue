@@ -17,7 +17,7 @@
 @property --list-panel-item-glow-start-position {
   syntax: "<length> | <percentage>";
   inherits: false;
-  initial-value: 0;
+  initial-value: -150%;
 }
 
 @layer base {
@@ -50,8 +50,6 @@
     white-space: nowrap;
     user-select: none;
 
-    --list-panel-item-glow-start-color: transparent;
-    --list-panel-item-glow-start-position: -150%;
     background-image: linear-gradient(
       135deg,
       var(--list-panel-item-glow-start-color)
