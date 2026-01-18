@@ -5,10 +5,17 @@ function focus(event: PointerEvent) {
 </script>
 
 <template>
+  <!--
+    Focusing is needed on both `pointerenter` and `pointermove`: a pointer can
+    enter an element without moving (e.g., by scrolling), and a pointer can move
+    over an unfocused element without entering it if it lost focus (e.g., via
+    keyboard) after the pointer entered it previously.
+  -->
   <ListPanelItem
     class="menu-item"
     role="menuitem"
     tabindex="-1"
+    @pointerenter="focus"
     @pointermove="focus"
   >
     <slot></slot>
