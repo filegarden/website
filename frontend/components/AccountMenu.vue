@@ -20,13 +20,12 @@ function toggle() {
 const accountButton = useTemplateRef("account-button");
 const accountMenu = useTemplateRef("account-menu");
 
-async function handleBlur() {
-  // Wait for the next element to focus.
-  await timeout();
-
+function closeIfBlurred(event: FocusEvent) {
   if (
-    accountButton.value?.$el.contains(document.activeElement) ||
-    accountMenu.value?.$el.contains(document.activeElement)
+    !accountButton.value ||
+    accountButton.value.$el === event.relatedTarget ||
+    !accountMenu.value ||
+    accountMenu.value.$el.contains(event.relatedTarget)
   ) {
     return;
   }
@@ -68,7 +67,7 @@ async function signOut() {
       aria-haspopup="dialog"
       :aria-expanded="isOpen"
       @click="toggle"
-      @blur="handleBlur"
+      @focusout="closeIfBlurred"
     >
       <IconUserCircle class="account-icon" />
     </IconButton>
@@ -85,7 +84,7 @@ async function signOut() {
         role="dialog"
         aria-label="Account Menu"
         tabindex="-1"
-        @blur.capture="handleBlur"
+        @focusout="closeIfBlurred"
         @keydown.esc="closeAndRestoreFocus"
       >
         <FocusTrap>

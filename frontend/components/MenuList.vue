@@ -49,11 +49,8 @@ function focusFirstItem() {
 
 const menu = useTemplateRef("menu");
 
-async function closeIfBlurred() {
-  // Wait for the next element to focus in case it's still in the menu.
-  await timeout();
-
-  if (!menu.value || menu.value.$el.contains(document.activeElement)) {
+function closeIfBlurred(event: FocusEvent) {
+  if (!menu.value || menu.value.$el.contains(event.relatedTarget)) {
     return;
   }
 
