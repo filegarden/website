@@ -62,7 +62,6 @@ async function signOut() {
 
   <template v-else>
     <IconButton
-      v-if="me"
       ref="account-button"
       class="account-button"
       label="Account Menu"
