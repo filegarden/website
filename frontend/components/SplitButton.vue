@@ -8,16 +8,6 @@ const { menuLabel, accented } = defineProps<{
 }>();
 
 const isMenuOpen = ref(false);
-
-function toggleMenu() {
-  isMenuOpen.value = !isMenuOpen.value;
-}
-
-function preventMenuBlur(event: MouseEvent) {
-  if (isMenuOpen.value) {
-    event.preventDefault();
-  }
-}
 </script>
 
 <template>
@@ -26,16 +16,13 @@ function preventMenuBlur(event: MouseEvent) {
       <slot name="button"></slot>
 
       <div class="menu-button-wrapper">
-        <Button
+        <MenuButton
+          v-model:expanded="isMenuOpen"
           class="menu-button"
           :aria-label="menuLabel"
-          aria-haspopup="menu"
-          :aria-expanded="isMenuOpen"
-          @click="toggleMenu"
-          @mousedown="preventMenuBlur"
         >
           <IconChevronDown />
-        </Button>
+        </MenuButton>
       </div>
     </div>
 

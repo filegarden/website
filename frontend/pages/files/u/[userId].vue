@@ -27,27 +27,11 @@ useTitle("Files");
             <Button>Upload</Button>
           </template>
 
-          <ListPanelItem v-autofocus role="menuitem" tabindex="-1">
-            <IconDocument />
-            File upload
-          </ListPanelItem>
-
-          <ListPanelItem role="menuitem" tabindex="-1">
-            <IconFolder />
-            Folder upload
-          </ListPanelItem>
-
-          <ListPanelItem role="menuitem" tabindex="-1">
-            <IconLink />
-            Upload from URL
-          </ListPanelItem>
-
+          <MenuItem><IconDocument />File upload</MenuItem>
+          <MenuItem><IconFolder />Folder upload</MenuItem>
+          <MenuItem><IconLink />Upload from URL</MenuItem>
           <hr />
-
-          <ListPanelItem role="menuitem" tabindex="-1">
-            <IconFolderPlus />
-            New folder
-          </ListPanelItem>
+          <MenuItem><IconFolderPlus />New folder</MenuItem>
         </SplitButton>
       </nav>
 

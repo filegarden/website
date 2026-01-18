@@ -43,9 +43,11 @@ onUnmounted(async () => {
 const keyboardFocus = useTemplateRef("keyboard-focus");
 
 function focusFirstItem() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The menu's keyboard focus manager must be mounted since the menu is being focused.
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- This is only called while the menu's keyboard focus manager is mounted.
   keyboardFocus.value!.focusFirst();
 }
+
+onMounted(focusFirstItem);
 
 const menu = useTemplateRef("menu");
 
