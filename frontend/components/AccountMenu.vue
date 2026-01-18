@@ -90,7 +90,7 @@ async function signOut() {
         <FocusTrap>
           <ul>
             <li>
-              <ListPanelItem v-autofocus :href="`/files/u/${me.id}`">
+              <ListPanelItem :href="`/files/u/${me.id}`">
                 <IconFolder />
                 Your Garden
               </ListPanelItem>
