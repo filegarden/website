@@ -39,7 +39,7 @@ useTitle("Files");
 
           <MenuButton role="menuitem" tabindex="-1">
             <IconLink />
-            URL upload
+            Upload from URL
           </MenuButton>
 
           <hr />
