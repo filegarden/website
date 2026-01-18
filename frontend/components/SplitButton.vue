@@ -7,61 +7,16 @@ const { menuLabel, accented } = defineProps<{
   accented?: boolean;
 }>();
 
-const isOpen = ref(false);
+const isMenuOpen = ref(false);
 
 function toggleMenu() {
-  if (!isOpen.value) {
-    isOpen.value = true;
-    return;
-  }
-
-  closeAndRestoreFocus();
+  isMenuOpen.value = !isMenuOpen.value;
 }
 
 function preventMenuBlur(event: MouseEvent) {
-  if (isOpen.value) {
+  if (isMenuOpen.value) {
     event.preventDefault();
   }
-}
-
-const menuButton = useTemplateRef("menu-button");
-
-function closeAndRestoreFocus() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The menu button must be mounted if its menu is being closed.
-  menuButton.value!.$el.focus();
-}
-
-const menu = useTemplateRef("menu");
-
-async function handleBlur() {
-  // Wait for the next element to focus.
-  await timeout();
-
-  if (menu.value?.$el.contains(document.activeElement)) {
-    return;
-  }
-
-  isOpen.value = false;
-}
-
-function handleClick(event: MouseEvent) {
-  if (
-    event.target instanceof HTMLElement &&
-    event.target.role === "menuitem" &&
-    !(
-      event.target.ariaHasPopup === "menu" ||
-      event.target.ariaHasPopup === "true"
-    )
-  ) {
-    closeAndRestoreFocus();
-  }
-}
-
-const menuFocus = useTemplateRef("menu-focus");
-
-function focusFirstItem() {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The menu's focus manager must be mounted if an item in it is being focused.
-  menuFocus.value!.focusFirst();
 }
 </script>
 
@@ -72,11 +27,10 @@ function focusFirstItem() {
 
       <div class="menu-button-wrapper">
         <Button
-          ref="menu-button"
           class="menu-button"
           :aria-label="menuLabel"
           aria-haspopup="menu"
-          :aria-expanded="isOpen"
+          :aria-expanded="isMenuOpen"
           @click="toggleMenu"
           @mousedown="preventMenuBlur"
         >
@@ -85,22 +39,14 @@ function focusFirstItem() {
       </div>
     </div>
 
-    <MenuPanel
-      v-if="isOpen"
-      ref="menu"
+    <MenuList
+      v-if="isMenuOpen"
+      v-model:open="isMenuOpen"
       class="menu"
-      role="menu"
-      :aria-label="menuLabel"
-      tabindex="-1"
-      @keydown.esc="closeAndRestoreFocus"
-      @blur.capture="handleBlur"
-      @click.capture="handleClick"
-      @focus="focusFirstItem"
+      :label="menuLabel"
     >
-      <KeyboardFocus ref="menu-focus" arrows="all" home-and-end>
-        <slot></slot>
-      </KeyboardFocus>
-    </MenuPanel>
+      <slot></slot>
+    </MenuList>
   </fieldset>
 </template>
 
@@ -162,6 +108,5 @@ $menu-button-width: calc(2 * $menu-button-padding-x + 1em);
 
 .menu {
   min-width: 100%;
-  font-size: 1rem;
 }
 </style>
