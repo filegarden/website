@@ -74,36 +74,38 @@ function focusNext() {
 }
 
 function handleKeyDown(event: KeyboardEvent) {
+  let handler: (() => void) | undefined;
+
   if (event.key === "ArrowLeft") {
     if (arrows !== "up-down") {
-      event.stopPropagation();
-      focusPrevious();
+      handler = focusPrevious;
     }
   } else if (event.key === "ArrowUp") {
     if (arrows !== "left-right") {
-      event.stopPropagation();
-      focusPrevious();
+      handler = focusPrevious;
     }
   } else if (event.key === "ArrowRight") {
     if (arrows !== "up-down") {
-      event.stopPropagation();
-      focusNext();
+      handler = focusNext;
     }
   } else if (event.key === "ArrowDown") {
     if (arrows !== "left-right") {
-      event.stopPropagation();
-      focusNext();
+      handler = focusNext;
     }
   } else if (event.key === "Home") {
     if (homeAndEnd) {
-      event.stopPropagation();
-      focusFirst();
+      handler = focusFirst;
     }
   } else if (event.key === "End") {
     if (homeAndEnd) {
-      event.stopPropagation();
-      focusLast();
+      handler = focusLast;
     }
+  }
+
+  if (handler) {
+    event.preventDefault();
+    event.stopPropagation();
+    handler();
   }
 }
 
