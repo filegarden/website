@@ -11,7 +11,7 @@ static SECRET_KEY: LazyLock<String> = LazyLock::new(|| {
 });
 
 /// The client for connecting to the CAPTCHA verification API.
-static CAPTCHA_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| reqwest::Client::new());
+static CAPTCHA_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(reqwest::Client::new);
 
 /// Returns whether a Cloudflare Turnstile token is valid.
 ///
