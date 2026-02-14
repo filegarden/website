@@ -6,7 +6,9 @@
 
 <style scoped lang="scss">
 main {
-  max-width: 100%;
+  // Hide the left and right borders just outside the viewport's edges when the
+  // viewport is small. Having a border right up against an edge is ugly.
+  max-width: calc(100% + 2px);
   padding: min(3rem, 12.5vw);
 
   &:has(h1:not(dialog:modal *, .long-text *)) {

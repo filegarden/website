@@ -61,6 +61,9 @@ header {
   @media (max-width: $panel-width) {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+
+    // Hide the bottom border, just like the left and right borders.
+    margin-bottom: -1px;
   }
 }
 
