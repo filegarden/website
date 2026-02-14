@@ -1,6 +1,5 @@
 // @ts-check
 
-// @ts-expect-error: This module has no type declarations.
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import stylistic from "@stylistic/eslint-plugin";
 import prettier from "eslint-config-prettier";

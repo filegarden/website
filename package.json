@@ -30,12 +30,12 @@
     "eslint-plugin-vue-scoped-css": "^2",
     "nuxt": "^4",
     "nuxt-compile-markdown": "^0.1",
-    "prettier": "3.7.4",
+    "prettier": "3.8.1",
     "sass-embedded": "^1",
     "typescript": "^5",
     "typescript-eslint": "^8",
     "vue": "^3",
-    "vue-router": "^4",
+    "vue-router": "^5",
     "vue-tsc": "^3"
   }
 }

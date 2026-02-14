@@ -6,7 +6,7 @@ const { error } = defineProps<{
   error: NuxtError;
 }>();
 
-const title = () => `Error ${error.statusCode}`;
+const title = () => `Error ${error.status}`;
 useTitle(title);
 </script>
 
