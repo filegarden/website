@@ -7,7 +7,7 @@ use argon2::{
     password_hash::{Salt, SaltString},
 };
 use rand::{
-    RngCore,
+    Rng,
     distr::{Distribution, Uniform},
 };
 use ring::digest::{Digest, SHA256, digest};
@@ -28,9 +28,7 @@ pub(crate) fn hash_without_salt<T: AsRef<[u8]>>(bytes: &T) -> Digest {
 /// each time. If the input can't be a short or guessable secret, use [`hash_without_salt`] instead.
 pub(crate) fn hash_with_salt<T: AsRef<[u8]>>(bytes: &T) -> String {
     // `SaltString::generate` would be simpler, but `argon2`'s `rand_core` version is outdated
-    // compared to `rand`'s, so that wouldn't accept `rand::rng()`. It accepts its own version of
-    // `rand_core::OsRng`, but then `SaltString::generate` would panic if `OsRng` fails, which is
-    // much more likely than with `rand::rng()`.
+    // compared to `rand`'s, so it doesn't accept up-to-date RNGs like `rand::rng()`.
     let mut salt = [0; Salt::RECOMMENDED_LENGTH];
     rand::rng().fill_bytes(&mut salt);
     let salt = SaltString::encode_b64(&salt).expect("salt should be valid");

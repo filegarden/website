@@ -7,7 +7,7 @@ use std::{
 
 use base64::{Engine as _, engine::general_purpose::URL_SAFE_NO_PAD};
 use derive_more::derive::{AsMut, AsRef, Deref, DerefMut};
-use rand::RngCore;
+use rand::Rng;
 use serde_with::{DeserializeFromStr, SerializeDisplay};
 use thiserror::Error;
 

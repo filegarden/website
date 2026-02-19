@@ -29,7 +29,7 @@ html2text = "0.12"
 idna = "1"
 lettre = { version = "0.11", features = ["serde", "tokio1", "tokio1-native-tls"] }
 percent-encoding = "2"
-rand = "0.9"
+rand = "0.10"
 regex-macro = "0.3"
 reqwest = { version = "0.13", features = ["brotli", "deflate", "gzip", "json", "stream", "zstd"] }
 ring = "0.17"
