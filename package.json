@@ -11,7 +11,7 @@
   "dependencies": {
     "body-scroll-lock": "^3",
     "qrcode": "^1",
-    "rfc4648": "^1.5.4",
+    "rfc4648": "^1",
     "vue-turnstile": "^1"
   },
   "devDependencies": {
