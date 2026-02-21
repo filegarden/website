@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # We use Alpine Linux since it's lightweight (much smaller and faster to build).
+# TODO: Compare runtime performance on Alpine Linux vs. the default (Debian),
+# since they use different C library implementations.
 FROM rust:1.92-alpine AS build
 
 WORKDIR /app

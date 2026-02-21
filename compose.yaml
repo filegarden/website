@@ -16,6 +16,8 @@ services:
         - action: rebuild
 
   db:
+    # TODO: Compare runtime performance on Alpine Linux vs. the default
+    # (Debian), since they use different C library implementations.
     image: postgres:18-alpine
     restart: always
     user: postgres
