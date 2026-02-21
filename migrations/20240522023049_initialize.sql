@@ -88,10 +88,9 @@ CREATE TABLE files (
     encoding encoding,
     type text NOT NULL,
 
+    UNIQUE (owner_id, parent_id_path, id),
     UNIQUE (owner_id, parent_name_path, name)
 );
-
-CREATE INDEX files_by_id_path ON files (owner_id, parent_id_path, id);
 
 CREATE TABLE folders (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
@@ -103,7 +102,6 @@ CREATE TABLE folders (
     browse_key bytea UNIQUE NOT NULL,
     size bigint NOT NULL DEFAULT 0,
 
+    UNIQUE (owner_id, parent_id_path, id),
     UNIQUE (owner_id, parent_name_path, name)
 );
-
-CREATE INDEX folders_by_id_path ON folders (owner_id, parent_id_path, id);
