@@ -11,9 +11,9 @@ CREATE EXTENSION citext;
 CREATE TABLE terms_version (
     constrain_table_to_one_row boolean NOT NULL UNIQUE DEFAULT TRUE
         CHECK (constrain_table_to_one_row),
-    updated_at timestamptz(3) PRIMARY KEY
+    updated_at timestamptz(3)
         GENERATED ALWAYS AS (GREATEST(terms_updated_at, privacy_updated_at))
-        STORED,
+        VIRTUAL,
     terms_updated_at timestamptz(3) NOT NULL DEFAULT now(),
     privacy_updated_at timestamptz(3) NOT NULL DEFAULT now(),
     terms_hash bytea NOT NULL,

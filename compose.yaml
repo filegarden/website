@@ -16,13 +16,13 @@ services:
         - action: rebuild
 
   db:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     restart: always
     user: postgres
     ports:
       - "5432:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql
     env_file:
       - path: ./.env.db
     healthcheck:
