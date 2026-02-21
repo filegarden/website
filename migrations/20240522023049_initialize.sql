@@ -69,7 +69,7 @@ CREATE TABLE sessions (
 );
 
 CREATE INDEX sessions_by_accessed_at ON sessions (accessed_at);
-CREATE INDEX sessions_by_user_id ON sessions (user_id);
+CREATE INDEX sessions_by_user ON sessions (user_id);
 
 CREATE TYPE encoding AS ENUM ('br');
 
