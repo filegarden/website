@@ -9,7 +9,7 @@ main {
   // Hide the left and right borders just outside the viewport's edges when the
   // viewport is small. Having a border right up against an edge is ugly.
   max-width: calc(100% + 2px);
-  padding: min(3rem, 12.5vw);
+  padding: min(3rem, 10vw);
 
   &:has(h1:not(dialog:modal *, .long-text *)) {
     padding-top: 0;

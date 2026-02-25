@@ -10,6 +10,7 @@ const { turnstileSiteKey } = useRuntimeConfig().public;
   <div class="captcha">
     <LabelBlock class="captcha-label">Verify you're human</LabelBlock>
 
+    <!-- TODO: Fix excessive width on mobile. -->
     <VueTurnstile v-model="model" :site-key="turnstileSiteKey" />
   </div>
 </template>

@@ -10,6 +10,12 @@
   box-sizing: border-box;
 }
 
+:root,
+body {
+  // This doesn't work on mobile unless it's on both the root and the body.
+  overflow-x: hidden;
+}
+
 :root {
   height: 100%;
   font-family: var(--font-family);

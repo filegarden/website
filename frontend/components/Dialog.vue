@@ -311,6 +311,10 @@ defineExpose(context);
   overflow: hidden auto;
 
   &::backdrop {
+    // Height doesn't immediately react to changes in the dynamic viewport on
+    // mobile, so this fills the brief bottom gap when the mobile UI retracts.
+    height: 100vh;
+
     // Using the page's background color makes panels over the backdrop tend to
     // the same color as panels over the page background.
     background-color: var(--color-background);
