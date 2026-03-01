@@ -131,18 +131,22 @@ CREATE INDEX files_by_content_id ON files (content_id);
 
 CREATE TABLE files_processing (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
-    required_before_deduping_file_id bytea UNIQUE
-        REFERENCES files (id) ON DELETE CASCADE
-        CHECK ((required_before_deduping_file_id IS NULL) !=
-            (source_content_hash IS NULL)),
+    file_id bytea
+        CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
+    file_complete boolean,
     source_content_hash bytea UNIQUE,
     encoding encoding NOT NULL,
     output_content_id bytea UNIQUE REFERENCES file_contents (id),
     failed_at timestamptz(3)
         CHECK ((failed_at IS NULL) != (output_content_id IS NULL)),
 
+    FOREIGN KEY (file_id, file_complete)
+        REFERENCES files (id, complete)
+        MATCH FULL
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
     UNIQUE NULLS NOT DISTINCT
-        (required_before_deduping_file_id, source_content_hash, encoding)
+        (file_id, file_complete, source_content_hash, encoding)
 );
 
 CREATE TABLE folders (
