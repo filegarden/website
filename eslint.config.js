@@ -3,7 +3,6 @@
 import comments from "@eslint-community/eslint-plugin-eslint-comments/configs";
 import stylistic from "@stylistic/eslint-plugin";
 import prettier from "eslint-config-prettier";
-// @ts-expect-error: This module has no type declarations.
 import esX from "eslint-plugin-es-x";
 import ts from "typescript-eslint";
 import vueScopedCss from "eslint-plugin-vue-scoped-css";
@@ -11,14 +10,14 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 
 export default withNuxt([
   comments.recommended,
-  // Baseline widely available supports browsers up to 2.5 years old. Let's not
-  // use browser APIs newer than that.
-  esX.configs["flat/restrict-to-es" + (new Date().getFullYear() - 3)],
+  // Browsers up to 2.5 years old support Baseline widely available features.
+  // Let's not use browser APIs newer than that.
+  esX.configs["flat/restrict-to-es2023"],
   // This is needed because of eslint-community/eslint-plugin-es-x#246.
   esX.configs["flat/no-new-in-esnext"],
   ...ts.configs.strictTypeChecked,
   ...ts.configs.stylisticTypeChecked,
-  ...vueScopedCss.configs["flat/all"],
+  ...vueScopedCss.configs.all,
   prettier,
   {
     plugins: {
