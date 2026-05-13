@@ -134,7 +134,7 @@ CREATE TABLE files_processing (
     file_id bytea
         CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
     file_complete boolean,
-    source_content_hash bytea UNIQUE,
+    source_content_hash bytea,
     encoding encoding NOT NULL,
     output_content_id bytea UNIQUE REFERENCES file_contents (id),
     failed_at timestamptz(3)
