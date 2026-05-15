@@ -83,9 +83,7 @@ impl<const MIN: usize, const MAX: usize> TryFrom<String> for BoundedString<MIN, 
 }
 
 /// A [`bool`] newtype that guarantees the Boolean is `true`.
-#[derive(
-    Display, Deserialize, SerializeDisplay, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug,
-)]
+#[derive(Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
 #[serde(try_from = "bool")]
 pub(crate) struct True;
 
