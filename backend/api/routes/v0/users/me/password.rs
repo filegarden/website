@@ -12,7 +12,7 @@ use crate::{
         extract::AuthToken,
         response::Response,
         validation::{
-            UserName,
+            NewUserPassword,
             auth::{FirstFactorCredentials, VerifyCredentials},
         },
     },
@@ -28,7 +28,7 @@ pub(crate) struct PatchRequest {
     pub credentials: FirstFactorCredentials,
 
     /// The user's new password.
-    pub password: UserName,
+    pub password: NewUserPassword,
 }
 
 /// Changes the current authenticated user's password.
