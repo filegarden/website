@@ -34,8 +34,14 @@ export default class IterableWeakSet<T extends WeakKey>
 
   *[Symbol.iterator](): SetIterator<T> {
     for (const ref of this.#refs) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The registry would have deleted the ref if its value were reclaimed.
-      yield ref.deref()!;
+      const value = ref.deref();
+
+      // The registry would have deleted the ref from the set if its value were
+      // reclaimed, but it could have been reclaimed after getting the ref from
+      // the set but before dereferencing it above, so we still need to check.
+      if (value !== undefined) {
+        yield value;
+      }
     }
   }
 
