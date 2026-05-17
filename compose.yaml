@@ -13,7 +13,8 @@ services:
         condition: service_healthy
     develop:
       watch:
-        - action: rebuild
+        - path: .
+          action: rebuild
 
   db:
     # TODO: Compare runtime performance on Alpine Linux vs. the default
@@ -28,7 +29,7 @@ services:
     env_file:
       - path: ./.env.db
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: [ "CMD", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 5
