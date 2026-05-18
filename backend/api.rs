@@ -18,7 +18,8 @@ mod validation;
 
 /// Routes a request to an API endpoint.
 pub(super) async fn handle(request: Request) -> axum::response::Response {
-    // Calling the router requires consuming it (even though it shouldn't), so the router must be
-    // cloned on each request.
+    // Calling the router requires either consuming it or a mutable reference to it (even though it
+    // shouldn't), so the router must be either cloned on each request or restricted by a mutex. The
+    // latter would allow only one request at a time, so the former is faster.
     ROUTER.clone().oneshot(request).await.into_response()
 }
