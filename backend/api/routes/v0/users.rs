@@ -20,21 +20,6 @@ use crate::{
 pub(crate) mod me;
 pub(crate) mod user;
 
-/// A `POST` request body for this API route.
-#[derive(Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct PostRequest {
-    /// Information that verifies the user's email address.
-    #[serde(flatten)]
-    pub email_verification: EmailVerification,
-
-    /// The user's name.
-    pub name: UserName,
-
-    /// The user's new password in plain text.
-    pub password: NewUserPassword,
-}
-
 /// Information that verifies the user's email address in the `POST` request body for this API
 /// route.
 #[derive(Deserialize, Debug)]
@@ -56,6 +41,21 @@ pub(crate) enum EmailVerification {
         #[serde(rename = "emailVerificationToken")]
         token: Token,
     },
+}
+
+/// A `POST` request body for this API route.
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct PostRequest {
+    /// Information that verifies the user's email address.
+    #[serde(flatten)]
+    pub email_verification: EmailVerification,
+
+    /// The user's name.
+    pub name: UserName,
+
+    /// The user's new password in plain text.
+    pub password: NewUserPassword,
 }
 
 /// Creates a new user. Signs in the user if successful.
