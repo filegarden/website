@@ -128,6 +128,7 @@ impl SecondFactorAuthMethod {
     }
 }
 
+/// See [`Self::verify`].
 pub(crate) trait VerifyCredentials {
     /// Verifies the credentials are correct.
     ///

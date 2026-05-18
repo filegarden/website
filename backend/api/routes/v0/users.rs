@@ -35,6 +35,8 @@ pub(crate) struct PostRequest {
     pub password: NewUserPassword,
 }
 
+/// Information that verifies the user's email address in the `POST` request body for this API
+/// route.
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase", untagged)]
 pub(crate) enum EmailVerification {
