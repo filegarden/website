@@ -5,7 +5,7 @@ rustflags = [
     "-Ctarget-cpu=native",
 
     # ==== Lints ====
-    # Last updated for Clippy version: 1.92
+    # Last updated for Clippy version: 1.95
 
     # Enforces soundness.
     "-Dunsafe_code",
@@ -52,6 +52,7 @@ rustflags = [
     "-Wclippy::clone_on_ref_ptr",
     "-Wclippy::copy_iterator",
     "-Wclippy::default_trait_access",
+    "-Wclippy::doc_paragraphs_missing_punctuation",
     "-Wclippy::empty_enum_variants_with_brackets",
     "-Wclippy::empty_line_after_doc_comments",
     "-Wclippy::empty_line_after_outer_attr",
@@ -107,6 +108,7 @@ rustflags = [
     "-Wclippy::uninlined_format_args",
     "-Wclippy::unnecessary_join",
     "-Wclippy::unnecessary_semicolon",
+    "-Wclippy::unnecessary_trailing_comma",
     "-Wclippy::unnested_or_patterns",
     "-Wclippy::unseparated_literal_suffix",
     "-Wclippy::unused_result_ok",
