@@ -34,10 +34,9 @@ pub(crate) async fn post(
     Json(body): Json<PostRequest>,
 ) -> impl Response<PostResponse> {
     db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let Some(user) = sqlx::query!(
-            "SELECT users.id FROM users
-                INNER JOIN sessions ON sessions.user_id = users.id
-                WHERE sessions.token_hash = $1",
+        let Some(session) = sqlx::query!(
+            "SELECT user_id FROM sessions
+                WHERE token_hash = $1",
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
@@ -46,7 +45,7 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        body.credentials.verify(tx, &user.id).await?;
+        body.credentials.verify(tx, &session.user_id).await?;
 
         Ok(())
     })

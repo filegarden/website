@@ -56,10 +56,9 @@ pub(crate) async fn delete(
     Json(body): Json<DeleteRequest>,
 ) -> impl Response<DeleteResponse> {
     let is_totp_deleted = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let Some(user) = sqlx::query!(
-            "SELECT users.id FROM users
-                INNER JOIN sessions ON sessions.user_id = users.id
-                WHERE sessions.token_hash = $1",
+        let Some(session) = sqlx::query!(
+            "SELECT user_id FROM sessions
+                WHERE token_hash = $1",
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
@@ -68,12 +67,12 @@ pub(crate) async fn delete(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        body.credentials.verify(tx, &user.id).await?;
+        body.credentials.verify(tx, &session.user_id).await?;
 
         Ok(sqlx::query!(
             "DELETE FROM totp
                 WHERE user_id = $1",
-            user.id,
+            session.user_id,
         )
         .execute(tx.as_mut())
         .await?
@@ -120,10 +119,9 @@ pub(crate) async fn post(
     Json(body): Json<PostRequest>,
 ) -> impl Response<PostResponse> {
     let backup_codes = db::transaction!(async |tx| -> TxResult<_, api::Error> {
-        let Some(user) = sqlx::query!(
-            "SELECT users.id FROM users
-                INNER JOIN sessions ON sessions.user_id = users.id
-                WHERE sessions.token_hash = $1",
+        let Some(session) = sqlx::query!(
+            "SELECT user_id FROM sessions
+                WHERE token_hash = $1",
             token_hash.as_ref(),
         )
         .fetch_optional(tx.as_mut())
@@ -132,7 +130,7 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        body.credentials.verify(tx, &user.id).await?;
+        body.credentials.verify(tx, &session.user_id).await?;
 
         if !verify_totp(&body.otp, body.secret.as_ref()) {
             return Err(TxError::Abort(api::Error::TotpSetupWrong));
@@ -144,7 +142,7 @@ pub(crate) async fn post(
         match sqlx::query!(
             "INSERT INTO totp (user_id, secret, otp_used_last, unused_backup_codes)
                 VALUES ($1, $2, $3, $4)",
-            user.id,
+            session.user_id,
             body.secret.as_ref(),
             *body.otp,
             &backup_codes,
