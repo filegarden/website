@@ -3,6 +3,7 @@
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::Serialize;
+use sqlx::Connection;
 
 use crate::{
     api::{
@@ -66,19 +67,25 @@ pub(crate) async fn delete(
             .await?;
         }
 
+        let mut savepoint = tx.begin().await?;
+
         match sqlx::query!(
             "INSERT INTO maybe_unused_file_contents (id, started_checking)
                 VALUES ($1, false)",
             file.content_id,
         )
-        .execute(tx.as_mut())
+        .execute(savepoint.as_mut())
         .await
         {
             Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("maybe_unused_file_contents_pkey") => {}
-
+                if error.constraint() == Some("maybe_unused_file_contents_pkey") =>
+            {
+                // The file content is already marked maybe unused.
+                savepoint.rollback().await?;
+            }
             result => {
                 result?;
+                savepoint.commit().await?;
             }
         }
 
