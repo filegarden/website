@@ -23,7 +23,6 @@ pub(crate) enum Error {
     /// The user is authenticated but has insufficient permission to access the requested resource
     /// (and possibly to even know whether it exists).
     #[error("You don't have permission to access the requested resource (if it exists).")]
-    #[expect(dead_code, reason = "I'll use it in the future.")]
     AccessDenied,
 
     /// The request tried to create a resource, but a conflicting resource already exists at the

@@ -149,6 +149,17 @@ CREATE TABLE files_processing (
         (file_id, file_complete, source_content_hash, encoding)
 );
 
+CREATE TABLE maybe_unused_file_contents (
+    id bytea NOT NULL
+        REFERENCES file_contents (id) ON DELETE CASCADE,
+    started_checking boolean NOT NULL,
+
+    PRIMARY KEY (id, started_checking)
+);
+
+CREATE INDEX maybe_unused_file_contents_by_id
+    ON maybe_unused_file_contents (id);
+
 CREATE TABLE folders (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     id bytea PRIMARY KEY,
