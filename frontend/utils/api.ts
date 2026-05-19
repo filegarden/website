@@ -1,43 +1,8 @@
-import type { NuxtApp } from "#app";
-import { FetchError, type FetchContext, type FetchOptions } from "ofetch";
-
-const nuxtAppsByFetchContext = new WeakMap<FetchContext, NuxtApp>();
+import { FetchError } from "ofetch";
 
 const baseOrigin = import.meta.server
   ? `http://${process.env.NUXT_INTERNAL_BACKEND_ADDRESS}`
   : "";
-
-const serverFetchOptions: FetchOptions | undefined = import.meta.server
-  ? {
-      onRequest(ctx) {
-        const { cookie } = useRequestHeaders(["Cookie"]);
-        if (cookie) {
-          // Forward request cookies to the backend.
-          ctx.options.headers.set("Cookie", cookie);
-        }
-
-        // Save the Nuxt app so other fetch hooks can reuse its context later.
-        nuxtAppsByFetchContext.set(ctx, useNuxtApp());
-      },
-
-      onResponse(ctx) {
-        const setCookie = ctx.response.headers.get("Set-Cookie");
-        if (!setCookie) {
-          return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- It's non-nullable because it was set in `onRequest`.
-        const nuxtApp = nuxtAppsByFetchContext.get(ctx)!;
-
-        void nuxtApp.runWithContext(() => {
-          // Forward response cookies to the client.
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- The request event isn't nullable under the Nuxt app context during SSR.
-          const event = useRequestEvent()!;
-          appendResponseHeader(event, "Set-Cookie", setCookie);
-        });
-      },
-    }
-  : undefined;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- We don't have an accurate type for this, and using `unknown` would require many pointless type assertions or runtime checks.
 const $api = $fetch.create<any>({
@@ -45,8 +10,6 @@ const $api = $fetch.create<any>({
   headers: {
     Accept: "application/json",
   },
-
-  ...serverFetchOptions,
 });
 
 type $ApiOptions = NonNullable<Parameters<typeof $api>[1]>;
