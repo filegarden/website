@@ -13,6 +13,7 @@ mod v0 {
     //! The routes for version 1 of the HTTP API.
 
     pub(crate) mod email_change_requests;
+    pub(crate) mod files;
     pub(crate) mod password_reset;
     pub(crate) mod sessions;
     pub(crate) mod user_requests;
@@ -30,6 +31,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             "/email-change-requests/{token}/verify",
             post(v0::email_change_requests::email_change_request::verify::post),
         )
+        .route("/files/{file_id}", delete(v0::files::file::delete))
         .route(
             "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
