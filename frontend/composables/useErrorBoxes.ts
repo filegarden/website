@@ -44,6 +44,8 @@ export default function useErrorBoxes() {
             (error.data ? "\n" + JSON.stringify(error.data) : ""),
         });
       } else {
+        console.error(error);
+
         errorBoxes.open({
           message: import.meta.server
             ? "Error in server-side rendering"
