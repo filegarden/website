@@ -66,10 +66,6 @@ pub(crate) async fn delete(
             .await?;
         }
 
-        // The file content can't be deleted here directly since a race condition could occur when
-        // simultaneously deleting every file with the same content. Each file being deleted would
-        // find that other files referencing the content still exist, so the content wouldn't be
-        // deleted despite being left unused.
         match sqlx::query!(
             "INSERT INTO maybe_unused_file_contents (id, started_checking)
                 VALUES ($1, false)",
