@@ -44,5 +44,11 @@ export default defineNuxtConfig({
         clientPort: 3000,
       },
     },
+
+    optimizeDeps: {
+      include: import.meta.dev
+        ? ["@vue/devtools-core", "@vue/devtools-kit"]
+        : undefined,
+    },
   },
 });
