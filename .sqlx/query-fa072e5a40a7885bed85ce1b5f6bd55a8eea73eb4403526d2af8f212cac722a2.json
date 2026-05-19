@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE folders\n                    SET size = size - $2\n                    WHERE id = ANY($1)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "ByteaArray",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "fa072e5a40a7885bed85ce1b5f6bd55a8eea73eb4403526d2af8f212cac722a2"
+}

@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM files\n                WHERE id = $1 AND complete AND owner_id = $2\n                RETURNING size, parent_id_path, content_id",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "size",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "parent_id_path",
+        "type_info": "ByteaArray"
+      },
+      {
+        "ordinal": 2,
+        "name": "content_id",
+        "type_info": "Bytea"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a2f1b403f95aacbf400b5cbcb9d40e83de3da2f36d8fe2ce2f9438a0e9b13e93"
+}

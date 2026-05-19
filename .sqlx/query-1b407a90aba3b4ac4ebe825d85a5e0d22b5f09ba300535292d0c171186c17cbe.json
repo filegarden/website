@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO maybe_unused_file_contents (id, started_checking)\n                VALUES ($1, false)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1b407a90aba3b4ac4ebe825d85a5e0d22b5f09ba300535292d0c171186c17cbe"
+}
