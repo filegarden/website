@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "^4",
-    "@nuxt/devtools": "latest",
     "@nuxt/eslint": "^1",
     "@stylistic/eslint-plugin": "^5",
     "@types/body-scroll-lock": "^3",
