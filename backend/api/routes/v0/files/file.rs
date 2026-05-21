@@ -45,7 +45,7 @@ pub(crate) async fn delete(
             "DELETE FROM files
                 WHERE id = $1 AND complete AND owner_id = $2
                 RETURNING size, parent_id_path, content_id",
-            *file_id,
+            file_id.as_slice(),
             session.user_id,
         )
         .fetch_optional(tx.as_mut())
