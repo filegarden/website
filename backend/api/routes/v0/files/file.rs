@@ -83,6 +83,7 @@ pub(crate) async fn delete(
                 // The file content is already marked maybe unused.
                 savepoint.rollback().await?;
             }
+
             result => {
                 result?;
                 savepoint.commit().await?;
