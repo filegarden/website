@@ -104,6 +104,70 @@ impl TryFrom<bool> for True {
     }
 }
 
+/// A file's name.
+#[derive(
+    Deref,
+    AsRef,
+    Display,
+    Deserialize,
+    SerializeDisplay,
+    Clone,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Hash,
+    Debug,
+)]
+#[as_ref(forward)]
+#[serde(try_from = "String")]
+pub(crate) struct FileName(BoundedString<{ Self::MIN_LENGTH }, { Self::MAX_LENGTH }>);
+
+impl FileName {
+    /// A file name's minimum length.
+    const MIN_LENGTH: usize = 1;
+
+    /// A file name's maximum length.
+    const MAX_LENGTH: usize = 255;
+
+    /// The illegal characters for a file name.
+    ///
+    /// Forbidding these simplifies some implementation details when handling file paths, and it
+    /// improves interoperability since these are the illegal characters for POSIX pathnames.
+    const ILLEGAL_CHARS: [u8; 2] = [b'\0', b'/'];
+}
+
+/// An error constructing a [`FileName`].
+#[derive(Error, Clone, Copy, Debug)]
+pub(crate) enum FileNameError {
+    /// The value is too short or too long.
+    #[error(transparent)]
+    Bounds(#[from] BoundedStringError<{ FileName::MIN_LENGTH }, { FileName::MAX_LENGTH }>),
+
+    /// The value contains an illegal character.
+    #[error("illegal character {1:?} at position {0}")]
+    IllegalChar(usize, char),
+}
+
+impl TryFrom<String> for FileName {
+    type Error = FileNameError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let value: BoundedString<_, _> = value.try_into()?;
+
+        if let Some((i, byte)) = value
+            .as_bytes()
+            .iter()
+            .enumerate()
+            .find(|(_, byte)| Self::ILLEGAL_CHARS.contains(byte))
+        {
+            return Err(FileNameError::IllegalChar(i, *byte as char));
+        }
+
+        Ok(Self(value))
+    }
+}
+
 /// A user-inputted email address. Ensures the address uses a domain name with a TLD, and normalizes
 /// the domain name (for non-ASCII characters).
 #[derive(
