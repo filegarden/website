@@ -1,16 +1,16 @@
 # Our Ethics
 
-Everything we do must be in service of our non-malicious users; that is the only thing we care about. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If that ever changes, please stop using File Garden.** File Garden should face consequences if it's ever taken in the wrong direction. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
+Everything we do must be in service of our non-malicious users; that's the only thing we care about. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If this ever changes, please cancel your File Garden subscriptions, and let others know to do the same.** File Garden should face consequences if it's ever taken in the wrong direction, as should any business. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
 
-We created S.O.U.N.D. ethics in pursuit of this goal, the policies of which we pledge to follow:
+We created S.O.U.N.D. ethics in pursuit of this goal, the policies of which we pledge to follow forever:
 
 ## Sustainability Over Profit
 
 Our users see File Garden as a useful tool, and it should stay that way. Profit is nice, but putting profit first is at odds with usefulness, leading to <A href="https://en.wikipedia.org/wiki/Dark_pattern" target="_blank">dark patterns</A>. We only need profit to remain sustainable, so that this tool can keep being as useful as possible for as long as possible, and permalinks can keep being permanent.
 
-## Open-Source Everything
+## Open and Transparent
 
-Our code is fully free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, so users can verify every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
+You shouldn't have to trust us on anything; you should be able to verify it yourself. 100% of the code we write is free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, so users can see every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
 
 ## Unwelcome to Investors
 
