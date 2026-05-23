@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE files\n                SET name = $1\n                WHERE id = $2 AND owner_id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f0e50ec968b7f1ca92ef0ddad545adcaaadbb56d9681d03479cc0335dcd66131"
+}
