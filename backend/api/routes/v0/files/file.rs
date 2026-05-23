@@ -15,6 +15,8 @@ use crate::{
     id::Id,
 };
 
+pub(crate) mod name;
+
 /// A request path for this API route.
 type PathParams = Path<Id>;
 
