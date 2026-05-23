@@ -32,6 +32,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::email_change_requests::email_change_request::verify::post),
         )
         .route("/files/{file_id}", delete(v0::files::file::delete))
+        .route("/files/{file_id}/name", put(v0::files::file::name::put))
         .route(
             "/password-reset",
             get(v0::password_reset::get).post(v0::password_reset::post),
