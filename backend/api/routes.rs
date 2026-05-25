@@ -14,6 +14,7 @@ mod v0 {
 
     pub(crate) mod email_change_requests;
     pub(crate) mod files;
+    pub(crate) mod folders;
     pub(crate) mod password_reset;
     pub(crate) mod sessions;
     pub(crate) mod user_requests;
@@ -36,6 +37,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route(
             "/files/{file_id}/share",
             delete(v0::files::file::share::delete).post(v0::files::file::share::post),
+        )
+        .route(
+            "/folders/{folder_id}/share",
+            delete(v0::folders::folder::share::delete).post(v0::folders::folder::share::post),
         )
         .route(
             "/password-reset",

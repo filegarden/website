@@ -169,6 +169,7 @@ CREATE TABLE folders (
     parent_name_path text[] NOT NULL,
     browse_key bytea UNIQUE NOT NULL,
     size bigint NOT NULL DEFAULT 0,
+    shared boolean NOT NULL DEFAULT FALSE,
 
     UNIQUE (owner_id, parent_id_path, id),
     UNIQUE (owner_id, parent_name_path, name)
