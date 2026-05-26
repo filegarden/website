@@ -9,15 +9,16 @@ CREATE EXTENSION citext;
 -- be edited once deployed.
 
 CREATE TABLE terms_version (
-    constrain_table_to_one_row boolean NOT NULL UNIQUE DEFAULT TRUE
-        CHECK (constrain_table_to_one_row),
+    single_row_only boolean NOT NULL UNIQUE DEFAULT TRUE,
     updated_at timestamptz(3)
         GENERATED ALWAYS AS (GREATEST(terms_updated_at, privacy_updated_at))
         VIRTUAL,
     terms_updated_at timestamptz(3) NOT NULL DEFAULT now(),
     privacy_updated_at timestamptz(3) NOT NULL DEFAULT now(),
     terms_hash bytea NOT NULL,
-    privacy_hash bytea NOT NULL
+    privacy_hash bytea NOT NULL,
+
+    CONSTRAINT single_row_only CHECK (single_row_only)
 );
 
 CREATE TABLE unverified_users (
@@ -78,28 +79,32 @@ CREATE TABLE file_contents (
     modified_at timestamptz(3) NOT NULL DEFAULT now(),
     id bytea PRIMARY KEY,
     complete boolean NOT NULL,
-    partial_hash bytea
-        CHECK ((partial_hash IS NULL) = complete),
-    hash bytea
-        CHECK ((hash IS NULL) = NOT complete),
+    hash bytea,
+    partial_hash bytea,
     original_size bigint NOT NULL,
     encoding encoding,
     encoded_size bigint NOT NULL DEFAULT 0,
     part_count integer NOT NULL DEFAULT 0,
-    decoded_part_size integer
-        CHECK (
-            decoded_part_size IS NULL
-            OR NOT complete
-            OR part_count = original_size / decoded_part_size
-        ),
-    decoded_part_sizes integer[]
-        CHECK (
-            decoded_part_sizes IS NULL
-            OR part_count = cardinality(decoded_part_sizes)
-        )
-        CHECK (decoded_part_sizes IS NULL OR decoded_part_size IS NULL),
+    decoded_part_size integer,
+    decoded_part_sizes integer[],
 
-    UNIQUE (id, complete, original_size)
+    CONSTRAINT file_contents_referenced_by_files
+        UNIQUE (id, complete, original_size),
+
+    CONSTRAINT hash_when_complete CHECK ((hash IS NULL) = NOT complete),
+    CONSTRAINT partial_hash_when_incomplete
+        CHECK ((partial_hash IS NULL) = complete),
+    CONSTRAINT decoded_part_size_nand_decoded_part_sizes
+        CHECK (decoded_part_sizes IS NULL OR decoded_part_size IS NULL),
+    CONSTRAINT consistent_decoded_part_size CHECK (
+        decoded_part_size IS NULL
+        OR NOT complete
+        OR part_count = original_size / decoded_part_size
+    ),
+    CONSTRAINT consistent_decoded_part_sizes CHECK (
+        decoded_part_sizes IS NULL
+        OR part_count = cardinality(decoded_part_sizes)
+    )
 );
 
 CREATE INDEX file_contents_by_hash ON file_contents (hash);
@@ -119,12 +124,14 @@ CREATE TABLE files (
     shared boolean NOT NULL DEFAULT FALSE,
 
     PRIMARY KEY (id, complete),
-    FOREIGN KEY (content_id, complete, size)
+    CONSTRAINT files_by_id_path UNIQUE (owner_id, parent_id_path, id, complete),
+    CONSTRAINT files_by_name_path
+        UNIQUE (owner_id, parent_name_path, name, complete),
+
+    CONSTRAINT foreign_content FOREIGN KEY (content_id, complete, size)
         REFERENCES file_contents (id, complete, original_size)
         MATCH FULL
-        ON UPDATE CASCADE,
-    UNIQUE (owner_id, parent_id_path, id, complete),
-    UNIQUE (owner_id, parent_name_path, name, complete)
+        ON UPDATE CASCADE
 );
 
 CREATE INDEX files_by_content_id ON files (content_id);
@@ -132,22 +139,25 @@ CREATE INDEX files_by_content_id ON files (content_id);
 CREATE TABLE files_processing (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     id bytea PRIMARY KEY,
-    file_id bytea
-        CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
+    file_id bytea,
     file_complete boolean,
     source_content_hash bytea,
     encoding encoding NOT NULL,
     output_content_id bytea UNIQUE REFERENCES file_contents (id),
-    failed_at timestamptz(3)
-        CHECK ((failed_at IS NULL) != (output_content_id IS NULL)),
+    failed_at timestamptz(3),
 
-    FOREIGN KEY (file_id, file_complete)
+    CONSTRAINT files_processing_by_source_and_encoding UNIQUE NULLS NOT DISTINCT
+        (file_id, file_complete, source_content_hash, encoding),
+
+    CONSTRAINT foreign_file FOREIGN KEY (file_id, file_complete)
         REFERENCES files (id, complete)
         MATCH FULL
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    UNIQUE NULLS NOT DISTINCT
-        (file_id, file_complete, source_content_hash, encoding)
+    CONSTRAINT source_file_xor_content
+        CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
+    CONSTRAINT output_xor_failed
+        CHECK ((output_content_id IS NULL) != (failed_at IS NULL))
 );
 
 CREATE TABLE maybe_unused_file_contents (
@@ -172,6 +182,6 @@ CREATE TABLE folders (
     size bigint NOT NULL DEFAULT 0,
     shared boolean NOT NULL DEFAULT FALSE,
 
-    UNIQUE (owner_id, parent_id_path, id),
-    UNIQUE (owner_id, parent_name_path, name)
+    CONSTRAINT folders_by_id_path UNIQUE (owner_id, parent_id_path, id),
+    CONSTRAINT folders_by_name_path UNIQUE (owner_id, parent_name_path, name)
 );
