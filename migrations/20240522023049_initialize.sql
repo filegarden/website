@@ -131,6 +131,7 @@ CREATE INDEX files_by_content_id ON files (content_id);
 
 CREATE TABLE files_processing (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
+    id bytea PRIMARY KEY,
     file_id bytea
         CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
     file_complete boolean,
