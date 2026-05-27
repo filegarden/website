@@ -49,7 +49,7 @@ pub(crate) async fn put(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        let is_name_updated = sqlx::query!(
+        let is_name_updated = match sqlx::query!(
             "UPDATE files
                 SET name = $1
                 WHERE id = $2 AND owner_id = $3",
@@ -58,7 +58,16 @@ pub(crate) async fn put(
             session.user_id,
         )
         .execute(tx.as_mut())
-        .await?
+        .await
+        {
+            Err(sqlx::Error::Database(error))
+                if error.constraint() == Some("files_by_name_path") =>
+            {
+                return Err(TxError::Abort(api::Error::AlreadyExists));
+            }
+
+            result => result?,
+        }
         .rows_affected()
             != 0;
 
