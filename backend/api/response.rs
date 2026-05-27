@@ -25,9 +25,9 @@ pub(crate) enum Error {
     #[error("You don't have permission to access the requested resource (if it exists).")]
     AccessDenied,
 
-    /// The request tried to create a resource, but a conflicting resource already exists at the
-    /// specified location or with the specified parameters.
-    #[error("The resource to be created already exists.")]
+    /// The request tried to create or modify a resource, but a conflicting resource already exists
+    /// at the specified location or with the specified parameters.
+    #[error("A conflicting resource already exists.")]
     AlreadyExists,
 
     /// Authentication credentials are required but either unspecified, invalid, or don't match any
