@@ -6,8 +6,9 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       vueCompilerOptions: {
-        fallthroughAttributes: true,
         strictTemplates: true,
+        fallthroughAttributes: true,
+        checkRequiredFallthroughAttributes: true,
       },
     },
 

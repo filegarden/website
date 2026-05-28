@@ -1,10 +1,6 @@
 <script lang="ts">
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
-function requireHandle(): never {
-  throw new Error("A `Dialog` component's `handle` prop is required");
-}
-
 // This is shared between all dialogs so the last dialog in a series can restore
 // focus to an element that was active before the first dialog.
 const previousActiveElements = new IterableWeakSet<Element>();
@@ -73,23 +69,15 @@ export interface DialogContext {
 
 defineOptions({ inheritAttrs: false });
 
-const {
-  handle = requireHandle(),
-  action,
-  focusOnClose,
-} = defineProps<{
+const { handle, action, focusOnClose } = defineProps<{
   /** How wide the dialog should be by default. */
   size: "small" | "medium" | "large";
 
   /**
    * The `handle` of a dialog controller returned from {@link useDialog}, to
    * ensure the dialog component is controlled correctly.
-   *
-   * This is required at runtime, despite being typed as optional so it can be
-   * passed via fallthrough attributes with inferred types instead of explicitly
-   * typed props.
    */
-  handle?: DialogHandle<Action>;
+  handle: DialogHandle<Action>;
 
   /**
    * Handles the dialog's form submission.
