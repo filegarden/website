@@ -11,7 +11,6 @@
 
   // TODO: Remove this ESLint comment and wrap `:first-child` in `:global` once
   // vuejs/core#12404 is fixed.
-  // eslint-disable-next-line vue-scoped-css/require-selector-used-inside -- Nothing here is unused.
   :first-child > & {
     margin-top: 0;
   }
