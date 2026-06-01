@@ -15,7 +15,7 @@ pub(crate) struct Response {
 }
 
 impl Response {
-    /// Constructs a new [`Response`].
+    /// Constructs a new `Response`.
     pub(crate) fn new() -> Self {
         Self {
             inner: axum::response::Response::new(Body::empty()),

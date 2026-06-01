@@ -50,7 +50,7 @@ pub(crate) type CaptchaToken = BoundedString<1, 2048>;
 pub(crate) struct BoundedString<const MIN: usize, const MAX: usize>(String);
 
 impl<const MIN: usize, const MAX: usize> BoundedString<MIN, MAX> {
-    /// Consumes the [`BoundedString`], returning the inner [`String`].
+    /// Consumes the `BoundedString`, returning the underlying [`String`].
     pub(crate) fn into_inner(self) -> String {
         self.0
     }
@@ -188,7 +188,7 @@ impl TryFrom<String> for FileName {
 pub(crate) struct UserEmail(Address);
 
 impl UserEmail {
-    /// The maximum length of a [`UserEmail`].
+    /// The maximum length of a `UserEmail`.
     ///
     /// As per RFC 3696 erratum 1690, the theoretical maximum is 254.
     pub(crate) const MAX_LENGTH: usize = 254;
@@ -198,7 +198,7 @@ impl UserEmail {
         self.as_ref()
     }
 
-    /// Consumes the [`UserEmail`], returning the inner [`Address`].
+    /// Consumes the `UserEmail`, returning the underlying [`Address`].
     pub(crate) fn into_inner(self) -> Address {
         self.0
     }

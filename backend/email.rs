@@ -143,6 +143,7 @@ pub(crate) trait MessageTemplate: Template {
 pub(crate) struct AddressedMessageTemplate<T> {
     /// The [`MessageTemplate`].
     template: T,
+
     /// The recipient mailbox.
     to: Mailbox,
 }
