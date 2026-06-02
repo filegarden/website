@@ -1,0 +1,30 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE folders\n                SET name = $1\n                WHERE id = $2 AND owner_id = $3\n                RETURNING parent_name_path, OLD.name AS old_name",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "parent_name_path",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 1,
+        "name": "old_name",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "d846a4ddf323a15d66cc0b9f88bd63a11b02535e49ef12e83f19889bbfa74eed"
+}

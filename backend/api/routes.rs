@@ -39,6 +39,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             delete(v0::files::file::share::delete).post(v0::files::file::share::post),
         )
         .route(
+            "/folders/{folder_id}/name",
+            put(v0::folders::folder::name::put),
+        )
+        .route(
             "/folders/{folder_id}/share",
             delete(v0::folders::folder::share::delete).post(v0::folders::folder::share::post),
         )
