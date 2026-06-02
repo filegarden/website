@@ -61,10 +61,10 @@ pub(crate) async fn delete(
         if !file.parent_id_path.is_empty() {
             sqlx::query!(
                 "UPDATE folders
-                    SET size = size - $2
-                    WHERE id = ANY($1)",
-                &file.parent_id_path,
+                    SET size = size - $1
+                    WHERE id = ANY($2)",
                 file.size,
+                &file.parent_id_path,
             )
             .execute(tx.as_mut())
             .await?;
