@@ -70,8 +70,6 @@ pub(crate) async fn put(
             Err(error) => return Err(error.into()),
 
             Ok(None) => {
-                // The client shouldn't be able to tell whether a non-shared folder exists by its
-                // ID.
                 return Err(TxError::Abort(api::Error::AccessDenied));
             }
 

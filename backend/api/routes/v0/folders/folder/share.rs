@@ -52,7 +52,6 @@ pub(crate) async fn post(
             != 0;
 
         if !is_shared_updated {
-            // The client shouldn't be able to tell whether a non-shared folder exists by its ID.
             return Err(TxError::Abort(api::Error::AccessDenied));
         }
 
@@ -103,7 +102,6 @@ pub(crate) async fn delete(
             != 0;
 
         if !is_shared_updated {
-            // The client shouldn't be able to tell whether a non-shared folder exists by its ID.
             return Err(TxError::Abort(api::Error::AccessDenied));
         }
 

@@ -54,7 +54,6 @@ pub(crate) async fn delete(
         .fetch_optional(tx.as_mut())
         .await?
         else {
-            // The client shouldn't be able to tell whether a non-shared file exists by its ID.
             return Err(TxError::Abort(api::Error::AccessDenied));
         };
 

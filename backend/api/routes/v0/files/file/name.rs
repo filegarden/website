@@ -72,7 +72,6 @@ pub(crate) async fn put(
             != 0;
 
         if !is_name_updated {
-            // The client shouldn't be able to tell whether a non-shared file exists by its ID.
             return Err(TxError::Abort(api::Error::AccessDenied));
         }
 
