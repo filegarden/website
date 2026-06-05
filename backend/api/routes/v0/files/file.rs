@@ -64,7 +64,7 @@ pub(crate) async fn delete(
                     SET size = size - $1
                     WHERE id = ANY($2)",
                 file.size,
-                &file.parent_id_path,
+                file.parent_id_path.as_slice(),
             )
             .execute(tx.as_mut())
             .await?;
