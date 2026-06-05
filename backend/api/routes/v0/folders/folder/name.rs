@@ -69,9 +69,7 @@ pub(crate) async fn put(
 
             Err(error) => return Err(error.into()),
 
-            Ok(None) => {
-                return Err(TxError::Abort(api::Error::AccessDenied));
-            }
+            Ok(None) => return Err(TxError::Abort(api::Error::AccessDenied)),
 
             Ok(Some(folder)) => folder,
         };
