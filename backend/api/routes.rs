@@ -33,6 +33,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             post(v0::email_change_requests::email_change_request::verify::post),
         )
         .route("/files/{file_id}", delete(v0::files::file::delete))
+        .route("/files/{file_id}/move", post(v0::files::file::r#move::post))
         .route("/files/{file_id}/name", put(v0::files::file::name::put))
         .route(
             "/files/{file_id}/share",
