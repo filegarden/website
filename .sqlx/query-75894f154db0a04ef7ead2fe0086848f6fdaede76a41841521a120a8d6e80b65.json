@@ -1,0 +1,31 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE files\n                SET parent_id_path = $1,\n                    parent_name_path = $2\n                WHERE owner_id = $3 AND id = $4\n                RETURNING size, OLD.parent_id_path AS old_parent_id_path",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "size",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 1,
+        "name": "old_parent_id_path",
+        "type_info": "ByteaArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "ByteaArray",
+        "TextArray",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "75894f154db0a04ef7ead2fe0086848f6fdaede76a41841521a120a8d6e80b65"
+}
