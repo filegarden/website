@@ -130,7 +130,7 @@ async fn query_folder_paths(
     folder_id: &[u8],
 ) -> TxResult<(Vec<Vec<u8>>, Vec<String>), api::Error> {
     let Some(folder) = sqlx::query!(
-        "SELECT parent_id_path, parent_name_path, name FROM folders
+        "SELECT name, parent_id_path, parent_name_path FROM folders
             WHERE owner_id = $1 AND id = $2",
         user_id,
         folder_id,
