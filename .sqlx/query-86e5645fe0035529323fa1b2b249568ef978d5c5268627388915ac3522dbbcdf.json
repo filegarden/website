@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT name, parent_id_path, parent_name_path FROM folders\n            WHERE owner_id = $1 AND id = $2",
+  "query": "SELECT name, parent_id_path, parent_name_path FROM folders\n            WHERE owner_id = $1 AND id = $2\n            FOR UPDATE",
   "describe": {
     "columns": [
       {
@@ -31,5 +31,5 @@
       false
     ]
   },
-  "hash": "a3b2d185fe2c65430b104652907ea32dc80533c934fbd16af1986f51e63b7295"
+  "hash": "86e5645fe0035529323fa1b2b249568ef978d5c5268627388915ac3522dbbcdf"
 }
