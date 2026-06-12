@@ -139,7 +139,7 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
             result => result?,
         };
 
-        let session_token = create_session(tx, &user_id).await?;
+        let session_token = create_session(tx, user_id.as_slice()).await?;
 
         Ok((user_id, session_token))
     })

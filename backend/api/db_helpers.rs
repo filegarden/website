@@ -14,12 +14,11 @@ use crate::{
 /// # Errors
 ///
 /// Returns an error if a database query fails.
-pub(crate) async fn create_session<UserId, E>(
+pub(crate) async fn create_session<E>(
     tx: &mut PgTransaction<'static>,
-    user_id: &UserId,
+    user_id: &[u8],
 ) -> TxResult<Token, E>
 where
-    UserId: AsRef<[u8]>,
     E: From<sqlx::Error>,
 {
     let token = Token::generate();
@@ -29,7 +28,7 @@ where
         "INSERT INTO sessions (token_hash, user_id)
             VALUES ($1, $2)",
         token_hash.as_ref(),
-        user_id.as_ref(),
+        user_id,
     )
     .execute(tx.as_mut())
     .await?;
