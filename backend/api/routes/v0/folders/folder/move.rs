@@ -26,14 +26,14 @@ pub(crate) struct PostRequest {
     pub parent_folder_id: Option<Id>,
 }
 
-/// Changes a file's parent folder.
+/// Changes a folder's parent folder.
 ///
 /// # Errors
 ///
 /// See [`crate::api::Error`].
 #[debug_handler]
 pub(crate) async fn post(
-    Path(file_id): PathParams,
+    Path(folder_id): PathParams,
     AuthToken(token_hash): AuthToken,
     Json(body): Json<PostRequest>,
 ) -> impl Response<PostResponse> {
@@ -56,22 +56,25 @@ pub(crate) async fn post(
             None => (vec![], vec![]),
         };
 
-        let file = match sqlx::query!(
-            "UPDATE files
+        let folder = match sqlx::query!(
+            "UPDATE folders
                 SET parent_id_path = $1,
                     parent_name_path = $2
                 WHERE owner_id = $3 AND id = $4
-                RETURNING size, OLD.parent_id_path AS old_parent_id_path",
+                RETURNING
+                    name,
+                    size,
+                    OLD.parent_id_path AS old_parent_id_path",
             new_parent_id_path.as_slice(),
             new_parent_name_path.as_slice(),
             session.user_id,
-            file_id.as_slice(),
+            folder_id.as_slice(),
         )
         .fetch_optional(tx.as_mut())
         .await
         {
             Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("files_by_name_path") =>
+                if error.constraint() == Some("folders_by_name_path") =>
             {
                 return Err(TxError::Abort(api::Error::AlreadyExists));
             }
@@ -80,16 +83,16 @@ pub(crate) async fn post(
 
             Ok(None) => return Err(TxError::Abort(api::Error::AccessDenied)),
 
-            Ok(Some(file)) => file,
+            Ok(Some(folder)) => folder,
         };
 
-        if !file.old_parent_id_path.is_empty() {
+        if !folder.old_parent_id_path.is_empty() {
             sqlx::query!(
                 "UPDATE folders
                     SET size = size - $1
                     WHERE id = ANY($2)",
-                file.size,
-                file.old_parent_id_path.as_slice(),
+                folder.size,
+                folder.old_parent_id_path.as_slice(),
             )
             .execute(tx.as_mut())
             .await?;
@@ -100,12 +103,47 @@ pub(crate) async fn post(
                 "UPDATE folders
                     SET size = size + $1
                     WHERE id = ANY($2)",
-                file.size,
+                folder.size,
                 new_parent_id_path.as_slice(),
             )
             .execute(tx.as_mut())
             .await?;
         }
+
+        let mut old_folder_id_path = folder.old_parent_id_path;
+        old_folder_id_path.push(folder_id.to_vec());
+
+        let mut new_folder_id_path = new_parent_id_path;
+        new_folder_id_path.push(folder_id.to_vec());
+
+        let mut new_folder_name_path = new_parent_name_path;
+        new_folder_name_path.push(folder.name);
+
+        sqlx::query!(
+            "UPDATE folders
+                SET parent_id_path = $1 || parent_id_path[array_length($2::bytea[], 1) + 1:],
+                    parent_name_path = $3 || parent_name_path[array_length($2::text[], 1) + 1:]
+                WHERE owner_id = $4 AND parent_id_path >= $2 AND parent_id_path < $2 || NULL",
+            new_folder_id_path.as_slice(),
+            old_folder_id_path.as_slice(),
+            new_folder_name_path.as_slice(),
+            session.user_id,
+        )
+        .execute(tx.as_mut())
+        .await?;
+
+        sqlx::query!(
+            "UPDATE files
+                SET parent_id_path = $1 || parent_id_path[array_length($2::bytea[], 1) + 1:],
+                    parent_name_path = $3 || parent_name_path[array_length($2::text[], 1) + 1:]
+                WHERE owner_id = $4 AND parent_id_path >= $2 AND parent_id_path < $2 || NULL",
+            new_folder_id_path.as_slice(),
+            old_folder_id_path.as_slice(),
+            new_folder_name_path.as_slice(),
+            session.user_id,
+        )
+        .execute(tx.as_mut())
+        .await?;
 
         Ok(())
     })

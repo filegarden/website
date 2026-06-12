@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE files\n                SET parent_id_path = $1 || parent_id_path[array_length($2::bytea[], 1) + 1:],\n                    parent_name_path = $3 || parent_name_path[array_length($2::text[], 1) + 1:]\n                WHERE owner_id = $4 AND parent_id_path >= $2 AND parent_id_path < $2 || NULL",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "ByteaArray",
+        "ByteaArray",
+        "TextArray",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bdae8b41c094ed6c7a9266bc831eb71416064386f522423ad40064893ff33b7d"
+}

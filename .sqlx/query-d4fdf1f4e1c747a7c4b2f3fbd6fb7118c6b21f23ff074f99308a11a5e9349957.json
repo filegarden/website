@@ -1,0 +1,37 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE folders\n                SET parent_id_path = $1,\n                    parent_name_path = $2\n                WHERE owner_id = $3 AND id = $4\n                RETURNING\n                    name,\n                    size,\n                    OLD.parent_id_path AS old_parent_id_path",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "size",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "old_parent_id_path",
+        "type_info": "ByteaArray"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "ByteaArray",
+        "TextArray",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d4fdf1f4e1c747a7c4b2f3fbd6fb7118c6b21f23ff074f99308a11a5e9349957"
+}
