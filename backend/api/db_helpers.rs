@@ -37,23 +37,22 @@ where
     Ok(token)
 }
 
-/// `SELECT`s a folder's ID and name paths `FOR UPDATE` if the user has permission to modify the
-/// folder's contents.
+/// `SELECT`s a folder's ID and name paths if the user has permission to modify the folder's
+/// contents.
 ///
 /// # Errors
 ///
 /// Returns an error if a database query fails, or if the user doesn't have access to the folder.
-pub(crate) async fn query_folder_paths_for_update(
+pub(crate) async fn query_folder_paths_to_modify_contents(
     tx: &mut PgTransaction<'static>,
     user_id: &[u8],
     folder_id: &[u8],
 ) -> TxResult<(Vec<Vec<u8>>, Vec<String>), api::Error> {
     let Some(folder) = sqlx::query!(
         "SELECT name, parent_id_path, parent_name_path FROM folders
-            WHERE owner_id = $1 AND id = $2
-            FOR UPDATE",
-        user_id,
+            WHERE id = $1 AND owner_id = $2",
         folder_id,
+        user_id,
     )
     .fetch_optional(tx.as_mut())
     .await?

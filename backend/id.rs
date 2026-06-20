@@ -17,6 +17,12 @@ pub(crate) type NewUserId = Id<[u8; 8]>;
 /// A 1024-bit token.
 pub(crate) type Token = Id<[u8; 128]>;
 
+/// The type to create new folder IDs with. Note that existing folder IDs may not fit this type.
+pub(crate) type NewFolderId = Id<[u8; 9]>;
+
+/// A folder's browse key.
+pub(crate) type FolderBrowseKey = Id<[u8; 24]>;
+
 /// An ID that can be deserialized from and serialized to `base64url` (without padding).
 #[derive(
     Deref,
