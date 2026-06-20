@@ -75,14 +75,14 @@ pub(crate) async fn post(
             .fetch_one(tx.as_mut())
             .await
             {
-                Err(sqlx::Error::Database(error)) if error.constraint() == Some("folders_pkey") => {
-                    return Err(TxError::Retry);
-                }
-
                 Err(sqlx::Error::Database(error))
                     if error.constraint() == Some("folders_by_name_path") =>
                 {
                     return Err(TxError::Abort(api::Error::AlreadyExists));
+                }
+
+                Err(sqlx::Error::Database(error)) if error.constraint() == Some("folders_pkey") => {
+                    return Err(TxError::Retry);
                 }
 
                 result => result?,
