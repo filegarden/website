@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     api::{
         self, Json,
-        db_helpers::query_folder_paths_for_update,
+        db_helpers::query_folder_paths_to_modify_contents,
         extract::{AuthToken, Path},
         response::Response,
     },
@@ -51,7 +51,8 @@ pub(crate) async fn post(
 
         let (new_parent_id_path, new_parent_name_path) = match &body.parent_folder_id {
             Some(parent_folder_id) => {
-                query_folder_paths_for_update(tx, &session.user_id, parent_folder_id).await?
+                query_folder_paths_to_modify_contents(tx, &session.user_id, parent_folder_id)
+                    .await?
             }
             None => (vec![], vec![]),
         };

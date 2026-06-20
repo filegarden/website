@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     api::{
         self, Json,
-        db_helpers::query_folder_paths_for_update,
+        db_helpers::query_folder_paths_to_modify_contents,
         extract::{AuthToken, Path},
         response::Response,
     },
@@ -23,7 +23,7 @@ type PathParams = Path<Id>;
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The new parent folder's ID, or [`None`] for the root directory.
-    pub parent_folder_id: Option<Id>,
+    pub parent_id: Option<Id>,
 }
 
 /// Changes a folder's parent folder.
@@ -49,9 +49,9 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        let (new_parent_id_path, new_parent_name_path) = match &body.parent_folder_id {
-            Some(parent_folder_id) => {
-                query_folder_paths_for_update(tx, &session.user_id, parent_folder_id).await?
+        let (new_parent_id_path, new_parent_name_path) = match &body.parent_id {
+            Some(parent_id) => {
+                query_folder_paths_to_modify_contents(tx, &session.user_id, parent_id).await?
             }
             None => (vec![], vec![]),
         };
