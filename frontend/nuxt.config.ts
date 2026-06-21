@@ -1,6 +1,5 @@
 export default defineNuxtConfig({
   compatibilityDate: "2026-05-14",
-  srcDir: "frontend",
   modules: ["@nuxt/eslint", "nuxt-compile-markdown"],
 
   typescript: {
@@ -14,7 +13,7 @@ export default defineNuxtConfig({
 
     nodeTsConfig: {
       // Nuxt's TS config doesn't include the ESLint config by default.
-      include: ["../eslint.config.*"],
+      include: ["./eslint.config.*"],
     },
   },
 

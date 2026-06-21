@@ -4,10 +4,6 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 
-[[bin]]
-name = "backend"
-path = "backend/main.rs"
-
 [profile.release]
 codegen-units = 1
 lto = "fat"

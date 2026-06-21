@@ -1,13 +1,11 @@
 services:
   backend:
     restart: always
-    build:
-      args:
-        PACKAGE: backend
+    build: .
     ports:
       - "8080:8080"
     env_file:
-      - path: ./.env
+      - path: ./backend/.env
     depends_on:
       db:
         condition: service_healthy

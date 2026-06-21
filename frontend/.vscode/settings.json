@@ -1,0 +1,13 @@
+{
+  "[dockercompose][html][javascript][json][jsonc][markdown][scss][typescript][vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.quoteStyle": "double",
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
+}

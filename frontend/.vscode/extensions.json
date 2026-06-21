@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "antfu.goto-alias",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "vue.volar"
+  ]
+}

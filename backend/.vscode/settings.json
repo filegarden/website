@@ -1,5 +1,5 @@
 {
-  "[dockercompose][json][jsonc][markdown][yaml]": {
+  "[dockercompose][html][json][jsonc][markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2

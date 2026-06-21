@@ -13,8 +13,6 @@ RUN apk add --no-cache clang lld musl-dev git file openssl-dev \
 
 COPY . .
 
-ARG PACKAGE
-
 # Persist directories with downloaded or compiled dependencies between builds so
 # every build doesn't have to redownload and recompile all dependencies. Then
 # build the binary package in release mode, and copy it out of the cache mount
@@ -24,8 +22,9 @@ RUN --mount=type=cache,target=target \
     --mount=type=cache,target=/usr/local/cargo/registry \
     <<END
 set -eu
-cargo build --locked --release --package "$PACKAGE"
-cp "./target/release/$PACKAGE" /bin/app
+cd backend
+cargo build --locked --release --package backend
+cp ./target/release/backend /bin/app
 END
 
 # The final image will be a lean Alpine instance with only the final binary from

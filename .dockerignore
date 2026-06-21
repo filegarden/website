@@ -1,16 +1,16 @@
 # Rust dev/build outputs
-target
+backend/target
 
 # Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
+frontend/.output
+frontend/.data
+frontend/.nuxt
+frontend/.nitro
+frontend/.cache
+frontend/dist
 
 # Node dependencies
-node_modules
+frontend/node_modules
 
 # Local env files
 .env*
