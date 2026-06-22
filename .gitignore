@@ -1,20 +1,3 @@
-# Rust dev/build outputs
-/backend/target
-
-# Nuxt dev/build outputs
-/frontend/.output
-/frontend/.data
-/frontend/.nuxt
-/frontend/.nitro
-/frontend/.cache
-/frontend/dist
-
-# Node dependencies
-node_modules
-
-# Local env files
+.DS_Store
 .env*
 !.env*.example
-
-# Misc
-.DS_Store
