@@ -133,7 +133,7 @@ CREATE TABLE files (
         ON UPDATE CASCADE
 );
 
-CREATE INDEX files_by_id_path ON files (owner_id, parent_id_path, id, complete);
+CREATE INDEX files_by_parent_id_path ON files (owner_id, parent_id_path);
 CREATE INDEX files_by_content_id ON files (content_id);
 
 CREATE TABLE files_processing (
@@ -185,4 +185,4 @@ CREATE TABLE folders (
     CONSTRAINT folders_by_name_path UNIQUE (owner_id, parent_name_path, name)
 );
 
-CREATE INDEX folders_by_id_path ON folders (owner_id, parent_id_path, id);
+CREATE INDEX folders_by_parent_id_path ON folders (owner_id, parent_id_path);
