@@ -7,30 +7,37 @@ env:
 jobs:
   cargo-clippy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v7
       - run: cargo clippy --all-features --all-targets --locked --workspace
-        working-directory: ./backend
 
   cargo-fmt:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v7
       - run: cargo fmt --all --check
-        working-directory: ./backend
 
   cargo-test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       - uses: actions/checkout@v7
       - run: cargo test --all-features --all-targets --locked --workspace
-        working-directory: ./backend
 
   npm-run-check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
     steps:
       - uses: actions/checkout@v7
       - run: npm ci
-        working-directory: ./frontend
       - run: npm run check
-        working-directory: ./frontend
