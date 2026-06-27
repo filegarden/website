@@ -186,3 +186,48 @@ CREATE TABLE folders (
 );
 
 CREATE INDEX folders_by_parent_id_path ON folders (owner_id, parent_id_path);
+
+CREATE TABLE trashed_folders (
+    trashed_at timestamptz(3) DEFAULT now(),
+    created_at timestamptz(3) NOT NULL,
+    id bytea PRIMARY KEY,
+    name text NOT NULL,
+    owner_id bytea NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    parent_id_path bytea[] NOT NULL,
+    original_parent_id_path bytea[],
+    browse_key bytea UNIQUE NOT NULL,
+    size bigint NOT NULL,
+    was_shared boolean NOT NULL,
+
+    CONSTRAINT only_roots_have_trashed_at
+        CHECK ((cardinality(parent_id_path) = 0) = (trashed_at IS NOT NULL)),
+    CONSTRAINT only_roots_have_original_parent
+        CHECK ((cardinality(parent_id_path) = 0) = (original_parent_id_path IS NOT NULL))
+);
+
+CREATE INDEX trashed_folders_by_parent_id_path ON trashed_folders (owner_id, parent_id_path);
+CREATE INDEX trashed_folders_by_trashed_at ON trashed_folders (trashed_at);
+
+CREATE TABLE trashed_files (
+    trashed_at timestamptz(3) DEFAULT now(),
+    created_at timestamptz(3) NOT NULL,
+    modified_at timestamptz(3) NOT NULL,
+    id bytea PRIMARY KEY REFERENCES file_contents (id),
+    name text NOT NULL,
+    owner_id bytea NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    parent_id_path bytea[] NOT NULL,
+    original_parent_id_path bytea[],
+    original_id bytea NOT NULL,
+    size bigint NOT NULL,
+    content_id bytea NOT NULL,
+    type text NOT NULL,
+    was_shared boolean NOT NULL,
+
+    CONSTRAINT only_roots_have_trashed_at
+        CHECK ((cardinality(parent_id_path) = 0) = (trashed_at IS NOT NULL)),
+    CONSTRAINT only_roots_have_original_parent
+        CHECK ((cardinality(parent_id_path) = 0) = (original_parent_id_path IS NOT NULL))
+);
+
+CREATE INDEX trashed_files_by_parent_id_path ON trashed_files (owner_id, parent_id_path);
+CREATE INDEX trashed_files_by_trashed_at ON trashed_files (trashed_at);
