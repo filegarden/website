@@ -109,6 +109,17 @@ CREATE TABLE file_contents (
 
 CREATE INDEX file_contents_by_hash ON file_contents (hash);
 
+CREATE TABLE maybe_unused_file_contents (
+    id bytea NOT NULL
+        REFERENCES file_contents (id) ON DELETE CASCADE,
+    started_checking boolean NOT NULL,
+
+    PRIMARY KEY (id, started_checking)
+);
+
+CREATE INDEX maybe_unused_file_contents_by_id
+    ON maybe_unused_file_contents (id);
+
 CREATE TABLE files (
     created_at timestamptz(3) NOT NULL,
     modified_at timestamptz(3) NOT NULL DEFAULT now(),
@@ -159,17 +170,6 @@ CREATE TABLE files_processing (
     CONSTRAINT output_xor_failed
         CHECK ((output_content_id IS NULL) != (failed_at IS NULL))
 );
-
-CREATE TABLE maybe_unused_file_contents (
-    id bytea NOT NULL
-        REFERENCES file_contents (id) ON DELETE CASCADE,
-    started_checking boolean NOT NULL,
-
-    PRIMARY KEY (id, started_checking)
-);
-
-CREATE INDEX maybe_unused_file_contents_by_id
-    ON maybe_unused_file_contents (id);
 
 CREATE TABLE folders (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
