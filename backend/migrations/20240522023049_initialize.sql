@@ -81,29 +81,28 @@ CREATE TABLE file_contents (
     complete boolean NOT NULL,
     hash bytea,
     partial_hash bytea,
-    original_size bigint NOT NULL,
+    logical_size bigint NOT NULL,
     encoding encoding,
     encoded_size bigint NOT NULL DEFAULT 0,
     part_count integer NOT NULL DEFAULT 0,
-    decoded_part_size integer,
-    decoded_part_sizes integer[],
+    logical_part_size integer,
+    logical_part_sizes integer[],
 
-    CONSTRAINT file_contents_referenced_by_files
-        UNIQUE (id, complete, original_size),
+    CONSTRAINT file_contents_referenced_by_files UNIQUE (id, complete),
 
     CONSTRAINT hash_when_complete CHECK ((hash IS NULL) = NOT complete),
     CONSTRAINT partial_hash_when_incomplete
         CHECK ((partial_hash IS NULL) = complete),
-    CONSTRAINT decoded_part_size_nand_decoded_part_sizes
-        CHECK (decoded_part_sizes IS NULL OR decoded_part_size IS NULL),
-    CONSTRAINT consistent_decoded_part_size CHECK (
-        decoded_part_size IS NULL
+    CONSTRAINT logical_part_size_nand_logical_part_sizes
+        CHECK (logical_part_sizes IS NULL OR logical_part_size IS NULL),
+    CONSTRAINT consistent_logical_part_size CHECK (
+        logical_part_size IS NULL
         OR NOT complete
-        OR part_count = original_size / decoded_part_size
+        OR part_count = logical_size / logical_part_size
     ),
-    CONSTRAINT consistent_decoded_part_sizes CHECK (
-        decoded_part_sizes IS NULL
-        OR part_count = cardinality(decoded_part_sizes)
+    CONSTRAINT consistent_logical_part_sizes CHECK (
+        logical_part_sizes IS NULL
+        OR part_count = cardinality(logical_part_sizes)
     )
 );
 
@@ -138,8 +137,8 @@ CREATE TABLE files (
     CONSTRAINT files_by_name_path
         UNIQUE (owner_id, parent_name_path, name, complete),
 
-    CONSTRAINT foreign_content FOREIGN KEY (content_id, complete, size)
-        REFERENCES file_contents (id, complete, original_size)
+    CONSTRAINT foreign_content FOREIGN KEY (content_id, complete)
+        REFERENCES file_contents (id, complete)
         MATCH FULL
         ON UPDATE CASCADE
 );
