@@ -126,7 +126,7 @@ CREATE TABLE files (
     id bytea NOT NULL,
     complete boolean NOT NULL DEFAULT FALSE,
     name text NOT NULL,
-    owner_id bytea NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    owner_id bytea NOT NULL REFERENCES users (id),
     parent_id_path bytea[] NOT NULL,
     parent_name_path text[] NOT NULL,
     size bigint NOT NULL,
