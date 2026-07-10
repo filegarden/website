@@ -23,7 +23,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
     let pool = PgPoolOptions::new()
         .after_connect(|conn, _| {
             Box::pin(async move {
-                conn.execute("SET default_transaction_isolation TO 'serializable';")
+                conn.execute("SET default_transaction_isolation TO 'repeatable read';")
                     .await?;
 
                 Ok(())
@@ -158,11 +158,14 @@ where
 /// The result of a database transaction.
 pub(crate) type TxResult<T, E = sqlx::Error> = Result<T, TxError<E>>;
 
-/// Begins a database transaction with the maximum isolation level (`SERIALIZABLE`), retrying if the
-/// database detects a race condition (serialization failure).
+/// Begins a database transaction with isolation level [Repeatable
+/// Read](https://www.postgresql.org/docs/current/transaction-iso.html#XACT-REPEATABLE-READ),
+/// retrying if the database detects a race condition (serialization failure).
 ///
-/// Maximum isolation is used to minimize the possibility of data races. This generally greatly
-/// simplifies database operations and reduces the mental overhead of working with them.
+/// Repeatable Read strikes a balance between performance and data race safety. Stronger isolation
+/// greatly reduces the mental overhead of data race considerations, simplifying database queries
+/// and architecture. The only stronger isolation level (Serializable) enables maximum simplicity
+/// but has impractically many false positives, resulting in limited concurrent performance.
 macro_rules! transaction {
     ($($ident:ident)* |$tx:ident| $(-> $Return:ty)? $block:block$(,)?) => {
         $crate::db::transaction!(
