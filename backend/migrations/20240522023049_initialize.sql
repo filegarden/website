@@ -162,7 +162,8 @@ CREATE TABLE files_processing (
     output_content_id bytea UNIQUE REFERENCES file_contents (id),
     failed_at timestamptz(3),
 
-    CONSTRAINT files_processing_by_source_and_encoding UNIQUE NULLS NOT DISTINCT
+    CONSTRAINT files_processing_by_source_and_encoding
+        UNIQUE NULLS NOT DISTINCT
         (file_id, file_complete, source_content_hash, encoding),
 
     CONSTRAINT source_file_xor_content
@@ -205,7 +206,8 @@ CREATE TABLE trashed_folders (
         CHECK ((cardinality(parent_id_path) = 0) = (original_parent_id_path IS NOT NULL))
 );
 
-CREATE INDEX trashed_folders_by_parent_id_path ON trashed_folders (owner_id, parent_id_path);
+CREATE INDEX trashed_folders_by_parent_id_path
+    ON trashed_folders (owner_id, parent_id_path);
 CREATE INDEX trashed_folders_by_trashed_at ON trashed_folders (trashed_at);
 
 CREATE TABLE trashed_files (
@@ -229,5 +231,6 @@ CREATE TABLE trashed_files (
         CHECK ((cardinality(parent_id_path) = 0) = (original_parent_id_path IS NOT NULL))
 );
 
-CREATE INDEX trashed_files_by_parent_id_path ON trashed_files (owner_id, parent_id_path);
+CREATE INDEX trashed_files_by_parent_id_path
+    ON trashed_files (owner_id, parent_id_path);
 CREATE INDEX trashed_files_by_trashed_at ON trashed_files (trashed_at);
