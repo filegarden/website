@@ -1,0 +1,47 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM files\n                USING files AS using_files\n                LEFT JOIN file_replacements ON file_replacements.id = using_files.id\n                WHERE files.id = using_files.id AND files.id = $1 AND files.owner_id = $2\n                RETURNING\n                    files.parent_id_path,\n                    files.size,\n                    files.content_id,\n                    file_replacements.size AS \"replacement_size?\",\n                    file_replacements.content_id AS \"replacement_content_id?\"",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "parent_id_path",
+        "type_info": "ByteaArray"
+      },
+      {
+        "ordinal": 1,
+        "name": "size",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "content_id",
+        "type_info": "Bytea"
+      },
+      {
+        "ordinal": 3,
+        "name": "replacement_size?",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 4,
+        "name": "replacement_content_id?",
+        "type_info": "Bytea"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b6f42a1e01e86bb54526b970fdd16f0bf1466f67322577ebfdb6796addb8fb5f"
+}

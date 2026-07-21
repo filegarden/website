@@ -3,7 +3,6 @@
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
 use serde::Serialize;
-use sqlx::Connection;
 
 use crate::{
     api::{
@@ -44,11 +43,17 @@ pub(crate) async fn delete(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
-        // Don't delete any incomplete replacement files for the same ID.
         let Some(file) = sqlx::query!(
-            "DELETE FROM files
-                WHERE id = $1 AND complete AND owner_id = $2
-                RETURNING size, parent_id_path, content_id",
+            r#"DELETE FROM files
+                USING files AS using_files
+                LEFT JOIN file_replacements ON file_replacements.id = using_files.id
+                WHERE files.id = using_files.id AND files.id = $1 AND files.owner_id = $2
+                RETURNING
+                    files.parent_id_path,
+                    files.size,
+                    files.content_id,
+                    file_replacements.size AS "replacement_size?",
+                    file_replacements.content_id AS "replacement_content_id?""#,
             file_id.as_slice(),
             session.user_id,
         )
@@ -63,34 +68,35 @@ pub(crate) async fn delete(
                 "UPDATE folders
                     SET size = size - $1
                     WHERE id = ANY($2)",
-                file.size,
+                file.size + file.replacement_size.unwrap_or(0),
                 file.parent_id_path.as_slice(),
             )
             .execute(tx.as_mut())
             .await?;
         }
 
-        let mut savepoint = tx.begin().await?;
-
-        match sqlx::query!(
-            "INSERT INTO maybe_unused_file_contents (id, started_checking)
-                VALUES ($1, false)",
+        sqlx::query!(
+            "INSERT INTO maybe_unused_file_contents (id)
+                VALUES ($1)
+                ON CONFLICT DO NOTHING",
+            // TODO: Consider using `ON CONFLICT DO UPDATE` instead, and remove `started_checking`
+            // from the primary key.
             file.content_id,
         )
-        .execute(savepoint.as_mut())
-        .await
-        {
-            Err(sqlx::Error::Database(error))
-                if error.constraint() == Some("maybe_unused_file_contents_pkey") =>
-            {
-                // The file content is already marked maybe unused.
-                savepoint.rollback().await?;
-            }
+        .execute(tx.as_mut())
+        .await?;
 
-            result => {
-                result?;
-                savepoint.commit().await?;
-            }
+        if let Some(replacement_content_id) = file.replacement_content_id
+            && replacement_content_id != file.content_id
+        {
+            sqlx::query!(
+                "INSERT INTO maybe_unused_file_contents (id)
+                    VALUES ($1)
+                    ON CONFLICT DO NOTHING",
+                replacement_content_id,
+            )
+            .execute(tx.as_mut())
+            .await?;
         }
 
         Ok(())

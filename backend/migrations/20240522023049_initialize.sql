@@ -111,7 +111,7 @@ CREATE INDEX file_contents_by_hash ON file_contents (hash);
 CREATE TABLE maybe_unused_file_contents (
     id bytea NOT NULL
         REFERENCES file_contents (id) ON DELETE CASCADE,
-    started_checking boolean NOT NULL,
+    started_checking boolean NOT NULL DEFAULT FALSE,
 
     PRIMARY KEY (id, started_checking)
 );
@@ -120,9 +120,9 @@ CREATE INDEX maybe_unused_file_contents_by_id
     ON maybe_unused_file_contents (id);
 
 CREATE TABLE files (
-    created_at timestamptz(3) NOT NULL,
+    created_at timestamptz(3) NOT NULL DEFAULT now(),
     modified_at timestamptz(3) NOT NULL DEFAULT now(),
-    id bytea NOT NULL,
+    id bytea PRIMARY KEY,
     complete boolean NOT NULL DEFAULT FALSE,
     name text NOT NULL,
     owner_id bytea NOT NULL REFERENCES users (id),
@@ -133,7 +133,6 @@ CREATE TABLE files (
     type text NOT NULL,
     shared boolean NOT NULL DEFAULT FALSE,
 
-    PRIMARY KEY (id, complete),
     CONSTRAINT files_by_name_path
         UNIQUE (owner_id, parent_name_path, name, complete),
 
@@ -146,10 +145,17 @@ CREATE TABLE files (
 CREATE INDEX files_by_parent_id_path ON files (owner_id, parent_id_path);
 CREATE INDEX files_by_content_id ON files (content_id);
 
+CREATE TABLE file_replacements (
+    created_at timestamptz(3) NOT NULL DEFAULT now(),
+    id bytea PRIMARY KEY REFERENCES files (id) ON DELETE CASCADE,
+    size bigint NOT NULL,
+    content_id bytea NOT NULL REFERENCES file_contents (id)
+);
+
 CREATE TABLE files_processing (
     created_at timestamptz(3) NOT NULL DEFAULT now(),
     id bytea PRIMARY KEY,
-    file_id bytea,
+    file_id bytea REFERENCES files (id) ON DELETE CASCADE,
     file_complete boolean,
     source_content_hash bytea,
     encoding encoding NOT NULL,
@@ -159,11 +165,6 @@ CREATE TABLE files_processing (
     CONSTRAINT files_processing_by_source_and_encoding UNIQUE NULLS NOT DISTINCT
         (file_id, file_complete, source_content_hash, encoding),
 
-    CONSTRAINT foreign_file FOREIGN KEY (file_id, file_complete)
-        REFERENCES files (id, complete)
-        MATCH FULL
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
     CONSTRAINT source_file_xor_content
         CHECK ((file_id IS NULL) != (source_content_hash IS NULL)),
     CONSTRAINT output_xor_failed
