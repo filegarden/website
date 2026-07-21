@@ -75,25 +75,27 @@ pub(crate) async fn delete(
             .await?;
         }
 
-        sqlx::query!(
-            "INSERT INTO maybe_unused_file_contents (id)
-                VALUES ($1)
-                ON CONFLICT DO NOTHING",
-            // TODO: Consider using `ON CONFLICT DO UPDATE` instead, and remove `started_checking`
-            // from the primary key.
-            file.content_id,
-        )
-        .execute(tx.as_mut())
-        .await?;
+        // TODO: Consider using `ON CONFLICT DO UPDATE` in both of the below queries instead, and
+        // remove `started_checking` from the primary key.
 
         if let Some(replacement_content_id) = file.replacement_content_id
             && replacement_content_id != file.content_id
         {
             sqlx::query!(
                 "INSERT INTO maybe_unused_file_contents (id)
+                    VALUES ($1), ($2)
+                    ON CONFLICT DO NOTHING",
+                file.content_id,
+                replacement_content_id,
+            )
+            .execute(tx.as_mut())
+            .await?;
+        } else {
+            sqlx::query!(
+                "INSERT INTO maybe_unused_file_contents (id)
                     VALUES ($1)
                     ON CONFLICT DO NOTHING",
-                replacement_content_id,
+                file.content_id,
             )
             .execute(tx.as_mut())
             .await?;
