@@ -123,7 +123,10 @@ pub(crate) async fn post(
             "UPDATE folders
                 SET parent_id_path = $1 || parent_id_path[array_length($2::bytea[], 1) + 1:],
                     parent_name_path = $3 || parent_name_path[array_length($2::text[], 1) + 1:]
-                WHERE owner_id = $4 AND parent_id_path >= $2 AND parent_id_path < $2 || NULL",
+                WHERE
+                    owner_id = $4 AND
+                    parent_id_path >= $2 AND
+                    parent_id_path < $2 || NULL::bytea",
             new_folder_id_path.as_slice(),
             old_folder_id_path.as_slice(),
             new_folder_name_path.as_slice(),
@@ -136,7 +139,10 @@ pub(crate) async fn post(
             "UPDATE files
                 SET parent_id_path = $1 || parent_id_path[array_length($2::bytea[], 1) + 1:],
                     parent_name_path = $3 || parent_name_path[array_length($2::text[], 1) + 1:]
-                WHERE owner_id = $4 AND parent_id_path >= $2 AND parent_id_path < $2 || NULL",
+                WHERE
+                    owner_id = $4 AND
+                    parent_id_path >= $2 AND
+                    parent_id_path < $2 || NULL::bytea",
             new_folder_id_path.as_slice(),
             old_folder_id_path.as_slice(),
             new_folder_name_path.as_slice(),

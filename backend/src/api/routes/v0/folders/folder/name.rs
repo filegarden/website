@@ -83,7 +83,10 @@ pub(crate) async fn put(
         sqlx::query!(
             "UPDATE folders
                 SET parent_name_path = $1 || parent_name_path[array_length($1::text[], 1) + 1:]
-                WHERE owner_id = $2 AND parent_name_path >= $3 AND parent_name_path < $3 || NULL",
+                WHERE
+                    owner_id = $2 AND
+                    parent_name_path >= $3 AND
+                    parent_name_path < $3 || NULL::text",
             new_folder_path.as_slice(),
             session.user_id,
             old_folder_path.as_slice(),
@@ -94,7 +97,10 @@ pub(crate) async fn put(
         sqlx::query!(
             "UPDATE files
                 SET parent_name_path = $1 || parent_name_path[array_length($1::text[], 1) + 1:]
-                WHERE owner_id = $2 AND parent_name_path >= $3 AND parent_name_path < $3 || NULL",
+                WHERE
+                    owner_id = $2 AND
+                    parent_name_path >= $3 AND
+                    parent_name_path < $3 || NULL::text",
             new_folder_path.as_slice(),
             session.user_id,
             old_folder_path.as_slice(),

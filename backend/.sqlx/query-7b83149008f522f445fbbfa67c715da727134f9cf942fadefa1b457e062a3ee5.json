@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE folders\n                SET parent_name_path = $1 || parent_name_path[array_length($1::text[], 1) + 1:]\n                WHERE\n                    owner_id = $2 AND\n                    parent_name_path >= $3 AND\n                    parent_name_path < $3 || NULL::text",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Bytea",
+        "TextArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "7b83149008f522f445fbbfa67c715da727134f9cf942fadefa1b457e062a3ee5"
+}
