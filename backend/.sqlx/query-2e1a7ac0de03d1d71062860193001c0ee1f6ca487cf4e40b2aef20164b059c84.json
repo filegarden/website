@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO maybe_unused_file_contents (id)\n                    VALUES ($1), ($2)\n                    ON CONFLICT DO NOTHING",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2e1a7ac0de03d1d71062860193001c0ee1f6ca487cf4e40b2aef20164b059c84"
+}

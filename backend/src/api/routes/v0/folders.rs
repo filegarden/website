@@ -41,7 +41,7 @@ pub(crate) async fn post(
         db::transaction!(async |tx| -> TxResult<_, api::Error> {
             let Some(session) = sqlx::query!(
                 "SELECT user_id FROM sessions
-                WHERE token_hash = $1",
+                    WHERE token_hash = $1",
                 token_hash.as_ref(),
             )
             .fetch_optional(tx.as_mut())
