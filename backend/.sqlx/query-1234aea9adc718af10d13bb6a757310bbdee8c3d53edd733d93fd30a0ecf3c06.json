@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH sub_files AS (\n                    DELETE FROM files\n                        WHERE\n                            owner_id = $1\n                            AND parent_id_path >= $2\n                            AND parent_id_path < $2 || NULL::bytea\n                        RETURNING created_at, modified_at, id, name, parent_id_path, size,\n                            content_id, type, shared\n                )\n                INSERT INTO trashed_files\n                    (trashed_at, id, created_at, modified_at, name, owner_id, original_id,\n                        parent_id_path, size, content_id, type, was_shared)\n                    SELECT\n                        NULL, ($3::bytea[])[row_number() OVER ()], created_at, modified_at, name,\n                            $1, id, parent_id_path[$4 + 1:], size, content_id, type, shared\n                        FROM sub_files",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "ByteaArray",
+        "ByteaArray",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "1234aea9adc718af10d13bb6a757310bbdee8c3d53edd733d93fd30a0ecf3c06"
+}

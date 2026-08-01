@@ -39,6 +39,7 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             "/files/{file_id}/share",
             delete(v0::files::file::share::delete).post(v0::files::file::share::post),
         )
+        .route("/files/{file_id}/trash", post(v0::files::file::trash::post))
         .route("/folders", post(v0::folders::post))
         .route(
             "/folders/{folder_id}/name",
@@ -51,6 +52,10 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
         .route(
             "/folders/{folder_id}/share",
             delete(v0::folders::folder::share::delete).post(v0::folders::folder::share::post),
+        )
+        .route(
+            "/folders/{folder_id}/trash",
+            post(v0::folders::folder::trash::post),
         )
         .route(
             "/password-reset",

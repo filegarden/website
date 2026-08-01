@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT COUNT(*) AS \"count!\" FROM files\n                WHERE\n                    owner_id = $1 AND\n                    parent_id_path >= $2 AND\n                    parent_id_path < $2 || NULL::bytea",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "count!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "ByteaArray"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "4681320fa141523f06aa5665f78fc2804b2437af1443360b8d474a2ec3aa4bed"
+}

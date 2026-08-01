@@ -1,0 +1,36 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH file AS (\n                DELETE FROM files\n                    WHERE owner_id = $1 AND id = $2\n                    RETURNING created_at, modified_at, name, parent_id_path, size, content_id, type,\n                        shared\n            )\n            INSERT INTO trashed_files \n                (created_at, modified_at, id, name, owner_id, parent_id_path,\n                    original_parent_id_path, original_id, size, content_id, type, was_shared)\n                SELECT\n                    created_at, modified_at, $3, name, $1, ARRAY[]::bytea[], parent_id_path, $2,\n                        size, content_id, type, shared\n                    FROM file\n                RETURNING trashed_at, original_parent_id_path, size",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "trashed_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 1,
+        "name": "original_parent_id_path",
+        "type_info": "ByteaArray"
+      },
+      {
+        "ordinal": 2,
+        "name": "size",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "1294b7697008e444b2b2208c7df89cc41a08b2c4ef1585d5e0fad0cad2504c64"
+}
