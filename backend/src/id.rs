@@ -20,6 +20,10 @@ pub(crate) type Token = Id<[u8; 128]>;
 /// The type to create new folder IDs with. Note that existing folder IDs may not fit this type.
 pub(crate) type NewFolderId = Id<[u8; 9]>;
 
+// TODO: Reconsider using fully random IDs for database performance.
+/// The type to create new file IDs with. Note that existing file IDs may not fit this type.
+pub(crate) type NewFileId = Id<[u8; 9]>;
+
 /// A folder's browse key.
 pub(crate) type FolderBrowseKey = Id<[u8; 24]>;
 

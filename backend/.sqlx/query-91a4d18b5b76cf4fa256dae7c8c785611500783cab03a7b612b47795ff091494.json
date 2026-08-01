@@ -1,0 +1,35 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH folder AS (\n                DELETE FROM folders\n                    WHERE owner_id = $1 AND id = $2\n                    RETURNING created_at, name, parent_id_path, browse_key, size, shared\n            )\n            INSERT INTO trashed_folders\n                (created_at, id, name, owner_id, parent_id_path, original_parent_id_path,\n                    browse_key, size, was_shared)\n                SELECT\n                    created_at, $2, name, $1, ARRAY[]::bytea[], parent_id_path, browse_key, size,\n                        shared\n                    FROM folder\n                RETURNING trashed_at, original_parent_id_path, size",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "trashed_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 1,
+        "name": "original_parent_id_path",
+        "type_info": "ByteaArray"
+      },
+      {
+        "ordinal": 2,
+        "name": "size",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "91a4d18b5b76cf4fa256dae7c8c785611500783cab03a7b612b47795ff091494"
+}
