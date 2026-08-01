@@ -124,6 +124,8 @@ pub(crate) async fn post(
         // TODO: Fix race condition from adding a file under the trashed folder after this point.
 
         if sub_files.count != 0 {
+            // TODO: Also cancel replacement file uploads.
+
             let trashed_file_ids: Vec<_> = iter::repeat_with(NewFileId::generate)
                 // TODO: If transact-rs/sqlx#4357 is completed, replace `to_vec` with `into_inner`.
                 .map(|id| id.to_vec())
