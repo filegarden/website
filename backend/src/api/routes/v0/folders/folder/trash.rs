@@ -167,7 +167,9 @@ pub(crate) async fn post(
             };
         }
 
-        Ok(trashed_folder.trashed_at)
+        Ok(trashed_folder
+            .trashed_at
+            .expect("root trashed folders should have `trashed_at`"))
     })
     .await?;
 
