@@ -81,6 +81,7 @@ pub(crate) async fn post(
             .original_parent_id_path
             .expect("root trashed files should have `original_parent_id_path`");
 
+        // TODO: Also cancel replacement file uploads and subtract their size from ancestors.
         if !original_parent_id_path.is_empty() {
             sqlx::query!(
                 "UPDATE folders
