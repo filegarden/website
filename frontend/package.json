@@ -2,11 +2,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "nuxi dev --inspect --dotenv .env.frontend",
+    "dev": "nuxi dev --inspect",
     "build-preview": "npm run build && npm run preview",
     "check": "nuxi prepare && vue-tsc -b --noEmit && eslint && prettier --check .",
     "build": "nuxi build",
-    "preview": "nuxi preview --dotenv .env.frontend"
+    "preview": "nuxi preview"
   },
   "dependencies": {
     "body-scroll-lock": "^3",
