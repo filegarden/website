@@ -76,8 +76,7 @@ async function open<T extends Component, Data>(
  * component imperatively.
  */
 export type DialogController<T extends Component, Data> =
-  | DialogControllerClosed<T, Data>
-  | DialogControllerOpen<T, Data>;
+  DialogControllerClosed<T, Data> | DialogControllerOpen<T, Data>;
 
 export interface DialogControllerBase<T extends Component, Data> {
   /** Whether the dialog is open. */
