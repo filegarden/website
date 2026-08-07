@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH sub_trashed_folders AS (\n                DELETE FROM trashed_folders\n                    WHERE\n                        owner_id = $1\n                        AND parent_id_path >= $2\n                        AND parent_id_path < $2 || NULL::bytea\n                    RETURNING created_at, id, name, parent_id_path, parent_name_path, browse_key,\n                        size, was_shared\n            )\n            INSERT INTO folders\n                (owner_id, created_at, id, name, parent_id_path, parent_name_path, browse_key, size,\n                    shared)\n                SELECT\n                    $1, created_at, id, name,\n                        $3 || parent_id_path[array_length($2::bytea[], 1) + 1:],\n                        $4 || parent_name_path[array_length($2::bytea[], 1) + 1:], browse_key, size,\n                        was_shared\n                    FROM sub_trashed_folders",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "ByteaArray",
+        "ByteaArray",
+        "TextArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "bfbcae8e7e2ca402061e4312d1e9fd6f56add0de0fd9c930442df4244686688a"
+}

@@ -105,7 +105,10 @@ pub(crate) async fn post(
 
     Ok((
         StatusCode::CREATED,
-        [(LOCATION, format!("/api/v0/TODO/{trashed_file_id}"))],
+        [(
+            LOCATION,
+            format!("/api/v0/users/me/trash/files/{trashed_file_id}"),
+        )],
         Json(PostResponse {
             id: trashed_file_id,
             trashed_at: trashed_at.timestamp_millis(),

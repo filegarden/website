@@ -1,0 +1,55 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "WITH trashed_file AS (\n                DELETE FROM trashed_files\n                    WHERE owner_id = $1 AND id = $2\n                    RETURNING created_at, modified_at, original_id, name, size, content_id, type,\n                        was_shared, parent_id_path\n            ),\n            file AS (\n                INSERT INTO files\n                    (created_at, modified_at, id, complete, name, owner_id, parent_id_path,\n                        parent_name_path, size, content_id, type, shared)\n                    SELECT\n                        created_at, modified_at, original_id, TRUE, name, $1, $3, $4, size,\n                            content_id, type, was_shared\n                        FROM trashed_file\n            )\n            SELECT original_id AS id, parent_id_path AS trashed_parent_id_path, size\n                FROM trashed_file",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Bytea",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "original_id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "trashed_parent_id_path",
+        "type_info": "ByteaArray",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "parent_id_path"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "size",
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "size"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Bytea",
+        "Bytea",
+        "ByteaArray",
+        "TextArray"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "ce768e762c7826bed7f8c1047ac34aa1772d7bbae2ac0c6fc54a0587e5e3750f"
+}

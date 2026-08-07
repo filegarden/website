@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE trashed_folders\n                    SET size = size - $1\n                    WHERE id = ANY($2)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "ByteaArray"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "efff68e94569cd16d6948270d983f8fc0ce775b11c7fa254e97f552475abc0cd"
+}
