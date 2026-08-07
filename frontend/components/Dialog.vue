@@ -229,7 +229,6 @@ defineExpose(context);
     class="dialog"
     :class="{ loading: loading.value }"
     :closedby="closedBy"
-    aria-modal="true"
     :aria-labelledby="$attrs['aria-label'] ? undefined : headingId"
     v-bind="$attrs"
     @close="handle.onClose"
