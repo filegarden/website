@@ -11,6 +11,12 @@
             "name": "citext",
             "kind": "Simple"
           }
+        },
+        "origin": {
+          "Table": {
+            "table": "email_change_requests",
+            "name": "email"
+          }
         }
       },
       {
@@ -20,6 +26,12 @@
           "Custom": {
             "name": "citext",
             "kind": "Simple"
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "email"
           }
         }
       }

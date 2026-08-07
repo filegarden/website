@@ -6,12 +6,24 @@
       {
         "ordinal": 0,
         "name": "terms_hash",
-        "type_info": "Bytea"
+        "type_info": "Bytea",
+        "origin": {
+          "Table": {
+            "table": "terms_version",
+            "name": "terms_hash"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "privacy_hash",
-        "type_info": "Bytea"
+        "type_info": "Bytea",
+        "origin": {
+          "Table": {
+            "table": "terms_version",
+            "name": "privacy_hash"
+          }
+        }
       }
     ],
     "parameters": {

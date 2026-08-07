@@ -6,27 +6,57 @@
       {
         "ordinal": 0,
         "name": "parent_id_path",
-        "type_info": "ByteaArray"
+        "type_info": "ByteaArray",
+        "origin": {
+          "Table": {
+            "table": "files",
+            "name": "parent_id_path"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "size",
-        "type_info": "Int8"
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "files",
+            "name": "size"
+          }
+        }
       },
       {
         "ordinal": 2,
         "name": "content_id",
-        "type_info": "Bytea"
+        "type_info": "Bytea",
+        "origin": {
+          "Table": {
+            "table": "files",
+            "name": "content_id"
+          }
+        }
       },
       {
         "ordinal": 3,
         "name": "replacement_size?",
-        "type_info": "Int8"
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "file_replacements",
+            "name": "size"
+          }
+        }
       },
       {
         "ordinal": 4,
         "name": "replacement_content_id?",
-        "type_info": "Bytea"
+        "type_info": "Bytea",
+        "origin": {
+          "Table": {
+            "table": "file_replacements",
+            "name": "content_id"
+          }
+        }
       }
     ],
     "parameters": {

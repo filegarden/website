@@ -6,7 +6,13 @@
       {
         "ordinal": 0,
         "name": "created_at",
-        "type_info": "Timestamptz"
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "folders",
+            "name": "created_at"
+          }
+        }
       }
     ],
     "parameters": {

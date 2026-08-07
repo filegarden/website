@@ -6,17 +6,35 @@
       {
         "ordinal": 0,
         "name": "trashed_at",
-        "type_info": "Timestamptz"
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "trashed_at"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "original_parent_id_path",
-        "type_info": "ByteaArray"
+        "type_info": "ByteaArray",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "original_parent_id_path"
+          }
+        }
       },
       {
         "ordinal": 2,
         "name": "size",
-        "type_info": "Int8"
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "trashed_files",
+            "name": "size"
+          }
+        }
       }
     ],
     "parameters": {

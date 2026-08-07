@@ -6,12 +6,24 @@
       {
         "ordinal": 0,
         "name": "parent_name_path",
-        "type_info": "TextArray"
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "folders",
+            "name": "parent_name_path"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "old_name",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "folders",
+            "name": "name"
+          }
+        }
       }
     ],
     "parameters": {

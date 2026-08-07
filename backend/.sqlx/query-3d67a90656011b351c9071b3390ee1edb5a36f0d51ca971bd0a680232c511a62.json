@@ -11,12 +11,24 @@
             "name": "citext",
             "kind": "Simple"
           }
+        },
+        "origin": {
+          "Table": {
+            "table": "unverified_users",
+            "name": "email"
+          }
         }
       },
       {
         "ordinal": 1,
         "name": "code_hash!",
-        "type_info": "Text"
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "unverified_users",
+            "name": "code_hash"
+          }
+        }
       }
     ],
     "parameters": {

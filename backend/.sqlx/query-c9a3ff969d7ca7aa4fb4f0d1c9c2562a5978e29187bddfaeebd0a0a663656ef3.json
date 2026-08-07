@@ -11,6 +11,12 @@
             "name": "citext",
             "kind": "Simple"
           }
+        },
+        "origin": {
+          "Table": {
+            "table": "unverified_users",
+            "name": "email"
+          }
         }
       }
     ],

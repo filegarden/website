@@ -6,12 +6,24 @@
       {
         "ordinal": 0,
         "name": "size",
-        "type_info": "Int8"
+        "type_info": "Int8",
+        "origin": {
+          "Table": {
+            "table": "files",
+            "name": "size"
+          }
+        }
       },
       {
         "ordinal": 1,
         "name": "old_parent_id_path",
-        "type_info": "ByteaArray"
+        "type_info": "ByteaArray",
+        "origin": {
+          "Table": {
+            "table": "files",
+            "name": "parent_id_path"
+          }
+        }
       }
     ],
     "parameters": {

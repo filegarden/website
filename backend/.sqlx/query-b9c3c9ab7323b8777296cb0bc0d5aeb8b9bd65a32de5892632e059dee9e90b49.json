@@ -6,7 +6,13 @@
       {
         "ordinal": 0,
         "name": "accepted_terms_at",
-        "type_info": "Timestamptz"
+        "type_info": "Timestamptz",
+        "origin": {
+          "Table": {
+            "table": "unverified_users",
+            "name": "accepted_terms_at"
+          }
+        }
       },
       {
         "ordinal": 1,
@@ -15,6 +21,12 @@
           "Custom": {
             "name": "citext",
             "kind": "Simple"
+          }
+        },
+        "origin": {
+          "Table": {
+            "table": "unverified_users",
+            "name": "email"
           }
         }
       }

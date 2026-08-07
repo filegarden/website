@@ -11,12 +11,19 @@
             "name": "citext",
             "kind": "Simple"
           }
+        },
+        "origin": {
+          "Table": {
+            "table": "users",
+            "name": "email"
+          }
         }
       },
       {
         "ordinal": 1,
         "name": "totp_enabled!",
-        "type_info": "Bool"
+        "type_info": "Bool",
+        "origin": "Expression"
       }
     ],
     "parameters": {
