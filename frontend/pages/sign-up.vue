@@ -17,7 +17,7 @@ useLeaveConfirmation(() => page.value === "code");
 
 const email = useSignInEmail();
 const acceptTerms = ref(false);
-const captchaToken = ref("");
+const captchaToken = ref<string>();
 
 function openCaptchaPage() {
   page.value = "captcha";

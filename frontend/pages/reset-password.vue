@@ -8,7 +8,7 @@ const page = ref<
 
 const email = useSignInEmail();
 
-const captchaToken = ref("");
+const captchaToken = ref<string>();
 
 async function requestPasswordReset() {
   await api("/password-reset", {
