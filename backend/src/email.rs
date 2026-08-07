@@ -3,7 +3,6 @@
 use std::{env::VarError, sync::LazyLock};
 
 use askama::Template;
-use html2text::render::text_renderer::TrivialDecorator;
 use lettre::{
     AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor,
     message::{Mailbox, MultiPart},
@@ -27,6 +26,10 @@ impl MessageTemplate for SignUpVerificationMessage<'_> {
     fn subject(&self) -> String {
         "Verify your email".into()
     }
+
+    fn plaintext(&self) -> String {
+        "Click the link to create your account".into()
+    }
 }
 
 /// An email template informing a user that someone tried to sign up with their email despite them
@@ -41,6 +44,10 @@ pub(crate) struct SignUpEmailTakenMessage<'a> {
 impl MessageTemplate for SignUpEmailTakenMessage<'_> {
     fn subject(&self) -> String {
         "Sign-up failed due to existing account".into()
+    }
+
+    fn plaintext(&self) -> String {
+        "You already have an account".into()
     }
 }
 
@@ -62,6 +69,10 @@ impl MessageTemplate for EmailChangeVerificationMessage<'_> {
     fn subject(&self) -> String {
         "Verify your email".into()
     }
+
+    fn plaintext(&self) -> String {
+        "Click the link to change your email".into()
+    }
 }
 
 /// An email template informing a user that they already have an account under an email someone
@@ -80,6 +91,10 @@ impl MessageTemplate for EmailChangeTakenMessage<'_> {
     fn subject(&self) -> String {
         "Email change failed due to existing account".into()
     }
+
+    fn plaintext(&self) -> String {
+        "You're already using this email".into()
+    }
 }
 
 /// An email template giving a user a link to reset their password.
@@ -97,6 +112,10 @@ impl MessageTemplate for PasswordResetMessage<'_> {
     fn subject(&self) -> String {
         "Reset your password?".into()
     }
+
+    fn plaintext(&self) -> String {
+        "Click the link to sign in with a new password".into()
+    }
 }
 
 /// An email template informing a user that someone tried to reset a password for their email
@@ -112,6 +131,10 @@ impl MessageTemplate for PasswordResetFailedMessage<'_> {
     fn subject(&self) -> String {
         "Password reset failed".into()
     }
+
+    fn plaintext(&self) -> String {
+        "You don't have an account with this email".into()
+    }
 }
 
 /// The mailbox automated emails are sent from.
@@ -124,8 +147,11 @@ static FROM_MAILBOX: LazyLock<Mailbox> = LazyLock::new(|| {
 
 /// An HTML [`Template`] for an email message.
 pub(crate) trait MessageTemplate: Template {
-    /// Gets the message's subject line.
+    /// Generates the message's subject line.
     fn subject(&self) -> String;
+
+    /// Generates the message's plaintext content.
+    fn plaintext(&self) -> String;
 
     /// Generates a subject and multipart HTML and plain text body for the email message template.
     fn to(self, mailbox: Mailbox) -> AddressedMessageTemplate<Self>
@@ -160,9 +186,7 @@ impl<T: MessageTemplate> AddressedMessageTemplate<T> {
         subject.push_str(" | File Garden");
 
         let html = self.template.to_string();
-        let plain = html2text::config::with_decorator(TrivialDecorator::new())
-            .string_from_read(html.as_bytes(), usize::MAX)
-            .expect("message HTML should be convertible to text");
+        let plain = self.template.plaintext();
 
         let from_mailbox = FROM_MAILBOX.clone();
 
@@ -172,11 +196,12 @@ impl<T: MessageTemplate> AddressedMessageTemplate<T> {
                 From: {from_mailbox}\n\
                 To: {}\n\
                 Subject: {subject}\n\
+                Plaintext: {plain}\n\
                 \n\
                 {}\n\
                 ======== DEBUG MAIL END ========",
                 self.to,
-                plain.trim_end_matches('\n'),
+                html.trim_end(),
             );
             return;
         }

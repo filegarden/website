@@ -25,7 +25,6 @@ chrono = { version = "0.4", features = ["serde"] }
 cookie = "0.18"
 derive_more = { version = "2", features = ["full"] }
 dotenvy = "0.15"
-html2text = "0.12"
 idna = "1"
 lettre = { version = "0.11", features = ["serde", "tokio1", "tokio1-native-tls"] }
 percent-encoding = "2"
