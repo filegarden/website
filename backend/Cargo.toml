@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2024"
 publish = false
 
+[profile.dev.package.sqlx-macros]
+# SQLx says this can make compile-time checks significantly faster.
+opt-level = 3
+
 [profile.release]
 codegen-units = 1
 lto = "fat"
