@@ -18,6 +18,7 @@ pub(crate) mod password;
 pub(crate) mod sessions;
 pub(crate) mod settings;
 pub(crate) mod totp;
+pub(crate) mod trash;
 pub(crate) mod verify_credentials;
 
 /// Gets the current authenticated user's public profile info.

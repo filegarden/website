@@ -97,6 +97,14 @@ pub(super) static ROUTER: LazyLock<Router> = LazyLock::new(|| {
             delete(v0::users::me::totp::delete).post(v0::users::me::totp::post),
         )
         .route(
+            "/users/me/trash/files/{trashed_file_id}/restore",
+            post(v0::users::me::trash::files::file::restore::post),
+        )
+        .route(
+            "/users/me/trash/folders/{trashed_folder_id}/restore",
+            post(v0::users::me::trash::folders::folder::restore::post),
+        )
+        .route(
             "/users/me/verify-credentials",
             post(v0::users::me::verify_credentials::post),
         )

@@ -93,14 +93,15 @@ pub(crate) async fn post(
                         owner_id = $1
                         AND parent_id_path >= $2
                         AND parent_id_path < $2 || NULL::bytea
-                    RETURNING created_at, id, name, parent_id_path, browse_key, size, shared
+                    RETURNING created_at, id, name, parent_id_path, parent_name_path, browse_key,
+                        size, shared
             )
             INSERT INTO trashed_folders
-                (trashed_at, owner_id, created_at, id, name, parent_id_path, browse_key, size,
-                    was_shared)
+                (trashed_at, owner_id, created_at, id, name, parent_id_path, parent_name_path,
+                    browse_key, size, was_shared)
                 SELECT
-                    NULL, $1, created_at, id, name, parent_id_path[$3 + 1:], browse_key, size,
-                        shared
+                    NULL, $1, created_at, id, name, parent_id_path[$3 + 1:],
+                        parent_name_path[$3 + 1:], browse_key, size, shared
                     FROM sub_folders",
             session.user_id,
             original_id_path.as_slice(),
@@ -139,15 +140,16 @@ pub(crate) async fn post(
                             owner_id = $1
                             AND parent_id_path >= $2
                             AND parent_id_path < $2 || NULL::bytea
-                        RETURNING created_at, modified_at, id, name, parent_id_path, size,
-                            content_id, type, shared
+                        RETURNING created_at, modified_at, id, name, parent_id_path,
+                            parent_name_path, size, content_id, type, shared
                 )
                 INSERT INTO trashed_files
                     (trashed_at, id, created_at, modified_at, name, owner_id, original_id,
-                        parent_id_path, size, content_id, type, was_shared)
+                        parent_id_path, parent_name_path, size, content_id, type, was_shared)
                     SELECT
                         NULL, ($3::bytea[])[row_number() OVER ()], created_at, modified_at, name,
-                            $1, id, parent_id_path[$4 + 1:], size, content_id, type, shared
+                            $1, id, parent_id_path[$4 + 1:], parent_name_path[$4 + 1:], size,
+                            content_id, type, shared
                         FROM sub_files",
                 session.user_id,
                 original_id_path.as_slice(),
@@ -175,7 +177,10 @@ pub(crate) async fn post(
 
     Ok((
         StatusCode::CREATED,
-        [(LOCATION, format!("/api/v0/TODO/{folder_id}"))],
+        [(
+            LOCATION,
+            format!("/api/v0/users/me/trash/folders/{folder_id}"),
+        )],
         Json(PostResponse {
             id: folder_id,
             trashed_at: trashed_at.timestamp_millis(),
