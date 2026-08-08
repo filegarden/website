@@ -133,6 +133,7 @@ pub(crate) async fn post(
                 .take(sub_files.count as usize)
                 .collect();
 
+            // TODO: Only trash complete files.
             match sqlx::query!(
                 "WITH sub_files AS (
                     DELETE FROM files

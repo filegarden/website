@@ -42,6 +42,7 @@ pub(crate) async fn post(
 
         let trashed_file_id = NewFileId::generate();
 
+        // TODO: Only trash complete files.
         let trashed_file = match sqlx::query!(
             "WITH file AS (
                 DELETE FROM files
