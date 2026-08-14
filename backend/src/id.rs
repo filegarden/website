@@ -78,6 +78,19 @@ impl<T> From<T> for Id<T> {
     }
 }
 
+/// A non-functional trait to extract `Id`'s generic type via an associated type.
+///
+/// TODO: When rust-lang/rust#8995 is complete, `Inner` can become an associated type on the `Id`
+/// struct directly, and this can be removed.
+pub(crate) trait IdInner {
+    /// The `Id`'s generic type.
+    type Inner;
+}
+
+impl<T> IdInner for Id<T> {
+    type Inner = T;
+}
+
 /// An error constructing an [`Id`].
 #[derive(Error, Clone, Debug)]
 #[non_exhaustive]

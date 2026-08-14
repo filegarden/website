@@ -14,7 +14,7 @@ use crate::{
     },
     crypto::{hash_with_salt, hash_without_salt, verify_hash},
     db::{self, TxError, TxResult},
-    id::{NewUserId, Token},
+    id::{IdInner, NewUserId, Token},
 };
 
 pub(crate) mod me;
@@ -159,4 +159,4 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 }
 
 /// A `POST` response body for this API route.
-pub(crate) type PostResponse = User<[u8; 8]>;
+pub(crate) type PostResponse = User<<NewUserId as IdInner>::Inner>;
