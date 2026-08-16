@@ -23,10 +23,10 @@ use crate::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The email address of the user signing in.
-    pub email: UserEmail,
+    email: UserEmail,
 
     /// The user's credentials.
-    pub credentials: MultiFactorCredentials,
+    credentials: MultiFactorCredentials,
 }
 
 /// Signs a user in, creating a sign-in session and returning a session cookie.

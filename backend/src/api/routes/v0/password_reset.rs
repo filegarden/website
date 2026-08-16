@@ -66,7 +66,7 @@ pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetRespo
 #[serde(rename_all = "camelCase")]
 pub(crate) struct GetResponse {
     /// The email of the user whose password reset was requested.
-    pub email: String,
+    email: String,
 }
 
 /// A `POST` request body for this API route.
@@ -74,10 +74,10 @@ pub(crate) struct GetResponse {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The email address of the user to request a password reset for.
-    pub email: UserEmail,
+    email: UserEmail,
 
     /// A token to verify this request was submitted manually.
-    pub captcha_token: CaptchaToken,
+    captcha_token: CaptchaToken,
 }
 
 /// Sends a password reset request to the specified email. If there is no user associated with the

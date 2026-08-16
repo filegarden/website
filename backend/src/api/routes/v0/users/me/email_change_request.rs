@@ -33,10 +33,10 @@ use crate::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The user's credentials.
-    pub credentials: FirstFactorCredentials,
+    credentials: FirstFactorCredentials,
 
     /// The new email address to verify.
-    pub email: UserEmail,
+    email: UserEmail,
 }
 
 /// Sends a verification email for an email change if the new email isn't already taken by an
@@ -147,5 +147,5 @@ pub(crate) async fn post(
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PostResponse {
     /// The (normalized) email address to verify.
-    pub email: UserEmail,
+    email: UserEmail,
 }

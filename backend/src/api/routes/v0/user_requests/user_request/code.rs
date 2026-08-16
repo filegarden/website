@@ -60,8 +60,8 @@ pub(crate) async fn post(Path(token): PathParams) -> impl Response<PostResponse>
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PostResponse {
     /// The email address to verify.
-    pub email: String,
+    email: String,
 
     /// The new email verification code.
-    pub code: String,
+    code: String,
 }

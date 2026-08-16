@@ -26,7 +26,7 @@ use crate::{
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PostQuery {
     /// The password reset token.
-    pub token: Token,
+    token: Token,
 }
 
 /// A `POST` request body for this API route.
@@ -34,10 +34,10 @@ pub(crate) struct PostQuery {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The user's credentials.
-    pub credentials: SecondFactorCredentials,
+    credentials: SecondFactorCredentials,
 
     /// The user's new password in plain text.
-    pub password: NewUserPassword,
+    password: NewUserPassword,
 }
 
 /// Sets a new password to fulfill a user's password reset request. Signs in the user if successful.

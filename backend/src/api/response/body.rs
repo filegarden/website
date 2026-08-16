@@ -5,6 +5,14 @@ use serde::Serialize;
 
 use crate::id::{Id, IdInner as IdInnerTrait};
 
+/// A reference to a user creation request.
+#[derive(Serialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub(crate) struct UserRequest {
+    /// The email address to verify.
+    pub email: String,
+}
+
 /// A reference to a user.
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]

@@ -2,10 +2,13 @@
 
 use axum::http::StatusCode;
 use axum_macros::debug_handler;
-use serde::Serialize;
 
 use crate::{
-    api::{self, Json, extract::Path, response::Response},
+    api::{
+        self, Json,
+        extract::Path,
+        response::{Response, body::UserRequest},
+    },
     crypto::hash_without_salt,
     db::{self, TxResult},
     id::Token,
@@ -48,9 +51,4 @@ pub(crate) async fn get(Path(token): PathParams) -> impl Response<GetResponse> {
 }
 
 /// A `GET` response body for this API route.
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct GetResponse {
-    /// The email address to verify.
-    pub email: String,
-}
+pub(crate) type GetResponse = UserRequest;

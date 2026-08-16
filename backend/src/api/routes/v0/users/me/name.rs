@@ -14,7 +14,7 @@ use crate::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PutRequest {
     /// The user's new display name.
-    pub name: UserName,
+    name: UserName,
 }
 
 /// Changes the current authenticated user's display name.
@@ -61,5 +61,5 @@ pub(crate) async fn put(
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PutResponse {
     /// The user's new display name.
-    pub name: UserName,
+    name: UserName,
 }

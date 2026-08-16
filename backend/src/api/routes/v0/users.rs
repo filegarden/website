@@ -49,13 +49,13 @@ pub(crate) enum EmailVerification {
 pub(crate) struct PostRequest {
     /// Information that verifies the user's email address.
     #[serde(flatten)]
-    pub email_verification: EmailVerification,
+    email_verification: EmailVerification,
 
     /// The user's name.
-    pub name: UserName,
+    name: UserName,
 
     /// The user's new password in plain text.
-    pub password: NewUserPassword,
+    password: NewUserPassword,
 }
 
 /// Creates a new user. Signs in the user if successful.

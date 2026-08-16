@@ -25,10 +25,10 @@ use crate::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PatchRequest {
     /// The user's credentials.
-    pub credentials: FirstFactorCredentials,
+    credentials: FirstFactorCredentials,
 
     /// The user's new password.
-    pub password: NewUserPassword,
+    password: NewUserPassword,
 }
 
 /// Changes the current authenticated user's password.

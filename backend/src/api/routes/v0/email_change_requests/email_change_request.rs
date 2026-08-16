@@ -55,8 +55,8 @@ pub(crate) async fn get(Path(token): PathParams) -> impl Response<GetResponse> {
 #[serde(rename_all = "camelCase")]
 pub(crate) struct GetResponse {
     /// The user's current email address.
-    pub current_email: String,
+    current_email: String,
 
     /// The email address requested for the email change.
-    pub requested_email: String,
+    requested_email: String,
 }

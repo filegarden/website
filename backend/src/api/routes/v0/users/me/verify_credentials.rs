@@ -19,7 +19,7 @@ use crate::{
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The user's credentials.
-    pub credentials: MultiFactorCredentials,
+    credentials: MultiFactorCredentials,
 }
 
 /// Verifies that the submitted credentials are correct for the current authenticated user. Responds

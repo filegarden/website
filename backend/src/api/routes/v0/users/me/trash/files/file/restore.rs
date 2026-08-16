@@ -24,7 +24,7 @@ type PathParams = Path<Id>;
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The ID of the destination folder outside the trash, or [`None`] for the root directory.
-    pub parent_id: Option<Id>,
+    parent_id: Option<Id>,
 }
 
 /// Moves a trashed file back out of the trash.

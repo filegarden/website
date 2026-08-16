@@ -23,7 +23,7 @@ type PathParams = Path<Id>;
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The new parent folder's ID, or [`None`] for the root directory.
-    pub parent_id: Option<Id>,
+    parent_id: Option<Id>,
 }
 
 /// Changes a folder's parent folder.

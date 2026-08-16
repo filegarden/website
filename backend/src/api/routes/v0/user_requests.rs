@@ -10,7 +10,7 @@ use crate::{
     api::{
         self, Json, captcha,
         extract::Query,
-        response::Response,
+        response::{Response, body::UserRequest},
         validation::{CaptchaToken, EmailVerificationCode, True, UserEmail},
     },
     crypto::{hash_without_salt, verify_hash},
@@ -62,7 +62,7 @@ pub(crate) async fn get(Query(query): Query<GetQuery>) -> impl Response<GetRespo
 }
 
 /// A `GET` response body for this API route.
-pub(crate) type GetResponse = user_request::GetResponse;
+pub(crate) type GetResponse = UserRequest;
 
 /// A `POST` request body for this API route.
 #[derive(Deserialize, Debug)]
@@ -72,13 +72,13 @@ pub(crate) struct PostRequest {
     ///
     /// This is part of the API so users can't use the API to get around accepting the terms.
     #[expect(dead_code, reason = "This isn't dead code; it's used for validation")]
-    pub accept_terms: True,
+    accept_terms: True,
 
     /// The email address to verify.
-    pub email: UserEmail,
+    email: UserEmail,
 
     /// A token to verify this request was submitted manually.
-    pub captcha_token: CaptchaToken,
+    captcha_token: CaptchaToken,
 }
 
 /// Sends a verification email for a new user if the email isn't already taken by an existing user.
@@ -170,5 +170,5 @@ pub(crate) async fn post(Json(body): Json<PostRequest>) -> impl Response<PostRes
 #[serde(rename_all = "camelCase")]
 pub(crate) struct PostResponse {
     /// The (normalized) email address to verify.
-    pub email: UserEmail,
+    email: UserEmail,
 }

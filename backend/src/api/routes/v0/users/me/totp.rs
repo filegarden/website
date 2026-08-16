@@ -42,7 +42,7 @@ pub(crate) struct DeleteRequest {
     // - On the other hand, an attacker disabling 2FA with your session token and password allows
     //   them to take over your account, but malicious changes can be reverted by a support admin
     //   with little risk and no need for proof of ownership.
-    pub credentials: FirstFactorCredentials,
+    credentials: FirstFactorCredentials,
 }
 
 /// Disables TOTP for the current authenticated user.
@@ -98,14 +98,14 @@ pub(crate) struct DeleteResponse {}
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub(crate) struct PostRequest {
     /// The user's credentials.
-    pub credentials: FirstFactorCredentials,
+    credentials: FirstFactorCredentials,
 
     /// The user's new TOTP secret. Generated client-side to significantly reduce backend
     /// complexity. A client should ensure it generates this using a CSPRNG.
-    pub secret: TotpSecret,
+    secret: TotpSecret,
 
     /// The user's TOTP verification code.
-    pub otp: Otp,
+    otp: Otp,
 }
 
 /// Completes a TOTP verification request, enabling TOTP for the current authenticated user.
