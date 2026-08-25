@@ -52,7 +52,7 @@ pub(super) async fn initialize(db_url: &str) -> sqlx::Result<()> {
 async fn sync_terms_version_to_db() -> sqlx::Result<()> {
     let mut hasher = Sha256::new();
     hasher.update(include_bytes!(
-        "../../frontend/components/TermsOfService.md"
+        "../../frontend/components/TermsOfService.md",
     ));
     let terms_hash = hasher.finalize();
     let terms_hash = terms_hash.as_slice();
