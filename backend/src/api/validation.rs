@@ -205,7 +205,7 @@ impl UserEmail {
 }
 
 /// An error constructing a [`UserEmail`].
-#[derive(Error, Copy, Clone, Debug)]
+#[derive(Error, Clone, Copy, Debug)]
 #[non_exhaustive]
 pub(crate) enum UserEmailError {
     /// The email address was invalid.
@@ -301,7 +301,7 @@ impl TotpSecret {
 }
 
 /// An error constructing a [`TotpSecret`].
-#[derive(Error, Copy, Clone, Debug)]
+#[derive(Error, Clone, Copy, Debug)]
 #[non_exhaustive]
 pub(crate) enum TotpSecretError {
     /// The Base32 encoding was invalid.
