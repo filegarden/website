@@ -49,6 +49,9 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
+        // TODO: Fix race condition from adding an empty file/folder under the moved folder after
+        // this point.
+
         let (new_parent_id_path, new_parent_name_path) = match &body.parent_id {
             Some(parent_id) => {
                 query_folder_paths_to_modify_contents(tx, &session.user_id, parent_id).await?

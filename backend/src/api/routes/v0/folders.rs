@@ -75,6 +75,7 @@ pub(crate) async fn post(
             .fetch_one(tx.as_mut())
             .await
             {
+                // TODO: This doesn't catch a folder name conflicting with a file name.
                 Err(sqlx::Error::Database(error))
                     if error.constraint() == Some("folders_by_name_path") =>
                 {

@@ -42,6 +42,9 @@ pub(crate) async fn post(
             return Err(TxError::Abort(api::Error::AuthFailed));
         };
 
+        // TODO: Fix race condition from adding an empty file/folder under the trashed folder after
+        // this point.
+
         let Some(trashed_folder) = sqlx::query!(
             r#"WITH folder AS (
                 DELETE FROM folders
@@ -121,8 +124,6 @@ pub(crate) async fn post(
         )
         .fetch_one(tx.as_mut())
         .await?;
-
-        // TODO: Fix race condition from adding a file under the trashed folder after this point.
 
         if sub_files.count != 0 {
             // TODO: Also cancel replacement file uploads.
