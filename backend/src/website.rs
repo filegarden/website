@@ -12,6 +12,8 @@ use axum::{
     response::{IntoResponse, Response},
 };
 
+use crate::well_known;
+
 /// The local address of the internal server for the website.
 static INTERNAL_ADDRESS: LazyLock<Authority> = LazyLock::new(|| {
     dotenvy::var("INTERNAL_WEBSITE_ADDRESS")
@@ -31,6 +33,10 @@ static INTERNAL_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
 /// The service function to handle incoming requests for the website, proxying them to the website's
 /// internal server.
 pub(super) async fn handle(request: Request) -> Response {
+    if request.uri().path() == "/.well-known/security.txt" {
+        return well_known::security_txt(&request);
+    }
+
     let (mut request_parts, request_body) = request.into_parts();
 
     let mut uri_parts = request_parts.uri.into_parts();

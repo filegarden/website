@@ -1,0 +1,5 @@
+Canonical: {{ WEBSITE_ORIGIN.as_str() }}/.well-known/security.txt
+Canonical: {{ CONTENT_ORIGIN.as_str() }}/.well-known/security.txt
+Contact: mailto:security@filegarden.com
+Expires: {{ expires }}
+Preferred-Languages: en

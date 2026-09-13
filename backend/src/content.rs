@@ -10,13 +10,17 @@ use axum::{
 };
 use percent_encoding::{percent_decode_str, utf8_percent_encode};
 
-use crate::{WEBSITE_ORIGIN, percent_encoding::COMPONENT_IGNORING_SLASH};
+use crate::{WEBSITE_ORIGIN, percent_encoding::COMPONENT_IGNORING_SLASH, well_known};
 
 /// The start of a file ID query parameter.
 const FILE_ID_QUERY_PREFIX: &str = "_id=";
 
 /// The service function to handle incoming requests for user-uploaded content.
 pub(super) fn handle(request: Request) -> Response {
+    if request.uri().path() == "/.well-known/security.txt" {
+        return well_known::security_txt(&request);
+    }
+
     build_response(request).expect("response should be valid")
 }
 

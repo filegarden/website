@@ -14,6 +14,7 @@ mod id;
 mod percent_encoding;
 mod router;
 mod website;
+mod well_known;
 
 /// The URI origin for user-uploaded content.
 pub(crate) static CONTENT_ORIGIN: LazyLock<String> = LazyLock::new(|| {
