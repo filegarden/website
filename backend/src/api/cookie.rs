@@ -2,7 +2,7 @@
 
 use std::borrow::Cow;
 
-use axum::http::{HeaderName, header::SET_COOKIE};
+use axum::http::{HeaderName, header};
 use cookie::{Cookie, SameSite, time::Duration};
 use derive_more::{AsMut, AsRef, From};
 
@@ -90,6 +90,6 @@ pub(crate) trait CookieWrapper {
     where
         Self: AsRef<Cookie<'c>>,
     {
-        (SET_COOKIE, self.as_ref().to_string())
+        (header::SET_COOKIE, self.as_ref().to_string())
     }
 }

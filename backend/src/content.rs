@@ -5,10 +5,7 @@ use std::borrow::Cow;
 use axum::{
     body::Body,
     extract::Request,
-    http::{
-        self, Method, StatusCode,
-        header::{ACCESS_CONTROL_ALLOW_ORIGIN, ALLOW, CONTENT_SECURITY_POLICY, LOCATION},
-    },
+    http::{self, Method, StatusCode, header},
     response::Response,
 };
 use percent_encoding::{percent_decode_str, utf8_percent_encode};
@@ -32,10 +29,12 @@ fn build_response(request: Request) -> http::Result<Response> {
     let (request, _body) = request.into_parts();
     let mut response = Response::builder();
 
-    response = response.header(ACCESS_CONTROL_ALLOW_ORIGIN, "*").header(
-        CONTENT_SECURITY_POLICY,
-        "default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: mediastream:",
-    );
+    response = response
+        .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+        .header(
+            header::CONTENT_SECURITY_POLICY,
+            "default-src 'self' 'unsafe-eval' 'unsafe-inline' blob: data: mediastream:",
+        );
 
     if !(request.method == Method::GET || request.method == Method::HEAD) {
         let status = if request.method == Method::OPTIONS {
@@ -46,7 +45,7 @@ fn build_response(request: Request) -> http::Result<Response> {
 
         return response
             .status(status)
-            .header(ALLOW, "GET, HEAD, OPTIONS")
+            .header(header::ALLOW, "GET, HEAD, OPTIONS")
             .body(Body::empty());
     }
 
@@ -55,7 +54,7 @@ fn build_response(request: Request) -> http::Result<Response> {
     if encoded_path == "/" {
         return response
             .status(StatusCode::PERMANENT_REDIRECT)
-            .header(LOCATION, format!("{}/", *WEBSITE_ORIGIN).as_str())
+            .header(header::LOCATION, format!("{}/", *WEBSITE_ORIGIN).as_str())
             .body(Body::empty());
     }
 
@@ -82,7 +81,7 @@ fn build_response(request: Request) -> http::Result<Response> {
 
         return response
             .status(StatusCode::PERMANENT_REDIRECT)
-            .header(LOCATION, normalized_uri.as_ref())
+            .header(header::LOCATION, normalized_uri.as_ref())
             .body(Body::empty());
     }
 

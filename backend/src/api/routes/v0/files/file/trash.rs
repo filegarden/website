@@ -1,6 +1,6 @@
 //! See [`post`].
 
-use axum::http::header::LOCATION;
+use axum::http::header;
 use axum_macros::debug_handler;
 use reqwest::StatusCode;
 use serde::Serialize;
@@ -50,7 +50,7 @@ pub(crate) async fn post(
                     RETURNING created_at, modified_at, name, parent_id_path, size, content_id, type,
                         shared
             )
-            INSERT INTO trashed_files 
+            INSERT INTO trashed_files
                 (created_at, modified_at, id, name, owner_id, parent_id_path,
                     original_parent_id_path, original_id, size, content_id, type, was_shared)
                 SELECT
@@ -107,7 +107,7 @@ pub(crate) async fn post(
     Ok((
         StatusCode::CREATED,
         [(
-            LOCATION,
+            header::LOCATION,
             format!("/api/v0/users/me/trash/files/{trashed_file_id}"),
         )],
         Json(PostResponse {

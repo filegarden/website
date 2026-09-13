@@ -2,7 +2,7 @@
 
 use std::iter;
 
-use axum::http::header::LOCATION;
+use axum::http::header;
 use axum_macros::debug_handler;
 use reqwest::StatusCode;
 use serde::Serialize;
@@ -180,7 +180,7 @@ pub(crate) async fn post(
     Ok((
         StatusCode::CREATED,
         [(
-            LOCATION,
+            header::LOCATION,
             format!("/api/v0/users/me/trash/folders/{folder_id}"),
         )],
         Json(PostResponse {

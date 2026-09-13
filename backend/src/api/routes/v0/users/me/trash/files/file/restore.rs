@@ -1,6 +1,6 @@
 //! See [`post`].
 
-use axum::http::header::LOCATION;
+use axum::http::header;
 use axum_macros::debug_handler;
 use reqwest::StatusCode;
 use serde::{Deserialize, Serialize};
@@ -126,7 +126,7 @@ pub(crate) async fn post(
 
     Ok((
         StatusCode::CREATED,
-        [(LOCATION, format!("/api/v0/files/{file_id}"))],
+        [(header::LOCATION, format!("/api/v0/files/{file_id}"))],
         Json(PostResponse { id: file_id }),
     ))
 }

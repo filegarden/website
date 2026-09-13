@@ -4,7 +4,7 @@ use std::str;
 
 use axum::{
     extract::{FromRequestParts, OptionalFromRequestParts},
-    http::{header::COOKIE, request},
+    http::{header, request},
 };
 use axum_macros::FromRequestParts;
 use ring::digest::Digest;
@@ -40,7 +40,7 @@ where
     ) -> Result<Self, Self::Rejection> {
         let Some(token) = parts
             .headers
-            .get(COOKIE)
+            .get(header::COOKIE)
             .and_then(|header_value| str::from_utf8(header_value.as_bytes()).ok())
             .and_then(SessionCookie::from_header)
             .and_then(|session_cookie| session_cookie.as_ref().value().parse::<Token>().ok())

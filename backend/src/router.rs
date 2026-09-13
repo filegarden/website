@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 
 use axum::{
     extract::Request,
-    http::{StatusCode, header::HOST},
+    http::{StatusCode, header},
     response::{IntoResponse, Response},
 };
 use axum_macros::debug_handler;
@@ -26,7 +26,7 @@ pub(super) async fn handle(request: Request) -> Response {
         Some(authority) => Some(authority.as_str()),
         None => request
             .headers()
-            .get(HOST)
+            .get(header::HOST)
             .and_then(|host| host.to_str().ok()),
     };
 
