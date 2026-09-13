@@ -12,7 +12,6 @@ mod db;
 mod email;
 mod id;
 mod percent_encoding;
-mod response;
 mod router;
 mod website;
 
