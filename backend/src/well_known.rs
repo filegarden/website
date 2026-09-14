@@ -21,8 +21,14 @@ pub(crate) struct SecurityTxt {
 
 /// Serves the `/.well-known/security.txt` file as defined in RFC 9116.
 pub(crate) fn security_txt(request: &Request) -> Response {
-    if request.method() != Method::GET {
-        return StatusCode::METHOD_NOT_ALLOWED.into_response();
+    let headers = [(header::CONTENT_TYPE, "text/plain; charset=utf-8")];
+    let allow_header = (header::ALLOW, "GET, HEAD, OPTIONS");
+
+    match *request.method() {
+        Method::GET => {}
+        Method::HEAD => return headers.into_response(),
+        Method::OPTIONS => return (StatusCode::NO_CONTENT, [allow_header]).into_response(),
+        _ => return (StatusCode::METHOD_NOT_ALLOWED, [allow_header]).into_response(),
     }
 
     let expires = (Utc::now() + Duration::days(14))
@@ -30,12 +36,10 @@ pub(crate) fn security_txt(request: &Request) -> Response {
         .single()
         .expect("the datetime should be in range");
 
-    (
-        [(header::CONTENT_TYPE, "text/plain; charset=utf-8")],
-        SecurityTxt {
-            expires: expires.to_rfc3339_opts(SecondsFormat::Secs, true),
-        }
-        .to_string(),
-    )
-        .into_response()
+    let content = SecurityTxt {
+        expires: expires.to_rfc3339_opts(SecondsFormat::Secs, true),
+    }
+    .to_string();
+
+    (headers, content).into_response()
 }
