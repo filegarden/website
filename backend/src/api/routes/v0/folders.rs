@@ -5,15 +5,18 @@ pub(crate) mod folder;
 use axum::http::header;
 use axum_macros::debug_handler;
 use reqwest::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 use crate::{
     api::{
-        self, Json, db_helpers::query_folder_paths_to_modify_contents, extract::AuthToken,
-        response::Response, validation::FileName,
+        self, Json,
+        db_helpers::query_folder_paths_to_modify_contents,
+        extract::AuthToken,
+        response::{Response, body::Folder},
+        validation::FileName,
     },
     db::{self, TxError, TxResult},
-    id::{FolderBrowseKey, Id, NewFolderId},
+    id::{FolderBrowseKey, Id, IdInner, NewFolderId},
 };
 
 /// A `POST` request body for this API route.
@@ -97,27 +100,16 @@ pub(crate) async fn post(
         StatusCode::CREATED,
         [(header::LOCATION, format!("/api/v0/folders/{folder_id}"))],
         Json(PostResponse {
-            id: folder_id,
-            name: body.name,
-            browse_key,
             created_at: created_at.timestamp_millis(),
+            id: folder_id,
+            name: body.name.into_inner(),
+            browse_key,
+            size: 0,
+            shared: false,
         }),
     ))
 }
 
 /// A `POST` response body for this API route.
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub(crate) struct PostResponse {
-    /// The new folder's ID.
-    id: NewFolderId,
-
-    /// The new folder's name.
-    name: FileName,
-
-    /// The new folder's browse key.
-    browse_key: FolderBrowseKey,
-
-    /// The new folder's creation timestamp in Unix milliseconds.
-    created_at: i64,
-}
+pub(crate) type PostResponse =
+    Folder<<NewFolderId as IdInner>::Inner, <FolderBrowseKey as IdInner>::Inner>;

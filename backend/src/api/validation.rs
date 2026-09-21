@@ -135,6 +135,11 @@ impl FileName {
     /// Forbidding these simplifies some implementation details when handling file paths, and it
     /// improves interoperability since these are the illegal characters for POSIX pathnames.
     const ILLEGAL_CHARS: [u8; 2] = [b'\0', b'/'];
+
+    /// Consumes the `FileName`, returning the underlying [`String`].
+    pub(crate) fn into_inner(self) -> String {
+        self.0.into_inner()
+    }
 }
 
 /// An error constructing a [`FileName`].
