@@ -10,7 +10,7 @@ Our users see File Garden as a useful tool, and it should stay that way. Profit 
 
 ## Open and Transparent
 
-You shouldn't have to trust us on anything; you should be able to verify it yourself. 100% of the code we write is free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, so users can see every detail of File Garden's functionality, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
+You shouldn't have to trust us on anything; you should be able to verify everything yourself. 100% of the code we write will always be free and <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, so users can see every detail of File Garden's behavior, both frontend and backend. We use a copyleft license to require the same of anyone who copies our code as well.
 
 ## Unwelcome to Investors
 
