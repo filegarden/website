@@ -15,7 +15,7 @@
       "request": "attach",
       "port": 9222,
       "urlFilter": "local*",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}/frontend"
     }
   ],
   "compounds": [
