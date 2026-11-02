@@ -1,8 +1,8 @@
 # Our Ethics
 
-Everything we do must be in service of our non-malicious users; that's the only thing we care about. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If this ever changes, please cancel your File Garden subscriptions, and let others know to do the same.** File Garden should face consequences if it's ever taken in the wrong direction, as should any business. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
+Everything we do must be in service of our non-malicious users; that's the only thing we care about. We believe any other underlying goal falls short of bringing about the most overall good to everyone. **If this ever changes, please stop supporting File Garden, and let others know to do the same.** File Garden should face consequences if it's ever taken in the wrong direction, as should any business. Publishing an ethics statement like this helps all of you hold us accountable, discouraging us from making bad decisions in the future.
 
-We created S.O.U.N.D. ethics in pursuit of this goal, the policies of which we pledge to follow forever:
+We created S.O.U.N.D. ethics in pursuit of this goal, the policies of which File Garden must follow forever:
 
 ## Sustainability Over Profit
 
@@ -14,7 +14,7 @@ You shouldn't have to trust us on anything; you should be able to verify everyth
 
 ## Unwelcome to Investors
 
-Businesses that go public or take investor funding are effectively forced to prioritize value to investors, and investors are very often out of touch with what makes users happy. We want our users to drive our business, not investors.
+Businesses that go public or take investor funding are effectively forced to prioritize value to investors, and investors are very often out of touch with what makes users happy. We want our users to drive our business, not investors. Time and time again, it's been demonstrated that investors necessitate <A href="https://en.wikipedia.org/wiki/Enshittification" target="_blank">ensh*ttification</A>.
 
 ## No Widely Hated Changes
 
@@ -22,4 +22,4 @@ Widely hated changes often claim to be the result of user feedback. But where co
 
 ## Don't Limit Competition
 
-Monopolies and <A href="https://en.wikipedia.org/wiki/Closed_platform" target="_blank">walled gardens</A> (no pun intended) hamper innovation and restrict user freedom. Competitors incentivize each other to improve, making everything better and better for the broader ecosystem over time. This ultimately makes our users happier.
+Monopolies and <A href="https://en.wikipedia.org/wiki/Closed_platform" target="_blank">walled gardens</A> (no pun intended) hamper innovation and restrict user freedom. On the contrary, we encourage competition by making 100% of the code we write <A href="https://github.com/filegarden/website" target="_blank">open-source</A>, following the free software philosophy we're strongly aligned with. Competitors incentivize each other to improve, making everything better and better for the broader ecosystem over time. This ultimately makes our users happier.
