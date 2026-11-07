@@ -141,7 +141,6 @@ rustflags = [
     "-Wclippy::unnecessary_safety_comment",
     "-Wclippy::unnecessary_safety_doc",
     "-Wclippy::unnecessary_self_imports",
-    "-Wclippy::unreachable",
     "-Wclippy::unused_rounding",
     "-Wrustdoc::unescaped_backticks",
     "-Wunused_crate_dependencies",
